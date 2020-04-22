@@ -1,0 +1,5 @@
+{
+  "name": "AssignmentsCleanupPage",
+  "private": true,
+  "main": "./cleanup.jsx"
+}

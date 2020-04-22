@@ -1,0 +1,13 @@
+<%= link_to "Download Invitable Users", "/admin/users/invitable.csv", class: 'btn btn-danger btn-block my-5' %>
+
+<% if @job_started %>
+<h1>
+  Job Started
+</h1>
+<h4>
+  You will be emailed with the resulting file
+</h4>
+<script>
+  history.replaceState({}, 'Imports - Invitable', location.pathname)
+</script>
+<% end %>

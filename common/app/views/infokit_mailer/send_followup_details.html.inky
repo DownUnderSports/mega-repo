@@ -1,0 +1,58 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Thank you for your interest in Competing Down Under!</h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="https://downundersports.com/deposit/<%= @athlete.dus_id %>">Pay Deposit</item>
+          <item href="#">DUS ID: <%= @athlete.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day!
+      </p>
+      <p>
+        For answers to our most commonly asked questions, <%= link_to 'check out our F.A.Q. page, here', "https://DownUnderSports.com/frequently-asked-questions?dus_id=#{@athlete.dus_id}" %>.
+      </p>
+      <p>
+        For full details on safety, supervision, travel, pricing and available discounts, <%= link_to 'we have an information video available for you to watch, here', "https://DownUnderSports.com/videos/i/#{@athlete.dus_id}" %>.
+      </p>
+      <p>
+        To schedule a one-on-one appointment with a specialist from Down Under Sports, <%= link_to 'please click here.', generate_schedule_link(@athlete.dus_id) %>
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'Click Here to View Information Video', "https://DownUnderSports.com/videos/i/#{@athlete.dus_id}", class: 'btn btn-block btn-3' %>
+        <spacer size="16"></spacer>
+        <%= link_to 'Click Here to View F.A.Q.', "https://DownUnderSports.com/frequently-asked-questions?dus_id=#{@athlete.dus_id}", class: 'btn btn-block btn-1' %>
+        <spacer size="16"></spacer>
+        <%= link_to 'View Information Flyer', "https://drive.google.com/file/d/1ynXn4-yJiAORz3PweFB9ZpDhk3RoN-ti/view?usp=sharing", class: 'btn btn-block btn-3' %>
+        <spacer size="16"></spacer>
+        <%= link_to 'View 2019 Program', 'https://drive.google.com/file/d/1b5dMilMB5k4NE7JJiuGaeNSpZuqvh23M/view?usp=sharing', class: 'btn btn-block btn-1' %>
+        <spacer size="16"></spacer>
+        <%= link_to "#{@athlete.team.sport.full} Itinerary", @athlete.team.poster[:drive], class: 'btn btn-block btn-3' %>
+        <spacer size="16"></spacer>
+        <%= link_to raw("Pay Deposit &amp; Join The Team"), "https://www.downundersports.com/deposit/#{@athlete.dus_id}", class: 'btn btn-block btn-1' %>
+      </center>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

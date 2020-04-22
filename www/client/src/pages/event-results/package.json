@@ -1,0 +1,5 @@
+{
+  "name": "EventResultsPage",
+  "private": true,
+  "main": "./event-results.jsx"
+}

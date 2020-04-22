@@ -1,0 +1,86 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  paid
+  sport
+  team_state
+  school_name
+  school_city
+  school_state
+  first
+  middle
+  last
+  print_names
+  gender
+  handicap
+  positions
+  height
+  weight
+  stats
+  athlete_phone
+  athlete_email
+  combined_phones
+  combined_emails
+  parent_1_relationship
+  parent_1_name
+  parent_1_phone
+  parent_1_email
+  parent_2_relationship
+  parent_2_name
+  parent_2_phone
+  parent_2_email
+  parent_3_relationship
+  parent_3_name
+  parent_3_phone
+  parent_3_email
+]
+
+test_user_traveler_id = test_user.traveler.id
+
+Traveler.
+  active.
+  joins(:team, :user).
+  where(
+    users: {category_type: :athletes},
+    teams: { sport_id: @sport.select(:id) }
+  ).
+  split_batches_values do |traveler|
+    next if traveler.id.in? test_user_environment_ids
+
+    u = traveler.user
+    a_sport = u.athlete&.athletes_sports&.find_by(sport_id: traveler.team.sport_id)
+
+    guardians = u.guardian_contact_info(3)
+
+    csv << [
+      u.dus_id,
+      traveler.total_payments.to_s,
+      u.team.sport.full,
+      u.team.state.abbr,
+      u.athlete.school&.name,
+      u.athlete.school&.address&.city,
+      u.athlete.school&.address&.state&.abbr,
+      u.first,
+      u.middle,
+      u.last,
+      u.print_names,
+      u.gender,
+      a_sport&.handicap,
+      (a_sport&.positions_array || []).join(', '),
+      a_sport&.height,
+      a_sport&.weight,
+      a_sport&.stats,
+      u.phone.presence,
+      u.ambassador_email,
+      [
+        u.phone.presence,
+        *guardians.map(&:third)
+      ].select(&:present?).join(';'),
+      [
+        *u.ambassador_email_array,
+        *guardians.map(&:fourth)
+      ].select(&:present?).join(';'),
+      *guardians.flatten
+    ]
+  end

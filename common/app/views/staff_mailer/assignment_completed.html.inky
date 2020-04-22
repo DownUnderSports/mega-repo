@@ -1,0 +1,84 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">
+        <%= @assignment.reason %> Assignment Marked as Completed for <%= @assignment.user.print_names %>
+      </h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="<%= @assignment.user.admin_url %>">DUS ID: <%= @assignment.user.dus_id %></item>
+          <item href="<%= @assignment.user.admin_url %>">Category: <%= @assignment.reason %></item>
+          <item href="<%= @assignment.user.admin_url %>">Interest: <%= @assignment.user.interest.level %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border full">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <a href="<%= @assignment.user.admin_url %>" class="btn btn-blue btn-block inverse">View User</a>
+      <hr>
+      <h4>
+        Assignment:
+      </h4>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              Category
+            </th>
+            <th>
+              Assigned To
+            </th>
+            <th>
+              Assigned By
+            </th>
+            <th>
+              Unneeded At
+            </th>
+            <th>
+              Completed At
+            </th>
+            <th>
+              Locked
+            </th>
+            <th>
+              Next Followup
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <%= @assignment.reason %>
+            </td>
+            <td>
+              <%= @assignment.assigned_to.print_first_name_only %>
+            </td>
+            <td>
+              <%= @assignment.assigned_by.print_first_name_only %>
+            </td>
+            <td>
+              <%= @assignment.unneeded ? @assignment.unneeded_at : nil %>
+            </td>
+            <td>
+              <%= @assignment.completed ? @assignment.completed_at : nil %>
+            </td>
+            <td>
+              <%= @assignment.locked %>
+            </td>
+            <td>
+              <%= @assignment.follow_up_date %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </columns>
+  </row>
+</container>

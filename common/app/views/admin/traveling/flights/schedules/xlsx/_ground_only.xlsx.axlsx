@@ -1,0 +1,19 @@
+# encoding: utf-8
+
+wb.add_worksheet(name: 'Ground Only') do |sheet|
+  sheet.add_row [
+    'Departing',
+    'Returning',
+    'Total People',
+    'View Users'
+  ]
+
+  ground_only.each do |go|
+    sheet.add_row [
+      go.departing_date,
+      go.returning_date,
+      go.total,
+      "https://admin.downundersports.com/admin/traveling/flights/tickets?ground_only=true&departing_date=#{go.departing_date.to_s}&returning_date=#{go.returning_date.to_s}"
+    ]
+  end
+end

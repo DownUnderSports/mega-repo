@@ -1,0 +1,5 @@
+{
+  "name": "UserOfferPages",
+  "private": true,
+  "main": "./offers.jsx"
+}

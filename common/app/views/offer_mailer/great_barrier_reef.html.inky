@@ -1,0 +1,41 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        Last Chance to Save your Spot for the Great Barrier Reef!
+      </h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        G'Day <%= @user.print_first_name_only %>!
+      </p>
+      <p>
+        Remember that Friday, June 14<sup>th</sup> is the last day to add the Great Barrier Reef escape to your travel package before you depart. You can still book this tour after you arrive in Australia; however, we cannot guarantee there will be spots available.
+      </p>
+      <p>
+        If you would like to participate in this once-in-a-lifetime tour, please <a href="tel:+14357534732"> call or text our office @ (435) 753-4732</a>, or <a href="mailto:mail@downundersports.com">send an email to mail@downundersports.com</a>
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'View the Great Barrier Reef Highlight Video', 'https://youtu.be/C-gkKvFNL88', class: 'btn btn-block btn-1' %>
+      </center>
+    </columns>
+  </row>
+</container>

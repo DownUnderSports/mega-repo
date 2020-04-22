@@ -1,0 +1,173 @@
+# encoding: utf-8
+
+ignored     = %w[ _GROUND_ONLY _UNASSIGNED ]
+empty       = Array.new(7)
+spacer      = [
+                '############',
+                '############',
+                '############',
+                '############',
+                '############',
+                '############',
+                '#####################################'
+              ]
+spaceblock  = (' ' * 61) + '##'
+
+csv << [
+  'departing_date',
+  'returning_date',
+  'departing_from',
+  'returning_to',
+  'count',
+  nil,
+  nil
+]
+
+@dates.
+  keys.
+  sort.
+  each do |dep_date|
+    csv << [
+      dep_date,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil
+    ]
+
+    @dates[dep_date].
+      keys.
+      sort.
+      each do |ret_date|
+        date = @dates[dep_date][ret_date]
+
+        csv << [
+          nil,
+          ret_date,
+          nil,
+          nil,
+          nil,
+          nil,
+          nil
+        ]
+
+        csv << [
+          nil,
+          nil,
+          'GROUND_ONLY',
+          'GROUND_ONLY',
+          date['_GROUND_ONLY'] || 0,
+          nil,
+          nil
+        ]
+
+        csv << [
+          nil,
+          nil,
+          'UNASSIGNED',
+          'UNASSIGNED',
+          date['_UNASSIGNED'] || 0,
+          nil,
+          nil
+        ]
+
+        date.
+          keys.
+          sort.
+          each do |fp|
+            unless ignored.any?(fp)
+              csv << [
+                nil,
+                nil,
+                *(fp.split('-')),
+                date[fp],
+                nil,
+                nil
+              ]
+            end
+          end
+      end
+  end
+
+
+
+3.times do
+  csv << empty
+end
+
+csv << spacer
+
+csv << [
+  '##',
+  nil,
+  nil,
+  'UNASSIGNED',
+  'USERS',
+  'LIST',
+]
+
+csv << spacer
+csv << empty
+
+csv << [
+  nil,
+  nil,
+  nil,
+  'team',
+  'join_date',
+  'deposit_date',
+  'url'
+]
+
+@unassigned.each do |t|
+  csv << [
+    nil,
+    nil,
+    nil,
+    t.team.name,
+    t.join_date,
+    t.deposit_date,
+    t.user.url(1)
+  ]
+end
+
+3.times do
+  csv << empty
+end
+
+csv << spacer
+
+csv << [
+  '##',
+  nil,
+  nil,
+  'GROUND ONLY',
+  'USERS',
+  'LIST',
+  spaceblock
+]
+csv << spacer
+csv << empty
+csv << [
+  nil,
+  nil,
+  nil,
+  'team',
+  'join_date',
+  'deposit_date',
+  'url'
+]
+
+@ground_only.each do |t|
+  csv << [
+    nil,
+    nil,
+    nil,
+    t.team.name,
+    t.join_date,
+    t.deposit_date,
+    t.user.url(1)
+  ]
+end

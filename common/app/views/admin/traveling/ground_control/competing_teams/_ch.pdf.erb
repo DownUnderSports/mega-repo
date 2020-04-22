@@ -1,0 +1,42 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>
+        ID
+      </th>
+      <th>
+        State
+      </th>
+      <th>
+        Name
+      </th>
+      <th>
+        Phone
+      </th>
+      <th>
+        Email
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @competing_team.travelers.athletes.each do |t| %>
+      <tr>
+        <td style="white-space: nowrap">
+          <%= t.user.dus_id %>
+        </td>
+        <td>
+          <%= t.team.state.abbr %>
+        </td>
+        <td>
+          <%= t.user.basic_name %>
+        </td>
+        <td style="white-space: nowrap">
+          <%= t.user.athlete_and_parent_phones.first %>
+        </td>
+        <td style="white-space: nowrap">
+          <%= t.user.athlete_and_parent_emails.first %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

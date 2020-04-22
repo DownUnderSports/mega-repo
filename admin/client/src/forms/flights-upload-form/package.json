@@ -1,0 +1,5 @@
+{
+  "name": "FlightsUploadForm",
+  "private": true,
+  "main": "./flights-upload-form.jsx"
+}

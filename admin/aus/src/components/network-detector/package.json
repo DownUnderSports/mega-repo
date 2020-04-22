@@ -1,0 +1,6 @@
+{
+  "name": "NetworkDetector",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./network-detector.jsx"
+}

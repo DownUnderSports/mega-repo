@@ -1,0 +1,35 @@
+# encoding: utf-8
+
+wb.add_worksheet(name: 'Flights Needed') do |sheet|
+  sheet.add_row [
+    'Departing',
+    'Returning',
+    'Departing From',
+    'Returning To',
+    'Carrier',
+    "Total People (#{flight_groups.reduce(0) {|t, fg| t += fg.total}})",
+    "Total with Flights (#{flight_groups.reduce(0) {|t, fg| t += fg.total_needed}})",
+    "Own Flights (#{flight_groups.reduce(0) {|t, fg| t += fg.own_flights_count}})",
+    "Unpaid (#{flight_groups.reduce(0) {|t, fg| t += fg.has_balance_count}})",
+    "< $2000 & > 30 days  (#{flight_groups.reduce(0) {|t, fg| t += fg.within_thirty_count}})",
+    "Reserved (#{Flight::Schedule.sum(:seats_reserved)})",
+    'View Users'
+  ]
+
+  flight_groups.each do |fg|
+    sheet.add_row [
+      fg.departing_date,
+      fg.returning_date,
+      fg.departing_from,
+      fg.returning_to,
+      (((carrier = airports[fg.departing_from]) && carrier == airports[fg.returning_to]) ? carrier : nil),
+      fg.total,
+      fg.total_needed,
+      fg.own_flights_count,
+      fg.has_balance_count,
+      fg.within_thirty_count,
+      Flight::Schedule.where(route_summary: "#{fg.departing_from}#{fg.departing_date.to_s}#{fg.returning_to}#{fg.returning_date.to_s}").sum(:seats_reserved),
+      "https://admin.downundersports.com/admin/traveling/flights/tickets?departing_from=#{fg.departing_from.to_s}&returning_to=#{fg.returning_to.to_s}&departing_date=#{fg.departing_date.to_s}&returning_date=#{fg.returning_date.to_s}"
+    ]
+  end
+end

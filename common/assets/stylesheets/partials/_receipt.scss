@@ -1,0 +1,130 @@
+.receipt-container {
+  padding: 1em;
+  margin:2em auto;
+  width: 100%;
+  // max-width: 768px;
+  border: 1px solid $charcoal;
+  background: $almost-white;
+  color: $charcoal;
+
+  section {
+    margin-bottom: 1em;
+    position: relative;
+    top:0;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  table tr td:first-child{
+    font-weight: bold;
+  }
+}
+
+.receipt-header {
+  margin-bottom: 2em
+}
+
+.print-only {
+  display: none
+}
+
+@media print {
+  html {
+    body {
+      position:absolute;
+      top:0;
+      left:0;
+    }
+    &, & *{
+      visibility: hidden;
+      background: none;
+    }
+    &.maximum-printage {
+      &, body {
+        height: 10000px;
+      }
+    }
+  }
+  .print-only {
+    display: block;
+  }
+
+  table.print-slim {
+    &, thead, tbody {
+      tr {
+        td, th {
+          padding: 0 4px;
+          font-size: .9rem
+        }
+      }
+    }
+  }
+  table.print-sm {
+    &, thead, tbody {
+      tr {
+        td, th {
+          padding: 2px 4px;
+          font-size: .9rem
+        }
+      }
+    }
+  }
+
+  .receipt-container, .printable {
+    width: 100%;
+    &, * {
+      color: $charcoal !important;
+      visibility: visible;
+    }
+    &.absolute {
+      position: absolute;
+      top: 0
+    }
+    .bg-danger {
+      background-color: #f2dede !important;
+    }
+    .bg-info {
+      background-color: #d9edf7 !important;
+    }
+    .bg-success {
+      background-color: #dff0d8 !important;
+    }
+    .bg-warning {
+      background-color: #fcf8e3 !important;
+    }
+    .bg-muted {
+      background-color: #ddd !important;
+    }
+  }
+  .receipt-container, .printable.fixed {
+    margin: 0;
+    padding: 2em;
+    font-size: 12px;
+    font-style: normal;
+    font-variant: normal;
+    font-family: sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height:100vh;
+    .print-fix {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      padding: 1em;
+    }
+    .footnote{
+      position: fixed;
+      top: unset;
+      bottom: .5em;
+      margin: auto;
+    }
+  }
+  .print-hidden {
+    display: none;
+  }
+}

@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pages - MeetingsPage Index is snapshotable 1`] = `
+<div
+  style={
+    Object {
+      "display": "block",
+      "width": "100%",
+    }
+  }
+>
+  <h1
+    className="text-center"
+  >
+    SUBMITTING...
+  </h1>
+  <div
+    className="la-ball-atom la-vw-sm"
+    style={
+      Object {
+        "color": "#00F",
+        "marginLeft": "auto",
+        "marginRight": "auto",
+        "zIndex": 0,
+      }
+    }
+  >
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+</div>
+`;
+
+exports[`Pages - MeetingsPage New is snapshotable 1`] = `
+<div
+  style={
+    Object {
+      "display": "block",
+      "width": "100%",
+    }
+  }
+>
+  <h1
+    className="text-center"
+  >
+    SUBMITTING...
+  </h1>
+  <div
+    className="la-ball-atom la-vw-sm"
+    style={
+      Object {
+        "color": "#00F",
+        "marginLeft": "auto",
+        "marginRight": "auto",
+        "zIndex": 0,
+      }
+    }
+  >
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+</div>
+`;
+
+exports[`Pages - MeetingsPage Show is snapshotable 1`] = `
+<div
+  style={
+    Object {
+      "display": "block",
+      "width": "100%",
+    }
+  }
+>
+  <h1
+    className="text-center"
+  >
+    SUBMITTING...
+  </h1>
+  <div
+    className="la-ball-atom la-vw-sm"
+    style={
+      Object {
+        "color": "#00F",
+        "marginLeft": "auto",
+        "marginRight": "auto",
+        "zIndex": 0,
+      }
+    }
+  >
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+</div>
+`;

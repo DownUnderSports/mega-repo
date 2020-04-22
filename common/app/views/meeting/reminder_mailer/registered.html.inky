@@ -1,0 +1,56 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Online Meeting</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day Mate!
+      </p>
+      <p>
+        Thank you for registering for the online information meeting <%= (same_day = (@meeting.start_time.to_date == Date.today)) ? 'today,' : 'on' %> <%= @meeting.start_time.strftime('%A, %B %d') %>, at <%= @meeting.start_time.strftime('%I:%M %p') %> Mountain Time (be sure to adjust for your local time). We will cover everything you need to know about the Down Under Sports Tournaments in order to make a well-informed decision. Please be sure a parent/guardian is in attendance.
+      </p>
+      <spacer size="16"></spacer>
+      <p>
+        <a href="https://downundersports.com/meetings/<%=  @meeting.id %>">
+          Click Here to See a Countdown to the Meeting Start Time
+        </a>
+      </p>
+      <spacer size="16"></spacer>
+      <p>
+        <a href="http://www.timebie.com/std/mst.php?q=<%= @meeting.start_time.strftime('%H') %>.<%= ((@meeting.start_time.strftime('%M').to_i.to_d / 60) * 10).to_i %>">
+          Click Here to Convert the Meeting Time to your Local Time
+        </a>
+      </p>
+      <spacer size="16"></spacer>
+      <ul>
+        <li>Eastern: <%= (@meeting.start_time + 2.hour).strftime('%I:%M %p') %> (+2 hours)</li>
+        <li>Central: <%= (@meeting.start_time + 1.hour).strftime('%I:%M %p') %> (+1 hour)</li>
+        <li>Pacific: <%= (@meeting.start_time - 1.hour).strftime('%I:%M %p') %> (-1 hour)</li>
+        <li>Alaska: <%= (@meeting.start_time - 2.hour).strftime('%I:%M %p') %> (-2 hours)</li>
+        <li>Hawaii: <%= (@meeting.start_time - 3.hour).strftime('%I:%M %p') %> (-3 hours)</li>
+      </ul>
+      <spacer size="16"></spacer>
+      <p>
+        Approximately 45 minutes before the meeting begins, you will recieve an email from &ldquo;no-reply@livestormevents.com&rdquo; with a unique link to join the presentation. Each link can only be used by one device at a time.
+        <%- if same_day -%>
+          If you have any issues connecting, or to reschedule, <a href="tel:+14357534732">please call <span style="white-space:nowrap">435-753-4732</span>.</a>
+        <%- else -%>
+          If you have any questions, or to reschedule, <a href="tel:+14357534732">please call <span style="white-space:nowrap">435-753-4732</span>.</a>
+        <%- end -%>
+      </p>
+      <spacer size="16"></spacer>
+      <p>
+        We look forward to meeting with you!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

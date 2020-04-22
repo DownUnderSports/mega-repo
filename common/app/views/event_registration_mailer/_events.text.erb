@@ -1,0 +1,22 @@
+_________________________________________________________________________
+
+Submitted Events:
+
+<% event_registration.events.each do |ev, groups| %>
+<% groups.each do |age| %>
+<%= ev %> (age group: <%= age %>, best time: <%= event_registration.event_time(ev) %>)
+
+<% end %>
+<% end %>
+
+Submitted Relays:
+
+<% if event_registration.relays.present? %>
+<% event_registration.relays.each do |ev, time| %>
+<%= ev %> (best time: <%= time %>)
+
+<% end %>
+<% else %>
+No Relays entered..
+
+<% end %>

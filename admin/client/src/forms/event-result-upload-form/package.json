@@ -1,0 +1,5 @@
+{
+  "name": "EventResultUploadForm",
+  "private": true,
+  "main": "./event-result-upload-form.jsx"
+}

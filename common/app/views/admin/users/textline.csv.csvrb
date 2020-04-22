@@ -1,0 +1,54 @@
+# encoding: utf-8
+csv << [
+  "Name",
+  "Phone Number",
+  "Tags",
+  "Email",
+  "DUS ID",
+  "Category",
+  "Traveler",
+  "Main Sport",
+  "Admin Link",
+  "Universal Link",
+  "Payment Link",
+  "Deposit Link",
+  "QR Code Link",
+  "Interest Level",
+  "Contactable",
+  "Balance"
+]
+
+User.where.not(phone: nil).split_batches_values do |u|
+  tags =
+    (
+      u.traveler&.all_sports&.map {|sp| [sp.abbr, sp.abbr_gender]} ||
+      [ u.team&.sport&.abbr, u.team&.sport&.abbr_gender ]
+    ).flatten.uniq
+
+  tags << u.category_title.downcase
+
+  if u.traveler
+    tags << "traveler"
+    tags << u.traveler.status.downcase
+    tags << (u.traveler.balance > 0) ? "owing" : "paid"
+  end
+
+  csv << [
+    u.print_names,
+    u.phone,
+    tags.join(' '),
+    u.email.presence,
+    u.dus_id,
+    u.category_title,
+    u.traveler ? 1 : 0,
+    u.team&.sport&.full_gender,
+    u.admin_url,
+    u.url,
+    u.payment_url,
+    u.deposit_url,
+    u.qr_code_link(u.url),
+    u.interest.level,
+    u.interest.contactable ? 1 : 0,
+    u.traveler ? u.traveler.balance.to_s(true) : nil
+  ]
+end

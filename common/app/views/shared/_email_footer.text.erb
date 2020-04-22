@@ -1,0 +1,5 @@
+<%= render partial: 'shared/signature' %>
+<%- unless defined?(skip_hours) && skip_hours -%>
+
+<%= render partial: 'shared/hours' %>
+<%- end -%>

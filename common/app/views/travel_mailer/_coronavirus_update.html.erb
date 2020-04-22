@@ -1,0 +1,22 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag "rep-banner-#{@sport.full.hyphenated}.png", class: 'full', alt: "#{@sport.full} Update" %>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border smaller-text">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <%= render_relative @sport.rep[:multiple] ? "multi_rep" : "single_rep" %>
+      <spacer size="16" class="hr"></spacer>
+      <%= render_relative @sport.abbr %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

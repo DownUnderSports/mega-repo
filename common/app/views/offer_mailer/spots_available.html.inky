@@ -1,0 +1,33 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">There are still a few spots available!</h3>
+    </columns>
+  </row>
+</container>
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G&rsquo;Day Mate!
+      </p>
+      <p>
+        We still have a few spots available for our tournaments this year. Watch this short video to get an overview of the Down Under Sports program, including information on the tournament, activities, safety, and our proven sponsorship fundraising program.
+      </p>
+      <spacer size="32"></spacer>
+      <center>
+        <%= link_to "Watch Information Video", "https://downundersports.com/videos/i/", class: 'btn inverse btn-link btn-block' %>
+      </center>
+      <spacer size="32"></spacer>
+      <p class="no-margin">
+        Please call or text our office at <a href="tel:+1-435-753-4732">435-753-4732</a> if you have any questions.
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+</container>

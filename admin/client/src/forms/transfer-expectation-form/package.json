@@ -1,0 +1,5 @@
+{
+  "name": "TransferExpectationForm",
+  "private": true,
+  "main": "./transfer-expectation-form.jsx"
+}

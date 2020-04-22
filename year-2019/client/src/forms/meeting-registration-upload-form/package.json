@@ -1,0 +1,5 @@
+{
+  "name": "MeetingRegistrationUploadForm",
+  "private": true,
+  "main": "./meeting-registration-upload-form.jsx"
+}

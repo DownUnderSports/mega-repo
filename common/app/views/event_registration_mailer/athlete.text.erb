@@ -1,0 +1,19 @@
+
+Thank you for placing the event registration for <%= @event_reg.user.full_name %>
+
+Details of your submission can be found below. If there are ANY errors with your submission, call our office ASAP.
+<% if @event_reg.has_event?('hammer') || @event_reg.has_event?('pole vault') %>
+
+All Pole Vault and Hammer entries are subject to a signed certificate of competency from a coach qualified in the relevant discipline. A copy of the certificate for your coach to sign is attached to this email.
+<% if @event_reg.has_event?('pole vault') %>
+
+Pole vaulters must email peter@sportscredentials.com.au to organize renting a pole in Australia. You will need to include the weight and length of the pole you will need. Be sure to mention you are with Down Under Sports in your email.
+<% end %>
+<% end %>
+
+Cheers,
+
+<%= render partial: 'shared/email_footer' %>
+
+
+<%= render partial: 'events', locals: {event_registration: @event_reg} %>

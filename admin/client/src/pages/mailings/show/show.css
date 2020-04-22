@@ -1,0 +1,170 @@
+@charset "UTF-8";
+.Mailings.ShowPage {
+  padding-top: 3rem;
+}
+.Mailings.ShowPage .la-square-jelly-box {
+  height: 25vw;
+  width: 25vw;
+  max-width: 25vh;
+  max-height: 25vh;
+  margin: 10vh auto;
+  color: #153e7c;
+}
+.Mailings.ShowPage .la-square-jelly-box div:first-child {
+  border: 1.5rem solid #d52027;
+}
+.Mailings.ShowPage form {
+  border: 1px solid rgba(0,0,0,0.125);
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+.Mailings.ShowPage .card-body form {
+  border: none;
+}
+.Mailings.ShowPage nav {
+  margin: 0 auto;
+  margin: 2rem 0;
+  display: block;
+}
+.Mailings.ShowPage nav .school-page-nav-trigger,
+.Mailings.ShowPage nav .debit-pages-nav-trigger {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  right: 0;
+  height: 0;
+  width: 0;
+}
+.Mailings.ShowPage nav .nav-link {
+  transition: all 0.25s ease-in-out;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.Mailings.ShowPage nav .nav-link:hover {
+  color: #61dafb !important;
+  background-color: #204373 !important;
+  z-index: 100;
+}
+.Mailings.ShowPage nav .nav-link.active {
+  position: relative;
+  font-weight: bold;
+  background-color: initial !important;
+  color: initial !important;
+}
+@media (min-width: 768px) {
+  .Mailings.ShowPage nav {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+  .Mailings.ShowPage nav .nav-link {
+    background-color: #ddd;
+    color: #777;
+    margin-left: 0.25rem;
+  }
+}
+@media (min-width: 992px) and (max-width: 1150px) {
+  .Mailings.ShowPage nav .nav-link {
+    padding: 0.5rem 0.7rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .Mailings.ShowPage nav .nav-link {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}
+@media (max-width: 767px) {
+  .Mailings.ShowPage nav {
+    border: none;
+  }
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger],
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] {
+    position: relative;
+    cursor: pointer;
+  }
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span {
+    position: absolute;
+    display: inline-block;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+  }
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span span,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span span {
+    position: relative;
+    top: 0.85rem;
+  }
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span span,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span span,
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span span:before,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span span:before,
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span span:after,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span span:after {
+    width: 2rem;
+    height: 0.3rem;
+    background: rgba(255,255,255,0.7);
+    position: absolute;
+    display: block;
+    content: '';
+    transition: all 500ms ease-in-out;
+  }
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span span:before,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span span:before {
+    top: -0.5rem;
+  }
+  .Mailings.ShowPage nav label[for=school-page-nav-trigger] > span span:after,
+  .Mailings.ShowPage nav label[for=debit-pages-nav-trigger] > span span:after {
+    bottom: -0.5rem;
+  }
+  .Mailings.ShowPage nav .nav-link {
+    border-radius: unset;
+    opacity: 1;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    background-color: #222;
+    color: #ddd;
+    overflow: hidden;
+    position: relative;
+  }
+  .Mailings.ShowPage nav .nav-link.active {
+    border-color: #222;
+    background: #fff;
+    display: block !important;
+    max-height: 500px;
+    padding: 0.5em 1em !important;
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+    background-color: #222;
+    color: #ddd;
+  }
+  .Mailings.ShowPage nav a.nav-link {
+    max-height: 0;
+    padding: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+  }
+  .Mailings.ShowPage nav #school-page-nav-trigger:checked ~ .nav-link {
+    display: block;
+    max-height: 100%;
+    padding: 0.5em 1em;
+    background-color: #222;
+    color: #ddd;
+    border-width: 1px;
+  }
+  .Mailings.ShowPage nav #school-page-nav-trigger:checked+label span {
+    background-color: transparent;
+  }
+  .Mailings.ShowPage nav #school-page-nav-trigger:checked+label span:before,
+  .Mailings.ShowPage nav #school-page-nav-trigger:checked+label span:after {
+    background: rgba(251,97,97,0.8);
+    top: 0;
+    box-shadow: 0 0 7px 1px #efefef;
+    width: 2rem;
+  }
+  .Mailings.ShowPage nav #school-page-nav-trigger:checked+label span:before {
+    transform: rotate(45deg);
+  }
+  .Mailings.ShowPage nav #school-page-nav-trigger:checked+label span:after {
+    transform: rotate(-45deg);
+  }
+}

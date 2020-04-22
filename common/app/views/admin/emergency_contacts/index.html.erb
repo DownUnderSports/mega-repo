@@ -1,0 +1,50 @@
+<div class="row mt-5">
+  <div class="col">
+    <form id="get_ec_print_params">
+      <div class="row">
+        <div class="col form-group">
+          <label for="get_sport_id">
+            Select Sport
+          </label>
+          <select id="get_sport_id" class="form-control">
+            <option value="">Select Sport...</option>
+            <% Sport.all.order(:full, :full_gender).each do |sp| %>
+            <option value="<%= sp.id %>"><%= sp.full_gender %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <button type="submit" id="print" class="btn btn-block btn-primary">
+            Print
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+  function getSubmit(ev, page) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const sportVal = String(document.getElementById("get_sport_id").value).replace(/\s+/g, '')
+
+    if(sportVal) {
+      const url = `${
+              window.location.origin
+            }/admin/emergency_contacts/${
+              sportVal
+            }.pdf?pp=disable`;
+
+      window.location = url
+    }
+  }
+
+  function onClick(ev) {
+    return getSubmit(ev, ev.target.id)
+  }
+
+  document.getElementById("get_ec_print_params").onsubmit = getSubmit;
+</script>

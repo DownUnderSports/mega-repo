@@ -1,0 +1,5 @@
+{
+  "name": "ETAValuesForm",
+  "private": true,
+  "main": "./eta-values-form.jsx"
+}

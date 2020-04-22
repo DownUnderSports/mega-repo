@@ -1,0 +1,51 @@
+<%= link_to 'Back', 'javascript:history.back()', class: 'btn btn-info my-3 float-right' %>
+
+<% if Rails.env.development? || @current_user&.dus_id === 'SAM-PSN' %>
+<%= button_to "Delete", admin_chat_room_path(@chat_room), method: :delete, class: 'btn btn-danger my-3' %>
+<% end %>
+
+
+<% if @chat_room %>
+  <section class="my-5">
+    <header>
+      <h3>
+        Info
+      </h3>
+    </header>
+    <ul>
+      <li>
+        Name: <%= @chat_room.name %>
+      </li>
+      <li>
+        Email: <%= @chat_room.email.present? ? link_to(@chat_room.email, "mailto:#{@chat_room.email}") : nil %>
+      </li>
+      <li>
+        Phone: <%= @chat_room.phone.present? ? link_to(@chat_room.phone, "tel:#{@chat_room.phone}") : nil %>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <header>
+      <h3 class="mb-3">
+        Messages
+      </h3>
+    </header>
+    <% @chat_room.messages.each do |message| %>
+      <hr>
+      <% direction = message.user&.is_staff? ? "text-left" : "text-right" %>
+      <div class="row">
+        <div class="col <%= direction %>">
+          <%= message.user&.basic_name %> (<%= message.user&.category_title || "Client" %>):
+          <% message.message.split("\n").each do |text| %>
+            <br><%= text %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </section>
+<% else %>
+  <h3>
+    Chat Not Found
+  </h3>
+<% end %>

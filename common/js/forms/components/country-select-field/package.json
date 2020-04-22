@@ -1,0 +1,6 @@
+{
+  "name": "CountrySelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./country-select-field.jsx"
+}

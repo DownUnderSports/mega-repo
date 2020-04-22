@@ -1,0 +1,34 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center text-success"><strong>There's Still Time, <%= @user.first %>!</strong></h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        We are still matching any payments made on your account through <strong>January 15th, 2020</strong>!*
+      </p>
+      <p>
+        For questions or more details, <a href="tel:+14357534732">call/text our office at 435-753-4732</a> or <a href="mailto:mail@downundersports.com">email mail@downundersports.com</a>.
+      </p>
+      <spacer size="16"></spacer>
+      <%= link_to 'Click Here to Make a Payment', "https://downundersports.com/payment/#{@user.dus_id}", class: 'btn btn-block btn-1' %>
+      <spacer size="16"></spacer>
+      <p>
+        We can&rsquo;t wait to share Australia with you!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <small class="text-danger"><i>*Maximum $700 discount per traveler</i></small>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

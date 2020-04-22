@@ -1,0 +1,6 @@
+{
+  "name": "ShirtSizeSelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./shirt-size-select-field.jsx"
+}

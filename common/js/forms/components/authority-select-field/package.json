@@ -1,0 +1,6 @@
+{
+  "name": "AuthoritySelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./authority-select-field.jsx"
+}

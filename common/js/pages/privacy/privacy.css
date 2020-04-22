@@ -1,0 +1,40 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Domine");
+@media (max-width: 949px) {
+  .privacy-site-seal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+}
+@media (min-width: 950px) {
+  .privacy-site-seal {
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+  }
+}
+@media print {
+  .privacy-site-seal {
+    display: none !important;
+  }
+}
+.privacy-section {
+  font-family: 'Domine', serif;
+}
+.privacy-section .privacy span:first-child {
+  font-weight: bold;
+}
+@media print {
+  .privacy-section.p-3.my-5 {
+    background: none !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+  .privacy-section,
+  .privacy-section * {
+    visibility: visible !important;
+    color: #000 !important;
+  }
+}

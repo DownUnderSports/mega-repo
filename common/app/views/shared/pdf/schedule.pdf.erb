@@ -1,0 +1,31 @@
+<% provide :title, "PNR - #{schedule.pnr} - #{Time.now.strftime('%Y-%b-%d_%H-%M-%S').upcase}" %>
+<div class="row">
+  <div class="col-2" style="height: 1.5in">
+  </div>
+  <div class="col-10" style="height: 1.5in">
+    <br>
+    <div style="font-size: .2in; text-align: right;">
+      <%= "#{schedule.pnr} - #{schedule.route_summary}" %>
+    </div>
+    <br>
+    <div style="font-size: .2in; text-align: right;" class="text-<%= schedule.booking_reference.present? ? 'success' : 'danger'%>">
+      <% if schedule.booking_reference.present? %>
+        Booking Reference: <%= "#{schedule.booking_reference}" %>
+      <% else %>
+        NO BOOKING REFERENCE
+      <% end %>
+    </div>
+    <div style="font-size: .2in; text-align: right;" class="text-<%= schedule.verified ? 'success' : 'danger'%>">
+      <% if schedule.verified %>
+        VERIFIED BY: <%= schedule.verified_by && schedule.verified_by.full_name || 'UNKNOWN' %>
+      <% else %>
+        UNVERIFIED
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div id="content" class="col-12">
+    <%= render partial: 'flight/schedules/schedule.html.erb', locals: {:@schedule => schedule, for_printing: true} %>
+  </div>
+</div>

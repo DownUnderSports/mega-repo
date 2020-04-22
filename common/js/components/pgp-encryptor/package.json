@@ -1,0 +1,5 @@
+{
+  "name": "PGPEncryptor",
+  "private": true,
+  "main": "./pgp-encryptor.jsx"
+}

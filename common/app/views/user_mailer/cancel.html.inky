@@ -1,0 +1,5 @@
+<%= link_to "#{@user.full_name}: #{@user.dus_id}", @user.url(true) %>
+<br>
+<%= Date.today.to_s %>
+<br>
+<strong>Requested By:</strong> <%= @staff_user&.full_name || @staff_user_id %>

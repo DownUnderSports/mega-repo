@@ -1,0 +1,212 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        Down Under Sports Payment Receipt
+      </h3>
+    </columns>
+  </row>
+</container>
+<container>
+  <row>
+    <columns>
+      <center>
+        <row>
+          <columns>
+            <p>
+              Thank you for your payment to Down Under Sports, a copy of your receipt can be found below.
+            </p>
+            <p>
+              Cheers,
+            </p>
+            <%= render partial: 'shared/email_footer' %>
+          </columns>
+        </row>
+        <spacer size="20" class="hr"></spacer>
+        <row>
+          <columns>
+            <h4>
+              Payment Information
+            </h4>
+          </columns>
+        </row>
+        <row>
+          <columns class="small-6">
+            <% billing = (@payment.billing || {}).deep_symbolize_keys %>
+            <address>
+              <% if billing[:street_address].present? %>
+                <% if billing[:company].present? %>
+                  <strong key='1'><%= billing[:company] %></strong> <br>
+                <% end %>
+                <strong><%= billing[:name].presence || "#{billing[:first_name]} #{billing[:last_name]}" %></strong><br/>
+                <%=  billing[:street_address] %><br/>
+                <% if billing[:extended_address].present? %>
+                  <%=  billing[:extended_address] %><br/>
+                <% end %>
+                <%= "#{billing[:locality]}, #{billing[:region]} #{billing[:postal_code]}"%><br/>
+                <%= billing[:country_code_alpha3]%><br/>
+                <%- if billing[:email].present? -%>
+                <abbr title="Card Holder Email">
+                  <a href="mailto:<%= billing[:email] %>">
+                    <%= billing[:email] %>
+                  </a>
+                </abbr><br/>
+                <%- end -%>
+                <%- if billing[:phone].present? -%>
+                <abbr title="Card Holder Phone">
+                  <a href={'tel:' + billing[:phone]}>
+                    <%= billing[:phone] %>
+                  </a>
+                </abbr>
+                <%- end -%>
+              <% else %>
+                <strong><%= billing[:name].presence || "#{billing[:first_name]} #{billing[:last_name]}" %></strong>
+              <% end %>
+            </address>
+          </columns>
+          <columns class="small-6">
+            <% gateway = (@payment.gateway || {}).deep_symbolize_keys %>
+            <% if @payment.transaction_id.present? %>
+              <row>
+                <columns class="small-6">
+                  Transaction ID:&nbsp;&nbsp;
+                </columns>
+                <columns class="small-6">
+                  <%= @payment.transaction_id %>
+                </columns>
+              </row>
+            <% end %>
+            <row>
+              <columns class="small-6">
+                Date:&nbsp;&nbsp;
+              </columns>
+              <columns class="small-6">
+                <%= @payment.created_at.to_s(:long) %>
+              </columns>
+            </row>
+            <row>
+              <columns class="small-6">
+                Acct Number:&nbsp;&nbsp;
+              </columns>
+              <columns class="small-6">
+                XXXX<%= gateway[:account_number] %>
+              </columns>
+            </row>
+            <%- if gateway[:routing_number].present? -%>
+            <row>
+              <columns class="small-6">
+                Routing Number:&nbsp;&nbsp;
+              </columns>
+              <columns class="small-6">
+                XXXX<%= gateway[:routing_number].to_s[-4..-1] %>
+              </columns>
+            </row>
+            <%- elsif gateway[:account_type].present? -%>
+            <row>
+              <columns class="small-6">
+                Acct Type:&nbsp;&nbsp;
+              </columns>
+              <columns class="small-6">
+                <%= gateway[:account_type] %>
+              </columns>
+            </row>
+            <%- end -%>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <spacer size="20"></spacer>
+          </columns>
+        </row>
+        <%- if @payment[:status] !~ /(settled|approved)/i -%>
+        <row>
+          <columns>
+            <center>
+              <strong>
+                Payments may be subject to further processing/acceptance before they are finalized
+              </strong>
+            </center>
+            <spacer size="20"></spacer>
+          </columns>
+        </row>
+        <%- end -%>
+        <row>
+          <columns>
+            <h4>Purchase Information</h4>
+            <spacer size="12"></spacer>
+            <table class='table table-bordered'>
+              <thead class='thead-inverse'>
+                <tr>
+                  <th>Item</th>
+                  <th>Description</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @payment.items.each do |item| %>
+                  <tr>
+                    <td>
+                      <%= item.name %>
+                    </td>
+                    <td>
+                      <%= item.description %>
+                    </td>
+                    <td>
+                      <%= item.price.to_s(true) %>
+                    </td>
+                    <td>
+                      <%= item.quantity || 1 %>
+                    </td>
+                    <td>
+                      <%= item.amount.to_s(true) %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+              <tfoot>
+                <tr class='table-info'>
+                  <td colspan='4'>Total</td>
+                  <td>
+                    <%= @payment.amount.to_s(true) %>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </columns>
+        </row>
+        <% if billing[:notes].present? %>
+        <row>
+          <columns>
+            <spacer size="5" class="hr"></spacer>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <h5>Submitted Notes:</h5>
+            <% billing[:notes].split("\n").each do |r| %>
+            <%= r %> <br>
+            <% end %>
+          </columns>
+        </row>
+        <% end %>
+        <row>
+          <columns>
+            <spacer size="5" class="hr"></spacer>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <a href="https://downundersports.com/refunds">
+              Click Here to view the Down Under Sports Refund Policy
+            </a>
+          </columns>
+        </row>
+      </center>
+    </columns>
+  </row>
+</container>

@@ -1,0 +1,5 @@
+{
+  "name": "UserDebitsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

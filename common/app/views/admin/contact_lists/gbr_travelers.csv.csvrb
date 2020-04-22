@@ -1,0 +1,56 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  paid
+  main_dus_id
+  category
+  team_state
+  team_sport
+  depart_date
+  return_date
+  team_depart_date
+  team_return_date
+  dob
+  handicap
+  positions
+  height
+  weight
+  stats
+  url
+  main_url
+]
+
+gbr_debit = Traveler::BaseDebit.find_by(name: 'Great Barrier Reef Escape').id
+
+Traveler.
+  active.
+  joins(:team).
+  where_exists(:debits, base_debit_id: gbr_debit).
+  order("teams.name", "teams.departing_date").
+  split_batches_values do |traveler|
+    u = traveler.user
+    main_relation = u.main_relation
+    a_sport = u.athlete&.athletes_sports&.find_by(sport_id: traveler.team.sport_id)
+
+    csv << [
+      u.dus_id,
+      traveler.total_payments.to_s,
+      main_relation&.dus_id,
+      u.category_title,
+      traveler.team.state.abbr,
+      traveler.team.sport.abbr_gender,
+      traveler.departing_date,
+      traveler.returning_date,
+      traveler.team.departing_date,
+      traveler.team.returning_date,
+      u.birth_date&.to_s,
+      a_sport&.handicap,
+      (a_sport&.positions_array || []).join(', '),
+      a_sport&.height,
+      a_sport&.weight,
+      a_sport&.stats,
+      u.url(true),
+      main_relation&.url(true)
+    ]
+  end

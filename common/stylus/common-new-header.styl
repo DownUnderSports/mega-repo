@@ -1,0 +1,219 @@
+.btn
+  &.btn-icon
+    line-height: 1
+    padding: 0
+    &.btn-danger
+    &.btn-info
+    &.btn-light
+    &.btn-primary
+    &.btn-secondary
+    &.btn-success
+    &.btn-warning
+      background-color: unset
+      border: 0
+    &.btn-danger
+      .material-icons
+        color: #dc3545
+    &.btn-info
+      .material-icons
+        color: #17a2b8
+    &.btn-light
+      .material-icons
+        color: #f8f9fa
+    &.btn-primary
+      .material-icons
+        color: #007bff
+    &.btn-secondary
+      .material-icons
+        color: #6c757d
+    &.btn-success
+      .material-icons
+        color: #28a745
+    &.btn-warning
+      .material-icons
+        color: #ffc107
+  &.with-icon
+    line-height: 1
+    padding: 0
+    &.large
+      .material-icons
+      &
+        font-size: 2rem
+
+.material-icons
+  vertical-align: middle !important
+  &.large
+    font-size: 2rem
+
+.spread-items
+  display: flex
+  justify-content: space-between
+
+@media screen
+  .d-screen-none
+    display: none !important
+
+  .d-screen-hidden
+    display: hidden !important
+
+  .d-screen-block
+    display: block !important
+
+  .d-screen-flex
+    display: flex !important
+
+  .table-nowrap
+    overflow-x: auto;
+    max-width: 100%;
+    font-size: .7em
+
+  .table-nowrap table td,
+  .table-nowrap table th
+    white-space: nowrap;
+
+@media screen and (min-width: 768px)
+  .table-nowrap
+    font-size: .85em
+
+@media screen and (min-width: 992px)
+  .table-nowrap
+    font-size: 1em
+
+@media print
+  ::first-letter
+    margin: 0;
+    padding: 0;
+
+  .d-print-none
+    display: none !important
+
+  .d-print-hidden
+    display: hidden !important
+
+  .d-print-block
+    display: block !important
+
+  .d-print-flex
+    display: flex !important
+
+  @page
+    size: 8.5in 11in;
+    margin: 0.25in;
+
+i.material-icons
+  &.input-group-text
+  .input-group-text &
+    font-size: 1.5rem
+
+.nav.collapsable
+  display: flex;
+  flex-flow: column nowrap
+  justify-content: center
+  align-items: center
+
+  input.nav-trigger
+    position: absolute
+    opacity: 0
+    z-index:  -1
+
+  .nav-link
+    transition: all 0.25s ease-in-out
+    text-decoration: none
+    white-space: nowrap
+    width: 100%
+    &:hover
+      font-size: 1.15em
+    &.active
+      position: relative;
+      font-weight: bold
+
+  @media(min-width:768px)
+    display: flex !important;
+    flex-flow: row nowrap;
+    .nav-link
+      margin-left: .25rem
+
+
+  @media(max-width:767px)
+    border:none
+    margin-left: 1rem
+    margin-right: 4rem
+    flex: 1 1 100%
+
+    label.nav-trigger
+    label[for=nav-trigger]
+      display: block
+      position: absolute
+      cursor: pointer
+      right: 0
+      top: 0
+
+      & > span
+        position:absolute
+        display: inline-block;
+        top: 1rem
+        right: 1rem
+        width: 2rem
+        height: 2rem
+        span
+          position:relative
+          top: .85rem
+          &,
+          &:before,
+          &:after
+            width: 2rem
+            height: .3rem
+            background: rgba(255,255,255,.7)
+            background: rgba(0,0,0,.7)
+            position: absolute
+            display: block
+            content: ''
+            transition: all 500ms ease-in-out
+
+          &:before
+            top: -.5rem
+
+          &:after
+            bottom: -.5rem
+    .nav-link
+      border-radius: unset;
+      opacity: 1;
+      border-top: 1px solid rgba(255,255,255, 1)
+      border-bottom: 1px solid rgba(255,255,255, 1)
+      overflow: hidden;
+      position: relative;
+
+      &.active
+        display: block !important;
+        max-height: 500px
+        padding: .5em 1em !important
+
+    .nav-link
+      max-height: 0
+      padding: 0
+      border-top-width: 0
+      border-bottom-width: 0
+
+    .nav-trigger:checked
+      & ~ .nav-link
+        display: block
+        max-height: 100%
+        padding: .5em 1em
+        border-width: 1px
+        &::last-of-type
+          border: 0
+
+      &+label.nav-trigger
+        span
+          background-color: transparent
+          &:before,
+          &:after
+            background: rgba(251,97,97,.8)
+            background: rgba(0,0,128,.8)
+            top: 0
+            box-shadow: 0 0 7px 1px #efefef
+            width: 2rem
+          &:before
+            transform: rotate(45deg)
+          &:after
+            transform: rotate(-45deg)

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+
+
+trap killgroup SIGINT
+
+killgroup(){
+  echo killing...
+  kill 0
+}
+
+HTTPS=true start www &
+HTTPS=true PORT=4000 MINIMAL=true start admin &
+wait

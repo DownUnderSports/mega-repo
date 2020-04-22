@@ -1,0 +1,102 @@
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '2.6.6'
+gem 'irb', '~> 1.0', '>= 1.0.0'
+# envkey managed environment variables
+# gem 'envkey'
+gem 'aasm', '~> 5.0', '>= 5.0.1'
+gem 'authorizenet', '~> 1.9', '>= 1.9.5'
+gem "aws-sdk-s3", '>= 1.30.1', require: false
+# Use ActiveModel has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
+gem 'better_record', '~> 0.24', '>= 0.24.4'
+gem 'csv_rb', '~> 5.2.3', '>= 5.2.3.2'
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+gem 'braintree', '~> 2.90', '>= 2.90.0'
+gem 'browser', '~> 2.5', '>= 2.5.3'
+gem 'dkim', '~> 1.0', '>= 1.0.1'
+gem 'icalendar', '~> 2.4', '>= 2.4.1'
+gem 'image_processing', '~> 1.2'
+gem 'inky-rb', require: 'inky', github: 'SampsonCrowley/inky-rb', ref: '30e006c95d47ca6ca6d73fb48f6377b0d71f673d'
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+# gem 'jbuilder', '~> 2.5'
+# Use ActiveStorage variant
+# gem 'mini_magick', '~> 4.8'
+# Use postgresql as the database for Active Record
+gem 'pg', '~> 1.1', '>= 1.1.2'
+# Stylesheet inlining for email **
+gem 'premailer-rails', '~> 1.9.7'
+# Use Puma as the app server
+gem 'puma', '~> 3.11'
+gem 'pundit', '~> 2.0'
+# gem 'mustache', '~> 1.0'
+# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
+# gem 'rack-cors'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '5.2.4.1'
+gem 'rb-fsevent', '0.9.8'
+# Use Redis adapter to run Action Cable in production
+gem 'redis', '~> 4.0.1'
+gem 'redis-namespace', '~> 1.6.0'
+gem 'sassc-rails'
+gem 'sidekiq', '~> 5.1.3'
+gem 'sidekiq-limit_fetch', '~> 3.4.0'
+gem 'sidekiq-status', '~> 1.0.1'
+# gem 'sprockets', '>= 4.0.0.beta3', github: 'rails/sprockets'
+# gem 'sprockets-rails', '>= 3.1.0'
+# gem 'sprockets-exporters_pack', '~> 0.1.2'
+# gem "stache", '~> 1.2'
+gem 'store_as_int', '>=0.0.19'
+gem 'uglifier'
+gem 'where_exists', github: 'SampsonCrowley/where_exists', ref: '902e72d9400748c6732c589599deb3fc44a86089'
+# PDF creator and binary wrapper
+# https://berislavbabic.com/send-pdf-attachments-from-rails-with-wickedpdf-and-actionmailer/
+# gem 'wicked_pdf', '~> 1.4.0'
+gem 'wicked_pdf', github: 'SampsonCrowley/wicked_pdf', ref: 'a1a8897e35f8590dbb852478a68384103dd4fd8b'
+
+gem 'rubyzip', '~> 1.2', '>= 1.2.2'
+# ORIGINAL gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
+gem 'axlsx', git: 'https://github.com/korun/axlsx.git', ref: 'fb2c71f2ada9c86b1b3352409f951fae7162cbe1'
+gem 'axlsx_rails', '= 0.5.2'
+
+# address verification service
+gem 'smartystreets_ruby_sdk', '~> 5.5.3'
+
+# qrcode generator
+gem 'rqrcode', '~> 1.1'
+
+gem 'google-api-client'
+gem 'jazz_fingers'
+gem 'pry-rails'
+gem 'table_print'
+gem 'wkhtmltopdf-heroku'
+
+group :development, :test do
+  gem 'brakeman'
+  gem 'bullet'
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'factory_bot_rails'
+  gem 'guard'
+  gem 'guard-rspec'
+  # gem 'rack-mini-profiler'
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'shoulda'
+end
+
+group :development do
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring', '>= 2.1.0'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'visual_call_graph'
+  gem 'derailed_benchmarks'
+  gem 'stackprof'
+end
+
+gem "barnes", "~> 0.0.7"
+
+gem "sentry-raven", "~> 2.11"

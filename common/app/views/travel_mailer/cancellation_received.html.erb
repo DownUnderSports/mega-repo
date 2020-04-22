@@ -1,0 +1,31 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">Cancellation Request Received</h3>
+
+      <center>
+        <menu class="text-center">
+          <item>DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+<container class="body-border">
+  <rows>
+    <columns>
+      <spacer size="16"></spacer>
+      <p>
+        The cancellation request for <%= @user.print_names %> has been received and is in line to be processed.
+      </p>
+      <p>
+        Thank you for your patience.
+      </p>
+      <p>
+        &mdash; Down Under Sports
+      </p>
+    </columns>
+  </rows>
+</container>

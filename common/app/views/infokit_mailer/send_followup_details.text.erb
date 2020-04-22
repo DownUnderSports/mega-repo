@@ -1,0 +1,23 @@
+Thank you for your interest in Competing Down Under!
+
+
+G'day!
+
+Each year we have a great group athletes that compete in our tournaments. For most of our participants the main concerns when traveling are cost, safety, and supervision. To help cover the cost of competing, we have put together a proven fundraising program available to all athletes. To view our fundraising video, visit "https://DownUnderSports.com/videos/f/<%= @athlete.dus_id %>".
+
+For full details on safety, supervision, travel, pricing and available discounts, we have an information video available to watch at: "https://DownUnderSports.com/videos/i/<%= @athlete.dus_id %>".
+
+For answers to our most commonly asked questions following the information video, check out our Frequently Asked Questions page at: "https://DownUnderSports.com/frequently-asked-questions?dus_id=<%= @athlete.dus_id %>".
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>
+
+__________________________________________________________________________
+
+Information Video: https://DownUnderSports.com/videos/<%= @athlete.dus_id %>
+Fundraising Video: https://DownUnderSports.com/videos/f/<%= @athlete.dus_id %>
+Information Flyer: https://drive.google.com/file/d/1ynXn4-yJiAORz3PweFB9ZpDhk3RoN-ti/view?usp=sharing
+2019 Program: https://drive.google.com/file/d/1b5dMilMB5k4NE7JJiuGaeNSpZuqvh23M/view?usp=sharing
+<%= "#{@user.team.sport.full} Itinerary: #{@user.team.poster[:drive]}" %>
+Pay Deposit & Join The Team: https://www.downundersports.com/deposit/<%= @athlete.dus_id %>

@@ -1,0 +1,45 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">Get a Bonus Travel Pack For Your Upcoming Trip Down Under</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border full">
+</container>
+
+<container>
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        G&rsquo;Day!
+      </p>
+      <p>
+        This year we are giving everyone who pays off their account balance<span className="text-warning">*</span> before May 1<sup>st</sup>, 2020 a <strong>free travel pack</strong>. See the attached image for more details.
+      </p>
+      <p class="no-margin">
+        Please call or text our office at <a href="tel:+1-435-753-4732">435-753-4732</a> if you have any questions.
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= image_tag attachments["offer.jpg"].url, class: 'fluid' %>
+      </center>
+      <spacer size="32"></spacer>
+      <p>
+        <span className="text-warning">*</span> Must include FULL Australia Tournament Package
+      </p>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

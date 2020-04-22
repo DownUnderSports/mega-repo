@@ -1,0 +1,6 @@
+{
+  "name": "DebitForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./debit-form.jsx"
+}

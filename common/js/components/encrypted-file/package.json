@@ -1,0 +1,5 @@
+{
+  "name": "EncryptedFile",
+  "private": true,
+  "main": "./encrypted-file.jsx"
+}

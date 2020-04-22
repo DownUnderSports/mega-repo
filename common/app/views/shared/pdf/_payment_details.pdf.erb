@@ -1,0 +1,68 @@
+<section>
+  <header>
+    <h3 style="margin-top: .25in">Payments: <span class="text-muted float-right" style='font-size: 16px; margin-top: 12px;'><%= time ||= Time.zone.now.strftime("%B %d, %Y, %l:%M %p (%Z)") %></span></h3>
+  </header>
+  <table class="table table-bordered" style="border:none!important">
+    <thead>
+      <tr>
+        <th style="width: 45%">
+          Description
+        </th>
+        <th style="width: 5%">
+          Type
+        </th>
+        <th style="width: 15%">
+          Payer
+        </th>
+        <th style="width: 5%">
+          Date
+        </th>
+        <th style="width: 5%">
+          Amount
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% user.traveler.items.order(:created_at).each do |item| %>
+        <% payment = item.payment %>
+        <tr style="page-break-inside:avoid !important;">
+          <td>
+            <%= item.description %>
+          </td>
+          <td nowrap>
+            <%= Payment.find_category(payment.transaction_type) %>
+          </td>
+          <td>
+            <%= b_name = payment.anonymous? ? 'Anonymous Donor' : "#{payment.billing['name']}".strip.titleize %>
+            <% if !payment.anonymous && (c_name = "#{payment.billing['company']}".strip.titleize).present? %>
+            <% if b_name.present? %>
+            <br>
+            <i>
+            <% end %>
+            <%= c_name %>
+            <% if b_name.present? %>
+            </i>
+            <% end %>
+            <% end %>
+          </td>
+          <td nowrap>
+            <%= item.created_at.to_date.to_s(:long) %>
+          </td>
+          <td nowrap class="text-right">
+            <%= item.amount.to_s(true) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tbody>
+      <tr>
+        <th colspan="4" style="background-color: #c3e6cb!important;">
+          Total Payments:
+        </th>
+        <th class="text-right" style="background-color: #5ceb89!important; white-space: nowrap">
+          <%= (@total_payments ||= StoreAsInt.money(user.traveler.items.sum(:amount))).to_s(true) %>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</section>

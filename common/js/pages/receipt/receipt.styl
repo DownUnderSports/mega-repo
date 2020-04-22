@@ -1,0 +1,56 @@
+@charset "UTF-8";
+@require 'common/stylus/colors'
+.receipt-container
+  padding: 1rem
+  margin: 2em auto
+  width: 100%
+  // max-width: 768px;
+  border: 1px solid $charcoal
+  background: $almost-white
+  color: $charcoal
+  section
+    position: relative
+    top: 0
+    margin-bottom: 1em
+    p
+      margin: 0
+  table tr td:first-child
+    font-weight: bold
+.receipt-header
+  margin-bottom: 2em
+@media print
+  .Site-header
+    display: none
+  html
+    &, & *
+      visibility: hidden !important
+      background: none !important
+  .receipt-container
+    margin: 0
+    padding: 2em
+    font-size: 12px
+    font-style: normal
+    font-variant: normal
+    font-family: sans-serif
+    position: fixed
+    top: 0
+    left: 0
+    height: 100vh
+    &, *
+      color: $charcoal !important
+      visibility: visible !important
+    .footnote
+      position: absolute
+      top: unset
+      bottom: .5em
+      margin: 0 15px
+      left: 0
+      right: 0
+
+    .print-fix
+      position: absolute
+      top: 0
+      left: 0
+      height: 100%
+      width: 100%
+      padding: 1em

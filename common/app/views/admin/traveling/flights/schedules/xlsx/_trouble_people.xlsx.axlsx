@@ -1,0 +1,106 @@
+# encoding: utf-8
+
+potentials=[]
+definites=[]
+
+Traveler.
+  active.
+  where_exists(:flight_schedules).
+  joins(:team).
+  where.not(departing_from: nil, returning_to: nil).
+  select(
+    'travelers.*',
+    %q(travelers.departing_from || COALESCE(travelers.departing_date, teams.departing_date) || travelers.returning_to || COALESCE(travelers.returning_date, teams.returning_date) AS route_summary)
+  ).each do |fl|
+    if fl.flight_schedules.none? {|sched| sched.route_summary == fl.route_summary}
+      definites << fl.id
+    elsif fl.flight_schedules.any? {|sched| sched.route_summary != fl.route_summary}
+      potentials << fl.id
+    end
+  end
+
+wb.add_worksheet(name: 'Incorrect PNR Travelers') do |sheet|
+  sheet.add_row [
+    'Own Flights?',
+    :first,
+    :middle,
+    :last,
+    :suffix,
+    :category,
+    :departing_from,
+    :returning_to,
+    :dus_id,
+    :team_name,
+    :departing_date,
+    :returning_date,
+    :join_date,
+    :paid,
+    :owing,
+    :link
+  ]
+
+  Traveler.where(id: definites).
+  joins(:team).each do |traveler|
+    sheet.add_row [
+      traveler.own_flights ? 'Yes' : 'No',
+      traveler.user.first,
+      traveler.user.middle,
+      traveler.user.last,
+      traveler.user.suffix,
+      traveler.user.category_title,
+      traveler.departing_from,
+      traveler.returning_to,
+      traveler.user.dus_id,
+      traveler.team.name,
+      traveler.departing_date,
+      traveler.returning_date,
+      traveler.join_date,
+      (traveler.total_payments + traveler.total_transfer_credits).to_s,
+      traveler.balance(true),
+      traveler.user.admin_url
+    ]
+  end
+end
+
+wb.add_worksheet(name: 'Multiple PNR Travelers') do |sheet|
+  sheet.add_row [
+    'Own Flights?',
+    :first,
+    :middle,
+    :last,
+    :suffix,
+    :category,
+    :departing_from,
+    :returning_to,
+    :dus_id,
+    :team_name,
+    :departing_date,
+    :returning_date,
+    :join_date,
+    :paid,
+    :owing,
+    :link
+  ]
+
+  Traveler.where(id: potentials).
+  joins(:team).each do |traveler|
+    sheet.add_row [
+      traveler.own_flights ? 'Yes' : 'No',
+      traveler.user.first,
+      traveler.user.middle,
+      traveler.user.last,
+      traveler.user.suffix,
+      traveler.user.category_title,
+      traveler.departing_from,
+      traveler.returning_to,
+      traveler.user.dus_id,
+      traveler.team.name,
+      traveler.departing_date,
+      traveler.returning_date,
+      traveler.join_date,
+      (traveler.total_payments + traveler.total_transfer_credits).to_s,
+      traveler.balance(true),
+      traveler.user.admin_url
+    ]
+  end
+end

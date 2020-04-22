@@ -1,0 +1,13 @@
+Dear <%= @user.first %>,
+
+Competition dates are approaching fast! We haven't received your Event Registration yet and we need to know what you will be competing in as soon as possible.
+
+Please visit the link below to register for your events, it will only take a moment.
+
+Uniform Order Form: <%= @user.hash_url('event-registration') %>
+
+We look forward to seeing you in Australia.
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>

@@ -1,0 +1,6 @@
+{
+  "name": "AirportSelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./airport-select-field.jsx"
+}

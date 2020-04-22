@@ -1,0 +1,69 @@
+# encoding: utf-8
+
+debit_id = Traveler::BaseDebit.find_by(name: 'Travelex Insurance').id
+
+csv << %w[
+  url
+  dus_id
+  category
+  team
+  first
+  middle
+  last
+  suffix
+  gender
+  is_deferral
+  join_date
+  deposit_date
+  cancel_date
+  total_paid
+  total_credits
+  total_debits
+  total_charges
+  current_balance
+  departing_date
+  returning_date
+  phone
+  email
+  parent_1_relationship
+  parent_1_name
+  parent_1_phone
+  parent_1_email
+  parent_2_relationship
+  parent_2_name
+  parent_2_phone
+  parent_2_email
+  parent_3_relationship
+  parent_3_name
+  parent_3_phone
+  parent_3_email
+]
+
+Traveler.where_exists(:debits, base_debit_id: debit_id).split_batches_values do |t|
+  u = t.user
+  csv << [
+    u.admin_url,
+    u.dus_id,
+    u.category_title,
+    t.team.name,
+    u.first,
+    u.middle,
+    u.last,
+    u.suffix,
+    u.gender,
+    !!u.traveler.credits.find_by("name ilike '20__ Transfer'"),
+    t.join_date&.to_s,
+    t.deposit_date&.to_s,
+    t.cancel_date&.to_s,
+    t.total_payments.to_s(true),
+    t.total_credits.to_s(true),
+    t.total_debits.to_s(true),
+    t.total_charges.to_s(true),
+    t.balance.to_s(true),
+    t.departing_date,
+    t.returning_date,
+    u.ambassador_phone.presence,
+    u.all_ambassador_emails,
+    *u.guardian_contact_info(3).flatten,
+  ]
+end

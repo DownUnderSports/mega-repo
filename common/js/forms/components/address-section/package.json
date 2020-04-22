@@ -1,0 +1,6 @@
+{
+  "name": "AddressSection",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./address-section.jsx"
+}

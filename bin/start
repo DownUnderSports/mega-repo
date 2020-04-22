@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo "starting $1 servers"
+cd $1
+bin/$1-servers "${@:2}"

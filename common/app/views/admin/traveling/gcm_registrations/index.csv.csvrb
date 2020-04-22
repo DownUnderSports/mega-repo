@@ -1,0 +1,31 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  first
+  last
+  category
+  registered_date
+  cancel_date
+  birth_date
+  confirmation
+  first_payment_date
+  has_passport
+  total_payments
+]
+
+@registrations.split_batches_values do |reg|
+  csv << [
+    reg[:dus_id],
+    reg[:first],
+    reg[:last],
+    User.category_title(reg[:category_type]),
+    reg[:registered_date],
+    reg[:cancel_date]&.to_s,
+    reg[:birth_date]&.to_s,
+    reg[:confirmation],
+    reg[:first_payment_date],
+    reg[:has_passport],
+    StoreAsInt::Money.new(reg[:total_payments]).to_s,
+  ]
+end

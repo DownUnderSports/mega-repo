@@ -1,0 +1,13 @@
+Dear <%= @user.first %>,
+
+Competition dates are approaching fast! We haven't received your uniform order yet, and we want as much time as possible to make sure everything comes out perfect.
+
+Please log in to your online account and visit the link below to place your uniform order, it will only take a moment.
+
+Uniform Order Form: https://downundersports.com/uniforms/<%= @user.id %>
+
+We look forward to seeing you in Australia.
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>

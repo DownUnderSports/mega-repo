@@ -1,0 +1,32 @@
+# encoding: utf-8
+
+csv << [
+  'name',
+  'id',
+  'event',
+  'age',
+  'time'
+]
+name = @event_reg.user.full_name
+id = @event_reg.user.dus_id
+@event_reg.events.each do |ev, groups|
+  groups.each do |age|
+    csv << [
+      name,
+      id,
+      ev,
+      age,
+      @event_reg.event_time(ev)
+    ]
+  end
+end
+
+@event_reg.relays.each do |ev, time|
+  csv << [
+    name,
+    id,
+    ev,
+    nil,
+    time
+  ]
+end

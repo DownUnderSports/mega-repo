@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col">
+    <div class="align-bottom" style="font-size: 0.1in; text-align: left;">
+      <div>
+        <% if (brf = user.booking_reference_string).present? %>
+          Booking:&nbsp;<%= brf %>
+        <% end %>
+        <% if (tkt = user.ticket_string).present? %>
+          <br>
+          Ticket:&nbsp;<%= tkt %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col" style='white-space: nowrap'>
+    <div style="font-size: .225in; text-align: right; white-space: nowrap;">
+      <%= user.passport_name %>
+    </div>
+    <div class="text-muted" style="font-size: 0.1in; text-align: right;">
+      <strong>
+        <% coach = user.competing_team_coaches_string %>
+        <%= user.category_title %> | <%= user.bus&.name %> | <%= user.bus&.color %><% if coach.present? %> | <%= coach %><% end %> | <%= user.dus_id %>
+      </strong>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col text-danger" style="font-size: 0.16in; white-space: nowrap">
+    BE SURE TO CHECK YOUR BAGS ALL THE WAY TO BRISBANE (BNE)
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <table class="table table-sm keep-grouped" style="font-size: 0.1in !important;">
+      <thead>
+        <tr>
+          <th>
+            Date
+          </th>
+          <th>
+            Airline
+          </th>
+          <th>
+            Flight
+          </th>
+          <th>
+            Origin
+          </th>
+          <th>
+            Destination
+          </th>
+          <th>
+            Depart
+          </th>
+          <th>
+            Arrive
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% user.flight_legs.each do |leg| %>
+          <tr>
+            <td>
+              <%= leg.local_departing_at.strftime("%e%b").upcase %>
+            </td>
+            <% airline, flight = leg.flight_number.split(' ') %>
+            <td>
+              <%= airline %>
+            </td>
+            <td>
+              <%= flight %>
+            </td>
+            <% [:departing_airport, :arriving_airport].each do |direction| %>
+              <% airport = leg.__send__(direction) %>
+              <td>
+                <%= airport.to_card_string %>
+              </td>
+            <% end %>
+            <td>
+              <%= leg.local_departing_at.strftime("%l:%M %p").upcase %>
+            </td>
+            <td>
+              <%= leg.local_arriving_at.strftime("%l:%M %p").upcase %>
+              <% if leg.local_departing_at.to_date != leg.local_arriving_at.to_date %>
+                <br>
+                <%= leg.local_arriving_at.strftime("%e%b").upcase %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+  <div class="row text-center">
+    <div class="col-12">
+      ******PLEASE VERIFY FLIGHTS ONLINE 24 HOURS BEFORE DEPARTURE******
+    </div>
+    <% if user.flight_schedules.any? {|sched| sched.operator =~ /qantas/i } %>
+      <div class="col-12">
+        QANTAS.COM.AU | MANAGE BOOKING
+      </div>
+    <% end %>
+    <% if user.flight_schedules.any? {|sched| sched.operator =~ /canada/i } %>
+      <div class="col-12">
+        AIRCANADA.COM | MY BOOKINGS
+      </div>
+    <% end %>
+    <% if user.flight_schedules.any? {|sched| sched.operator =~ /virgin/i } %>
+      <div class="col-12">
+        VIRGINAUSTRALIA.COM
+      </div>
+    <% end %>
+    <div class="col-12 col-xs-12">
+      <% user.traveler&.hotels&.each do |hotel| %>
+        <hr>
+        <%= hotel.flight_card %>
+      <% end %>
+    </div>
+  </div>

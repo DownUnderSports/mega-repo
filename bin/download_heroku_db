@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+pushd www
+rm -f latest.dump
+heroku pg:backups:download
+bin/load_db_dump
+rm -f latest.dump
+popd

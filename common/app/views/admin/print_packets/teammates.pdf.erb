@@ -1,0 +1,42 @@
+<% provide :mass_printing, true %>
+<% provide :title, @title || "#{@found_user.basic_name} (#{@found_user.dus_id}) Teammates" %>
+<% provide :page_title, @title || "#{@found_user.basic_name} (#{@found_user.dus_id}) Teammates" %>
+<% i = 0 %>
+<% @found_user.teams_and_buses.each do |competing_team| %>
+  <% if i > 0 %>
+    <div style="page-break-before: always;"></div>
+  <% end %>
+  <% i += 1 %>
+  <div class="row">
+    <div class="col-2" style="height: 1.5in">
+      <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+    </div>
+    <div class="col-10" style="height: 1.5in">
+      <br>
+      <div style="font-size: .2in; text-align: right;">
+        <h4>
+          <%= @found_user.print_names %> - <%= @found_user.dus_id %>
+        </h4>
+        <div>
+          <strong>
+            <%= "#{competing_team.sport.full_gender} Team - #{competing_team.name}" %>
+          </strong>
+        </div>
+        <%= competing_team.coach_names %>
+      </div>
+    </div>
+  </div>
+  <%= render partial: 'shared/pdf/teammate_rows', locals: { competing_team: competing_team } %>
+<% end %>
+<% if @direct_print %>
+  <script>
+    (function(){
+      document.addEventListener('DOMContentLoaded', function(){window.print()}, false);
+      window.addEventListener("afterprint", function(){
+        setTimeout(function() {
+          window.location = "<%= @next_user || '/admin/print_packets' %>".replace(/amp;/gi, '')
+        }, 0)
+      })
+    })();
+  </script>
+<% end %>

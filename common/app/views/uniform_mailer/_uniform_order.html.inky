@@ -1,0 +1,93 @@
+<table style="width: 100%!important;">
+  <tbody>
+    <tr>
+      <td>
+        <table class="row">
+          <tbody>
+            <tr>
+              <td class="columns col-xs-12">
+                <h4>Shipping Information</h4>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="row">
+          <tbody>
+            <tr>
+              <td class="small-6 columns col-sm-6">
+                <address style="text-align: left!important;">
+                  <%- sv =  uniform_order.shipping_label.split("\n") -%>
+                  <strong><%= sv[0] %></strong><br>
+                  <%= sv[1..-1].join('<br>').html_safe %>
+                </address>
+              </td>
+              <td class="small-6 columns col-sm-6"></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="row">
+          <tbody>
+            <tr>
+              <td class="columns col-xs-12">
+                <h4>Uniform Details</h4>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="row">
+          <tbody>
+            <tr>
+              <td class="small-6 columns col-sm-6">
+                <% if uniform_order.jersey_size.present? %>
+                  <strong><%= uniform_order.sport.abbr == 'GF' ? 'Polo' : 'Jersey' %> Size:</strong> <%= uniform_order.jersey_size.sub(/^M-/, "Men's/Unisex ").sub(/^W-/, "Women's ") %> <%= (uniform_order.jersey_count > 1) ? "(#{uniform_order.jersey_count} ordered)" : '' %><br>
+                <% end %>
+                <% if uniform_order.shorts_size.present? %>
+                  <strong>Shorts Size:</strong> <%= uniform_order.shorts_size.sub(/^M-/, "Men's/Unisex ").sub(/^W-/, "Women's ") %> <%= (uniform_order.shorts_count > 1) ? "(#{uniform_order.shorts_count} ordered)" : '' %><br>
+                <% end %>
+                <% if uniform_order.jersey_size.present? && uniform_order.preferred_number_1.present? %>
+                  <strong>Chosen Jersey Numbers:</strong> <%= "#{uniform_order.preferred_number_1}, #{uniform_order.preferred_number_2}, #{uniform_order.preferred_number_3}" %><br>
+                <% end %>
+                <% if defined?(full_details) && full_details %>
+                  <br>
+                  <% if uniform_order.jersey_number.present? %>
+                    <strong>Assigned Number:</strong> <%= uniform_order.jersey_number %><br>
+                  <% end %>
+                  <strong>Sent To Shop:</strong> <%= uniform_order.submitted_to_shop_at.present? ? uniform_order.submitted_to_shop_at.to_date : 'Not Sent' %><br>
+                  <strong>Shop Started:</strong> <%= uniform_order.invoice_date.present? ? uniform_order.invoice_date : 'Not Started' %><br>
+                  <strong>Shipped To Athlete:</strong> <%= uniform_order.shipped_date.present? ? uniform_order.shipped_date : 'Not Sent' %>
+                <% end %>
+              </td>
+              <td class="small-6 columns col-sm-6"></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="row">
+          <tbody>
+            <tr>
+              <td class="small-6 columns col-sm-6">
+                <strong>Submitted By:</strong> <%= (uniform_order.submitter || uniform_order.user).full_name %> (<%= uniform_order.created_at.strftime("%B %d, %Y %H:%M %Z") %>)
+              </td>
+              <td class="small-6 columns col-sm-6"></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

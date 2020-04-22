@@ -1,0 +1,5 @@
+{
+  "name": "ETAUploadForm",
+  "private": true,
+  "main": "./eta-upload-form.jsx"
+}

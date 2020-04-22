@@ -1,0 +1,143 @@
+html {
+  font-size: 12px;
+}
+
+@media screen and (min-width: 768px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.bg-light-blue {
+  background: #d9edf7aa
+}
+
+.la-square-jelly-box.page-loader {
+  height: 25vw;
+  width: 25vw;
+  max-width: 25vh;
+  max-height: 25vh;
+  margin: 10vh auto;
+  color: #153e7c;
+}
+
+.la-square-jelly-box.page-loader div:first-child {
+  border: 1.5rem solid #d52027
+}
+
+@media screen {
+  .d-screen-none {
+    display: none !important
+  }
+
+  .d-screen-hidden {
+    display: hidden !important
+  }
+
+  .d-screen-block {
+    display: block !important
+  }
+
+  .d-screen-flex {
+    display: flex !important
+  }
+
+  .table-nowrap {
+    overflow-x: auto;
+    max-width: 100%;
+    font-size: .7em
+  }
+
+  .table-nowrap table td,
+  .table-nowrap table th {
+    white-space: nowrap;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .table-nowrap {
+    font-size: .85em
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .table-nowrap {
+    font-size: 1em
+  }
+}
+
+@media print {
+  ::first-letter{
+    margin: 0;
+    padding: 0;
+  }
+
+  html, html body {
+    margin: 0;
+    background: #fff;
+    background: transparent;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 11px;
+  }
+  html body .bg-light-blue {
+    background: #d9edf7aa !important;
+  }
+  html body table tbody tr td, html body table tbody tr th, html body table thead tr td, html body table thead tr th,
+  html body .table tbody tr td,
+  html body .table tbody tr th,
+  html body .table thead tr td,
+  html body .table thead tr th {
+    background-color: unset !important;
+  }
+  html body table tbody tr.bg-light-blue, html body table tbody tr td.bg-light-blue, html body table tbody tr th.bg-light-blue, html body table thead tr.bg-light-blue, html body table thead tr td.bg-light-blue, html body table thead tr th.bg-light-blue,
+  html body .table tbody tr.bg-light-blue,
+  html body .table tbody tr td.bg-light-blue,
+  html body .table tbody tr th.bg-light-blue,
+  html body .table thead tr.bg-light-blue,
+  html body .table thead tr td.bg-light-blue,
+  html body .table thead tr th.bg-light-blue {
+    background: #d9edf7aa !important;
+  }
+
+  .d-print-none {
+    display: none !important
+  }
+
+  .d-print-hidden {
+    display: hidden !important
+  }
+
+  .d-print-block {
+    display: block !important
+  }
+
+  .d-print-flex {
+    display: flex !important
+  }
+
+  @page {
+    size: 8.5in 11in;
+    margin: 0.25in;
+  }
+}

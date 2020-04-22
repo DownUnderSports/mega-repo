@@ -1,0 +1,21 @@
+@charset "UTF-8"
+@require 'common/stylus/colors'
+
+.ContactPage
+  padding-top: 1rem
+  padding-bottom: 1rem
+  margin: 1rem 0
+  .authBtn
+    display: block
+    padding: 1.3rem
+    text-align: center
+    background-color: $transparent-blue
+    width: 100%
+    border: 2px solid $charcoal
+    border-radius: 2px
+    transition: background-color .5s ease-in-out
+    &, &:visited, &:hover
+      color: $almost-white
+      text-decoration: none
+    &:hover
+      background-color: $green

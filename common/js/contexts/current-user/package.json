@@ -1,0 +1,6 @@
+{
+  "name": "CurrentUserContext",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./current-user.jsx"
+}

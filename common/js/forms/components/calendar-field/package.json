@@ -1,0 +1,6 @@
+{
+  "name": "CalendarField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./calendar-field.jsx"
+}

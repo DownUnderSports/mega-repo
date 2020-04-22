@@ -1,0 +1,5 @@
+{
+  "name": "ChatIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

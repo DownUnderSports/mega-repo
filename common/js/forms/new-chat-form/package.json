@@ -1,0 +1,6 @@
+{
+  "name": "NewChatForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./new-chat-form.jsx"
+}

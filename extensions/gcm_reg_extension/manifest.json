@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Auto GCM Registration",
+  "version": "2020.1",
+  "description": "Accept pasted JSON Data to automate filling out the Gold Coast Marathon Registration Form for Down Under Sports team Athletes",
+  "icons": {
+    "16": "16.png",
+    "32": "32.png",
+    "48": "48.png",
+    "64": "64.png",
+    "128": "128.png",
+    "192": "192.png",
+    "256": "256.png"
+  },
+  "page_action": {
+    "default_icon": "128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://entergcm.com/*"
+      ],
+      "js": [ "user-fields.js" ]
+    }
+  ]
+}

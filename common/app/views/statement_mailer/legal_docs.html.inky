@@ -1,0 +1,102 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">Missing <%= @user.first %><%= (@user.first =~ /s$/) ? "'" : "'s" %> Legal Documents!</h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="<%= @user.url %>">DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        We still do not have a signed copy of your legal documents. If we do not have your completed forms by June 10, 2020 we may have to cancel your reservation. Read below for detailed instructions. If your document requires 2 signatures, we must have the copy with both signatures completed. Partially completed documents will not be accepted. Click the link below to begin.
+      </p>
+      <spacer size="16"></spacer>
+      <center>
+        <%= link_to 'Start Legal Documents', @user.hash_url('legal-documents'), class: 'btn btn-block btn-1' %>
+      </center>
+      <spacer size="16"></spacer>
+      <p>
+        We highly recommend using a laptop or desktop computer so you can see the entirety of each page.
+      </p>
+      <spacer size="16"></spacer>
+      <p>
+        Tips for completing legal documents:
+      </p>
+      <ul class="spaced-list">
+        <li>
+          After clicking the &ldquo;Start Legal Documents&rdquo; button above answer the question about the age of the traveler then click the &ldquo;Click Here&rdquo; button. You will be redirected to a page through SignNow that will ask for 1 email if the traveler is an adult or 2 emails if the traveler is a minor.
+        </li>
+        <li>
+          <strong>For Minors:</strong>
+          <ul>
+            <li>
+              Your legal document must be completed in 2 steps:
+              <ol>
+                <li>
+                  Legal Guardian receives an emailed link and completes their portion of the document. <i>This must be done before step 2 can be started.</i>
+                </li>
+                <li>
+                  Dependent receives an emailed link and completes their portion of the document.
+                </li>
+              </ol>
+            </li>
+            <li>
+              Once both steps are complete you will receive a confirmation email to indicate you are finished.
+            </li>
+            <li>
+              <i>
+                <u>Note:</u> You may use the same email address for Legal Guardian and Dependent; however, it will still require 2 steps to complete.
+              </i>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>For Adults:</strong>
+          <ul>
+            <li>
+              An email is sent to the address you provide with a link to fill in your documents.
+            </li>
+            <li>
+              Once complete, you will receive a confirmation email to indicate you are finished.
+            </li>
+          </ul>
+
+        </li>
+        <li>
+          You will be asked for the <strong>traveler's</strong> <i>DUS ID</i>, which can be found at the top of this email.
+        </li>
+        <li>
+          When filling out the documents, you will be only be allowed to click &ldquo;Done&rdquo; once every field is filled in. Please read the document in its entirety.
+        </li>
+        <li>
+          After you complete the documents on the SignNow website you are not required to upload your copy on Down Under Sport's website, though you can do so to help track your progress. To upload your copy, download the PDF you receive in the confirmation email and upload it using your checklist page. After uploading your copy, your checklist page will show your document status as &ldquo;Pending Approval&rdquo;. If you opt to skip this step, we will still receive a copy directly from SignNow.
+        </li>
+        <li>
+          Your Legal Documents will not be marked as &ldquo;Completed&rdquo; until Down Under Sports has verified the accuracy of your signed Legal Document.
+        </li>
+      </ul>
+      <spacer size="16"></spacer>
+      <p>
+        Once you have finished your Legal Documents, review your <%= link_to 'Departure Checklist', @user.checklist_url %> for any other items that may be incomplete. If you have any questions, <a href="tel:+14357534732">please call or text our staff at (435) 753-4732</a> or email us at <a href="mailto:mail@downundersports.com">mail@downundersports.com</a>
+      </p>
+      <p>
+        We are excited to have you join us in Australia!
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+</container>

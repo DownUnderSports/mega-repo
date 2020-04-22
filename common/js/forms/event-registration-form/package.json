@@ -1,0 +1,6 @@
+{
+  "name": "EventRegistrationForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./event-registration-form.jsx"
+}

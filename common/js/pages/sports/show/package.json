@@ -1,0 +1,5 @@
+{
+  "name": "SportPage",
+  "private": true,
+  "main": "./show.jsx"
+}

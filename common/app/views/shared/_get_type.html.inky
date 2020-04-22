@@ -1,0 +1,8 @@
+<%= value.is_a?(Hash) ?
+  render(partial: 'shared/print_hash', locals: { hash: value, level: level + 1 }) :
+  (
+    value.is_a?(Array) ?
+      render(partial: 'shared/print_array', locals: { array: value, level: level + 1 }) :
+      value
+  )
+-%>

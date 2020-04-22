@@ -1,0 +1,35 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center text-success"><strong>Happy Holidays <%= @user.first %>!</strong></h3>
+      <h4 class="text-center text-danger"><i>From Down Under Sports</i></h4>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        As a special holiday gift, we are matching any payments made on your account through <strong>January 15th, 2020</strong> up to $500!*
+      </p>
+      <p>
+        For questions or more details, <a href="tel:+14357534732">call/text our office at 435-753-4732</a> or <a href="mailto:mail@downundersports.com">email mail@downundersports.com</a>.
+      </p>
+      <spacer size="16"></spacer>
+      <%= link_to 'Click Here to Make a Payment', "https://downundersports.com/payment/#{@user.dus_id}", class: 'btn btn-block btn-1' %>
+      <spacer size="16"></spacer>
+      <p>
+        Happy New Year!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <small class="text-danger"><i>*Maximum $700 discount per traveler</i></small>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "version": "0.3",
+  "name": "Amadeus Easy Copy",
+  "description": "Automate Flight and ETA processing for Down Under Sports",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "icons": {
+    "16": "favicon.ico",
+    "48": "favicon.ico",
+    "128": "favicon.ico"
+  },
+  "page_action": {
+    "default_popup": "popup.html",
+    "default_title": "Enable PNR Copy-to-Clipboard",
+    "default_icon": "favicon.ico"
+  },
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "tabs",
+    "*://*.amadeus.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [ "*://*.amadeus.com/*" ],
+      "js": [ "eta.js" ],
+      "run_at": "document_idle"
+    }
+  ]
+}

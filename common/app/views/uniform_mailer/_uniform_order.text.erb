@@ -1,0 +1,33 @@
+Shipping Information
+---------------------------------------
+
+<%= uniform_order.shipping_label %>
+
+Uniform Details
+---------------------------------------
+
+<%=
+  "#{
+    uniform_order.sport.abbr == 'GF' ? 'Polo' : 'Jersey'
+  } Size: #{
+    uniform_order.jersey_size.sub(/^M-/, "Men's/Unisex ").sub(/^W-/, "Women's ")
+  } #{
+    (uniform_order.jersey_count > 1) ? "(#{uniform_order.jersey_count} ordered)" : ''
+  }" if uniform_order.jersey_size.present?
+-%>
+<%=
+  "Shorts Size: #{
+    uniform_order.shorts_size.sub(/^M-/, "Men's/Unisex ").sub(/^W-/, "Women's ")
+  } #{(uniform_order.shorts_count > 1) ? "(#{uniform_order.shorts_count} ordered)" : '' }" if uniform_order.shorts_size.present?
+-%>
+<%=
+  "Chosen Jersey Numbers: #{
+    uniform_order.preferred_number_1
+  }, #{
+    uniform_order.preferred_number_2
+  }, #{
+    uniform_order.preferred_number_3
+  }" if uniform_order.preferred_number_1.present? && uniform_order.jersey_size.present?
+-%>
+
+Submitted By: <%= uniform_order.submitter.full_name %> (<%= uniform_order.created_at.strftime("%B %d, %Y %H:%M %Z") %>)

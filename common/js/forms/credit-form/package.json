@@ -1,0 +1,6 @@
+{
+  "name": "CreditForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./credit-form.jsx"
+}

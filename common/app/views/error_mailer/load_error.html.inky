@@ -1,0 +1,26 @@
+
+<div>
+  USER AGENT: <%= @user_agent %>
+</div>
+<hr>
+<div>
+  WAITED FOR: <%= @waited %>
+</div>
+<div>
+  DID LOAD: <%= @loading_completed ? 'Yes' : 'No' %>
+</div>
+<hr>
+<div>
+CONSOLE HISTORY:
+<pre>
+  <code style='color:#222'><%= render(partial: 'shared/get_type', locals: { value: @console, level: 0 }) %></code>
+</pre>
+<hr>
+</div>
+<div>
+NAVIGATOR:
+<pre>
+  <code style='color:#222'><%= render(partial: 'shared/get_type', locals: { value: @navigator, level: 0 }) %></code>
+</pre>
+<hr>
+</div>

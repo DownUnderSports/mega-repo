@@ -1,0 +1,6 @@
+{
+  "name": "DirectPaymentForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./direct-payment-form.jsx"
+}

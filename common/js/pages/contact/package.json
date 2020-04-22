@@ -1,0 +1,5 @@
+{
+  "name": "ContactPage",
+  "private": true,
+  "main": "./contact.jsx"
+}

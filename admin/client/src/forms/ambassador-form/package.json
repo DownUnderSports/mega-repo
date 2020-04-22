@@ -1,0 +1,5 @@
+{
+  "name": "AmbassadorForm",
+  "private": true,
+  "main": "./ambassador-form.jsx"
+}

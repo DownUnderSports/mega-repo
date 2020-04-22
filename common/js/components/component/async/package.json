@@ -1,0 +1,6 @@
+{
+  "name": "AsyncComponent",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./async.jsx"
+}

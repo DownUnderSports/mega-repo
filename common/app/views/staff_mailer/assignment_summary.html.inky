@@ -1,0 +1,85 @@
+<container class="header full">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">
+        Assignments Summary for <%= Time.zone.now.to_s(:long) %>
+      </h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="https://admin.downundersports.com/admin/assignments">View Assignments</item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border full">
+  <row>
+    <columns>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              Name
+            </th>
+            <th>
+              # Assigned
+            </th>
+            <th>
+              # Uncontacted
+            </th>
+            <th>
+              # Watched Video
+            </th>
+            <th>
+              # Responded Not Watched
+            </th>
+            <th>
+              # Not Responded
+            </th>
+            <th>
+              Oldest
+            </th>
+            <th>
+              Newest
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% User.staff.order(:first, :last).where_exists(:assignments, assigned_to_id: Staff::Assignment::Views::Respond.select(:assigned_to_id)).each do |user| %>
+            <% assignments = Staff::Assignment::Views::Respond.where(assigned_to_id: user.id) %>
+            <tr>
+              <th>
+                <%= user.basic_name %>
+              </th>
+              <th>
+                <%= assignments.size %>
+              </th>
+              <th>
+                <%= assignments.where(message_count: 0).size %>
+              </th>
+              <th>
+                <%= assignments.where(watched: true).size %>
+              </th>
+              <th>
+                <%= assignments.where(watched: false).where.not(responded_at: nil).size %>
+              </th>
+              <th>
+                <%= assignments.where(responded_at: nil).size %>
+              </th>
+              <th>
+                <%= assignments.order(:created_at).first&.created_at&.strftime("%m/%d/%Y") %>
+              </th>
+              <th>
+                <%= assignments.order(:created_at).last&.created_at&.strftime("%m/%d/%Y") %>
+              </th>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </columns>
+  </row>
+</container>

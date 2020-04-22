@@ -1,0 +1,323 @@
+#!/usr/bin/env bash
+
+set -e
+
+# set -x # -> for debug
+
+#rm -rf /tmp/heroku
+
+parse_git_branch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1) /'
+}
+
+parse_commit_hash() {
+  git log -1 | head -1
+}
+
+sync_folders() {
+  echo "  -- SYNC $1/ => $2/"
+  echo
+  rsync -rP --delete --exclude=.git $1/ $2/ >/dev/null
+}
+
+function pull_git_repo() {
+  set +e
+  git fetch
+  git reset --hard origin/master
+  set -e
+}
+
+function pull_heroku_repo() {
+  set +e
+  git fetch
+  git reset --hard heroku/master
+  set -e
+}
+
+# config
+PROJECT="downundersports-mega-repo"
+REPO="git@github.com:SampsonCrowley/$PROJECT.git"
+TMPDIR="/var/tmp/heroku"
+COMMIT_LOG="`parse_git_branch`: `parse_commit_hash`"
+
+# globals
+here=$(pwd)
+
+if [ -z "$JENKINS_HOME" ]; then
+  CODE_SOURCE_DIR="$TMPDIR/$PROJECT"
+else
+  CODE_SOURCE_DIR=$(pwd)
+fi
+
+prepare() {
+  echo
+  echo "=============== Fetch latest version of code from GH ==============="
+  echo
+
+  # make sure our changes are there, but no need on jenkins
+  echo "Pushing local changes...."
+  git push
+  echo
+
+  # make sure TMPDIR is in place and go there
+  if [ ! -d $TMPDIR ];  then mkdir $TMPDIR;    fi
+  cd $TMPDIR
+
+  # make sure REPO is in place and go there
+  if [ ! -d $PROJECT ]; then git clone $REPO;  fi
+  cd $PROJECT
+
+  # checkout last version of whatever needs checkouting
+  if [ "$#" -gt "0" ];  then git checkout $@;  fi
+  echo "Pulling from GitHub..."
+  pull_git_repo
+  echo
+}
+
+function deploy() {
+
+  export TARGET=$1
+
+  TMPVENDOR="$TMPDIR/$TARGET/vendor"
+  TMPCOMMON="$TMPVENDOR/common"
+
+  function sync_common() {
+    # replace vendor/common symlink with the actual folder
+    echo "Syncing vendor/common..."
+    echo
+
+    if [ -f $TMPCOMMON ]; then
+      echo " -- remove symlink: $TMPCOMMON"
+
+      rm $TMPCOMMON
+    fi
+
+    if [ ! -d $TMPVENDOR ]; then
+      echo " -- create vendor dir: $TMPVENDOR"
+
+      mkdir $TMPVENDOR
+    fi
+
+    sync_folders "$CODE_SOURCE_DIR/common" $TMPCOMMON
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/lib/assets" ]]; then
+      for d in $TMPDIR/$TARGET/lib/assets; do
+        echo "Syncing assets"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/assets" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/lib/active_storage" ]]; then
+      for d in $TMPDIR/$TARGET/lib/active_storage; do
+        echo "Syncing active_storage"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/lib/active_storage" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/db" ]]; then
+      for d in $TMPDIR/$TARGET/db; do
+        echo "Syncing db"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/db" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/lib/db" ]]; then
+      for d in $TMPDIR/$TARGET/lib/db; do
+        echo "Syncing db"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/lib/db" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/lib/tasks" ]]; then
+      for d in $TMPDIR/$TARGET/lib/tasks; do
+        echo "Syncing tasks"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/lib/tasks" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/config/sidekiq.yml" ]]; then
+      for d in $TMPDIR/$TARGET/config/sidekiq.yml; do
+          echo "Syncing sidekiq.yml"
+          echo
+
+          rm -rf $d
+
+          cp -a "$CODE_SOURCE_DIR/common/config/sidekiq.yml" "$d"
+          echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/$TARGET/config/storage.yml" ]]; then
+      for d in $TMPDIR/$TARGET/config/storage.yml; do
+          echo "Syncing storage.yml"
+          echo
+
+          rm -rf $d
+
+          cp -a "$CODE_SOURCE_DIR/common/config/storage.yml" "$d"
+          echo
+      done
+    fi
+
+    echo
+    echo "OK"
+    echo
+  }
+
+  echo
+  echo "=================== STEP 1: assemble the deployment code ==================="
+  echo
+
+  cd $TMPDIR
+
+
+  echo "Assembling project-specific code..."
+  REPO_NAME=""
+  H_OR_G=""
+  # sync the main part of the project
+  if  [ "$1" = "admin" ]        ||
+      [ "$1" = "api" ]          ||
+      [ "$1" = "authenticate" ] ||
+      [ "$1" = "authorize" ]    ||
+      [ "$1" = "www" ]          ||
+      [ "$1" = "elixir_www" ]   ||
+      [ "$1" = "year-2019" ];   then
+
+    if [ -f "$CODE_SOURCE_DIR/$1/repo_name" ]; then
+      REPO_NAME=$(cat "$CODE_SOURCE_DIR/$1/repo_name")
+    fi
+
+    if [ -z "$REPO_NAME" ]; then
+      REPO_NAME="$PROJECT-$1"
+    fi
+
+    if [[ "$1" =~ "elixir" ]]; then
+      H_OR_G="gigalixir"
+      if [ ! -d $1 ] || [ -d $1/.git ]; then
+        rm -rf $1
+        mkdir $1
+      fi
+
+      cd $1
+
+      if [ ! -d .git ]; then
+        git init
+        git remote add gigalixir "https://git.gigalixir.com/$REPO_NAME.git/"
+      fi
+    else
+      H_OR_G="heroku"
+      echo "Pulling from $REPO_NAME heroku app repo..."
+      echo
+      if [ ! -d $1 ] || [ -d $1/.git ]; then
+        rm -rf $1
+        heroku git:clone -a $REPO_NAME $1;
+      fi
+      cd $1
+      if [ -d .git ]; then
+        pull_heroku_repo
+      else
+        echo "HEROKU REPO DOESN'T EXIST: $REPO_NAME"
+        echo
+        exit 1
+      fi
+    fi
+
+    sync_folders "$CODE_SOURCE_DIR/$1" "$TMPDIR/$1"
+    for f in $TMPDIR/$1/**/.keep; do
+      [[ ! "$f" =~ node_modules ]] && git add -f $f
+    done
+    sync_common
+    echo
+
+  else
+    echo "Invalid Deployment Target: $1"
+    exit 1
+  fi
+
+  echo "OK"
+  echo
+
+
+
+  echo
+  echo "========================== STEP 2: commit & push ==========================="
+  echo
+
+  cd $TMPDIR/$1
+
+  echo "Commiting..."
+  git add -A
+  if git status | grep "Changes" ; then
+    git commit -a -m "$COMMIT_LOG"
+  fi
+  echo
+
+  echo "Pushing...."
+  if [[ "$H_OR_G" =~ gigalixir ]]; then
+    git push gigalixir +master
+  else
+    git push
+  fi
+  echo
+
+  echo "Sending an async ping so that the box wakes up... OK"
+  curl "https://"$REPO_NAME"."$H_OR_G"app.com" &>/dev/null &
+  echo
+
+  echo "Heroku logs:"
+  echo "===================================="
+  echo
+  heroku logs -a $REPO_NAME -n10000 > $here/log/heroku_log-$profile.log &
+  heroku logs -a $REPO_NAME -n100
+}
+
+if [ -z "$JENKINS_HOME" ]; then
+  for profile do
+    if echo $profile|grep -v '^test.*$' >/dev/null; then
+      echo
+      echo "         YOU ARE DEPLOYING '$profile' INTO PRODUCTION, YOU CAN PRESS CTRL+C NOW IF YOU WISH TO STOP!!!!"
+      echo
+      read
+    fi
+  done
+
+  prepare
+fi
+
+echo
+echo "==================== Deploying the code to Heroku =================="
+echo
+
+for profile do
+  TMPTARGET=$(echo $profile | tr -s /)
+  TMPTARGET=${TMPTARGET%/}
+  deploy $TMPTARGET 2>&1 | sed -re 's!(.*)!\['$TMPTARGET'\] \1!g'  &
+done
+
+wait
+echo

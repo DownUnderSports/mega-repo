@@ -1,0 +1,5 @@
+{
+  "name": "LegalUploadForm",
+  "private": true,
+  "main": "./legal-upload-form.jsx"
+}

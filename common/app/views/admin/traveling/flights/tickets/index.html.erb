@@ -1,0 +1,16 @@
+<div>
+  <div id="html-to-insert">
+    <% @travelers.each_with_index do |traveler, i| %>
+      <% unless i == 0 %>
+      <hr>
+      <% end %>
+      <div class="row form-group">
+        <div class="col-xs-12">
+          <h4>
+            <%= link_to "#{ traveler.user.first } #{ traveler.user.last } | Balance: #{ traveler.balance.cents.to_s(true) } | Paid: #{ traveler.total_payments.to_s(true) }#{ traveler.flight_schedules.count > 0 ? " | Assigned To: [#{ traveler.flight_schedules.map(&:pnr).join(', ') }]" : '' }", traveler.user.admin_url, target: '_show_traveler' %>
+          </h4>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

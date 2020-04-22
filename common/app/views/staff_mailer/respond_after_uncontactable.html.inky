@@ -1,0 +1,92 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">
+        <%= @user.print_names %> has new activity
+      </h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="<%= @user.admin_url %>">DUS ID: <%= @user.dus_id %></item>
+          <item href="<%= @user.admin_url %>">Type: <%= @category %></item>
+          <item href="<%= @user.admin_url %>">Interest: <%= @interest&.level %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border full">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <a href="<%= @user.admin_url %>" class="btn btn-blue btn-block inverse">View User</a>
+      <hr>
+      <h4>
+        Assignments:
+      </h4>
+      <% if @user.staff_assignments.size > 0 %>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>
+                Category
+              </th>
+              <th>
+                Assigned To
+              </th>
+              <th>
+                Assigned By
+              </th>
+              <th>
+                Unneeded At
+              </th>
+              <th>
+                Completed At
+              </th>
+              <th>
+                Locked
+              </th>
+              <th>
+                Next Followup
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @user.staff_assignments.each do |assignment| %>
+              <tr>
+                <td>
+                  <%= assignment.reason %>
+                </td>
+                <td>
+                  <%= assignment.assigned_to.print_first_name_only %>
+                </td>
+                <td>
+                  <%= assignment.assigned_by.print_first_name_only %>
+                </td>
+                <td>
+                  <%= assignment.unneeded ? assignment.unneeded_at : nil %>
+                </td>
+                <td>
+                  <%= assignment.completed ? assignment.completed_at : nil %>
+                </td>
+                <td>
+                  <%= assignment.locked %>
+                </td>
+                <td>
+                  <%= assignment.follow_up_date %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p>
+          None Created
+        </p>
+      <% end %>
+    </columns>
+  </row>
+</container>

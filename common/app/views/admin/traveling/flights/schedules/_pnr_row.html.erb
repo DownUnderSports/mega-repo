@@ -1,0 +1,36 @@
+<tr id="pnr_table_<%= schedule.pnr %>_<%= schedule.route_summary %>" data-target="#<%= schedule.route_summary %>" data-count="<%= schedule.seats_reserved %>">
+  <td>
+    <%= link_to schedule.pnr, flight_schedule_path(schedule), remote: true %>
+  </td>
+  <td>
+    <%= schedule.operator %>
+  </td>
+  <td>
+    <%= (has_schedule = schedule.legs.order(:local_departing_at).first) ? has_schedule.local_departing_at.strftime('%A, %B %d') : '' %>
+  </td>
+  <td>
+    <%= has_schedule ? (last_leg = schedule.legs.order(local_arriving_at: :desc).first).local_arriving_at.strftime('%A, %B %d') : '' %>
+  </td>
+  <td>
+    <%= has_schedule ? schedule.route_summary[/([A-Z]+).*?[A-Z]+/, 1] : 'N/A' %>
+  </td>
+  <td>
+    <%= has_schedule ? schedule.route_summary[/[A-Z]+.*?([A-Z]+)/, 1] : '' %>
+  </td>
+  <td>
+    <%= schedule.users.where(User.arel_table[:cancel_date].not_eq(nil).or(User.arel_table[:transfer_date].not_eq(nil))).count %>
+  </td>
+  <td class="reserved">
+    <%= sprintf '%02d', schedule.seats_reserved %>
+  </td>
+  <td>
+    <% if schedule.verified %>
+      <%= form_for schedule, remote: true, confirm: 'Are you sure?' do |f| %>
+        <%= f.hidden_field :verified_by_id, value: nil %>
+        <%= f.submit schedule.verified_by.full_name, style: 'background: none; border: none; color: #3c763d', confirm: 'Are you sure?' %>
+      <% end %>
+    <% else %>
+      <%= select :flight_schedule, :verified_by_id, Staff.order(:first, :last).collect {|st| [st.full_name, st.id]}, {prompt: true}, class: 'form-control', style: 'max-width: 50px;', data: {confirm: 'Submit Verified?', remote: true, url: flight_schedule_path(schedule.id), method: :patch} %>
+    <% end %>
+  </td>
+</tr>

@@ -1,0 +1,3 @@
+.wide-label > label:first-of-type {
+  display: block;
+}

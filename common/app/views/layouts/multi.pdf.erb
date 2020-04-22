@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= (yield :title).presence || (defined?(title) && title).presence || "Statement List - #{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}" %></title>
+    <meta charset='utf-8' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" media="all"> -->
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("pdf.css"), media: 'all' -%>
+  </head>
+  <body class="container" style="max-width: 8in; font-size: 11px">
+    <%= yield %>
+  </body>
+</html>

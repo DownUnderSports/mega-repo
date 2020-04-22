@@ -1,0 +1,5 @@
+{
+  "name": "ReceiptPage",
+  "private": true,
+  "main": "./receipt.jsx"
+}

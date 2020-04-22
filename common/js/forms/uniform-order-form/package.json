@@ -1,0 +1,6 @@
+{
+  "name": "UniformOrderForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./uniform-order-form.jsx"
+}

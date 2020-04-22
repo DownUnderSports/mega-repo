@@ -1,0 +1,89 @@
+<container>
+  <row>
+    <columns small="12">
+      <form id="get_uniform_list_params">
+        <row>
+          <columns small="12">
+            <label for="get_sent_date">
+              Select Sent Date
+            </label>
+            <input type="date" id="get_sent_date">
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <label for="get_sport_abbr">
+              Select Sport
+            </label>
+            <select id="get_sport_abbr">
+              <option value="">Select Sport...</option>
+              <% Sport.all.order(:full, :full_gender).each do |sp| %>
+              <option value="<%= sp.abbr_gender %>"><%= sp.full_gender %></option>
+              <% end %>
+            </select>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <button type="submit" class="btn btn-block btn-primary">
+              Loop Orders
+            </button>
+          </columns>
+          <columns>
+            <button type="submit" id="loop_packing_slips" class="btn btn-block btn-primary">
+              Loop Packing Slips
+            </button>
+          </columns>
+          <columns>
+            <button type="button" class="btn btn-block btn-primary" id="get_uniform_list_csv">
+              Download Available to Submit
+            </button>
+          </columns>
+        </row>
+      </form>
+    </columns>
+  </row>
+</container>
+<script type="text/javascript">
+  let shouldCSV = false, packingSlip = false
+
+  function getSubmit(ev) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const date_val  = String(document.getElementById("get_sent_date").value).replace(/\s+/g, ''),
+          sport_val = String(document.getElementById("get_sport_abbr").value).replace(/\s+/g, ''),
+          url       = `${
+            window.location.href.replace(/(\.html)?\?.*/, '')
+          }${
+            shouldCSV ? '.csv' : ''
+          }?pp=disable${
+            packingSlip ? '&packing_slip=1' : ''
+          }${
+            sport_val && `&sport=${sport_val}`
+          }${
+            date_val && `&sent_date=${date_val}`
+          }`;
+
+    shouldCSV = false
+    window.location = url
+  }
+
+  function getCSV(ev) {
+    shouldCSV = true
+    return getSubmit(ev)
+  }
+
+  function getSlips(ev) {
+    packingSlip = true
+    return getSubmit(ev)
+  }
+
+  const form       = document.getElementById("get_uniform_list_params"),
+        slipButton = document.getElementById("loop_packing_slips"),
+        csvButton  = document.getElementById("get_uniform_list_csv");
+  form.onsubmit = getSubmit;
+  slipButton.onclick = getSlips;
+  csvButton.onclick = getCSV;
+
+</script>

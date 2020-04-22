@@ -1,0 +1,35 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center text-success">It's the ultimate New Year's resolution:</h3>
+      <h4 class="text-center text-danger"><i>Travel and Compete in Australia!</i></h4>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        Join the team by <strong>January 15th, 2020</strong> and we will match your deposit payment up to $700!*
+      </p>
+      <p>
+        For questions or more details, <a href="tel:+14357534732">call/text our office at 435-753-4732</a> or <a href="mailto:mail@downundersports.com">email mail@downundersports.com</a>.
+      </p>
+      <spacer size="16"></spacer>
+      <%= link_to 'Click Here to Join the Team', "https://downundersports.com/deposit/#{@user.dus_id}", class: 'btn btn-block btn-1' %>
+      <spacer size="16"></spacer>
+      <p>
+        Happy New Year!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <small class="text-danger"><i>*Cannot be combined with other discount offers</i></small>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

@@ -1,0 +1,5 @@
+{
+  "name": "UserCreditsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

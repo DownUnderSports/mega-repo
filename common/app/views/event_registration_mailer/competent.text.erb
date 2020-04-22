@@ -1,0 +1,14 @@
+
+Thank you for placing the event registration for <%= @event_reg.user.full_name %> in a timely manner.
+
+One or more of the events you have chosen require a signed certificate of competency from a qualified coach.
+
+Please print the attached PDF, get it signed by your coach, and bring it with you to the track meet in Australia.
+<% if @event_reg.has_event?('pole vault') %>
+
+Pole vaulters must email peter@sportscredentials.com.au to organize renting a pole in Australia. You will need to include the weight and length of the pole you will need. Be sure to mention you are with Down Under Sports in your email.
+<% end %>
+
+Cheers,
+
+<%= render partial: 'shared/email_footer' %>

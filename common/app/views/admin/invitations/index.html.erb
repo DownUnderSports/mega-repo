@@ -1,0 +1,73 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col">
+      <%= form_for :invitation do |form| %>
+        <% if @submitted && !@overrides["invite_rule"] %>
+          <div class="alert alert-danger">
+            No Matching Rule Found
+          </div>
+        <% end %>
+        <div class="row form-group">
+          <div class="col-auto">
+            <div class="custom-control custom-checkbox">
+              <%= form.check_box :invitable, class: 'custom-control-input', checked: @row.invite_rule.invitable %>
+              <%= form.label :invitable, "Invitable?", class: 'custom-control-label' %>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-auto">
+            <div class="custom-control custom-checkbox">
+              <%= form.check_box :certifiable, class: 'custom-control-input', checked: @row.invite_rule.certifiable %>
+              <%= form.label :certifiable, "Certificate?", class: 'custom-control-label' %>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-auto">
+            <%= form.label :sport_id, "Sport", class: 'form-control-label' %>
+          </div>
+          <div class="col-auto">
+            <%= form.select :sport_id, Sport.all.order(:full, :full_gender).collect {|sport| [ sport.full_gender, sport.id ]}, { selected: @row.sport.id }, class: 'form-control' %>
+          </div>
+        </div>
+
+        <%= form.submit "Set Rules", class: 'btn btn-block btn-primary border' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<hr class="mt-5">
+<hr>
+<hr class="mb-5">
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <center class="my-3">
+        <%= @row.tryout %> <br>
+        <%= @row.second_heading %>
+      </center>
+      <p>
+        <%= @row.p1 %>
+      </p>
+      <p>
+        <%= @row.p2 %>
+      </p>
+      <p>
+        <%= @row.p3 %>
+      </p>
+      <p>
+        <%= @row.p4 %>
+      </p>
+      <p>
+        Sincerely,
+      </p>
+      <p>
+        Down Under Sports
+      </p>
+      <p>
+        <%= @row.ps_line %>
+      </p>
+    </div>
+  </div>
+</div>

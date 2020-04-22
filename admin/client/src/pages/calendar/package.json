@@ -1,0 +1,5 @@
+{
+  "name": "CalendarPage",
+  "private": true,
+  "main": "./calendar.jsx"
+}

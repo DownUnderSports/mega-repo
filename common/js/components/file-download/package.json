@@ -1,0 +1,5 @@
+{
+  "name": "FileDownload",
+  "private": true,
+  "main": "./file-download.jsx"
+}

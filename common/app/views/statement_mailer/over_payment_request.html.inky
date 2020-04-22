@@ -1,0 +1,13 @@
+<container>
+  <row>
+    <columns>
+      <p>
+        <%= link_to "Refund Request Submitted For #{@request.user.full_name}: #{@request.user.dus_id}", @request.url %>
+        <br>
+        <strong>Requested:</strong> <%= Date.today.to_s %>
+        <br>
+        <strong>Balance:</strong> <%= link_to @request.user.traveler&.balance&.to_s(true), @request.user.admin_url %>
+      </p>
+    </columns>
+  </row>
+</container>

@@ -1,0 +1,14 @@
+<% provide :page_title, "#{@competing_team.sport.full_gender} Roster - #{@competing_team.name}" %>
+<% provide :title do %>
+  <div>
+    <strong>
+      <%= "#{@competing_team.sport.full_gender} Roster - #{@competing_team.name}" %>
+    </strong>
+  </div>
+  <%= @competing_team.coach_names %>
+<% end %>
+<% provide :skip_address, true %>
+<div class="d-print-none">
+  <a href="<%= request.fullpath.sub(/\.pdf(\?.*)?$/, '.csv\1') %>" class="btn btn-block btn-info">View As CSV</a>
+</div>
+<%= render_relative "#{@competing_team.sport.abbr.downcase}" %>

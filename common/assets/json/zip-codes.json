@@ -1,0 +1,12 @@
+{
+  "0": [ "CT", "MA", "ME", "NH", "NJ", "NY", "PR", "RI", "VI", "VT" ],
+  "1": [ "DE", "NY", "PA" ],
+  "2": [ "DC", "MD", "NC", "SC", "VA", "WV" ],
+  "3": [ "AL", "FL", "GA", "MS", "TN" ],
+  "4": [ "IN", "KY", "MI", "OH" ],
+  "5": [ "IA", "MN", "MT", "ND", "SD", "WI" ],
+  "6": [ "IL", "KS", "MO", "NE" ],
+  "7": [ "AR", "LA", "OK", "TX" ],
+  "8": [ "AZ", "CO", "ID", "NM", "NV", "UT", "WY" ],
+  "9": [ "AK", "AS", "CA", "GU", "HI", "MH", "FM", "MP", "OR", "PW", "WA" ]
+}

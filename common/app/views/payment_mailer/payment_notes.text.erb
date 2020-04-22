@@ -1,0 +1,36 @@
+Payment ID: <%= @payment_id %>
+<%- if @transaction_id.present? -%>
+Transaction ID: <%= @transaction_id %>
+<%- end -%>
+<%- if @payment -%>
+Total Amount: <%= @payment.amount.to_s(true) %>
+
+Items:
+<%- @payment.items.each do |item| -%>
+--
+  Amount: <%= item.amount.to_s(true) %>
+  Traveler: <%= (user = item.traveler&.user)&.print_names %>
+  Traveler URL: <%= user ? user.url(true) : nil %>
+--
+<%- end -%>
+
+Users List:
+--
+  URL: <%= @payment.user.url(true) %>
+  Name: <%= @payment.user.print_names %>
+  Traveler: <%= !!(@payment.user.traveler) %>
+--
+<%- @payment.user.relations.each do |rel| -%>
+--
+  URL: <%= rel.related_user.url(true) %>
+  Name: <%= rel.related_user.print_names %>
+  Relationship: <%= rel.relationship %>
+  Traveler: <%= !!(rel.related_user.traveler) %>
+--
+<%- end -%>
+<%- end -%>
+
+--------------------------------------------------------------------------------
+
+Submitted Notes:
+<%= @notes %>

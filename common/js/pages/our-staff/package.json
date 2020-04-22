@@ -1,0 +1,5 @@
+{
+  "name": "OurStaffPage",
+  "private": true,
+  "main": "./our-staff.jsx"
+}

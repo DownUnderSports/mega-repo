@@ -1,0 +1,49 @@
+@media print {
+  ::first-letter{
+    margin: 0;
+    padding: 0;
+  }
+
+  @page {
+    size: A6;
+    margin: 0;
+  }
+
+}
+
+html,
+body {
+  position:relative;
+  margin: 0;
+  background: #fff;
+  background: transparent;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 5mm;
+  font-family: Verdana,sans-serif !important;
+  font-style:normal;
+  height: 100%;
+  width: 100%;
+  color: #000!important;
+  overflow: hidden!important;
+}
+
+#address {
+  display: block;
+  // position: fixed;
+  // top: 0;
+  // left:0;
+  height: 105mm;
+  width: 148mm;
+  white-space: nowrap;
+  transform: rotate(-90deg) translateX(-148mm);
+  transform-origin: top left;
+  address {
+    font-style:normal;
+    position:absolute;
+    top: 50mm;
+    left: 50mm;
+    display: inline-block;
+    margin: auto;
+  }
+}

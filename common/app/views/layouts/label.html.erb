@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= (yield(:title).presence || (defined?(title) && title).presence || "Down Under Sports") %></title>
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("label.css"), media: 'all', 'data-turbolinks-track': 'reload' -%>
+  </head>
+  <body>
+    <div id="address">
+      <%= yield(:address).html_safe %>
+    </div>
+    <%= yield %>
+  </body>
+</html>

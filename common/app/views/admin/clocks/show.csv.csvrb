@@ -1,0 +1,3 @@
+# encoding: utf-8
+
+render partial: 'time_clock', locals: { user: @user, csv: csv, all_clocks: @all_clocks }

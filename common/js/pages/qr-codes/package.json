@@ -1,0 +1,5 @@
+{
+  "name": "QrCodesPage",
+  "private": true,
+  "main": "./qr-codes.jsx"
+}

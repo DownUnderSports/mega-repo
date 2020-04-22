@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Header::Links is snapshotable 1`] = `
+<ul
+  className="navbar-nav mr-auto"
+>
+  <li
+    className="nav-item header-link "
+  >
+    <a
+      href="/test"
+      onClick={[Function]}
+    >
+      TEST
+    </a>
+  </li>
+  <li
+    className="nav-item header-link "
+  >
+    <a
+      href="/test/2"
+      onClick={[Function]}
+    >
+      TEST 2
+    </a>
+  </li>
+  <li
+    className="nav-item header-link "
+  >
+    <a
+      href="/test/3"
+      onClick={[Function]}
+    >
+      <div>
+        <h1>
+          TEST 3
+        </h1>
+      </div>
+    </a>
+  </li>
+</ul>
+`;

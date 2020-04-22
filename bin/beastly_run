@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [ "$1" = "d" ]; then
+  shift
+  heroku run:detached --size=performance-l "$@"
+else
+  heroku run --size=performance-l "$@"
+fi

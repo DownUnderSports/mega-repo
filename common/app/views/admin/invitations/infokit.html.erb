@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col">
+      <%= form_for :infokit do |form| %>
+        <div class="row form-group">
+          <div class="col-auto">
+            <div class="custom-control custom-checkbox">
+              <%= form.check_box :is_home, class: 'custom-control-input', checked: @row.home? %>
+              <%= form.label :is_home, "Home?", class: 'custom-control-label' %>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-auto">
+            <%= form.label :sport_id, "Sport", class: 'form-control-label' %>
+          </div>
+          <div class="col-auto">
+            <%= form.select :sport_id, Sport.all.order(:full, :full_gender).collect {|sport| [ sport.full_gender, sport.id ]}, { selected: @row.sport.id }, class: 'form-control' %>
+          </div>
+        </div>
+
+        <%= form.submit "Set Rules", class: 'btn btn-block btn-primary border' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<hr class="mt-5">
+<hr>
+<hr class="mb-5">
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <tbody>
+          <% @row.to_row.each.with_index do |v, i| %>
+            <tr>
+              <th>
+                <%= Mailing::Infokit.headers[i] %>
+              </th>
+              <td>
+                <%= v %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

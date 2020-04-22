@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+git remote remove heroku
+git remote add heroku https://git.heroku.com/downundersports.git

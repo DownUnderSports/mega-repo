@@ -1,0 +1,5 @@
+{
+  "name": "FindUser",
+  "private": true,
+  "main": "./find-user.jsx"
+}

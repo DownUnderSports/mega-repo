@@ -1,0 +1,6 @@
+{
+  "name": "InfokitForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./infokit-form.jsx"
+}

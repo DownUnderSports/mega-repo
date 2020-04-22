@@ -1,0 +1,40 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">2021 Transfer Confirmation</h3>
+
+      <center>
+        <menu class="text-center">
+          <item>DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+<container class="body-border">
+  <rows>
+    <columns small="12" large="12">
+      <spacer size="16"></spacer>
+      <p>
+        We are excited to have <%= @user.print_first_name_only %> as part of our 2021 program. We will follow up with more information when it becomes available.
+      </p>
+      <p>
+        Thank you for your patience.
+      </p>
+      <p>
+        &mdash; Down Under Sports
+      </p>
+    </columns>
+  </rows>
+</container>
+<container>
+  <rows>
+    <columns small="12" large="12">
+      <spacer size="16"></spacer>
+      <%= image_tag "transfer-confirmed-banner.png", class: 'full', alt: "We look forward to seeing you in 2021!" %>
+    </columns>
+  </rows>
+</container>

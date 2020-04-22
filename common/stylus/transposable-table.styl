@@ -1,0 +1,82 @@
+
+tableTransposableTbody()
+  -webkit-overflow-scrolling touch
+  background radial-gradient(left, ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, radial-gradient(right, ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center
+  background-size 10px 100%, 10px 100%
+  background-attachment scroll, scroll
+  background-repeat no-repeat
+
+flippedTable()
+  display flex
+  overflow hidden
+  background none
+  tr
+    display flex
+    flex-direction column
+    min-width -webkit-min-content
+    min-width -moz-min-content
+    min-width min-content
+  thead
+    display flex
+    flex: 1
+    min-width -webkit-min-content
+    min-width -moz-min-content
+    min-width min-content
+    tr
+      flex 1 1 50%
+      min-width: 2em
+  tbody
+    display flex
+    position relative
+    overflow-x scroll
+    overflow-y hidden
+    box-shadow inset 0 0px 1em 0em black
+    flex 1 0 75%
+    tr
+      flex 1 0 10%
+  td
+    background-image none !important
+    border-left 0
+
+  td,
+  th
+    overflow: visible
+    position: relative
+    width: 100%
+    flex: 1 100%
+    white-space: nowrap
+  th:not(:last-child),
+  td:not(:last-child)
+    border-bottom 0
+
+
+.table-transposable
+  display block
+  max-width: 100%
+  overflow: auto
+  &.table-flipped
+    flippedTable()
+    tbody
+      table-transposableTbody()
+
+  @media medium-down
+    flippedTable()
+    tbody
+      table-transposableTbody()
+
+
+// .table-transposable td:first-child,
+// .table-transposable-flipped tbody tr:first-child
+//   background-image linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 100%)
+//   background-repeat no-repeat
+//   background-size 20px 100%
+// .table-transposable td:last-child,
+// .table-transposable-flipped tbody tr:last-child
+//   background-image linear-gradient(to left, white 50%, rgba(255, 255, 255, 0) 100%)
+//   background-repeat no-repeat
+//   background-position 100% 0
+//   background-size 20px 100%
+// .table-transposable th,
+// .table-transposable td
+//   padding 6px 12px
+//   border 1px solid #d9d7ce

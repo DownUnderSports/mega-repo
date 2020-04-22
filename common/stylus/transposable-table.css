@@ -1,0 +1,107 @@
+.table-transposable {
+  display: block;
+  max-width: 100%;
+  overflow: auto;
+}
+.table-transposable.table-flipped {
+  display: flex;
+  overflow: hidden;
+  background: none;
+}
+.table-transposable.table-flipped tr {
+  display: flex;
+  flex-direction: column;
+  min-width: -webkit-min-content;
+  min-width: -moz-min-content;
+  min-width: min-content;
+}
+.table-transposable.table-flipped thead {
+  display: flex;
+  flex: 1;
+  min-width: -webkit-min-content;
+  min-width: -moz-min-content;
+  min-width: min-content;
+}
+.table-transposable.table-flipped thead tr {
+  flex: 1 1 50%;
+  min-width: 2em;
+}
+.table-transposable.table-flipped tbody {
+  display: flex;
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  box-shadow: inset 0 0px 1em 0em #000;
+  flex: 1 0 75%;
+}
+.table-transposable.table-flipped tbody tr {
+  flex: 1 0 10%;
+}
+.table-transposable.table-flipped td {
+  background-image: none !important;
+  border-left: 0;
+}
+.table-transposable.table-flipped td,
+.table-transposable.table-flipped th {
+  overflow: visible;
+  position: relative;
+  width: 100%;
+  flex: 1 100%;
+  white-space: nowrap;
+}
+.table-transposable.table-flipped th:not(:last-child),
+.table-transposable.table-flipped td:not(:last-child) {
+  border-bottom: 0;
+}
+@media medium-down {
+  .table-transposable {
+    display: flex;
+    overflow: hidden;
+    background: none;
+  }
+  .table-transposable tr {
+    display: flex;
+    flex-direction: column;
+    min-width: -webkit-min-content;
+    min-width: -moz-min-content;
+    min-width: min-content;
+  }
+  .table-transposable thead {
+    display: flex;
+    flex: 1;
+    min-width: -webkit-min-content;
+    min-width: -moz-min-content;
+    min-width: min-content;
+  }
+  .table-transposable thead tr {
+    flex: 1 1 50%;
+    min-width: 2em;
+  }
+  .table-transposable tbody {
+    display: flex;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    box-shadow: inset 0 0px 1em 0em #000;
+    flex: 1 0 75%;
+  }
+  .table-transposable tbody tr {
+    flex: 1 0 10%;
+  }
+  .table-transposable td {
+    background-image: none !important;
+    border-left: 0;
+  }
+  .table-transposable td,
+  .table-transposable th {
+    overflow: visible;
+    position: relative;
+    width: 100%;
+    flex: 1 100%;
+    white-space: nowrap;
+  }
+  .table-transposable th:not(:last-child),
+  .table-transposable td:not(:last-child) {
+    border-bottom: 0;
+  }
+}

@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col">
+    <table class="table table-sm">
+      <tbody>
+        <% %w[ coaches supporters athletes ].each do |category| %>
+          <% if (travelers = competing_team.travelers.__send__("#{category}").where(cancel_date: nil)).present? %>
+            <% unless category == 'coaches' %>
+              <tr>
+                <td colspan="5" class="bg-white border-0">
+                   &nbsp;
+                </td>
+              </tr>
+            <% end %>
+            <tr>
+              <th colspan="5" class="bg-light-blue">
+                <%= category.titleize %>
+              </th>
+            </tr>
+            <% travelers.each_with_index do |traveler, idx| %>
+              <tr class="<%= idx % 2 > 0 ? 'bg-light' : '' %>">
+                <td>
+                  <%= traveler.team.state.abbr %>
+                </td>
+                <td>
+                  <%= traveler.user.basic_name %>
+                </td>
+                <% if category == 'supporters' %>
+                  <td colspan="2"></td>
+                <% else %>
+                  <td>
+                    <%= traveler.user.ambassador_phone %>
+                  </td>
+                  <td>
+                    <%= traveler.user.ambassador_email %>
+                  </td>
+                <% end %>
+                <td style="white-space: nowrap">
+                  <%= traveler.arriving_flight&.to_string %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

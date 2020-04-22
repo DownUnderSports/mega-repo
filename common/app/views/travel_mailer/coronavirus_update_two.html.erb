@@ -1,0 +1,32 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag 'travel-update-banner.png', class: 'full', alt: 'Travel Update' %>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        On March 19, the Prime Minister of Australia announced a travel ban on all non-residents and non-Australian citizens entering Australia. The US State Department has also issued a warning for all American citizens not to travel abroad.
+      </p>
+      <p>
+        This is the first time in the company's 31 year history that the tournaments have been unable to proceed. We are a small, family-operated business and we appreciate your patience as we navigate this unprecedented situation.
+      </p>
+      <p>
+        We will reach out to all of our 2020 travelers in the upcoming weeks to review options going forward.
+      </p>
+      <p>
+        Best Wishes,
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: true } %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

@@ -1,0 +1,66 @@
+@charset "UTF-8";
+.receipt-container {
+  padding: 1rem;
+  margin: 2em auto;
+  width: 100%;
+  border: 1px solid #444;
+  background: #fafafa;
+  color: #444;
+}
+.receipt-container section {
+  position: relative;
+  top: 0;
+  margin-bottom: 1em;
+}
+.receipt-container section p {
+  margin: 0;
+}
+.receipt-container table tr td:first-child {
+  font-weight: bold;
+}
+.receipt-header {
+  margin-bottom: 2em;
+}
+@media print {
+  .Site-header {
+    display: none;
+  }
+  html,
+  html * {
+    visibility: hidden !important;
+    background: none !important;
+  }
+  .receipt-container {
+    margin: 0;
+    padding: 2em;
+    font-size: 12px;
+    font-style: normal;
+    font-variant: normal;
+    font-family: sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+  }
+  .receipt-container,
+  .receipt-container * {
+    color: #444 !important;
+    visibility: visible !important;
+  }
+  .receipt-container .footnote {
+    position: absolute;
+    top: unset;
+    bottom: 0.5em;
+    margin: 0 15px;
+    left: 0;
+    right: 0;
+  }
+  .receipt-container .print-fix {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: 1em;
+  }
+}

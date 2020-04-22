@@ -1,0 +1,5 @@
+{
+  "name": "UserDebitPages",
+  "private": true,
+  "main": "./debits.jsx"
+}

@@ -1,0 +1,134 @@
+<style>
+  #clock_timer {
+    display: inline;
+    float: right;
+    font-size: initial;
+  }
+
+  #clock_timer form {
+    display: inline;
+  }
+
+  #clock_timer header {
+    display: none;
+  }
+
+  #clocks_outer_wrapper.timer-active #clock_timer {
+    background: #fff;
+    display: flex;
+    float: unset;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #clocks_outer_wrapper.timer-active > header > h3 {
+    position: relative;
+    padding: 0;
+    margin: 0;
+  }
+
+  #clocks_outer_wrapper.timer-active #clock_timer header {
+    display: block;
+    font-size: 4rem;
+  }
+
+  #clocks_outer_wrapper.timer-active #clock_timer button,
+  #clocks_outer_wrapper.timer-active #clock_timer form {
+    display: none;
+  }
+
+
+  @keyframes over-time {
+    0% {
+      background-color: darkred;
+      color: #FFF
+    }
+    50% {
+      background-color: red;
+      color: #FFF
+    }
+    100% {
+      background-color: darkred;
+      color: #FFF
+    }
+  }
+
+  #clock_timer.over-time {
+    animation-name: over-time;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+
+  @media print {
+    #clock_timer {
+      display: none !important;
+    }
+  }
+</style>
+
+<section id="clock_timer">
+  <header>
+    00:15:00.000
+  </header>
+  <button class="btn btn-success mr-3" type="button" name="clock_timer_button" id="clock_timer_button" style="float-right">Start Break</button>
+  <form action="/admin/clocks" method="POST" style="display: inline; float: right;">
+    <button class="btn btn-primary" type="submit" name="submit">Add Clock</button>
+  </form>
+</section>
+
+<script>
+  function startTimer() {
+    const interval = 100,
+          oneSecond = 1000,
+          start = Date.now(),
+          endTime = start + (oneSecond * 60 * 15),
+          wrapper = document.getElementById('clocks_outer_wrapper'),
+          display = document.getElementById('clock_timer'),
+          header = display.querySelector('header');
+
+    wrapper.classList.add('timer-active')
+
+    let driftless = start + oneSecond;
+
+    (function step() {
+      const now = Date.now()
+      let dt = Date.now() - driftless, // the drift (positive for overshooting)
+          timeLeft = endTime - Date.now();
+
+      if(timeLeft < 0) display.classList.add('over-time')
+
+      const secondsLeft = Math.floor(Math.abs(timeLeft)/oneSecond),
+            msLeft = Math.abs(timeLeft) - (secondsLeft * 1000),
+            minutesLeft = Math.floor(secondsLeft/60),
+            displayedSeconds = secondsLeft - (minutesLeft * 60)
+
+      header.innerHTML = `ON BREAK - ${String(minutesLeft).padStart(2, '0')}:${String(displayedSeconds).padStart(2, '0')}.${String(msLeft).slice(0, 2).padStart(2, '0')}`
+
+      // const secondsLeft = Math.ceil(timeLeft/oneSecond),
+      //       minutesLeft = Math.floor(secondsLeft/60),
+      //       displayedSeconds = secondsLeft - (minutesLeft * 60)
+      //
+      // header.innerHTML = `ON BREAK - ${String(minutesLeft).padStart(2, '0')}:${String(displayedSeconds).padStart(2, '0')}`
+
+      if(dt > interval) console.log(dt)
+
+      while (dt > interval) {
+        dt = dt - interval;
+        driftless = driftless + interval;
+      }
+
+      driftless = driftless + interval;
+      setTimeout(step, Math.max(0, interval - dt)); // take into account drift
+    })()
+  }
+  const button = document.getElementById('clock_timer_button')
+  button.addEventListener('click', startTimer)
+</script>

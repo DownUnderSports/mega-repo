@@ -1,0 +1,9 @@
+<container>
+  <row>
+    <columns>
+      <h3>
+        <%= @message %>
+      </h3>
+    </columns>
+  </row>
+</container>

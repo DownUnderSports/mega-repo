@@ -1,0 +1,5 @@
+{
+  "name": "TravelingFlightsAirportsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

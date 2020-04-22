@@ -1,0 +1,6 @@
+{
+  "name": "QueueTracker",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./queue-tracker.jsx"
+}

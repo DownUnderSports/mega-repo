@@ -1,0 +1,44 @@
+<%= provide :title, "Download All Statements" %>
+
+<div class="alert alert-block alert-danger">
+  <h3>DO NOT CLICK</h3>
+  <p>
+    Unless you are <strong><u>currently</u></strong> printing statements.
+  </p>
+</div>
+
+<%= link_to "Download Statements", "#", data: {job: 'CreateStatements'}, id: 'download_statements_job', class: 'btn btn-danger' %>
+
+<h1>
+  SETTINGS FOR PRINTING IN CHROME
+</h1>
+
+<ul>
+  <li>
+    Printer: Mary-Kate
+  </li>
+  <li>
+    Color: Color
+  </li>
+  <li>
+    Orientation: Portrait
+  </li>
+  <li>
+    margins: Default
+  </li>
+  <li>
+    Scale: 100
+  </li>
+  <li>
+    Paper Size: Letter (8.5 x 11)
+  </li>
+  <li>
+    Quality: >= 300dpi
+  </li>
+  <li>
+    Headers & Footers: Unchecked
+  </li>
+  <li>
+    Background Graphics: Checked
+  </li>
+</ul>

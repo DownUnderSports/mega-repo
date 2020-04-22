@@ -1,0 +1,305 @@
+{
+  "flightAirport": {
+    "db_values": {
+      "id":         "number",
+      "code":       "string",
+      "name":       "string",
+      "carrier":    "string",
+      "cost":       "amount",
+      "address_id": "number",
+      "tz_offset":  "number",
+      "dst":        "boolean",
+      "preferred":  "boolean",
+      "selectable": "boolean",
+      "created_at": "datetime",
+      "updated_at": "datetime"
+    },
+    "transformKeys": {
+      "id":         "id",
+      "code":       "code",
+      "name":       "name",
+      "carrier":    "carrier",
+      "cost":       "cost",
+      "address_id": "addressId",
+      "tz_offset":  "tzOffset",
+      "dst":        "dst",
+      "preferred":  "preferred",
+      "selectable": "selectable",
+      "created_at": "createdAt",
+      "updated_at": "updatedAt"
+    },
+    "config": { "keyPath": ["id"] },
+    "indexes": [
+      [ "by-code", "code" ],
+      [ "by-carrier", "carrier" ]
+    ]
+  },
+  "flightLeg": {
+    "db_values": {
+      "id":                   "number",
+      "schedule_id":          "number",
+      "flight_number":        "string",
+      "departing_airport_id": "number",
+      "departing_at":         "datetime",
+      "local_departing_at":   "datetime",
+      "arriving_airport_id":  "number",
+      "arriving_at":          "datetime",
+      "local_arriving_at":    "datetime",
+      "overnight":            "boolean",
+      "is_subsidiary":        "boolean",
+      "created_at":           "datetime",
+      "updated_at":           "datetime"
+    },
+    "transformKeys": {
+      "id":                   "id",
+      "schedule_id":          "scheduleId",
+      "flight_number":        "flightNumber",
+      "departing_airport_id": "departingAirportId",
+      "departing_at":         "departingAt",
+      "local_departing_at":   "localDepartingAt",
+      "arriving_airport_id":  "arriving_airportId",
+      "arriving_at":          "arrivingAt",
+      "local_arriving_at":    "localArrivingAt",
+      "overnight":            "overnight",
+      "is_subsidiary":        "isSubsidiary",
+      "created_at":           "createdAt",
+      "updated_at":           "updatedAt"
+    },
+    "config": { "keyPath": ["id"] },
+    "indexes": [
+      [ "by-schedule-id", "scheduleId" ],
+      [ "by-departing-airport", "departingAirportId" ],
+      [ "by-departing-at", "departingAt" ],
+      [ "by-local-departing-at", "localDepartingAt" ],
+      [ "by-arriving-airport", "arrivingAirportId" ],
+      [ "by-arriving-at", "arrivingAt" ],
+      [ "by-local-arriving-at", "localArrivingAt" ]
+    ]
+  },
+  "flightSchedule": {
+    "db_values": {
+      "id":                 "number",
+      "parent_schedule_id": "number",
+      "pnr":                "string",
+      "carrier_pnr":        "string",
+      "operator":           "string",
+      "route_summary":      "string",
+      "created_at":         "datetime",
+      "updated_at":         "datetime"
+    },
+    "transformKeys": {
+      "id":                 "id",
+      "parent_schedule_id": "parentScheduleId",
+      "pnr":                "pnr",
+      "carrier_pnr":        "carrierPnr",
+      "operator":           "operator",
+      "route_summary":      "routeSummary",
+      "created_at":         "createdAt",
+      "updated_at":         "updatedAt"
+    },
+    "config": { "keyPath": ["id"] },
+    "indexes": [
+      [ "by-parent", "parentScheduleId" ],
+      [ "by-pnr", "pnr" ],
+      [ "by-operator", "operator" ]
+    ]
+  },
+  "flightTicket": {
+    "db_values": {
+      "id":            "number",
+      "schedule_id":   "number",
+      "traveler_id":   "number",
+      "ticketed":      "boolean",
+      "required":      "boolean",
+      "ticket_number": "string",
+      "created_at":    "datetime",
+      "updated_at":    "datetime"
+    },
+    "transformKeys": {
+      "id":            "id",
+      "schedule_id":   "scheduleId",
+      "traveler_id":   "travelerId",
+      "ticketed":      "ticketed",
+      "required":      "required",
+      "ticket_number": "ticketNumber",
+      "created_at":    "createdAt",
+      "updated_at":    "updatedAt"
+    },
+    "config": { "keyPath": ["id"] },
+    "indexes": [
+      [ "by-schedule", "scheduleId" ],
+      [ "by-traveler", "travelerId" ]
+    ]
+  },
+  "inboundDomesticFlights" : {
+    "db_values": {
+      "date":    "date",
+      "code":    "string",
+      "airport": "string",
+      "flights": "array"
+    },
+    "transformKeys": {
+      "date":    "date",
+      "code":    "code",
+      "airport": "airport",
+      "flights": "flights"
+    },
+    "config": { "keyPath": ["date", "code"] },
+    "indexes": [
+      [ "by-date", "date" ],
+      [ "by-airport", "airport" ]
+    ]
+  },
+  "outboundInternationalFlights": {
+    "db_values": {
+      "id":                   "number",
+      "schedule_id":          "number",
+      "traveler_id":          "number",
+      "ticketed":             "boolean",
+      "required":             "boolean",
+      "ticket_number":        "string",
+      "is_checked_in":        "boolean",
+      "created_at":           "datetime",
+      "updated_at":           "datetime",
+      "category":             "string",
+      "full_name":            "string",
+      "date":                 "date",
+      "code":                 "string",
+      "airport_name":         "string",
+      "user_id":              "number",
+      "dus_id":               "string",
+      "local_departing_time": "time",
+      "wristband":            "string"
+    },
+    "transformKeys": {
+      "id":                   "id",
+      "schedule_id":          "scheduleId",
+      "traveler_id":          "travelerId",
+      "ticketed":             "ticketed",
+      "required":             "required",
+      "ticket_number":        "ticketNumber",
+      "is_checked_in":        "isCheckedIn",
+      "created_at":           "createdAt",
+      "updated_at":           "updatedAt",
+      "category":             "category",
+      "full_name":            "fullName",
+      "date":                 "date",
+      "code":                 "code",
+      "airport_name":         "airportName",
+      "user_id":              "userId",
+      "dus_id":               "dusId",
+      "local_departing_time": "localDepartingTime",
+      "wristband":            "wristband"
+    },
+    "config": { "keyPath": "id" },
+    "indexes": [
+      [ "by-date", "date" ],
+      [ "by-schedule", "scheduleId" ],
+      [ "by-airport", "code" ],
+      [ "by-dus-id", "dusId" ]
+    ]
+  },
+  "travelers": {
+    "db_values": {
+      "id":                        "number",
+      "user_id":                   "number",
+      "team_id":                   "number",
+      "balance":                   "amount",
+      "shirt_size":                "string",
+      "departing_date":            "date",
+      "departing_from":            "string",
+      "returning_date":            "date",
+      "returning_to":              "string",
+      "bus":                       "string",
+      "wristband":                 "string",
+      "hotel":                     "string",
+      "has_ground_transportation": "boolean",
+      "has_lodging":               "boolean",
+      "has_gbr":                   "boolean",
+      "own_flights":               "boolean",
+      "cancel_date":               "date",
+      "cancel_reason":             "string",
+      "created_at":                "datetime",
+      "updated_at":                "datetime"
+    },
+    "transformKeys": {
+      "id":                        "id",
+      "user_id":                   "userId",
+      "team_id":                   "teamId",
+      "balance":                   "balance",
+      "shirt_size":                "shirtSize",
+      "departing_date":            "departingDate",
+      "departing_from":            "departingFrom",
+      "returning_date":            "returningDate",
+      "returning_to":              "returningTo",
+      "has_ground_transportation": "hasGroundTransportation",
+      "has_lodging":               "hasLodging",
+      "has_gbr":                   "hasGbr",
+      "own_flights":               "ownFlights",
+      "cancel_date":               "cancelDate",
+      "cancel_reason":             "cancelReason",
+      "created_at":                "createdAt",
+      "updated_at":                "updatedAt"
+    },
+    "config": {"keyPath": "id"},
+    "indexes": [
+      [ "by-id", "id" ],
+      [ "by-user-id", "userId" ],
+      [ "by-cancel-date", "cancelDate" ],
+      [ "by-departing-date", "departingDate" ],
+      [ "by-returning-date", "returningDate" ]
+    ]
+  },
+  "users": {
+    "db_values": {
+      "id":                "number",
+      "dus_id":            "string",
+      "category_type":     "string",
+      "category_id":       "number",
+      "email":             "string",
+      "title":             "string",
+      "first":             "string",
+      "middle":            "string",
+      "last":              "string",
+      "suffix":            "string",
+      "print_first_names": "string",
+      "print_other_names": "string",
+      "nick_name":         "string",
+      "keep_name":         "boolean",
+      "address_id":        "number",
+      "interest_id":       "number",
+      "extension":         "string",
+      "phone":             "string",
+      "gender":            "gender",
+      "birth_date":        "date",
+      "updated_at":        "datetime"
+    },
+    "transformKeys": {
+      "id":                "id",
+      "dus_id":            "dusId",
+      "category_type":     "categoryType",
+      "category_id":       "categoryId",
+      "email":             "email",
+      "title":             "title",
+      "first":             "first",
+      "middle":            "middle",
+      "last":              "last",
+      "suffix":            "suffix",
+      "print_first_names": "printFirstNames",
+      "print_other_names": "printOtherNames",
+      "address_id":        "addressId",
+      "interest_id":       "interestId",
+      "extension":         "extension",
+      "phone":             "phone",
+      "gender":            "gender",
+      "birth_date":        "birthDate",
+      "updated_at":        "updatedAt"
+    },
+    "config": {"keyPath": "id"},
+    "indexes": [
+      [ "by-id", "id" ],
+      [ "by-dus-id", "dusId" ],
+      [ "by-updated-at", "updatedAt" ]
+    ]
+  }
+}

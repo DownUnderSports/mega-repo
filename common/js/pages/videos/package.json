@@ -1,0 +1,5 @@
+{
+  "name": "VideosPage",
+  "private": true,
+  "main": "./videos.jsx"
+}

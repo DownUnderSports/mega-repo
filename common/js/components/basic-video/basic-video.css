@@ -1,0 +1,100 @@
+.youtubeWrapper {
+  position: relative;
+  padding-bottom: 66%;
+}
+.youtubeWrapper .random-background-image {
+  display: none;
+}
+.youtubeWrapper.ended .random-background-image,
+.youtubeWrapper.paused .random-background-image,
+.youtubeWrapper.ended::after,
+.youtubeWrapper.paused::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+}
+.youtubeWrapper.ended::after,
+.youtubeWrapper.paused::after,
+.youtubeWrapper.ended.random-background::after,
+.youtubeWrapper.paused.random-background::after,
+.youtubeWrapper.ended.no-background::after,
+.youtubeWrapper.paused.no-background::after {
+  content: "";
+  background-color: #000;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 64px, contain;
+  background-size: 20%, contain;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgNTEwIDUxMCI+PHBhdGggZD0iTTI1NSAxMDJWMEwxMjcuNSAxMjcuNSAyNTUgMjU1VjE1M2M4NC4xNSAwIDE1MyA2OC44NSAxNTMgMTUzcy02OC44NSAxNTMtMTUzIDE1My0xNTMtNjguODUtMTUzLTE1M0g1MWMwIDExMi4yIDkxLjggMjA0IDIwNCAyMDRzMjA0LTkxLjggMjA0LTIwNC05MS44LTIwNC0yMDQtMjA0eiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIwIiBmaWxsPSIjRkZGIi8+PC9zdmc+Cg==");
+}
+.youtubeWrapper.ended::after,
+.youtubeWrapper.paused::after {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgNTEwIDUxMCI+PHBhdGggZD0iTTI1NSAxMDJWMEwxMjcuNSAxMjcuNSAyNTUgMjU1VjE1M2M4NC4xNSAwIDE1MyA2OC44NSAxNTMgMTUzcy02OC44NSAxNTMtMTUzIDE1My0xNTMtNjguODUtMTUzLTE1M0g1MWMwIDExMi4yIDkxLjggMjA0IDIwNCAyMDRzMjA0LTkxLjggMjA0LTIwNC05MS44LTIwNC0yMDQtMjA0eiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIwIiBmaWxsPSIjRkZGIi8+PC9zdmc+Cg=="), url("https://img.youtube.com/vi/YSx01E_UiBA/maxresdefault.jpg");
+}
+.youtubeWrapper.ended.alt-background::after,
+.youtubeWrapper.paused.alt-background::after {
+  background-size: 20%, 50%;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgNTEwIDUxMCI+PHBhdGggZD0iTTI1NSAxMDJWMEwxMjcuNSAxMjcuNSAyNTUgMjU1VjE1M2M4NC4xNSAwIDE1MyA2OC44NSAxNTMgMTUzcy02OC44NSAxNTMtMTUzIDE1My0xNTMtNjguODUtMTUzLTE1M0g1MWMwIDExMi4yIDkxLjggMjA0IDIwNCAyMDRzMjA0LTkxLjggMjA0LTIwNC05MS44LTIwNC0yMDQtMjA0eiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIwIiBmaWxsPSIjRkZGIi8+PC9zdmc+Cg=="), url("/dus-logo.png");
+}
+.youtubeWrapper.ended.random-background::after,
+.youtubeWrapper.paused.random-background::after {
+  background-color: transparent;
+}
+.youtubeWrapper.ended.random-background .random-background-image,
+.youtubeWrapper.paused.random-background .random-background-image {
+  display: block;
+  min-width: 100%;
+  min-height: 100%;
+}
+.youtubeWrapper.ended.fullscreen-background::after,
+.youtubeWrapper.paused.fullscreen-background::after {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+.youtubeWrapper.ended.rounded-bottom::after,
+.youtubeWrapper.paused.rounded-bottom::after {
+  border-bottom-right-radius: 0.25rem !important;
+  border-bottom-left-radius: 0.25rem !important;
+}
+.youtubeWrapper.paused::after,
+.youtubeWrapper.paused.alt-background::after,
+.youtubeWrapper.paused.random-background::after,
+.youtubeWrapper.paused.no-background::after {
+  top: 15%;
+  bottom: 15%;
+  background-size: 20%, contain;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNzA2LjY2NyIgaGVpZ2h0PSIxNzA2LjY2NyIgdmlld0JveD0iMCAwIDEyODAgMTI4MCI+PHBhdGggZD0iTTE1Ny42MzUgMi45ODRMMTI2MC45NzkgNjQwIDE1Ny42MzUgMTI3Ny4wMTZ6IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMjAiIGZpbGw9IiNGRkYiLz48L3N2Zz4K");
+}
+.youtubeWrapper.paused.random-background .random-background-image {
+  display: none;
+}
+.youtubeWrapper.paused.random-background::after {
+  background-color: #000;
+}
+.youtubeWrapper.paused.paused-background::after {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNzA2LjY2NyIgaGVpZ2h0PSIxNzA2LjY2NyIgdmlld0JveD0iMCAwIDEyODAgMTI4MCI+PHBhdGggZD0iTTE1Ny42MzUgMi45ODRMMTI2MC45NzkgNjQwIDE1Ny42MzUgMTI3Ny4wMTZ6IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMjAiIGZpbGw9IiNGRkYiLz48L3N2Zz4K"), url("https://img.youtube.com/vi/YSx01E_UiBA/maxresdefault.jpg");
+}
+.youtubeWrapper.paused.alt-background.paused-background::after {
+  background-size: 20%, 50%;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNzA2LjY2NyIgaGVpZ2h0PSIxNzA2LjY2NyIgdmlld0JveD0iMCAwIDEyODAgMTI4MCI+PHBhdGggZD0iTTE1Ny42MzUgMi45ODRMMTI2MC45NzkgNjQwIDE1Ny42MzUgMTI3Ny4wMTZ6IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMjAiIGZpbGw9IiNGRkYiLz48L3N2Zz4K"), url("/dus-logo.png");
+}
+.youtubeWrapper.paused.random-background.paused-background::after {
+  background-color: transparent;
+}
+.youtubeWrapper.paused.random-background.paused-background .random-background-image {
+  display: block;
+  min-width: 100%;
+  min-height: 100%;
+}
+.youtubeWrapper iframe,
+.youtubeWrapper object,
+.youtubeWrapper embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

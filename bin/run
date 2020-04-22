@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [ "$1" = "d" ]; then
+  shift
+  heroku run:detached --size=standard-2x "$@"
+else
+  heroku run --size=standard-2x "$@"
+fi

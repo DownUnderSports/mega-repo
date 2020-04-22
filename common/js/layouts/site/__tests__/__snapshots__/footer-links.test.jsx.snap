@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Footer::Links is snapshotable 1`] = `
+<div
+  className="footer-menu"
+>
+  <a
+    className="footer-link "
+    href="/test"
+    onClick={[Function]}
+  >
+    TEST
+  </a>
+  <a
+    className="footer-link "
+    href="/test/2"
+    onClick={[Function]}
+  >
+    TEST 2
+  </a>
+  <a
+    className="footer-link "
+    href="/test/3"
+    onClick={[Function]}
+  >
+    <div>
+      <h1>
+        TEST 3
+      </h1>
+    </div>
+  </a>
+</div>
+`;

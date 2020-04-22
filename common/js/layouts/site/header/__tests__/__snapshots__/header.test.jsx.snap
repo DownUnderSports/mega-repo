@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Header is snapshotable 1`] = `
+<header
+  className="Site-header"
+  style={
+    Object {
+      "top": "-0px",
+    }
+  }
+>
+  <div
+    className="header-content"
+  >
+    <nav
+      className="header-nav undefined"
+    >
+      <div
+        className="header-logo"
+      >
+        <a
+          className="header-link"
+          href="/"
+          onClick={[Function]}
+        >
+          <img
+            alt="Site Logo"
+            src="dus-logo.png"
+          />
+        </a>
+      </div>
+      <div
+        className="header-menu"
+      >
+        <input
+          checked={false}
+          className="nav-trigger"
+          id="nav-trigger"
+          type="checkbox"
+        />
+        <label
+          htmlFor="nav-trigger"
+          onClick={[Function]}
+        >
+          <span />
+        </label>
+        <div
+          className="header-menu-wrapper"
+        >
+          <a
+            className="header-link "
+            href="/"
+            onClick={[Function]}
+          >
+            Home Page
+          </a>
+          <a
+            className="header-link "
+            href="/infokit"
+            onClick={[Function]}
+          >
+            More Info
+          </a>
+          <a
+            className="header-link "
+            href="/sports/bbb"
+            onClick={[Function]}
+          >
+            Sports
+          </a>
+          <a
+            className="header-link "
+            href="https://downundersports.smugmug.com"
+          >
+            Galleries
+          </a>
+        </div>
+      </div>
+    </nav>
+    <h1
+      className="Site-title"
+    >
+      <div
+        className="top-logo"
+      >
+        <a
+          className="header-link"
+          href="/"
+          onClick={[Function]}
+        >
+          <img
+            alt="Site Logo"
+            src="dus-logo.png"
+          />
+        </a>
+      </div>
+      <span>
+        Down Under Sports
+      </span>
+    </h1>
+  </div>
+</header>
+`;

@@ -1,0 +1,6 @@
+{
+  "name": "MapContext",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./map.jsx"
+}

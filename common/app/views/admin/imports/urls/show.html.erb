@@ -1,0 +1,40 @@
+<%= provide :title, "Imports - From URL" %>
+<h1>Import an Athlete from Previous Year</h1>
+
+<form method="POST">
+  <div class="row">
+    <div class="col-12 form-group">
+      <label for="url">Url to Athlete Page</label>
+      <input class="form-control" type="text" id="url" name="url" value="">
+    </div>
+    <div class="col">
+      <label>Send Infokit? <input type="checkbox" name="infokit" id="infokit" value="1"></label>
+    </div>
+    <div class="col">
+      <label>Next Year? <input type="checkbox" name="next_year" id="next_year" value="1"></label>
+    </div>
+    <div class="col-md">
+      <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</form>
+
+<% if (@user || @errors).present? %>
+<h1>Athlete Import from Previous Year - <% if !@user %><span class="text-danger">FAILED</span><% else %><span class="text-success">SUCCESS</span><% if @errors.present? %><span class="text-danger"> WITH ERRORS</span><% end %><% end %></h1>
+<% end %>
+<% if @errors.present? %>
+<pre><%= @errors %></pre>
+<% end %>
+<% if @user %>
+<ul>
+  <li>
+    Admin URL: <%= link_to @user.admin_url, @user.admin_url, target: '_blank' %>
+  </li>
+  <li>
+    Sent Infokit? <% if @infokit %><span class="text-success">Yes</span><% else %><span class="text-danger">No</span><% end %>
+  </li>
+  <li>
+    Marked Next Year? <% if @next_year %><span class="text-success">Yes</span><% else %><span class="text-danger">No</span><% end %>
+  </li>
+</ul>
+<% end %>

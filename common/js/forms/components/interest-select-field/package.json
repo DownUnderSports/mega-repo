@@ -1,0 +1,6 @@
+{
+  "name": "InterestSelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./interest-select-field.jsx"
+}

@@ -1,0 +1,7 @@
+<%= "#{"  " * (level - 1)}[" %>
+<%- array.each do |value| -%>
+<%= "#{"  " * level}#{
+  render(partial: 'shared/get_type', locals: { value: value, level: level })
+}," %>
+<%- end -%>
+<%= "#{"  " * (level - 1)}]" -%>

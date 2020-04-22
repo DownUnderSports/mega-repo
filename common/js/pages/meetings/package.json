@@ -1,0 +1,5 @@
+{
+  "name": "MeetingsPage",
+  "private": true,
+  "main": "./meetings.jsx"
+}

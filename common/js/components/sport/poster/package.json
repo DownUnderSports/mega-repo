@@ -1,0 +1,6 @@
+{
+  "name": "SportPoster",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./sport-poster.jsx"
+}

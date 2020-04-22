@@ -1,0 +1,50 @@
+<%= form_for @schedule do |f| %>
+  <h3>
+    Manual Add PNR
+  </h3>
+
+  <%= f.label :original_value, "Paste Schedule from Amadeus" %>
+  <%= f.text_area :original_value, class: 'form-control form-group', style: 'height: 4rem;resize: vertical' %>
+
+  <div class="row">
+    <div class="col-md-4 form-group">
+      <%= f.label :pnr %>
+      <%= f.text_field :pnr, class: 'form-control', required: 'required', pattern: '[A-Z0-9]+' %>
+    </div>
+    <div class="col-md-4 form-group">
+      <%= f.label :booking_reference %>
+      <%= f.text_field :booking_reference, class: 'form-control' %>
+    </div>
+    <div class="col-md-4 form-group">
+      <%= f.label :operator %>
+      <%= f.select :operator, options_for_select(Flight::Schedule.group(:operator).order(:operator).pluck(:operator)), {prompt: 'Select Operator'}, class: 'form-control', required: 'required' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6 col-md-4 form-group">
+      <%= f.label :amount, 'Schedule Price' %>
+      <span class="input-group add-on">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+        <%= f.text_field :amount, class: 'form-control', pattern: '^[0-9]+(\.[0-9][0-9])?$' %>
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-4 form-group">
+      <%= f.label :seats_reserved %>
+      <%= f.text_field :seats_reserved, class: 'form-control', pattern: '^[0-9]+$' %>
+    </div>
+    <div class="col-lg-3 col-md-4 form-group">
+      <%= f.label :names_assigned %>
+      <%= f.text_field :names_assigned, class: 'form-control', pattern: '^[0-9]+$' %>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <h3>
+        Paste rtaxr here
+      </h3>
+      <%= f.text_area :rtaxr, value: nil, class: 'form-control form-group', rows: 5 %>
+    </div>
+  </div>
+  <%= render partial: 'admin/traveling/flights/forms/flight_legs_fields', locals: {form: f, legs: @schedule.legs} %>
+  <%= f.submit 'Update Flights', class: 'btn btn-block btn-primary form-group' %>
+<% end %>

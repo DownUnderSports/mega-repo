@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Header::Logo is snapshotable 1`] = `
+<div
+  className="header-logo navbar-brand"
+>
+  <a
+    className="header-link"
+    href="/admin/"
+    onClick={[Function]}
+  >
+    <img
+      alt="Admin Logo"
+      src="dus-logo.png"
+    />
+  </a>
+</div>
+`;

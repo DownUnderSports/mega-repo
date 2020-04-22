@@ -1,0 +1,17 @@
+G'Day Mate!
+
+Thank you for taking the time to watch our information video.<% if @expiration_date&.present? %> You are now eligible to receive a $200 discount if you pay your $300 deposit by <%= pretty_date_text(@expiration_date) %>.<% end %> Included below are a link to pay your deposit and a link to the information video if you would like to review it again.
+
+Pay Deposit & Join The Team: <%= @deposit_link %>
+
+View Information Video: <%= "https://downundersports.com/videos/i/#{@user&.dus_id}" %>
+<%- if @expiration_date&.present? -%>
+
+Quick View Flyer: https://drive.google.com/file/d/1wRWSDm36CL7VGtZ52NlyC6WcY4I5a8tu/view?usp=sharing
+<%- end -%>
+
+Please call or text our office at 435-753-4732 with any questions you have (see website for office hours). For answers to our most commonly asked questions, check out our F.A.Q. page, at: <%= @faq_link %>.
+
+We look forward to watching you compete!
+
+<%= render partial: 'shared/email_footer' %>

@@ -1,0 +1,5 @@
+{
+  "name": "ClientPassportPage",
+  "private": true,
+  "main": "./passport.jsx"
+}

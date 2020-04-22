@@ -1,0 +1,18 @@
+<% provide :mass_printing, true %>
+<% provide :title, @title %>
+<% provide :page_title, "#{@found_user.basic_name} (#{@found_user.dus_id}) Flight Schedule" %>
+<%= render partial: 'shared/pdf/flights', locals: { user: @found_user } %>
+<div style="page-break-before: always;"></div>
+<%= (render partial: 'shared/pdf/eta.pdf.erb', locals: { user: @found_user }).sub(/PASSENGER\s-\s.*?\n/m, '').html_safe %>
+<% if @direct_print %>
+  <script>
+    (function(){
+      document.addEventListener('DOMContentLoaded', function(){window.print()}, false);
+      window.addEventListener("afterprint", function(){
+        setTimeout(function() {
+          window.location = "<%= @next_user || '/admin/print_packets' %>".replace(/amp;/gi, '')
+        }, 0)
+      })
+    })();
+  </script>
+<% end %>

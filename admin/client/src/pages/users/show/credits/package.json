@@ -1,0 +1,5 @@
+{
+  "name": "UserCreditPages",
+  "private": true,
+  "main": "./credits.jsx"
+}

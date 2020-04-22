@@ -1,0 +1,55 @@
+# encoding: utf-8
+
+csv << %w[
+  user_link
+  dus_id
+  category
+  interest
+  first
+  last
+  state
+  sport
+  video_link
+  video_category
+  video_duration
+  did_watch
+  watched_duration
+  watched_percentage
+  first_registered
+  first_viewed
+  first_watched
+  last_watched
+  respond_date
+]
+
+Meeting::Video::View.
+  includes(:video, user: :interest).
+  joins(user: :interest).
+  where(users: { category_type: %i[ athletes coaches ]}).
+  where(interests: { contactable: true }).
+  split_batches_values do |view|
+    addr = view.user.main_address.presence
+    csv << [
+      view.user.url(true),
+      view.user.dus_id,
+      view.user.category_title,
+      view.user.interest.level,
+      view.user.first,
+      view.user.last,
+      view.user.team&.state&.abbr,
+      view.user.team&.sport&.abbr_gender,
+      view.video.link,
+      Meeting::Category.titleize(view.category),
+      view.video.duration,
+      !!view.watched,
+      view.duration,
+      ((view.duration.to_i / view.video.duration.to_i.to_d) * 100).to_i,
+      view.created_at,
+      view.first_viewed,
+      view.first_watched,
+      # views[view.id],
+      # watches[view.id],
+      view.last_viewed_at,
+      view.user.respond_date
+    ] unless view.user_id == test_user.id
+  end

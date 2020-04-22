@@ -1,0 +1,5 @@
+{
+  "name": "AccountingUsersPage",
+  "private": true,
+  "main": "./users.jsx"
+}

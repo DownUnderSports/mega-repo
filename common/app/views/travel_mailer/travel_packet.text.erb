@@ -1,0 +1,13 @@
+Travel Details for <%= @user.basic_name %> (<%= @user.dus_id %>)
+
+G'Day <%= @user.print_first_name_only %>!
+
+The link below contains important information for your trip to the land down under, including your flight schedules, teammates lists, free day information, packing requirements, and more.
+
+View Your Travel Details: https://DownUnderSports.com/travel/my-info/<%= @user.dus_id %>
+
+If there are any errors with your travel packet, please call or text our office @ (435) 753-4732 ASAP.
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>

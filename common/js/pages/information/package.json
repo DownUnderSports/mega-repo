@@ -1,0 +1,5 @@
+{
+  "name": "InformationPage",
+  "private": true,
+  "main": "./information.jsx"
+}

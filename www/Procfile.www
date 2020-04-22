@@ -1,0 +1,5 @@
+www-node: yarn --cwd client start
+www-rails: bundle exec rails s
+www-travel: yarn --cwd travel start
+www-queue: bin/run_queue
+www-redis: redis-server

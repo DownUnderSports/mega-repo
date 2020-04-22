@@ -1,0 +1,125 @@
+@charset "UTF-8";
+.HomePage {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin: 1rem 0;
+}
+.HomePage .verticalCenter,
+.HomePage .flexEnd {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+.HomePage .verticalCenter img,
+.HomePage .flexEnd img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.HomePage .verticalCenter q,
+.HomePage .flexEnd q {
+  font-size: 14px;
+  line-height: 2.3;
+}
+.HomePage .flexEnd {
+  justify-content: flex-end;
+}
+.HomePage .attention {
+  border: 0.4rem double #fff;
+  border-radius: 1rem;
+  padding: 1em;
+  color: #222;
+  font-weight: bold;
+}
+.HomePage .attention:before {
+  border-radius: 1rem;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  display: block;
+  content: '';
+  border: 0.2rem solid rgba(2,117,216,0.6);
+  height: 100%;
+  width: calc(100% - 30px);
+}
+.HomePage .attention > * {
+  background: none;
+  width: 100%;
+  color: transparent;
+  opacity: none;
+}
+.HomePage .attention .attention-text {
+  color: #000080;
+  padding: 0.5rem;
+  background: #fff;
+  background: rgba(255,255,255,0.6);
+  line-height: 1.9;
+}
+.HomePage .attention .verticalCenter {
+  justify-content: center;
+}
+.HomePage .verticalWrapper {
+  padding-bottom: 50%;
+  position: relative;
+}
+.HomePage .verticalWrapper .innerVertWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.HomePage .verticalWrapper .innerVertWrapper .attention:before {
+  left: 0;
+  width: 100%;
+}
+.HomePage .aboutUs {
+  background: #fafafa;
+  color: #444;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+.HomePage .authBtn {
+  display: block;
+  padding: 1.3rem;
+  text-align: center;
+  background-color: rgba(2,117,216,0.6);
+  width: 100%;
+  border: 2px solid #444;
+  border-radius: 2px;
+  transition: background-color 0.5s ease-in-out;
+}
+.HomePage .authBtn,
+.HomePage .authBtn:visited,
+.HomePage .authBtn:hover {
+  color: #fafafa;
+  text-decoration: none;
+}
+.HomePage .authBtn:hover {
+  background-color: #5cb85c;
+}
+.HomePage .block-header {
+  background: #000080;
+  border: 0.15em solid #d40000;
+  color: #fff;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+}
+.HomePage .block-header h1 {
+  margin: 0;
+}
+.HomePage .text-blue {
+  color: #000080;
+}
+.HomePage .text-red {
+  color: #d40000;
+}
+.HomePage .framed {
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.HomePage .framed > div {
+  padding: 1rem 2rem;
+}

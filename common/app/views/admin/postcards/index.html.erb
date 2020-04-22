@@ -1,0 +1,127 @@
+<div class="row">
+  <div class="col">
+    <h1>
+      SETTINGS FOR PRINTING IN CHROME
+    </h1>
+
+    <ul>
+      <li>
+        Printer: Ashley
+      </li>
+      <li>
+        Orientation: Landscape
+      </li>
+      <li>
+        margins: Default
+      </li>
+      <li>
+        Scale: 100
+      </li>
+      <li>
+        Paper Size: Letter (105 x 148 mm)
+      </li>
+      <li>
+        Quality: >= 300dpi
+      </li>
+      <li>
+        Headers & Footers: Unchecked
+      </li>
+      <li>
+        Background Graphics: Checked
+      </li>
+    </ul>
+  </div>
+</div>
+
+<form id="get_postcard_params">
+  <div class="row">
+    <div class="col-12 form-group">
+      <label for="get_include_mailing_filter">Paste Filter From <a href="/admin/accounting/users" target="_lookup_table">Lookup Table</a>(CTRL + SHIFT + CLICK "Copy Filter"):</label>
+      <input id="get_main_filter" name="get_main_filter" class="form-control" />
+    </div>
+    <div class="col-12 form-group">
+      <label for="get_include_mailing_filter">Require These Mailings:</label>
+      <select name="get_include_mailing_filter[]" id="get_include_mailing_filter" multiple class="form-control">
+        <option value="">None</option>
+        <% Mailing.uniq_column_values(:category).each do |m| %>
+        <option value="<%= m.category %>"><%= m.category.titleize %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-12 form-group">
+      <label for="get_exclude_mailing_filter">Don't Allow These Mailings:</label>
+      <select name="get_exclude_mailing_filter[]" id="get_exclude_mailing_filter" multiple class="form-control">
+        <option value="">None</option>
+        <% Mailing.uniq_column_values(:category).each do |m| %>
+        <option value="<%= m.category %>"><%= m.category.titleize %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-6 form-group">
+      <label for="assign_mailing_category">Add This Mailing:</label>
+      <select name="assign_mailing_category" id="assign_mailing_category" class="form-control">
+        <option value="">None</option>
+        <% Mailing.uniq_column_values(:category).each do |m| %>
+        <option value="<%= m.category %>"><%= m.category.titleize %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-6 form-group">
+      <label for="assign_sent_date">
+        Assign Sent Date
+      </label>
+      <input type="date" id="assign_sent_date" class="form-control">
+    </div>
+    <div class="col-12">
+      <button class="btn btn-block btn-primary" type="submit">Loop Postcards</button>
+    </div>
+  </div>
+</form>
+<script type="text/javascript">
+  function arraysAreConflicting(one, two) {
+    const similar = [];
+
+    one.map((v) => two.includes(v) && similar.push(v));
+
+    return similar;
+  }
+
+  function getSubmit(ev) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const filter_val          = String(document.getElementById("get_main_filter").value).replace(/\s+/g, ''),
+          assign_category_val = String(document.getElementById("assign_mailing_category").value).replace(/\s+/g, ''),
+          assign_sent_val     = String(document.getElementById("assign_sent_date").value).replace(/\s+/g, ''),
+          include_mailing_val = [
+                                  ...document.getElementById("get_include_mailing_filter").options
+                                ].filter(option => option.selected && option.value).map(option => option.value),
+          exclude_mailing_val = [
+                                  ...document.getElementById("get_exclude_mailing_filter").options
+                                ].filter(option => option.selected && option.value).map(option => option.value),
+          url                 = `${
+                                  window.location.href.replace(/(\.html)?\?.*/, '')
+                                }?pp=disable&continue=1${
+                                  assign_category_val && `&add_mailing_category=${encodeURIComponent(assign_category_val)}`
+                                }${
+                                  assign_sent_val && `&add_mailing_sent=${encodeURIComponent(assign_sent_val)}`
+                                }${
+                                  `&${include_mailing_val.map((v) => `include_mailings[]=${encodeURIComponent(v)}`).join('&')}`
+                                }${
+                                  `&${exclude_mailing_val.map((v) => `exclude_mailings[]=${encodeURIComponent(v)}`).join('&')}`
+                                }${
+                                  filter_val ? `&${filter_val}` : ''
+                                }`.replace(/(\&(?:amp;?)?)+/gi, '&'),
+          similar = arraysAreConflicting(include_mailing_val, exclude_mailing_val)
+
+    if(similar && similar.length) {
+      return alert(`both required and excluded mailings: ${similar.join(', ')}`)
+    }
+
+    window.location = url
+  }
+
+  const form = document.getElementById("get_postcard_params");
+
+  form.onsubmit = getSubmit;
+</script>

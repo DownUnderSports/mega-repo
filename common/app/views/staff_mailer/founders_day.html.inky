@@ -1,0 +1,18 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">
+        Qualifying Payment Submitted for <%= @user.print_names %>
+      </h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="<%= @user.admin_url %>">DUS ID: <%= @user.dus_id %></item>
+          <item href="<%= @user.admin_url %>">Category: <%= @user.category_title %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>

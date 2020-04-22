@@ -1,0 +1,41 @@
+.Admin-header {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  transition: background-image 2s ease-in-out;
+  width: 100vw;
+  overflow: auto;
+}
+.Admin-header > nav {
+  border-bottom: 1px solid #000;
+}
+.Admin-header > nav .nav-item {
+  border-left: 1px solid #333;
+  padding: 0.25rem 0.5rem;
+  min-height: 2rem;
+  position: relative;
+}
+.Admin-header > nav .nav-item:last-child {
+  border-right: 1px solid #333;
+}
+.Admin-header > nav .nav-item.notify a {
+  position: relative;
+}
+.Admin-header > nav .nav-item.notify a::after {
+  content: "";
+  display: block;
+  background: #f00;
+  width: 7px;
+  height: 7px;
+  border-radius: 7px;
+  position: absolute;
+  top: -2px;
+  right: -7px;
+}
+.Admin-header > nav .nav-item.text-danger a {
+  color: #dc3545 !important;
+}
+.Admin-header .header-logo img {
+  max-width: 30px;
+  max-height: 30px;
+}

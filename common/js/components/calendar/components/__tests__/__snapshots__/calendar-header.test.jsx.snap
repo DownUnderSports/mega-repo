@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Calendar::Header is snapshotable 1`] = `
+<header
+  className="calendar-header calendar-row flex-middle"
+>
+  <div
+    className="calendar-col col-start pl-3"
+  >
+    <i
+      className="material-icons clickable"
+      data-function="previous-month"
+      onClick={undefined}
+    >
+      chevron_left
+    </i>
+  </div>
+  <h4
+    className="calendar-col col-center"
+    data-label="month-name"
+  >
+    test
+  </h4>
+  <div
+    className="calendar-col col-end pr-3"
+  >
+    <i
+      className="material-icons clickable"
+      data-function="next-month"
+      onClick={undefined}
+    >
+      chevron_right
+    </i>
+  </div>
+</header>
+`;

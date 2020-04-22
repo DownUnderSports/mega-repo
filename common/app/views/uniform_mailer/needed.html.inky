@@ -1,0 +1,39 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">We need your uniform details.</h3>
+      <center>
+        <menu class="text-center">
+          <item href="https://downundersports.com/uniforms/<%= @user.id %>">Submit Your Uniform</item>
+        </menu>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+
+      <spacer size="32"></spacer>
+
+      <p>
+        Dear <%= @user.first %>,
+      </p>
+      <p>
+        Competition dates are approaching fast! We haven't received your uniform order yet, and we want as much time as possible to make sure everything comes out perfect. Please log in to your online account and <a href="https://downundersports.com/uniforms/<%= @user.id %>">place your uniform order</a> today, it will only take a moment.
+      </p>
+      <p>
+        We look forward to seeing you in Australia.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16"></spacer>
+</container>

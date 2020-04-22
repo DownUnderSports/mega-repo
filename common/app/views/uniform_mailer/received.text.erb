@@ -1,0 +1,17 @@
+Down Under Sports Uniform Order
+
+--------------------------------------------------
+
+Thank you for placing the uniform order for <%= @order.user.full_name %>
+
+Details of your submission can be found below. If there are ANY errors with your submission, call our office ASAP @ (435) 753-4732
+
+Failure to notify us of any errors before your uniform order is processed will result in additional charges to order a replacement.
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>
+
+--------------------------------------------------
+
+<%= render partial: 'uniform_order', locals: { uniform_order: @order, full_details: false } %>

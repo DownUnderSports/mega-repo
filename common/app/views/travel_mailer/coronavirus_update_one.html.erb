@@ -1,0 +1,29 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag 'travel-update-banner.png', class: 'full', alt: 'Travel Update' %>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        While keeping in mind that our first departure is scheduled for over 15 weeks away, Down Under Sports will take a timely approach in assessing the impacts of COVID-19.
+      </p>
+      <p>
+        Though we expect our competitions to continue as planned, our participants’ safety and wellbeing is always our top priority. We appreciate your patience and understanding while we carefully monitor this evolving situation before any final decisions are made on the status of this year’s tournaments.
+      </p>
+      <p>
+        Best Wishes,
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: true } %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

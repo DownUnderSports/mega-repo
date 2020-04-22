@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# if [[ -z "$1" ]]; then
+#   heroku run:detached --size=performance-l rails db:seed
+# else
+#   heroku run:detached --size=performance-l INV_COUNT=$1 rails db:seed
+# fi
+heroku run:detached --size=performance-l SKIP_INVALID=$SKIP_INVALID SKIP_FOUND=$SKIP_FOUND RECORDS_PER_SHEET=$RECORDS_PER_SHEET DRY_RUN=$DRY_RUN INV_COUNT=$INV_COUNT rails db:seed

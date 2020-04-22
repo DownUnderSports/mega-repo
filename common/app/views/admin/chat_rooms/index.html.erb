@@ -1,0 +1,59 @@
+<% date = nil %>
+<% (@chat_rooms || []).each do |room| %>
+  <% if date != room.created_at.to_date %>
+    <% if date %>
+        </tbody>
+      </table>
+    </section>
+    <% end %>
+    <section class="mt-5">
+      <header>
+        <h2 class="text-center">
+          <%= (date = room.created_at.to_date).strftime("%A, %B #{date.day.ordinalize}") %>
+        </h2>
+      </header>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              Name
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Phone
+            </th>
+            <th>
+              Message Count
+            </th>
+            <th>
+              Closed?
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+  <% end %>
+  <tr>
+    <td>
+      <%= link_to room.name, admin_chat_room_path(room) %>
+    </td>
+    <td>
+      <%= room.email.present? ? link_to(room.email, "mailto:#{room.email}") : nil %>
+    </td>
+    <td>
+      <%= room.phone.present? ? link_to(room.phone, "tel:#{room.phone}") : nil %>
+    </td>
+    <td>
+      <%= link_to room.messages.size, admin_chat_room_path(room) %>
+    </td>
+    <td>
+      <%= (!!room.is_closed).yes_no_to_s %>
+    </td>
+  </tr>
+<% end %>
+<% if date %>
+    </tbody>
+  </table>
+</section>
+<% end %>

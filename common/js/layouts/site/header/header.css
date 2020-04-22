@@ -1,0 +1,160 @@
+.Site-header {
+  padding-top: 6.5rem;
+}
+@media print {
+  .Site-header {
+    display: none;
+    padding: 0;
+  }
+}
+.Site-header .nav-wrapper {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 0;
+  background: #000080;
+  background: #fff;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #d40000;
+}
+.Site-header .nav-wrapper .header-logo {
+  height: 4rem;
+  width: 4rem;
+  padding: 0.25rem;
+}
+.Site-header .nav-wrapper div.dropdown {
+  position: relative;
+}
+.Site-header .nav-wrapper div.dropdown ul.dropdown-list {
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  margin: 0;
+  padding: 1rem;
+  background: #fff;
+}
+.Site-header .nav-wrapper div.dropdown ul.dropdown-list li,
+.Site-header .nav-wrapper div.dropdown ul.dropdown-list .nav-link {
+  display: block;
+}
+.Site-header .nav-wrapper div.dropdown ul.dropdown-list li + li {
+  border-top: 1px solid #000;
+}
+.Site-header .nav-wrapper div.dropdown.true {
+  font-size: 1rem;
+}
+.Site-header .nav-wrapper div.dropdown.true .dropdown-list {
+  display: block;
+}
+.Site-header .nav-wrapper .nav-link {
+  color: #9cf;
+  color: #000;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .Site-header .nav-wrapper .nav-link + .nav-link {
+    border-left: 1px solid #000;
+  }
+}
+.Site-header .social-bar {
+  position: fixed;
+  width: 100%;
+  top: 4rem;
+  z-index: 999;
+  background: #222;
+  padding: 0.5rem 1rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  line-height: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  justify-content: flex-end;
+  align-items: center;
+}
+.Site-header .social-bar a {
+  margin-left: 1rem;
+}
+.Site-header .social-bar svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #fff;
+}
+.Site-header .header-content {
+  padding: 1rem;
+  background: #000080;
+  color: #fff;
+  border-top: 1px solid #d40000;
+  border-bottom: 1px solid #d40000;
+}
+.Site-header .carousel {
+  height: 50vh;
+  background-image: url("~common/assets/images/headers/bg-skyline.jpg");
+  background-position: 50%;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: background-image 2s ease-in-out;
+  background-color: #ddd;
+}
+.Site-header .carousel button {
+  background: transparent;
+  border: none;
+}
+.Site-header .carousel .carousel-control-next,
+.Site-header .carousel .carousel-control-prev {
+  position: absolute;
+}
+.Site-header .carousel .carousel-control-next[data-tooltip]:before,
+.Site-header .carousel .carousel-control-prev[data-tooltip]:before {
+  font-size: 1.5rem;
+  bottom: unset;
+}
+.Site-header .carousel .carousel-inner {
+  height: 100%;
+}
+.Site-header .carousel .carousel-inner .carousel-item.active {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.Site-header .carousel .carousel-inner .carousel-item img {
+  max-height: 100%;
+  max-width: 100%;
+}
+.Site-header .carousel .carousel-indicators li {
+  background-clip: unset;
+  flex: 1 1 auto;
+  border-top: unset;
+}
+.Site-header .top-logo {
+  display: none;
+}
+@media screen and (min-width: 768px) {
+  .Site-header .top-logo {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    max-width: 150px;
+    max-height: 150px;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+  .Site-header .top-logo .header-link {
+    padding: 0;
+    border: none;
+    background: none;
+    height: 100%;
+    width: 100%;
+  }
+}

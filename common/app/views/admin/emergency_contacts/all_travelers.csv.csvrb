@@ -1,0 +1,33 @@
+# encoding: utf-8
+
+Sport.all.each do |sport|
+  sport.buses.each do |bus|
+    next unless bus.travelers.size > 0
+    bus.travelers.joins(:user).order("users.last", "users.first", "users.middle").each do |t|
+      next unless t.user.is_athlete? || t.user.under_age?
+      csv << [
+        sport.abbr_gender,
+        bus.to_str,
+        t.user.dus_id,
+        t.user.first,
+        t.user.last,
+        t.user.category_title,
+        'Relations:',
+        *(
+          t.user.relations.map do |ur|
+            ur.related_user.interest.contactable? \
+              ? [] \
+              : [
+                  ur.relationship,
+                  ur.related_user.basic_name,
+                  ur.related_user.gender,
+                  ur.related_user.ambassador_phone,
+                  ur.related_user.ambassador_email,
+                  ur.related_user.dus_id
+                ]
+          end.flatten
+        )
+      ]
+    end
+  end
+end

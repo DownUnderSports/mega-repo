@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html class="<%= (yield :outer_class).presence || '' %>">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <%= stylesheet_link_tag 'mailer.css', media: 'all' %>
+  </head>
+
+  <body style="width:100vw;width:100%;">
+    <table class="body" style='width: 100%' data-made-with-foundation>
+      <tr>
+        <td class="center" align="center" valign="top">
+          <center>
+            <%= yield %>
+          </center>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

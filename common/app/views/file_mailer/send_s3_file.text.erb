@@ -1,0 +1,5 @@
+<%= @message %>
+<% if @on_download %>
+
+Download: <%= "https://admin.downundersports.com/admin/email_files?object_path=#{CGI.escape(@object_path.to_s)}&file_name=#{CGI.escape(@file_name.to_s)}&should_delete=#{@on_download}" %>
+<% end %>

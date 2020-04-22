@@ -1,0 +1,32 @@
+<section class="hero">
+  <aside class="">
+    <img src="<%= Routes.static_path(@conn, "/images/down-under-sports.png") %>" alt="Test">
+  </aside>
+  <article>
+    <h1>Who Are We?</h1>
+    <p>
+      Since 1989, Down Under Sports has been hosting sports tournaments in Australia. We personally invite high school athletes to compete in the annual Down Under Sports Tournaments in Queensland, Australia each summer. We seek athletes who we believe will benefit the most from our program. Our goal is to see our participants grow through this life changing experience, both in their sport and as people. These renowned tournaments are an opportunity for athletes from different countries to compete on an international level. We pride ourselves on providing these opportunities to compete and experience the culture, beauty, and grandeur of Australia. We dedicate ourselves to ensuring that our athletes and their families are prepared for the experience of a lifetime.
+    </p>
+    <p>
+      Over the years we have helped tens of thousands of high school athletes showcase their talents on the international stage. We have many great reviews from athletes and their parents who have traveled with us. You can check out our reviews on Facebook, Google, and the Better Business Bureau, where we have an A+ rating!
+    </p>
+    <p>
+      <i>To learn more about our fantastic staff who work their hardest to make this experience consistently great, <a href="/our-staff">click here.</a></i>
+    </p>
+  </article>
+</section>
+
+<section class="hero">
+  <aside class="first">
+    <img src="<%= Routes.static_path(@conn, "/images/down-under-sports.png") %>" alt="Test">
+  </aside>
+  <article>
+    <h1>Our Story</h1>
+    <p>
+      Down Under Sports was founded in 1989, based on the dream of two New Zealanders named George and Shelley O&rsquo;Scanlon. They fell in love with athletics, especially American football (gridiron). Their dream was to promote football in Australia and New Zealand. In 1979, George founded the New Zealand American Football Association (NZAFA). This was the first time that American Football was played in the Pacific! In 1989, they began inviting American high school football players to compete in New Zealand and Australia. Over the years, this tournament, which was given the name &ldquo;The Down Under Bowl&rdquo;, started to see overwhelming success.
+    </p>
+    <p>
+      We saw this as an exciting opportunity to include other young athletes in this fun and rewarding experience. Over the last three decades, Down Under Sports has shared the land down under with thousands of athletes from all across the United States! No matter the sport, the goal has been the same; to use the common language of sports to bridge the continents. Through Down Under Sports, countless friendships and memories have been made.
+    </p>
+  </article>
+</section>

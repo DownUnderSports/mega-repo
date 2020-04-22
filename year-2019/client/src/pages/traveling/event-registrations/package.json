@@ -1,0 +1,5 @@
+{
+  "name": "TravelingEventRegistrationsPage",
+  "private": true,
+  "main": "./event-registrations.jsx"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "TravelingFlightsListPage",
+  "private": true,
+  "main": "./list.jsx"
+}

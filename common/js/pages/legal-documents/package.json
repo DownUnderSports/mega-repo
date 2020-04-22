@@ -1,0 +1,5 @@
+{
+  "name": "LegalDocumentsPage",
+  "private": true,
+  "main": "./legal-documents.jsx"
+}

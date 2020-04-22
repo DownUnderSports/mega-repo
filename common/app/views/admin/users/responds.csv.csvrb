@@ -1,0 +1,115 @@
+# encoding: utf-8
+
+csv << %w[
+  deposit_qr_code
+  dus_id
+  contactable
+  interest_level
+  respond_date
+  did_watch
+  duration
+  watched_on
+  last_viewed
+  deposit_date
+  cancel_date
+  title
+  first
+  middle
+  last
+  suffix
+  email
+  phone
+  guardian_relationship
+  guardian_title
+  guardian_first
+  guardian_middle
+  guardian_last
+  guardian_suffix
+  guardian_email
+  guardian_phone
+  address_is_school
+  address_is_foreign
+  address_street
+  address_street_2
+  address_street_3
+  address_city
+  address_state_or_province
+  address_zip
+  address_country
+  school_name
+  state
+  sport
+  grad
+  main_event
+  main_event_best
+  stats
+]
+
+User.
+  visible.
+  athletes.
+  order(:first, :middle, :last, :dus_id).
+  where_exists(:mailings, category: :infokit).
+  split_batches_values do |u|
+    rel = u.relations.find_by(relationship: %w[ guardian ]) ||
+          u.relations.find_by(relationship: %w[ parent ]) ||
+          u.relations.find_by(relationship: %w[ grandparent ])
+    g = rel&.related_user
+    addr = u.address || (g&.address) || u.relations.find_by(relationship: %w[ sibling ])&.related_user&.address
+    addr_is_school = !addr
+    ath = u.athlete
+    sch = ath.school
+    addr ||= u.main_address || sch&.address
+    asport = ath.athletes_sports.first
+    views = u.video_views.
+              joins(:video).
+              where(meeting_videos: { category: 'I' })
+    view = views.
+              order(:last_viewed_at).
+              where(watched: true).last
+
+    csv << [
+      u.qr_code_link(u.deposit_url),
+      u.dus_id,
+      (u.interest_id < no_interest),
+      interest_levels[u.interest_id],
+      u.respond_date,
+      !!view,
+      (view || views.order(:duration).last)&.duration,
+      view&.first_watched_at&.to_date,
+      (view || views.order(:last_viewed_at).last)&.last_viewed_at,
+      u.traveler&.items&.first&.created_at&.to_date,
+      u.traveler&.cancel_date.presence,
+      u.title,
+      u.first,
+      u.middle,
+      u.last,
+      u.suffix,
+      u.ambassador_email,
+      u.ambassador_phone,
+      rel&.relationship,
+      g&.title,
+      g&.first,
+      g&.middle,
+      g&.last,
+      g&.suffix,
+      g&.ambassador_email,
+      g&.ambassador_phone,
+      addr_is_school,
+      addr&.is_foreign&.to_s,
+      addr&.street,
+      addr&.street_2,
+      addr&.street_3,
+      addr&.city,
+      addr&.province || addr&.state&.abbr,
+      addr&.zip,
+      addr&.country,
+      sch&.name,
+      sch&.address&.state&.abbr || u.team&.state&.abbr,
+      (ath.sport || asport&.sport || u.team&.sport&.abbr)&.abbr_gender,
+      ath.grad,
+      asport&.main_event,
+      asport&.main_event_best,
+      asport&.stats,
+    ]
+  end

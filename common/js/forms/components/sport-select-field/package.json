@@ -1,0 +1,6 @@
+{
+  "name": "SportSelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./sport-select-field.jsx"
+}

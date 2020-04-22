@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  Dir.glob("#{APP_ROOT}/{config,test,client}/**/{.*,*}.base").each do |file|
+    new_file = file.to_s.sub('.base', '')
+    unless File.exist?(new_file)
+      p "#{file} => #{new_file}"
+      unless File.directory?(file)
+        txt = File.read(file)
+        File.open(new_file, 'w') {|f| f << txt}
+      else
+        File.rename(file, new_file)
+      end
+    end
+  end
+end

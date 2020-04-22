@@ -1,0 +1,90 @@
+<% start = nil %>
+<% total = 0.0 %>
+<table class="table">
+  <thead>
+    <tr>
+      <th class="text-center" colspan="4">
+        <% if since %>
+        CLOCK TIME SINCE: <%= since %>
+        <% else %>
+          TOTAL CLOCK TIME
+        <% end %>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        IN
+      </th>
+      <th>
+        OUT
+      </th>
+      <th>
+        TIME (HH:MM:SS.ms)
+      </th>
+      <th>
+        TIME (Decimal)
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% user.staff.clocks_since(since).each do |clock| %>
+      <% if start %>
+        <% total += (value = clock.created_at.to_f - start.to_f) %>
+          <td>
+            <% if @current_user&.dus_id == 'SAM-PSN' %>
+              <%= link_to clock.created_at.strftime("%F (%a) - %r"), edit_admin_clock_path(clock) %>
+            <% else %>
+              <%= clock.created_at.strftime("%F (%a) - %r") %>
+            <% end %>
+          </td>
+          <td>
+            <%= Time.zone.at(value).utc.strftime("%H:%M:%S.%L") %>
+          </td>
+          <td>
+            <%= (value / 1.hour).round(5) %>
+          </td>
+        </tr>
+        <% start = nil %>
+      <% else %>
+        <tr>
+          <td>
+            <% start = clock.created_at %>
+            <% if @current_user&.dus_id == 'SAM-PSN' %>
+              <%= link_to start.strftime("%F (%a) - %r"), edit_admin_clock_path(clock) %>
+            <% else %>
+              <%= start.strftime("%F (%a) - %r") %>
+            <% end %>
+          </td>
+      <% end %>
+    <% end %>
+    <% if start %>
+      <% time = Time.zone.now %>
+      <% total += (value = time.to_f - start.to_f) %>
+        <td class="text-danger">
+          <%= time.strftime("%F (%a) - %r") %>
+        </td>
+        <td class="text-danger">
+          <%= Time.zone.at(value).utc.strftime("%H:%M:%S.%L") %>
+        </td>
+        <td class="text-danger">
+          <%= (value / 1.hour).round(5) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="2">
+        Total
+      </th>
+      <th>
+        <% hours = (total - (total % 1.hour)) %>
+        <% time = total - hours %>
+        <%= "#{sprintf '%02d', (hours / 1.hour).to_i}:#{Time.zone.at(time).utc.strftime("%M:%S.%L")}" %>
+      </th>
+      <th>
+        <%= (total / 1.hour).round(5) %>
+      </th>
+    </tr>
+  </tfoot>
+</table>

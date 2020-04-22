@@ -1,0 +1,5 @@
+{
+  "name": "ParticipantsPage",
+  "private": true,
+  "main": "./participants.jsx"
+}

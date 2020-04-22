@@ -1,0 +1,5 @@
+{
+  "name": "IncentiveDeadlinesUploadForm",
+  "private": true,
+  "main": "./incentive-deadlines-upload-form.jsx"
+}

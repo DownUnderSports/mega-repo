@@ -1,0 +1,5 @@
+{
+  "name": "NominationFormPage",
+  "private": true,
+  "main": "./nomination-form.jsx"
+}

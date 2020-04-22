@@ -1,0 +1,5 @@
+{
+  "name": "MailingsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

@@ -1,0 +1,15 @@
+default: &default
+  adapter: redis
+  url: <%= ENV.fetch('REDIS_URL') { 'redis://localhost:6379/1' } %>
+
+development:
+  <<: *default
+  channel_prefix: down_under_sports_development
+
+test:
+  <<: *default
+  channel_prefix: down_under_sports_test
+
+production:
+  <<: *default
+  channel_prefix: down_under_sports_production

@@ -1,0 +1,11 @@
+@import 'partials/print_tables';
+
+.align-bottom {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items:  flex-end;
+  height: 100%;
+  & > * {
+    flex: 1
+  }
+}

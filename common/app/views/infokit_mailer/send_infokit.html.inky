@@ -1,0 +1,50 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Thank you for your interest in Competing Down Under!</h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="https://downundersports.com/deposit/<%= @athlete.dus_id %>">Pay Deposit</item>
+          <item href="#">DUS ID: <%= @athlete.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day!
+      </p>
+      <p>
+        Congratulations on taking your first step toward competing in the Down Under Sports Tournaments! Over the past 32 years, we've had over 55,000 participants travel with us to the land down under.
+      </p>
+      <p>
+        Your next step is for you and a parent or guardian to <%= link_to 'view our information video', "https://downundersports.com/videos/#{@athlete.dus_id}" %> where we will cover safety, supervision, travel, pricing, and fundraising opportunities. Watch to the end of the video to unlock a secret limited discount!
+      </p>
+      <p>
+        To schedule a one-on-one appointment with a specialist from Down Under Sports, <%= link_to 'please click here.', generate_schedule_link(@athlete.dus_id) %>
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'Click Here to View Information Video', "https://downundersports.com/videos/#{@athlete.dus_id}", class: 'btn btn-block btn-1' %>
+        <spacer size="16"></spacer>
+        <%= link_to raw("Click Here to Pay Deposit &amp; Join The Team"), "https://downundersports.com/deposit/#{@athlete.dus_id}", class: 'btn btn-block btn-3' %>
+      </center>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

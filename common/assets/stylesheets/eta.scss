@@ -1,0 +1,45 @@
+@import 'partials/pdf';
+
+html {
+  width: 100vw;
+  body {
+    background: transparent !important;
+    padding-top: .2in;
+    padding-bottom: .2in;
+  }
+  .container{
+    width: 6in !important;
+    min-width: 6in !important;
+    max-width: 6in !important;
+    margin: auto;
+  }
+}
+
+
+* {
+  overflow: visible !important;
+}
+
+.img-fluid {
+  max-height: 100%;
+}
+
+@media print {
+  ::first-letter{
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    &, body {
+      margin: 0;
+      background: transparent !important;
+      padding-top: 0;
+      padding-bottom: 0;
+      font-size: 11px;
+    }
+  }
+  @page {
+    size: 6in 3.9in;
+    margin: 0.1in 0.2in;
+  }
+}

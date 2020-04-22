@@ -1,0 +1,149 @@
+<% if ((@user.get_athlete && (coach = @user.get_athlete.team_coach)) || (coach = @user.get_coach)) %>
+  <% assistant = coach.assistant_coach.presence %>
+  <div class="row form-group">
+    <div class="col col-xs-12" style="background: #d9edf7">
+      <h3>
+        <span class="pull-right float-right">
+          <%= @user.wristband %> wristbands | <%= @user.bus %> bus
+        </span>
+        COACH <%= coach.user.basic_name.upcase %>
+      </h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-xs-12">
+      <table class="table table-sm keep-grouped spread-cells">
+        <tbody>
+          <tr>
+            <th colspan="6">
+              <%= assistant ? 'Coaches' : 'Coach' %>
+            </th>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2">
+              <%= coach.user.basic_name %>
+            </td>
+            <td>
+              <%= coach.user.phone %>
+            </td>
+            <td colspan="2">
+              <%= coach.user.email %>
+            </td>
+          </tr>
+          <% if assistant %>
+            <tr class="print-bg-info">
+              <td></td>
+              <td colspan="2">
+                <%= assistant.user.basic_name %>
+              </td>
+              <td>
+                <%= assistant.user.phone %>
+              </td>
+              <td colspan="2">
+                <%= assistant.user.email %>
+              </td>
+            </tr>
+          <% end %>
+          <% supporters = [
+            *(Traveler.everything(false).where(id: coach.user.relations.select(:id), category: :contact).to_a),
+            *(Traveler.everything(false).where(id: (assistant && assistant.user.relations.select(:id)), category: :contact).to_a),
+            *(Traveler.everything(false).where(id: coach.team_athletes.map(&:user).map {|u| u.relations.pluck(:id)}.flatten, category: :contact).to_a),
+          ].map {|u| u.is_active? ? u.id : nil }.select(&:present?) %>
+
+          <% if supporters.size > 0 %>
+            <tr>
+              <th colspan="6">
+                Supporters
+              </th>
+            </tr>
+            <% User.where(id: supporters.uniq).order(:first, :last).each_with_index do |u, i| %>
+              <tr class="<%= (i % 2 == 0) ? '' : 'print-bg-info' %>">
+                <td></td>
+                <td colspan="2">
+                  <%= u.basic_name %>
+                </td>
+                <td colspan="3"></td>
+              </tr>
+            <% end %>
+          <% end %>
+          <% current_count = (assistant ? 2 : 1) + supporters.uniq.size %>
+          <% total_count = current_count + coach.team_athletes.active.size %>
+          <tr>
+            <th colspan="6">
+              Athletes
+            </th>
+          </tr>
+          <% i = 0 %>
+          <%
+            coach.team_athletes.active.
+            includes(user: [team: :state]).
+            joins(user: [team: :state]).
+            order('states.abbr', 'users.first', 'users.last').
+            each do |athlete|
+          %>
+            <% if (total_count > 35) && ((current_count += 1) == 36)  %>
+              <% i = 0 %>
+                    </tbody>
+                  </table>
+                  <div class="text-right">
+                    <strong>
+                      Continued on Back >>
+                    </strong>
+                  </div>
+                </div>
+              </div>
+              <div style="page-break-before: always;"></div>
+              <div class="row form-group">
+                <div class="col col-xs-12" style="background: #d9edf7">
+                  <h3>
+                    <span class="pull-right float-right">
+                      <%= @user.wristband %> wristbands | <%= @user.bus %> bus
+                    </span>
+                    COACH <%= coach.user.basic_name.upcase %>
+                  </h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col col-xs-12">
+                  <table class="table table-sm keep-grouped spread-cells">
+                    <tbody>
+                      <tr>
+                        <th colspan="6">
+                          Athletes Continued
+                        </th>
+                      </tr>
+            <% end %>
+            <tr class="<%= ((i += 1) % 2 == 0) ? 'print-bg-info' : '' %>">
+              <td>
+                <%= athlete.user.team.state.abbr %>
+              </td>
+              <td colspan="2">
+                <%= athlete.user.basic_name %>
+              </td>
+              <td>
+                <%= athlete.user.phone %>
+              </td>
+              <td colspan="2">
+                <%= athlete.user.email %>
+              </td>
+            </tr>
+          <% end %>
+          <tr>
+            <th colspan="6">
+              TOTAL: <%= total_count %>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% unless (defined?(no_break) && no_break) || total_count > 35 %>
+    <div style="page-break-before: always;"></div>
+    &nbsp; <br>
+  <% end %>
+<% else %>
+  &nbsp; <br>
+  <div style="page-break-before: always;"></div>
+  &nbsp; <br>
+<% end %>

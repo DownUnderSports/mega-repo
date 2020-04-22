@@ -1,0 +1,5 @@
+<%= @user.url(true) %>
+
+<%= Date.today.to_s %>
+
+Requested By: <%= @staff_user&.full_name || @staff_user_id %>

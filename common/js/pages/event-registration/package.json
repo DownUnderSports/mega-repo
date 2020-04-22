@@ -1,0 +1,5 @@
+{
+  "name": "EventRegistrationPage",
+  "private": true,
+  "main": "./event-registration.jsx"
+}

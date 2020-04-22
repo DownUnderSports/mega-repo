@@ -1,0 +1,343 @@
+# encoding: utf-8
+
+wb = xlsx_package.workbook
+widths = [
+  3,
+  15,
+  20,
+  20,
+  20,
+  8,
+  8,
+  15,
+  20,
+  10,
+  15,
+  10,
+]
+bordered = {
+  style: :thin,
+  color: "000000",
+  edges: [:top, :bottom, :right, :left]
+}
+centered = {
+  horizontal: :center,
+  vertical: :center,
+  wrap_text: true
+}
+lefted = {
+  horizontal: :left,
+  vertical: :bottom,
+  wrap_text: true
+}
+styles = {}
+
+wb.styles do |s|
+  styles[:default] = s.add_style bg_color: 'FFFFFF', font_name: 'Calibri', sz: 10
+  styles[:grey_label_cell] = s.add_style bg_color: 'E6E6E6', font_name: 'Calibri', border: bordered, sz: 10, b: true
+  styles[:grey_title_cell] = s.add_style(
+    bg_color: 'E6E6E6',
+    font_name: 'Calibri',
+    b: true,
+    border: bordered,
+    alignment: centered,
+    sz: 10
+  )
+  styles[:grey_ex_cell] = s.add_style(
+    bg_color: 'E6E6E6',
+    font_name: 'Calibri',
+    i: true,
+    border: bordered,
+    alignment: centered,
+    sz: 10
+  )
+  styles[:white_cell] = s.add_style bg_color: 'FFFFFF', font_name: 'Calibri', sz: 10, border: bordered, alignment: lefted
+  styles[:border_left] = s.add_style border: { style: :thin, color: "000000", edges: [:left] }
+  styles[:border_thin] = s.add_style border: bordered, font_name: 'Calibri', sz: 10, alignment: centered
+  styles[:border_bold] = s.add_style border: bordered.merge({style: :medium}), font_name: 'Calibri', sz: 10, alignment: centered
+end
+
+wb.add_worksheet(name: 'Names English') do |sheet|
+  sheet.add_row [], style: styles[:default]
+  sheet.sheet_view.pane do |pane|
+    pane.y_split = 12
+    pane.top_left_cell = 'A13'
+    pane.active_pane = :bottom_right
+    pane.state = :frozen
+  end
+  sheet.sheet_view.show_grid_lines = false
+
+  sheet.sheet_format_pr.default_col_width = 9.140625
+  sheet.sheet_format_pr.default_row_height = 12.75
+
+  sheet.add_row [
+    'Virgin Australia Group Passenger Name List',
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil
+  ], height: 30, style: styles[:default]
+  sheet['A2'].sz = 20
+  sheet['A2'].font_name = 'Calibri'
+  sheet['A2'].b = true
+
+  sheet.merge_cells 'A2:H2'
+
+  sheet.add_row [], style: styles[:default]
+  sheet.add_row [], style: styles[:default]
+
+  [
+    ['Agency Name:', 'International Travel Specialists'],
+    ['Agency IATA:', '46541375'],
+    ['Group Name:', 'Down Under Sports'],
+    ['Contact Email:', 'sherrie@downundersports.com'],
+    ['First Dept Date:', Flight::Leg.order(:departing_at).limit(1).first&.local_departing_at&.strftime('%d-%b-%Y')],
+  ].each_with_index do |(h, v), i|
+    sheet.add_row [
+      h,
+      nil,
+      v,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil
+    ], height: 15, style: styles[:default]
+
+    n = i + 5
+
+    [
+      [%w(A B), styles[:grey_label_cell]],
+      [%w(C D E), styles[:white_cell]],
+      [%w(F), styles[:border_left]],
+    ].each do |cs, st|
+      cs.each do |c|
+        sheet["#{c}#{n}"].style = st
+      end
+    end
+
+    sheet.merge_cells "A#{n}:B#{n}"
+    sheet.merge_cells "C#{n}:E#{n}"
+  end
+
+  sheet.add_row [], style: styles[:default]
+  sheet.add_row [], style: styles[:default]
+
+  sheet.add_row [
+    'ID',
+    "VA PNR\nLocator",
+    'Last Name',
+    'First Name',
+    'Middle Name',
+    'Title',
+    'Infant',
+    'Gender',
+    'Date of Birth',
+    "FQTV\nAirline ID",
+    "FQTV\nNumber",
+    "Tour\nConductor",
+    "First Flight\nDate",
+    "Depart\nDate",
+    "Team Depart\nDate",
+    "Ticketed",
+    "Balance",
+    "Total Charges",
+    "Total Payments",
+    "Passport Submitted",
+    "Passport Checked",
+    "Link",
+  ], style: styles[:grey_title_cell], height: 40
+
+  sheet.add_row [
+    'Ex',
+    'G6T9ZU',
+    'Doe',
+    'John',
+    'Cameron',
+    'Mstr/M/',
+    nil,
+    'M',
+    'dd/mm/yyyy',
+    nil,
+    nil,
+    'Y',
+    'dd/mm/yyyy',
+    'dd/mm/yyyy',
+    'dd/mm/yyyy',
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+    nil,
+  ], style: styles[:grey_ex_cell], height: 15
+
+  i = 0
+  Flight::Schedule.
+    where(operator: 'Virgin Australia').
+    where_exists(:tickets).
+    joins(
+      <<-SQL
+        INNER JOIN (
+          SELECT flight_legs.schedule_id, MIN(flight_legs.departing_at) as departing_at
+          FROM flight_legs
+          GROUP BY flight_legs.schedule_id
+        ) legs ON legs.schedule_id = flight_schedules.id
+      SQL
+    ).
+    order('legs.departing_at', :pnr, :id).
+    each do |schedule|
+      schedule.tickets.
+        joins(traveler: :user).
+        includes(traveler: :user).
+        joins(
+          <<-SQL
+            LEFT JOIN user_passports
+              ON user_passports.user_id = users.id
+          SQL
+        ).
+        where(travelers: { cancel_date: nil }).
+        order('COALESCE(user_passports.surname, users.last)', 'COALESCE(user_passports.given_names, users.first)', :id).each do |ticket|
+          u = pp = last = middle = first = sex = birth_date = nil
+
+          u = ticket.traveler.user
+          pp = u.passport
+
+          if pp
+            last = pp.surname.to_s.gsub("'", '').gsub("-", ' ').strip.upcase.presence
+            names = pp.given_names.to_s.split(' ')&.map {|nm| nm.to_s.gsub("'", '').gsub("-", ' ').strip.upcase}
+            first, middle = [names[0].presence, (names[1..-1] || []).join(' ').presence]
+            sex = pp.sex
+            birth_date = pp.birth_date
+          else
+            middle = u.middle.to_s.gsub("'", '').gsub("-", ' ').strip.upcase.presence
+          end
+
+          last       ||= "#{u.last} #{u.suffix}".gsub("'", '').gsub("-", ' ').strip.upcase.presence
+          first      ||= u.first.to_s.gsub("'", '').gsub("-", ' ').strip.upcase.presence
+          sex        ||= u.gender
+          birth_date ||= u.birth_date
+
+          i += 1
+          sheet.add_row [
+            i,
+            schedule.pnr,
+            last,
+            first,
+            middle,
+            nil,
+            nil,
+            (sex == 'U' ? nil : sex),
+            birth_date&.strftime('%d/%m/%Y'),
+            nil,
+            nil,
+            nil,
+            schedule.legs.first_departing.local_departing_at.to_date.strftime('%d/%m/%Y'),
+            ticket.traveler.departing_date.strftime('%d/%m/%Y'),
+            ticket.traveler.team.departing_date.strftime('%d/%m/%Y'),
+            ticket.ticketed.y_n_to_s,
+            ticket.traveler.balance.to_s,
+            ticket.traveler.total_charges.to_s,
+            ticket.traveler.total_payments.to_s,
+            (!!pp).y_n_to_s,
+            (!!pp&.second_checker_id.present?).y_n_to_s,
+            u.admin_url
+          ], style: [
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_bold],
+            styles[:border_bold],
+            styles[:border_bold],
+            styles[:border_bold],
+            styles[:border_thin],
+            styles[:border_bold],
+            styles[:border_bold],
+            styles[:border_thin],
+            styles[:border_bold],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+            styles[:border_thin],
+          ], height: 15
+        end
+    end
+
+  (i < 80) && (80 - i).times do
+    i += 1
+    sheet.add_row [
+      i,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+      nil,
+    ], style: [
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_bold],
+      styles[:border_bold],
+      styles[:border_bold],
+      styles[:border_bold],
+      styles[:border_thin],
+      styles[:border_bold],
+      styles[:border_bold],
+      styles[:border_thin],
+      styles[:border_bold],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+      styles[:border_thin],
+    ], height: 15
+  end
+
+
+  sheet.column_widths *widths
+end

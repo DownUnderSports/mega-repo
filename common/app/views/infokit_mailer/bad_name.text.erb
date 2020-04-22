@@ -1,0 +1,21 @@
+BAD NAME SUBMISSION: <%= @domain %>/admin/users/<%= @dus_id %>
+
+in_database:
+<% @db.each do |k, v| %>
+  <%= k %>: <%= v %>
+<% end %>
+
+user_params:
+<% @user.each do |k, v| %>
+  <%= k %>: <%= v %>
+<% end %>
+
+guardian_params:
+<% @guardian.each do |k, v| %>
+  <%= k %>: <%= v %>
+<% end %>
+
+options:
+<% @options.each do |k, v| %>
+  <%= k %>: <%= v %>
+<% end %>

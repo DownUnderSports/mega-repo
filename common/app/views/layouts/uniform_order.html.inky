@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title><%= @title.presence || 'Down Under Sports' %></title>
+
+    <%= stylesheet_link_tag 'mailer.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <style media="print">
+      @page {
+        size: 8.5in 11in;
+        margin: 0.25in 0.25in;
+      }
+      body,
+      table.body,
+      p,
+      td,
+      th {
+        font-size: 11px
+      }
+    </style>
+  </head>
+
+  <body style="width:100vw;width:100%;">
+    <table class="body" style='width: 100%' data-made-with-foundation>
+      <tr>
+        <td class="center" align="center" valign="top">
+          <center>
+            <%= yield %>
+          </center>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

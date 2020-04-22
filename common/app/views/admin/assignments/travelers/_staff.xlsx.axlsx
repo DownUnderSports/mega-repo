@@ -1,0 +1,27 @@
+# encoding: utf-8
+
+wb.add_worksheet(name: staff.first) do |sheet|
+  sheet.add_row %W[
+    Link
+    Joined
+    Category
+    First
+    Last
+    State
+    Sport
+  ] + (Date::MONTHNAMES.select(&:present?).map {|m| [m[0..2], m[0..2]]}).flatten
+
+  staff.assignments.travelers.each do |assignment|
+    u = assignment.user
+    t = u.traveler
+    sheet.add_row [
+      u.admin_url,
+      t.join_date.to_s,
+      u.category_title,
+      u.first,
+      u.last,
+      t.team.state.abbr,
+      t.team.sport.abbr_gender
+    ]
+  end
+end

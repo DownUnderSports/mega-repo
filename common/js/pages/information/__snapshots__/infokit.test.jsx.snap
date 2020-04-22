@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pages - Infokit is snapshotable 1`] = `
+<div
+  className="infokit-page"
+>
+  <div
+    className="row form-group"
+  >
+    <div
+      className="col"
+    >
+      <div
+        style={
+          Object {
+            "display": "block",
+            "width": "100%",
+          }
+        }
+      >
+        <h1
+          className="text-center"
+        >
+          SUBMITTING...
+        </h1>
+        <div
+          className="la-ball-atom la-vw-sm"
+          style={
+            Object {
+              "color": "#00F",
+              "marginLeft": "auto",
+              "marginRight": "auto",
+              "zIndex": 0,
+            }
+          }
+        >
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

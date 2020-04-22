@@ -1,0 +1,5 @@
+{
+  "name": "TravelInfoPage",
+  "private": true,
+  "main": "./travel-info.jsx"
+}

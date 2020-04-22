@@ -1,0 +1,43 @@
+P.O. #:        <%= @uniform_order.id + 1000 %>
+Order Date:    <%= Date.today.strftime("%b-%d-%y") %>
+Departing On:  <%= @uniform_order.user.departing_date.strftime("%b-%d-%y") %>
+
+
+Ship To
+----------------------
+<%= @uniform_order.shipping_label %>
+
+
+Order Details (Total: <%= @uniform_order.price.to_s(true) %>)
+----------------------
+
+
+Item:        <%= @uniform_order.jersey_size_details[:number] %>
+Qty:         1
+Color:       <%= @uniform_order.jersey_size_details[:color] %>
+#:           <%= @uniform_order.jersey_number %>
+Size:        <%= @uniform_order.jersey_size.gsub(/[WM]-/i, '') %>
+Description: <%= @uniform_order.jersey_size_details[:description] %>
+Amount:      <%= @uniform_order.jersey_size_details[:price].to_s(true) %>
+<% if @uniform_order.two_color? %>
+
+
+Item:        <%= @uniform_order.jersey_size_details[:number] %>
+Qty:         1
+Color:       <%= @uniform_order.jersey_size_details[:color_2] %>
+#:           <%= @uniform_order.jersey_number %>
+Size:        <%= @uniform_order.jersey_size.gsub(/[WM]-/i, '') %>
+Description: <%= @uniform_order.jersey_size_details[:description] %>
+Amount:      <%= @uniform_order.jersey_size_details[:price].to_s(true) %>
+<% end %>
+<% if @uniform_order.shorts_size.present? %>
+
+
+Item:        <%= @uniform_order.shorts_size_details[:number] %>
+Qty:         1
+Color:       <%= @uniform_order.shorts_size_details[:color] %>
+#:
+Size:        <%= @uniform_order.shorts_size.gsub(/[WM]-/i, '') %>
+Description: <%= @uniform_order.shorts_size_details[:description] %>
+Amount:      <%= @uniform_order.shorts_size_details[:price].to_s(true) %>
+<% end %>

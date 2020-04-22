@@ -1,0 +1,6 @@
+{
+  "name": "SiteSeal",
+  "version": "0.2.0",
+  "private": true,
+  "main": "./site-seal.jsx"
+}

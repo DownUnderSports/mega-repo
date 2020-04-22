@@ -1,0 +1,50 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Thank you for your interest in Down Under Sports!</h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="https://downundersports.com/deposit/<%= @user.dus_id %>">Pay Deposit</item>
+          <item href="#">DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day!
+      </p>
+      <p>
+        Thank you for requesting information on the Down Under Sports Tournaments! Over the past 31 years, we've had over 55,000 participants travel with us to the land down under.
+      </p>
+      <p>
+        Please take a moment to view our information video where we will cover pricing, fundraising opportunities, and available discounts for the competition.
+      </p>
+      <p>
+        We are always on the look out for talented new athletes. If you coach any athletes that you think would make a strong competitor in our program, please don't hesitate to contact us.
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'Click Here to View Information Video', "https://downundersports.com/videos/#{@user.dus_id}", class: 'btn btn-block btn-1' %>
+        <spacer size="16"></spacer>
+        <%= link_to raw("Click Here to Pay Deposit &amp; Join The Team"), "https://downundersports.com/deposit/#{@user.dus_id}", class: 'btn btn-block btn-3' %>
+      </center>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

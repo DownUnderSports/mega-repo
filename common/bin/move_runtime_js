@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  puts "\n== Moving Runtime Files =="
+  ['', '/admin'].each do |prefix|
+    files = `echo public#{prefix}/static/js/runtime*`.strip.split(' ')
+    files.each do |file|
+      p file
+      `mv #{file} #{file.sub(/~/, '-')}`
+    end
+  end
+end

@@ -1,0 +1,72 @@
+wrapper_background_color = #153e7c
+img_background_color = #FFF
+font_color = #FFF
+.QRCode-page
+  margin-top: 2rem
+.qr-code-wrapper
+  display: inline-block
+  padding: .5rem
+  background: wrapper_background_color
+  border: 0px solid wrapper_background_color
+  border-radius: .5rem
+  margin-bottom: 1rem
+  .qr-code
+    width: 100%
+    background: img_background_color
+    border: 0px solid wrapper_background_color
+    border-radius: .5rem
+    padding: .125rem
+    img
+      width: 100%
+      max-width: 100%
+      // max-height: 100%
+
+  .qr-code-footer
+    width: 100%
+    text-align: center
+    display: flex
+    flex-flow: column nowrap
+    justify-content: center
+    align-items: center
+    color: font_color
+    font-weight: bold
+    margin: .25rem
+
+  a, a &
+    color: font_color
+    &:hover
+      color: font_color
+      font-weight: bolder
+      text-decoration: underline
+  &.sm
+    .qr-code
+      max-width: 100px
+      max-height: 100px
+
+    .qr-code-footer
+      max-width: 100px
+      max-height: 100px
+  &.md
+    .qr-code
+      max-width: 150px
+      max-height: 150px
+
+    .qr-code-footer
+      max-width: 150px
+      max-height: 150px
+  &.lg
+    .qr-code
+      max-width: 250px
+      max-height: 250px
+
+    .qr-code-footer
+      max-width: 250px
+      max-height: 250px
+  &.xl
+    .qr-code
+      max-width: 500px
+      max-height: 500px
+
+    .qr-code-footer
+      max-width: 500px
+      max-height: 500px

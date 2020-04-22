@@ -1,0 +1,5 @@
+{
+  "name": "CheckInPage",
+  "private": true,
+  "main": "./check-in.jsx"
+}

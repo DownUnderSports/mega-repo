@@ -1,0 +1,76 @@
+<% provide :mass_printing, true %>
+<% provide :title, @title || "#{@sport.abbr_gender} Emergency Contacts" %>
+<% provide :page_title, @title || "#{@sport.abbr_gender} Emergency Contacts" %>
+<% i = 0 %>
+<% @sport.buses.each do |bus| %>
+  <% next unless bus.travelers.size > 0 %>
+  <% if i > 0 %>
+    <div style="page-break-before: always;"></div>
+  <% end %>
+  <% i += 1 %>
+  <div class="row">
+    <div class="col-12">
+      <div style="font-size: .2in; text-align: right;">
+        <h3><%= bus.to_str %></h3>
+      </div>
+    </div>
+  </div>
+  <table class="table print-slim">
+    <thead>
+      <tr>
+        <th>
+          <%= bus.to_str %>
+        </th>
+        <th>
+          Relationship
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          Gender
+        </th>
+        <th>
+          Phone
+        </th>
+        <th>
+          Email
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% bus.travelers.joins(:user).order("users.last", "users.first", "users.middle").each do |t| %>
+        <% next unless t.user.is_athlete? || t.user.under_age? %>
+        <tr>
+          <th colspan="6">
+            <%= t.user.last %>, <%= t.user.first %> <%= t.user.middle %> (<%= t.user.is_athlete? ? 'Ath:' : 'UA Sup:' %> <%= t.user.dus_id %>)
+          </th>
+        </tr>
+        <% t.user.relations.each do |ur| %>
+          <% next unless ur.related_user.interest.contactable? %>
+          <tr>
+            <td></td>
+            <td>
+              <%= ur.relationship %>
+            </td>
+            <td>
+              <%= ur.related_user.basic_name %>
+            </td>
+            <td>
+              <%= ur.related_user.gender %>
+            </td>
+            <td>
+              <%= ur.related_user.ambassador_phone %>
+            </td>
+            <td>
+              <%= ur.related_user.ambassador_email %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+<script>
+  (function(){ document.addEventListener('DOMContentLoaded', function(){window.print()}, false); })();
+</script>

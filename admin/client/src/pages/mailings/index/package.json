@@ -1,0 +1,5 @@
+{
+  "name": "MailingsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

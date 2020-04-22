@@ -1,0 +1,129 @@
+<% yesterday_morning = Time.zone.yesterday.midnight %>
+<% yesterday_night   = Time.zone.yesterday.end_of_day %>
+<% is_yesterday      = ->(column) { column.between(yesterday_morning..yesterday_night) } %>
+
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h4 class="text-center">Respond Totals for <%= Date.yesterday.to_s(:long) %></h4>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Athletes</th>
+            <th>Others</th>
+            <th>All</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% responds = User.where.not(responded_at: nil) %>
+          <tr>
+            <% counter = responds.where(is_yesterday.call(User.arel_table[:responded_at])) %>
+            <th>
+              New Responds
+            </th>
+            <td>
+              <%= counter.athletes.count(1) %>
+            </td>
+            <td>
+              <%= counter.non_athletes.count(1) %>
+            </td>
+            <td>
+              <%= counter.count(1) %>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              Total Responds
+            </th>
+            <td>
+              <%= responds.athletes.count(1) %>
+            </td>
+            <td>
+              <%= responds.non_athletes.count(1) %>
+            </td>
+            <td>
+              <%= responds.count(1) %>
+            </td>
+          </tr>
+          <tr>
+            <th colspan="4">&nbsp;</th>
+          </tr>
+          <% video_views   = Meeting::Video::View.joins(:video).where(meeting_videos: { category: 'I' }) %>
+          <% views_watched = video_views.where(watched: true) %>
+          <% views_started = video_views.where(watched: false).where.not(last_viewed_at: nil) %>
+          <% view_ar_t = Meeting::Video::View.arel_table %>
+          <tr>
+            <% watched_counter = User.where(id: views_watched.where(is_yesterday.call(view_ar_t[:first_watched_at])).select(:user_id)) %>
+            <th>
+              New Watched Video
+            </th>
+            <td>
+              <%= watched_counter.athletes.count(1) %>
+            </td>
+            <td>
+              <%= watched_counter.non_athletes.count(1) %>
+            </td>
+            <td>
+              <%= watched_counter.count(1) %>
+            </td>
+          </tr>
+          <tr>
+            <% started_counter = User.where(id: views_started.where(is_yesterday.call(view_ar_t[:first_viewed_at])).select(:user_id)).where.not(id: watched_counter.select(:id)) %>
+            <th>
+              New Started Video
+            </th>
+            <td>
+              <%= started_counter.athletes.count(1) %>
+            </td>
+            <td>
+              <%= started_counter.non_athletes.count(1) %>
+            </td>
+            <td>
+              <%= started_counter.count(1) %>
+            </td>
+          </tr>
+          <tr>
+            <% watched_counter = User.where(id: views_watched.select(:user_id)) %>
+            <th>
+              Total Watched Video
+            </th>
+            <td>
+              <%= watched_counter.athletes.count(1) %>
+            </td>
+            <td>
+              <%= watched_counter.non_athletes.count(1) %>
+            </td>
+            <td>
+              <%= watched_counter.count(1) %>
+            </td>
+          </tr>
+          <tr>
+            <% started_counter = User.where(id: views_started.select(:user_id)).where.not(id: watched_counter.select(:id)) %>
+            <th>
+              Total Started Video
+            </th>
+            <td>
+              <%= started_counter.athletes.count(1) %>
+            </td>
+            <td>
+              <%= started_counter.non_athletes.count(1) %>
+            </td>
+            <td>
+              <%= started_counter.count(1) %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </columns>
+  </row>
+</container>

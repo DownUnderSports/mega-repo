@@ -1,0 +1,5 @@
+{
+  "name": "ProxyPage",
+  "private": true,
+  "main": "./proxy.jsx"
+}

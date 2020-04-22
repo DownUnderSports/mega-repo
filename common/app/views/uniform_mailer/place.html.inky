@@ -1,0 +1,319 @@
+<style type="text/css">
+  *,
+  html,
+  body,
+  div,
+  table {
+    background: #ffffff;
+  }
+
+  html,
+  body,
+  div,
+  table {
+    width: 100vw;
+    width: 100%;
+  }
+
+  center address {
+    text-align: left !important;
+    font-style: normal;
+  }
+  table {
+    width: 100vw !important;
+    width: 100% !important
+  }
+  table.literal th {
+    border: 2px solid #000000;
+    font-weight: 700;
+  }
+  table.literal th,
+  table.literal td {
+    padding: .5rem
+  }
+
+  tr.with-border td,
+  td.with-border {
+    border: 2px solid #000000;
+  }
+
+</style>
+<container>
+  <row>
+    <columns small="12">
+      <spacer size="32"></spacer>
+    </columns>
+  </row>
+  <row>
+    <columns small="5">
+      <address>
+        <strong>Down Under Sports</strong><br>
+        1755 North 400 East, Suite 201<br>
+        North Logan, UT 84341
+      </address>
+      <spacer size="32"></spacer>
+      <% unless @packing_slip %>
+      <table class="literal">
+        <thead>
+          <tr>
+            <th>
+              Vendor
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <address>
+              <% if @uniform_order.sport_provider == :logo_shop %>
+                <strong>The Logo Shop</strong><br>
+                40 South Main<br>
+                Logan, UT 84321
+              <% else %>
+                <strong>Badger Screen Printing Co.</strong><br>
+                1795 N 600 W<br>
+                Logan, UT 84321
+              <% end %>
+              </address>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <% end %>
+      <spacer size="32"></spacer>
+      <table class="literal">
+        <thead>
+          <tr>
+            <th>
+              Customer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <address style="text-align: left!important;">
+                <%- sv =  @uniform_order.shipping_label.split("\n") -%>
+                <strong><%= sv[0] %></strong><br>
+                <%= sv[1..-1].join('<br>').html_safe %>
+              </address>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <spacer size="32"></spacer>
+    </columns>
+    <columns small="1" large="2">&nbsp;</columns>
+    <columns large="10" small="6">
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        Purchase Order
+      </h3>
+      <table class="literal">
+        <thead>
+          <tr>
+            <th class="text-center">
+              Date
+            </th>
+            <th class="text-center">
+              P.O. #
+            </th>
+            <th class="text-center">
+              Departing On
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">
+              <%= Date.today.strftime("%b-%d-%y") %>
+            </td>
+            <td class="text-center">
+              <%= @uniform_order.id + 1000 %>
+            </td>
+            <td class="text-center">
+              <%= @uniform_order.user.departing_date.strftime("%b-%d-%y") %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </columns>
+  </row>
+  <row>
+    <columns small="12">
+      <table class="literal">
+        <thead>
+          <tr>
+            <th class="text-center" colspan="2">
+              Item
+            </th>
+            <th class="text-center">
+              Qty
+            </th>
+            <th class="text-center">
+              State
+            </th>
+            <th class="text-center">
+              Sport
+            </th>
+            <th class="text-center" colspan="2">
+              Color
+            </th>
+            <th class="text-center">
+              #
+            </th>
+            <th class="text-center">
+              Size
+            </th>
+            <th class="text-center" colspan="3">
+              Description
+            </th>
+            <% unless @packing_slip %>
+            <th class="text-center">
+              Amount
+            </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="with-border">
+            <td class="text-center" colspan="2">
+              <%= @uniform_order.jersey_size_details[:number] %>
+            </td>
+            <td class="text-center">
+              1
+            </td>
+            <td class="text-center">
+              <%= @uniform_order.user&.team&.state&.abbr || @uniform_order.shipping['state_abbr'] %>
+            </td>
+            <td class="text-center">
+              <%= @uniform_order.sport.abbr_gender %>
+            </td>
+            <td class="text-center" colspan="2">
+              <%= @uniform_order.jersey_size_details[:color] %>
+            </td>
+            <td class="text-center">
+              <%= @uniform_order.jersey_number %>
+            </td>
+            <td class="text-center">
+              <%= @uniform_order.jersey_size.gsub(/[WM]-/i, '') %>
+            </td>
+            <td class="text-center" colspan="3">
+              <%= @uniform_order.jersey_size_details[:description] %>
+            </td>
+            <% unless @packing_slip %>
+            <td class="text-center">
+              <%= @uniform_order.jersey_size_details[:price].to_s(true) %>
+            </td>
+            <% end %>
+          </tr>
+          <% if @uniform_order.jersey_size_details[:color_2] %>
+            <tr class="with-border">
+              <td class="text-center" colspan="2">
+                <%= @uniform_order.jersey_size_details[:number] %>
+              </td>
+              <td class="text-center">
+                1
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.user&.team&.state&.abbr || @uniform_order.shipping['state_abbr'] %>
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.sport.abbr_gender %>
+              </td>
+              <td class="text-center" colspan="2">
+                <%= @uniform_order.jersey_size_details[:color_2] %>
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.jersey_number %>
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.jersey_size.gsub(/[WM]-/i, '') %>
+              </td>
+              <td class="text-center" colspan="3">
+                <%= @uniform_order.jersey_size_details[:description] %>
+              </td>
+              <% unless @packing_slip %>
+              <td class="text-center">
+                <%= @uniform_order.jersey_size_details[:price].to_s(true) %>
+              </td>
+              <% end %>
+            </tr>
+          <% end %>
+          <% if @uniform_order.shorts_size.present? %>
+            <tr class="with-border">
+              <td class="text-center" colspan="2">
+                <%= @uniform_order.shorts_size_details[:number] %>
+              </td>
+              <td class="text-center">
+                1
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.user&.team&.state&.abbr || @uniform_order.shipping['state_abbr'] %>
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.sport.abbr_gender %>
+              </td>
+              <td class="text-center" colspan="2">
+                <%= @uniform_order.shorts_size_details[:color] %>
+              </td>
+              <td class="text-center">
+              </td>
+              <td class="text-center">
+                <%= @uniform_order.shorts_size.gsub(/[WM]-/i, '') %>
+              </td>
+              <td class="text-center" colspan="3">
+                <%= @uniform_order.shorts_size_details[:description] %>
+              </td>
+              <% unless @packing_slip %>
+              <td class="text-center">
+                <%= @uniform_order.shorts_size_details[:price].to_s(true) %>
+              </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+        <% unless @packing_slip %>
+        <tfoot style="font-size: 1.5rem">
+          <% if @uniform_order.sport_provider == :badger %>
+          <tr>
+            <td class="text-center" colspan="9" style="width: 50%;">
+            </td>
+            <td class="text-center" colspan="2" style="width: 30%;">
+            </td>
+            <td class="text-center with-border">
+              <strong>
+                Shipping
+              </strong>
+            </td>
+            <td class="text-center with-border">
+              <strong>
+                $2.00
+              </strong>
+            </td>
+          </tr>
+          <% end %>
+          <tr>
+            <td class="text-center" colspan="9" style="width: 50%;">
+            </td>
+            <td class="text-center" colspan="2" style="width: 30%;">
+            </td>
+            <td class="text-center with-border">
+              <strong>
+                Total
+              </strong>
+            </td>
+            <td class="text-center with-border">
+              <strong>
+                <%= @uniform_order.price.to_s(true) %>
+              </strong>
+            </td>
+          </tr>
+        </tfoot>
+        <% end %>
+      </table>
+    </columns>
+  </row>
+</container>

@@ -1,0 +1,10 @@
+csv.set(
+  User::UniformOrder.create_stamps_csv(
+    params[:sport].presence \
+    && (
+      Sport[params[:sport]]&.id \
+      || Sport.where(abbr: params[:sport]).select(:sport_id)
+    ),
+    params[:sent_date].presence
+  )
+)

@@ -1,0 +1,37 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  paid
+  name
+  street
+  street_2
+  city
+  state
+  zip
+  sport_abbr
+  team_departing_date
+  url
+  returned_link
+  sent_date
+]
+
+Mailing.where(category: :earned_duffel_bag).order(:id).split_batches(preserve_order: true) do |b|
+  b.each do |m|
+    csv << [
+      m.user.dus_id,
+      m.user.traveler&.total_payments&.to_s,
+      m.user.print_names,
+      m.street,
+      m.street_2,
+      m.city,
+      m.state,
+      m.zip,
+      m.user.team&.sport&.abbr_gender,
+      m.user.team&.departing_date&.to_s,
+      m.user.admin_url,
+      "d.us/d/#{m.id}",
+      m.sent.presence&.to_s
+    ]
+  end
+end

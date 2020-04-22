@@ -1,0 +1,5 @@
+<%= @email_body.gsub(/\[\[([^\[\]]+)\]\]\(([^()\[\]]+)\)/, "\n\nLink to \\1: \\2") %>
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>

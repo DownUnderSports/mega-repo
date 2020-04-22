@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# set -e
+
+# set -x # -> for debug
+
+here=$(pwd)
+
+echo "$here"
+
+for d in $here/*/vendor ; do
+  echo "$d"
+  ln -sf "$here/common" "$d/common"
+done
+
+for d in $here/* ; do
+  if [[ ! "$d" =~ common ]] && [[ -d "$d/app" ]]; then
+    echo "$d"
+    rm -rf "$d/lib/assets"
+    rm -rf "$d/lib/active_storage"
+    rm -rf "$d/lib/db"
+    rm -rf "$d/lib/tasks"
+    rm -rf "$d/db"
+    rm -rf "$d/config/sidekiq.yml"
+    rm -rf "$d/config/storage.yml"
+
+    ln -sf "$here/common/assets" "$d/lib/assets"
+    ln -sf "$here/common/lib/active_storage" "$d/lib/active_storage"
+    ln -sf "$here/common/lib/db" "$d/lib/db"
+    ln -sf "$here/common/lib/tasks" "$d/lib/tasks"
+    ln -sf "$here/common/db" "$d/db"
+    ln -sf "$here/common/config/sidekiq.yml" "$d/config/sidekiq.yml"
+    ln -sf "$here/common/config/storage.yml" "$d/config/storage.yml"
+  fi
+done

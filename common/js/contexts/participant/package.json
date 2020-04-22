@@ -1,0 +1,6 @@
+{
+  "name": "ParticipantContext",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./participant.jsx"
+}

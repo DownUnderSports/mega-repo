@@ -1,0 +1,54 @@
+<tbody class="row-group">
+  <tr>
+    <td></td>
+    <td colspan="2">
+      <%= user.basic_name %>
+    </td>
+    <td>
+      <%= user.category_title %>
+    </td>
+    <td>
+      <%= user.team.name %>
+    </td>
+    <td>
+      <%= user.phone.presence %>
+    </td>
+    <td>
+      <%= user.age %>
+    </td>
+    <td>
+      <%= user.bus %>
+    </td>
+    <td>
+      <%= user.wristband %>
+    </td>
+  </tr>
+  <tr class="print-bg-info">
+    <% ((f_leg = user.legs.ordered.first) && (f_leg = f_leg.departing_airport)) %>
+    <td colspan="3"></td>
+    <% if f_leg %>
+      <td colspan="2">
+        <%= user[:location].presence ? "#{user[:location]} (#{user[:code]})" : '' %>
+      </td>
+      <td>
+        <%= user[:flight_number] %>
+      </td>
+      <td>
+        <% (
+          ar_time =
+            user[:local_arriving_at].presence &&
+            user[:local_arriving_at].utc
+        ) %>
+        <%= ar_time ? ar_time.strftime("%l:%M %p") : '' %>
+      </td>
+      <td colspan="2">
+        <%= f_leg ? "#{f_leg.location} (#{f_leg.code})" : '' %>
+      </td>
+    <% else %>
+      <td colspan="6">
+        N/A
+      </td>
+    <% end %>
+
+  </tr>
+</tbody>

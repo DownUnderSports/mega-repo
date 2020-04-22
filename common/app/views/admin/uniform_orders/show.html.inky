@@ -1,0 +1,19 @@
+<% unless @packing_slip %>
+<%= render partial: 'order', locals: {packing_slip: false } %>
+<p style="page-break-before: always">
+<% end %>
+<%= render partial: 'order', locals: {packing_slip: true } %>
+<% if @direct_print %>
+<raw>
+  <script>
+    (function(){
+      document.addEventListener('DOMContentLoaded', function(){window.print()}, false);
+      window.addEventListener("afterprint", function(){
+        setTimeout(function() {
+          window.location = "<%= @next_uniform_order || '/admin/uniform_orders' %>".replace(/amp;/gi, '')
+        }, 0)
+      })
+    })();
+  </script>
+</raw>
+<% end %>

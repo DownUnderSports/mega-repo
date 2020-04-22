@@ -1,0 +1,36 @@
+<table class="table signature">
+  <thead>
+    <tr>
+      <th colspan="2">
+        <a href="https://www.downundersports.com">Down Under Sports</a>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>
+        Phone:
+      </th>
+      <td>
+        <!-- <a href="tel:+14357534732">435-753-4732 (Call or Text)</a> -->
+        <a href="tel:+14357534732">435-753-4732</a>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Email:
+      </th>
+      <td>
+        <a href="mailto:mail@downundersports.com">mail@downundersports.com</a>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Web:
+      </th>
+      <td>
+        <a href="https://www.downundersports.com">www.downundersports.com</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

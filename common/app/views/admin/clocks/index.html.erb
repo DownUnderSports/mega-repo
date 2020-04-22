@@ -1,0 +1,11 @@
+<% if authenticated_user %>
+  <%= render partial: 'admin/clocks/show_clocks', locals: { all_clocks: @all_clocks, user: @user || authenticated_user, is_index: true } %>
+<% else %>
+<section>
+  <header>
+    <h3>
+      NOT LOGGED IN
+    </h3>
+  </header>
+</section>
+<% end %>

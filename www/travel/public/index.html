@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json?201906251005">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico?201809171347">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="%PUBLIC_URL%/apple-touch-icon-57x57.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="%PUBLIC_URL%/apple-touch-icon-114x114.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="%PUBLIC_URL%/apple-touch-icon-72x72.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="%PUBLIC_URL%/apple-touch-icon-144x144.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="%PUBLIC_URL%/apple-touch-icon-60x60.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="%PUBLIC_URL%/apple-touch-icon-120x120.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="%PUBLIC_URL%/apple-touch-icon-76x76.png?201809171347" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="%PUBLIC_URL%/apple-touch-icon-152x152.png?201809171347" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon-196x196.png?201809171347" sizes="196x196" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon-128x128.png?201809171347" sizes="128x128" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon-96x96.png?201809171347" sizes="96x96" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon-32x32.png?201809171347" sizes="32x32" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon-16x16.png?201809171347" sizes="16x16" />
+    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/mstile-144x144.png?201809171347" />
+    <meta name="msapplication-square70x70logo" content="%PUBLIC_URL%/mstile-70x70.png?201809171347" />
+    <meta name="msapplication-square150x150logo" content="%PUBLIC_URL%/mstile-150x150.png?201809171347" />
+    <meta name="msapplication-square310x310logo" content="%PUBLIC_URL%/mstile-310x310.png?201809171347" />
+
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <style>
+      @-webkit-keyframes loading-ellipsis-tmp {
+          0% {
+            opacity: .2;
+          }
+          20% {
+            opacity: 1;
+          }
+          100% {
+            opacity: .2;
+          }
+      }
+
+      @keyframes loading-ellipsis-tmp {
+          0% {
+            opacity: .2;
+          }
+          20% {
+            opacity: 1;
+          }
+          100% {
+            opacity: .2;
+          }
+      }
+
+      .loading-ellipsis-tmp {
+        font-size: 5rem;
+        line-height: .25;
+      }
+
+      .loading-ellipsis-tmp span {
+        -webkit-animation-name: loading-ellipsis-tmp;
+                animation-name: loading-ellipsis-tmp;
+        -webkit-animation-duration: 2s;
+                animation-duration: 2s;
+        -webkit-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+        -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+      }
+
+      .loading-ellipsis-tmp span:nth-child(2) {
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+      }
+
+      .loading-ellipsis-tmp span:nth-child(3) {
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+      }
+      .loading-ellipsis-tmp span:nth-child(4) {
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+      }
+      .loading-ellipsis-tmp span:nth-child(5) {
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+      }
+    </style>
+    <link rel="preload" as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="preload" as="style">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="preload" as="style">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <page-body>
+        <div class="container h-100">
+          <div class="row h-100">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+              <div>
+                <a id="TMP_LOAD_LINK" href="mailto:it@downundersports.com?subject=site%20didn't%20load&body=%0A%0AUSER%20AGENT%3A%20|USER_AGENT|%0A%0ACONSOLE%3A%20%5B%5D">
+                  <img class="rounded mx-auto d-block" src="%PUBLIC_URL%/mstile-310x310.png" alt="Down Under Sports">
+                  <br>
+                  <h1 class="text-center">
+                    LOADING
+                  </h1>
+                  <h5>
+                    <i>
+                      Loading can take up to a minute under slow network conditions, but will be faster with consecutive page loads
+                    </i>
+                  </h5>
+                  <h3 id="page-not-loading-sub">
+                    CLICK HERE IF THE PAGE DOESN'T CHANGE WHEN LOADING IS FINISHED
+                  </h3>
+                </a>
+                <div class="text-center loading-ellipsis-tmp" style="color:#007bff">
+                  <span>&middot;</span>
+                  <span>&middot;</span>
+                  <span>&middot;</span>
+                  <span>&middot;</span>
+                  <span>&middot;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </page-body>
+    </div>
+    <div id="noscript" style="display:none">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 m-5">
+            <h1>OOPS! YOU&apos;VE DISABLED JAVASCRIPT</h1>
+            <p>This website runs on ReactJS, a framework that relies on JavaScript to function.</p>
+            <p>Please enable JavaScript, then <a href="#" onclick="event.preventDefault?event.preventDefault():event.returnValue=!1,location&&location.reload()">Click Here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      try {
+        console.log('%cStop!', 'color:red; font-size:60px; font-weight: bold; -webkit-text-stroke: 1px black;');
+        console.log('%cThis is a browser feature intended only for developers. If someone told you to copy and paste something here, it is a scam and they are trying to steal from you.', 'font-size: 18px;');
+        console.log('%cSee https://www.facebook.com/selfxss for more information.', 'font-size: 18px;');
+      } catch(e) {
+        console.log('Stop!');
+        console.log('This is a browser feature intended only for developers. If someone told you to copy and paste something here, it is a scam and they are trying to steal from you.');
+        console.log('See https://www.facebook.com/selfxss for more information.');
+        console.log('-------------------------------------------------------')
+        console.log('-------------------------------------------------------')
+        console.log(e)
+      }
+      console.log('-------------------------------------------------------')
+      console.log('-------------------------------------------------------')
+    </script>
+    <script type="text/javascript">
+      try {
+        if(!window.console) {
+          throw new Error('Browser has no console')
+        }
+        if(document.getElementById('dus-site-outer-wrapper')) {
+          throw new Error('Document Already Loaded')
+        }
+        var loadStartTime = new Date().getTime()
+        var loadErrLink = document.getElementById('TMP_LOAD_LINK')
+        if(!loadErrLink) {
+          throw new Error('Document Already Loaded')
+        }
+        var nav = window.navigator || {}
+        var ogLoadLinkHTML = loadErrLink.innerHTML
+        function getLoadTimeInSeconds(){
+          return ((new Date().getTime()) - loadStartTime) / 1000
+        }
+        function serverOnLoadError(ev, err){
+          console.log(err.message)
+          try {
+            loadErrLink.href = loadErrLink.href.replace(/CONSOLE%3A%20.*/, encodeURIComponent('CONSOLE: ' + JSON.stringify((console.history || [])[0] || {})))
+          } catch (errTwo) {
+            console.log(errTwo.message)
+          }
+          loadErrLink.onclick = void(0)
+          loadErrLink.dispatchEvent(new ev.constructor(ev.type, ev))
+        }
+
+        loadErrLink.href = loadErrLink.href.replace('|USER_AGENT|', encodeURIComponent(nav.userAgent))
+        loadErrLink.onclick = function sendLoadError(ev) {
+          try {
+            ev.preventDefault()
+            ev.stopPropagation()
+            var waitedFor = getLoadTimeInSeconds()
+            if(!window.downUnderSportsScriptIsLoaded && (waitedFor < 60)) {
+              return alert('Page Is Still Loading, Please Wait...')
+            }
+            loadErrLink.innerHTML = '<h1 class="text-center"> SENDING LOAD ERRORS TO IT SUPPORT </h1>'
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/errors/load_errors');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+              var errText = ''
+              try {
+                errText = JSON.parse(xhr.response).error
+              } catch(e) {
+                errText = e.message
+              }
+              setTimeout(function(){ location.reload(true) }, 5000)
+              if (xhr.status > 299) serverOnLoadError(ev, new Error('Load Error Portal responded with ' + xhr.status + ': ' + errText))
+            }
+            var navObject = {
+              waited: waitedFor,
+              loading_completed: !!window.downUnderSportsScriptIsLoaded
+            }
+            for(var p in nav) navObject[p] = nav[p]
+            xhr.send(JSON.stringify({
+              waited: waitedFor,
+              loading_completed: !!window.downUnderSportsScriptIsLoaded,
+              page: window.location.href,
+              agent: nav.userAgent,
+              console: console.history,
+              navigator: navObject
+            }));
+          } catch (err) {
+            serverOnLoadError(ev, err)
+          }
+
+        }
+
+        // try {
+        //   /**
+        //    * Console History v1.5.0
+        //    * console-history.js
+        //    *
+        //    * Licensed under the MIT License.
+        //    *
+        //    * Written by Sander Laarhoven <sander@laarhoven.org>
+        //    * For Doorbell.io <3
+        //    * https://git.io/console
+        //    * https://sander.tech - https://doorbell.io
+        //    */
+        //   /* Allow only one instance of console-history.js */
+        //   if (typeof console.history !== 'undefined') {
+        //     throw new Error('Only one instance of console-history.js can run at a time.')
+        //   }
+        //
+        //   /* Store the original log functions. */
+        //   console._log = console.log
+        //   console._info = console.info
+        //   console._warn = console.warn
+        //   console._error = console.error
+        //   console._debug = console.debug
+        //
+        //   /* Declare our console history variable. */
+        //   console.history = []
+        //
+        //   /* Redirect all calls to the collector. */
+        //   console.log = function () { return console._intercept('log', arguments) }
+        //   console.info = function () { return console._intercept('info', arguments) }
+        //   console.warn = function () { return console._intercept('warn', arguments) }
+        //   console.error = function () { return console._intercept('error', arguments) }
+        //   console.debug = function () { return console._intercept('debug', arguments) }
+        //
+        //   /* Give the developer the ability to intercept the message before letting
+        //      console-history access it. */
+        //   console._intercept = function (type, args) {
+        //     // Your own code can go here, but the preferred method is to override this
+        //     // function in your own script, and add the line below to the end or
+        //     // begin of your own 'console._intercept' function.
+        //     // REMEMBER: Use only underscore console commands inside _intercept!
+        //     console._collect(type, args)
+        //   }
+        //
+        //   /* Define the main log catcher. */
+        //   console._collect = function (type, args) {
+        //     // WARNING: When debugging this function, DO NOT call a modified console.log
+        //     // function, all hell will break loose.
+        //     // Instead use the original console._log functions.
+        //
+        //     // All the arguments passed to any function, even when not defined
+        //     // inside the function declaration, are stored and locally available in
+        //     // the variable called 'arguments'.
+        //     //
+        //     // The arguments of the original console.log functions are collected above,
+        //     // and passed to this function as a variable 'args', since 'arguments' is
+        //     // reserved for the current function.
+        //
+        //     // Collect the timestamp of the console log.
+        //     var time = new Date().toUTCString()
+        //
+        //     // Make sure the 'type' parameter is set. If no type is set, we fall
+        //     // back to the default log type.
+        //     if (!type) type = 'log'
+        //
+        //     // To ensure we behave like the original console log functions, we do not
+        //     // output anything if no arguments are provided.
+        //     if (!args || args.length === 0) return
+        //
+        //     // Act normal, and just pass all original arguments to
+        //     // the origial console function :)
+        //     console['_' + type].apply(console, args)
+        //
+        //     // Get stack trace information. By throwing an error, we get access to
+        //     // a stack trace. We then go up in the trace tree and filter out
+        //     // irrelevant information.
+        //     var stack = false
+        //     try { throw Error('') } catch (error) {
+        //       // The lines containing 'console-history.js' are not relevant to us.
+        //       var stackParts = error.stack.split('\n')
+        //       stack = []
+        //       for (var i = 0; i < stackParts.length; i++) {
+        //         if (stackParts[i].indexOf('console-history.js') > -1 ||
+        //         stackParts[i].indexOf('console-history.min.js') > -1 ||
+        //         stackParts[i].indexOf('console._collect') > -1 ||
+        //         stackParts[i].indexOf('console._intercept') > -1 ||
+        //         stackParts[i] === 'Error') {
+        //           continue
+        //         }
+        //         stack.push(stackParts[i].trim())
+        //       }
+        //     }
+        //
+        //     // Add the log to our history.
+        //     console.history.push({type: type, timestamp: time, arguments: args, stack: stack})
+        //     if(console.history.length > 100) console.history.shift()
+        //   }
+        // } catch(e) {
+        //   if(e.message !== 'Only one instance of console-history.js can run at a time.') {
+        //     alert('YOUR BROWSER IS TOO OLD. IT NEEDS TO BE UPDATED ASAP')
+        //     document.getElementById('root').innerHTML = '<h1 class="text-center">YOUR BROWSER IS TOO OLD. IT NEEDS TO BE UPDATED ASAP</h1>'
+        //   }
+        // }
+      } catch (e) {
+        if(
+            (e.message !== 'Only one instance of console-history.js can run at a time.')
+            && (e.message !== 'Document Already Loaded')
+        ) {
+          try {
+            console.error(e)
+          } catch(err) {
+            console.log(e)
+            console.log(err)
+          }
+          alert('YOUR BROWSER IS TOO OLD. IT NEEDS TO BE UPDATED ASAP')
+          document.getElementById('root').innerHTML = '<h1 class="text-center">YOUR BROWSER IS TOO OLD. IT NEEDS TO BE UPDATED ASAP</h1>' + '<h2>' + e.toString() + '</h2>'
+        }
+      }
+    </script>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+    <!-- <script type="module" src="%PUBLIC_URL%/import-service-worker.mjs"></script> -->
+  </body>
+</html>

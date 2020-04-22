@@ -1,0 +1,33 @@
+# encoding: utf-8
+
+wb.add_worksheet(name: 'Flight Requests') do |sheet|
+  sheet.add_row [
+    'Departing Date',
+    'First',
+    'Middle',
+    'Last',
+    'Suffix',
+    "Team Name",
+    'Link',
+    'Request(s)',
+  ]
+
+  Traveler.active.
+    where_exists(:requests, category: Traveler::Request.categories[:flight]).each do |t|
+      next if test_user_environment_ids.include?(t.id)
+
+      sheet.add_row [
+        t.departing_date,
+        t.user.first,
+        t.user.middle,
+        t.user.last,
+        t.user.suffix,
+        t.team.name,
+        t.user.admin_url,
+        t.requests.
+          flight_request.
+          pluck(:details).
+          join("\n-------------------\n")
+      ]
+    end
+end

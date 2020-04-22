@@ -1,0 +1,58 @@
+<container>
+  <row>
+    <columns small="12">
+      <form id="get_uniform_list_params">
+        <row>
+          <columns small="12">
+            <label for="get_sent_date">
+              Select Sent Date
+            </label>
+            <input type="date" id="get_sent_date">
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <label for="get_sent_date">
+              Select Sport
+            </label>
+            <select id="get_sport_abbr">
+              <option value="">Select Sport...</option>
+              <% Sport.all.order(:full, :full_gender).each do |sp| %>
+              <option value="<%= sp.abbr_gender %>"><%= sp.full_gender %></option>
+              <% end %>
+            </select>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <button type="submit" class="btn btn-block btn-primary">
+              Download Stamps Sheet
+            </button>
+          </columns>
+        </row>
+      </form>
+    </columns>
+  </row>
+</container>
+<script type="text/javascript">
+  function getSubmit(ev) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const date_val  = String(document.getElementById("get_sent_date").value).replace(/\s+/g, ''),
+          sport_val = String(document.getElementById("get_sport_abbr").value).replace(/\s+/g, ''),
+          url       = `${
+            window.location.href.replace(/(\.html)?\?.*/, '')
+          }.csv?pp=disable${
+            sport_val && `&sport=${sport_val}`
+          }${
+            date_val && `&sent_date=${date_val}`
+          }`;
+
+    window.location = url
+  }
+
+  const form = document.getElementById("get_uniform_list_params");
+
+  form.onsubmit = getSubmit;
+</script>

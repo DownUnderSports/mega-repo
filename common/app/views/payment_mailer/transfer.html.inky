@@ -1,0 +1,119 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        Down Under Sports Transfer Receipt
+      </h3>
+    </columns>
+  </row>
+</container>
+<container>
+  <row>
+    <columns>
+      <center>
+        <row>
+          <columns>
+            <p>
+              A transfer has been made involving your account(s). View the provided receipt below for more details.
+            </p>
+            <p>
+              Cheers,
+            </p>
+            <%= render partial: 'shared/email_footer' %>
+          </columns>
+        </row>
+        <spacer size="20" class="hr"></spacer>
+        <row>
+          <columns>
+            <h4>
+              Payment Information
+            </h4>
+          </columns>
+        </row>
+        <row>
+          <columns class="small-6">
+            <address>
+              <strong>Transfer Payment</strong>
+            </address>
+          </columns>
+          <columns class="small-6">
+            <row>
+              <columns class="small-6">
+                Date:&nbsp;&nbsp;
+              </columns>
+              <columns class="small-6">
+                <%= @payment.created_at.to_s(:long) %>
+              </columns>
+            </row>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <spacer size="20"></spacer>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <h4>Purchase Information</h4>
+            <spacer size="12"></spacer>
+            <table class='table table-bordered'>
+              <thead class='thead-inverse'>
+                <tr>
+                  <th>Item</th>
+                  <th>Description</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @payment.items.each do |item| %>
+                  <tr>
+                    <td>
+                      <%= item.name %>
+                    </td>
+                    <td>
+                      <%= item.description %>
+                    </td>
+                    <td>
+                      <%= item.price.to_s(true) %>
+                    </td>
+                    <td>
+                      <%= item.quantity || 1 %>
+                    </td>
+                    <td>
+                      <%= item.amount.to_s(true) %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+              <tfoot>
+                <tr class='table-info'>
+                  <td colspan='4'>Total</td>
+                  <td>
+                    <%= @payment.amount.to_s(true) %>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <spacer size="5" class="hr"></spacer>
+          </columns>
+        </row>
+        <row>
+          <columns>
+            <a href="https://downundersports.com/refunds">
+              Click Here to view the Down Under Sports Refund Policy
+            </a>
+          </columns>
+        </row>
+      </center>
+    </columns>
+  </row>
+</container>

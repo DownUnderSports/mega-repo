@@ -1,0 +1,7 @@
+<%= "#{"  " * (level - 1)}{" %>
+<%- hash.each do |prop, value| -%>
+<%= "#{"  " * level}#{prop}: #{
+  render(partial: 'shared/get_type', locals: { value: value, level: level })
+}," %>
+<%- end -%>
+<%= "#{"  " * (level - 1)}}" -%>

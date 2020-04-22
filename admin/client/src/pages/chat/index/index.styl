@@ -1,0 +1,42 @@
+@charset "UTF-8";
+@require 'common/stylus/colors'
+
+.Chat
+  .la-square-jelly-box
+    height: 25vw
+    width: 25vw
+    max-width: 25vh
+    max-height: 25vh
+    margin: 10vh auto
+    color: #153e7c
+    div:first-child
+      border: 1.5rem solid #d52027
+
+  .chat-links
+    a
+      display: block
+      border-top: 1px solid #ddd
+      border-bottom: 1px solid #ddd
+      padding: 1rem
+      position: relative
+      &.active
+        background: #000080
+        color: #FFF
+        border-color: #F00
+        border-width: 2px
+      &.notify
+        background: #f27272
+        color: #000
+        &::after
+        &::before
+          content: ""
+          display: block
+          background: #007bff
+          width: 7px
+          height: 100%
+          position: absolute
+          top: 0
+        &::after
+          right: -7px
+        &::before
+          left: -7px

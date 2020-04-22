@@ -1,0 +1,5 @@
+{
+  "name": "PassportForm",
+  "private": true,
+  "main": "./passport-form.jsx"
+}

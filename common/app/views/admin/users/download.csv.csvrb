@@ -1,0 +1,115 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  transfer_id
+  source
+  title
+  first
+  middle
+  last
+  suffix
+  gender
+  sport_abbr
+  contactable
+  school_name
+  original_school_name
+  is_school
+  street
+  street_2
+  street_3
+  city
+  state_abbr
+  province
+  zip
+  country
+  verified
+  school_pid
+  txfr_school_id
+  invited_date
+  main_event_best
+  main_event
+  rank
+  stats
+]
+
+schools = {}
+addresses = {}
+states = {}
+sources = {}
+sports = {}
+
+State.all.map do |st|
+  states[st.id] = st.abbr
+end
+
+Sport.all.map do |sp|
+  sports[sp.id] = sp.abbr
+end
+
+users = User.all
+
+if Boolean.parse(@athletes_only)
+  users = User.athletes
+  if @invited_date.present?
+    users = users.where_exists(:mailings, "category ilike 'invite%' AND sent = ?", Date.parse(@invited_date.to_s).to_s)
+  end
+end
+
+users.split_batches_values do |u|
+  is_school = false
+  athlete = u.is_athlete? ? u.athlete : nil
+  source = nil
+  asport = nil
+  school = nil
+
+  if athlete
+    source = (sources[athlete.source_id] ||= athlete.source.name)
+    asport = (athlete.athletes_sports.find_by(sport_id: athlete.sport_id) || athlete.athletes_sports.order(:created_at).first)
+    school = (schools[athlete.school_id] ||= athlete.school)
+  end
+
+  addr = (
+    u.address_id ? (addresses[u.address_id] ||= u.address) : nil
+  ) || (
+    (ru = u.related_users.where.not(address_id: nil).first) &&
+    (addresses[ru.address_id] ||= ru.address)
+  ) || (
+    school ?
+    ((is_school = true) && (addresses[school.address_id] ||= school.address)) :
+    nil
+  )
+
+  csv << [
+    u.dus_id,
+    u.transfer_id,
+    source,
+    u.title,
+    u.first,
+    u.middle,
+    u.last,
+    u.suffix,
+    u.gender,
+    sports[athlete&.sport_id],
+    u.contactable,
+    school&.name,
+    athlete&.original_school_name,
+    is_school.to_s,
+    addr&.street,
+    addr&.street_2,
+    addr&.street_3,
+    addr&.city,
+    states[addr&.state_id],
+    addr&.province,
+    addr&.zip,
+    addr&.country,
+    addr&.verified&.to_s,
+    school&.pid,
+    athlete&.txfr_school_id,
+    (@invited_date.presence || u.mailings.invites.limit(1).take&.sent),
+    asport&.main_event_best,
+    asport&.main_event,
+    asport&.rank,
+    asport&.stats
+  ]
+end

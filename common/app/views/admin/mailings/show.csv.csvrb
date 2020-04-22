@@ -1,0 +1,50 @@
+# encoding: utf-8
+
+csv << %w[
+  url
+  dus_id
+  main_dus_id
+  user_category
+  first
+  middle
+  last
+  suffix
+  print_name
+  meeting_date
+  deposit_date
+  mailing_category
+  street
+  street_2
+  street_3
+  city
+  state
+  zip
+  country
+  inline
+]
+
+@mailings.split_batches_values do |m|
+  u = m.user
+  csv << [
+    u.url(true),
+    u.dus_id,
+    u.main_relation&.dus_id,
+    u.category_title,
+    u.first,
+    u.middle,
+    u.last,
+    u.suffix,
+    u.print_names,
+    u.meeting_registrations.where(attended: true).order(:created_at).limit(1).take&.meeting&.start_time&.to_date&.to_s,
+    u.traveler&.items&.order(:created_at)&.limit(1)&.take&.created_at&.to_date&.to_s,
+    m.category,
+    m.street,
+    m.street_2,
+    m.street_3,
+    m.city,
+    m.state,
+    m.zip,
+    m.country,
+    Address.new(m.address).inline
+  ]
+end

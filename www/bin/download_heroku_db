@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  puts "\n== Downloading Database =="
+  system! 'heroku pg:backups:download'
+
+  puts "\n== Loading Dump File =="
+  system 'bin/load_db_dump'
+
+  puts "\n== Removing Dump File =="
+  system! 'rm latest.dump'
+end

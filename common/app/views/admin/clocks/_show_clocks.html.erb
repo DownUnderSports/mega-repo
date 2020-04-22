@@ -1,0 +1,42 @@
+<style>
+  #clocks_outer_wrapper > header {
+    position: relative;
+  }
+
+  #clocks_outer_wrapper > header > h3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    padding: 0.5rem;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0px 1px 10px #888
+  }
+</style>
+<section id="clocks_outer_wrapper">
+  <header>
+    <h3>
+      Time Clock Data For: <%= user.print_names %>
+      <%= link_to "Download CSV", admin_clock_path(user, format: :csv, all_clocks: !!all_clocks), class: 'btn btn-info float-right ml-3' %>
+      <%=
+        link_to \
+          "Show #{all_clocks ? 'Current' : 'All'}",
+          (defined?(is_index) && is_index) \
+            ? admin_clocks_path(all_clocks: !all_clocks) \
+            : admin_clock_path(user, all_clocks: !all_clocks),
+          class: 'btn btn-secondary float-right ml-3'
+      %>
+      <% unless defined?(no_button) && no_button %>
+        <%= render partial: 'admin/clocks/break' %>
+      <% end %>
+    </h3>
+  </header>
+  <% (all_clocks ? [ nil ] : [ monday, last_monday, two_mondays_ago ]).each do |since| %>
+    <div class="row form-group" style="margin-top: 5rem; page-break-after: always">
+      <div class="col-12">
+        <%= render partial: 'admin/clocks/clocks_since', locals: { since: since, user: user } %>
+      </div>
+    </div>
+  <% end %>
+</section>

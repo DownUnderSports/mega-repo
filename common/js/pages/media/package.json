@@ -1,0 +1,5 @@
+{
+  "name": "MediaPage",
+  "private": true,
+  "main": "./media.jsx"
+}

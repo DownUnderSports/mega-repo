@@ -1,0 +1,55 @@
+table.spread-cells {
+  th,
+  td {
+    width: 1%
+  }
+  table {
+    th,
+    td {
+      width: auto
+    }
+  }
+  tr.print-bg-info {
+    background: #d9edf7aa;
+    th,
+    td {
+      background: #d9edf7aa;
+    }
+  }
+}
+
+tbody.row-group {
+  &, * {
+    page-break-inside:avoid !important;
+  }
+}
+
+@media print {
+  table {
+    &.keep-grouped {
+      thead {
+        display: table-row-group !important;
+      }
+    }
+
+    &.print-slim {
+      &, thead, tbody {
+        tr {
+          td {
+            padding: 4px;
+            font-size: .9rem
+          }
+        }
+      }
+    }
+
+    tr.print-bg-info {
+      background: #d9edf7aa!important;
+      th,
+      td {
+        background: #d9edf7aa!important;
+      }
+    }
+
+  }
+}

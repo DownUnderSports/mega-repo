@@ -1,0 +1,146 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th colspan="3">
+        <h4>
+          Submitted by: <%= @submitted_by %>
+        </h4>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="3">
+        School/Stats:
+      </th>
+    </tr>
+    <%- %i[ grad stats school_name school_city school_state_abbr ].each do |k| -%>
+    <tr>
+      <th></th>
+      <th>
+        <%= k.to_s.titleize %>:
+      </th>
+      <td>
+        <%= @athlete[k] %>
+      </td>
+    </tr>
+    <%- end -%>
+    <tr>
+      <th colspan="3">
+        Athlete:
+      </th>
+    </tr>
+    <%- %i[ first middle last suffix gender email phone ].each do |k| -%>
+    <tr>
+      <th></th>
+      <th>
+        <%= k.to_s.titleize %>:
+      </th>
+      <td>
+        <%= @athlete[k] %>
+      </td>
+    </tr>
+    <%- end -%>
+    <% if @nominator.present? %>
+      <tr>
+        <th colspan="3">
+          Nominated By:
+        </th>
+      </tr>
+      <%- %i[ relationship first last email phone ].each do |k| -%>
+      <tr>
+        <th></th>
+        <th>
+          <%= k.to_s.titleize %>:
+        </th>
+        <td>
+          <%= @nominator[k] %>
+        </td>
+      </tr>
+      <%- end -%>
+    <% end %>
+  </tbody>
+
+  <% if @query.present? %>
+  <tfoot>
+    <tr>
+      <th colspan="3">
+        FACEBOOK AD PARAMS
+      </th>
+    </tr>
+    <%- @query.each do |k, v| -%>
+    <tr>
+      <th></th>
+      <th>
+        <%= k %>:
+      </th>
+      <td>
+        <%= k %>
+      </td>
+    </tr>
+    <%- end -%>
+  </tfoot>
+  <% end %>
+</table>
+<hr>
+<table class="table">
+  <thead>
+    <tr>
+      <th colspan="2">
+        <h3 class="text-center">Instructions</h3>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>
+        <h4>
+          Step 1:
+        </h4>
+      </th>
+      <th>
+        <%= link_to 'Search for Existing User', "https://admin.downundersports.com/admin/users", class: 'btn btn-blue' %>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <h4>
+          Step 2:
+        </h4>
+      </th>
+      <th>
+        <%= link_to 'Add to Old System', "https://staff.downundersports.com/athletes/new", class: 'btn btn-blue' %>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <h4>
+          Step 3:
+        </h4>
+      </th>
+      <th>
+        <%= link_to 'Import Created User', "https://authenticate.downundersports.com/admin/imports/url", class: 'btn btn-blue' %>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <h4>
+          Step 4:
+        </h4>
+      </th>
+      <th>
+        Mark Appropriate Interest Level (Pending Decision = "Open Tryout"; Accepted = "Interested"; Rejected = "Not Going")
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <h4>
+          Step 5:
+        </h4>
+      </th>
+      <th>
+        Notify Athlete of Decision (Send Infokit if Accepted, Notify Rejected, Etc.)
+      </th>
+    </tr>
+  </tbody>
+</table>

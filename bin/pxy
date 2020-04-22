@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+echo "proxying to www/bin/$1 ${@:2}"
+pushd www
+bin/$1 "${@:2}"
+popd

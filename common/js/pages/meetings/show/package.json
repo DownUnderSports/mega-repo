@@ -1,0 +1,5 @@
+{
+  "name": "MeetingsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

@@ -1,0 +1,218 @@
+{
+  "running": [
+    {
+      "event": "100 M",
+      "all": true
+    },
+    {
+      "event": "200 M",
+      "all": true
+    },
+    {
+      "event": "400 M",
+      "all": true
+    },
+    {
+      "event": "800 M",
+      "all": true
+    },
+    {
+      "event": "1500 M",
+      "all": true
+    },
+    {
+      "event": "3000 M",
+      "all": true
+    },
+    {
+      "event": "90 M Hurdles",
+      "F": [
+        [
+          14,
+          15
+        ]
+      ],
+      "M": [
+
+      ]
+    },
+    {
+      "event": "100 M Hurdles",
+      "F": [
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20
+        ]
+      ],
+      "M": [
+        [
+          14,
+          15
+        ]
+      ]
+    },
+    {
+      "event": "110 M Hurdles",
+      "F": [
+
+      ],
+      "M": [
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20
+        ]
+      ]
+    },
+    {
+      "event": "200 M Hurdles",
+      "F": [
+        [
+          14,
+          15
+        ]
+      ],
+      "M": [
+        [
+          14,
+          15
+        ]
+      ]
+    },
+    {
+      "event": "300 M Hurdles",
+      "F": [
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ]
+      ],
+      "M": [
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ]
+      ]
+    },
+    {
+      "event": "400 M Hurdles",
+      "F": [
+        [
+          20
+        ]
+      ],
+      "M": [
+        [
+          20
+        ]
+      ]
+    },
+    {
+      "event": "2000 M Steeple",
+      "all": true
+    },
+    {
+      "event": "3000 M Walk",
+      "F": [
+        [
+          14,
+          15
+        ]
+      ],
+      "M": [
+        [
+          14,
+          15
+        ]
+      ]
+    },
+    {
+      "event": "5000 M Walk",
+      "F": [
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20
+        ]
+      ],
+      "M": [
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20
+        ]
+      ]
+    }
+  ],
+  "jumping": [
+    {
+      "event": "High Jump",
+      "all": true
+    },
+    {
+      "event": "Long Jump",
+      "all": true
+    },
+    {
+      "event": "Triple Jump",
+      "all": true
+    },
+    {
+      "event": "Pole Vault",
+      "all": true,
+      "competency": true
+    }
+  ],
+  "throwing": [
+    {
+      "event": "Discus",
+      "all": true
+    },
+    {
+      "event": "Hammer",
+      "all": true,
+      "competency": true
+    },
+    {
+      "event": "Javelin",
+      "all": true
+    },
+    {
+      "event": "Shot Put",
+      "all": true
+    }
+  ]
+}

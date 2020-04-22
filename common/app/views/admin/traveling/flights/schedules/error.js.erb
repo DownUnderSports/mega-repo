@@ -1,0 +1,12 @@
+$(function(){
+  $('#pnr_error').html(`
+    <% @schedule.each do |msg| %>
+      <% if msg.present? %>
+        <div class="alert alert-block alert-danger">
+          <p><%= sanitize msg %></p>
+        </div>
+      <% end %>
+    <% end %>
+  `);
+  $('#pnr_result').html('');
+})

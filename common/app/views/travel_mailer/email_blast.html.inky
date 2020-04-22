@@ -1,0 +1,95 @@
+<% if @confirmation %>
+<style type="text/css">
+  .form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    margin-bottom: 1rem
+  }
+  textarea.form-control {
+    min-height: 10vh;
+  }
+</style>
+<container>
+  <row>
+    <columns>
+      <%= form_for :email, url: '/admin/sampson' do |form| %>
+        <label>Sport</label>
+        <%= text_field_tag 'sport', @sport, class: "form-control", placeholder: "Sport (abbr or abbr_gender)", required: true %>
+
+        <label>Subject</label>
+        <%= text_field_tag 'subject', @subject, class: "form-control", placeholder: "Subject", required: true %>
+
+        <label>Banner</label>
+        <%= text_field_tag 'banner', @banner, class: "form-control", placeholder: "Banner (Subject if blank)" %>
+
+        <label>Body</label>
+        <%= text_area_tag 'body', @email_body, class: "form-control", placeholder: "Body", rows: 10, required: true %>
+
+        <%= text_field_tag 'confirmed', nil, class: "form-control", placeholder: "confirmed", required: false %>
+
+        <button type="submit" class="btn btn-block btn-primary">Submit</button>
+      <% end %>
+    </columns>
+  </row>
+</container>
+<% end %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag image_url('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center mt">
+        <%= @banner.presence || @subject %>
+      </h3>
+    </columns>
+  </row>
+</container>
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+      <% closed_early = false %>
+      <% @email_body.split("\n").each_with_index do |line, i| %>
+        <% if line =~ /^\[\[[^\[\]]+\]\]\([^()\[\])]+\)$/ %>
+          <% if i > 0 %>
+          </p>
+          <% end %>
+          <spacer size="16"></spacer>
+          <center>
+            <%= line.sub(/^\[\[([^\[\]]+)\]\]\(([^()]+)\)$/, "<a class=\"btn\" href=\"\\2\">\\1</a>").html_safe %>
+          </center>
+          <spacer size="16"></spacer>
+          <% closed_early = true %>
+        <% else %>
+          <% if closed_early %>
+            <% closed_early = false %>
+            <p>
+          <% elsif i > 0 %>
+            <br>
+          <% end %>
+          <%= line.gsub(/\[\[([^\[\]]+)\]\]\(([^()\[\]]+)\)/, "<a href=\"\\2\">\\1</a>").html_safe %>
+        <% end %>
+      <% end %>
+      <% unless closed_early %>
+      </p>
+      <% end %>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+</container>

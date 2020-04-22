@@ -1,0 +1,228 @@
+<% for_printing = !!(defined?(for_printing) && for_printing) %>
+<% edit_flights = !for_printing && !!(defined?(edit_flights) && edit_flights) %>
+<% if !for_printing %>
+<%= link_to "Print", flight_schedule_path(@schedule, format: :pdf), class: 'btn btn-info pull-right float-right' if @schedule.id %>
+<div class="printable">
+  <div class="print-fix">
+<% end %>
+<h3>
+  <%= @schedule.pnr %> - <%= @schedule.operator %> (reserved: <%= @schedule.seats_reserved %>, assigned: <%= @schedule.names_assigned %>)
+</h3>
+<% if @schedule.parent_schedule %>
+<h4>
+  Parent PNR:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= @schedule.parent_schedule.pnr %> <br>
+  Top Level PNR:&nbsp;&nbsp;<%= @schedule.top_level(:pnr) %>
+</h4>
+<% end %>
+<% if edit_flights %>
+  <%= form_for @schedule do |f| %>
+    <%= render partial: 'admin/traveling/flights/forms/flight_legs_fields', locals: {form: f, legs: @schedule.legs} %>
+    <%= f.submit 'Update Flights', class: 'btn btn-block btn-primary form-group' %>
+  <% end %>
+  <hr>
+  <hr>
+<% else %>
+  <%= flight_leg_table do %>
+    <% last_leg = nil %>
+    <% @schedule.legs.order(:departure_time, :arrival_time, :local_departing_at, :local_departing_at).each do |leg| %>
+      <tr>
+        <td>
+          <%= leg.flight_number %>
+        </td>
+        <td>
+          <%= leg.departing_airport_code %>
+        </td>
+        <td>
+          <%= leg.arriving_airport_code %>
+        </td>
+        <% layover = last_leg && (leg.departure_time.to_i - last_leg.arrival_time.to_i) %>
+        <% layover = last_leg && ("#{(hours = layover / 60 / 60)} hr #{((layover / 60) - (hours * 60))} min") %>
+        <td class="<%= layover && ("text-#{hours < 2 ? 'danger' : (hours < 4 ? 'warning' : 'black')}") %>">
+          <strong>
+            <%= last_leg && (hours < 24) && layover || '' %>
+          </strong>
+        </td>
+        <td>
+          <%= leg.local_departing_at.strftime("%d-%b-%Y %l:%M%p").upcase %>
+        </td>
+        <td>
+          <%= leg.local_arriving_at.strftime("%d-%b-%Y %l:%M%p").upcase %>
+        </td>
+        <td>
+          <%= leg.is_subsidiary ? 'Y' : 'N' %>
+        </td>
+      </tr>
+      <% last_leg = leg %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if for_printing %>
+<div class="row">
+  <div class="col col-xs-12">
+    <% @schedule.tickets.each do |su| %>
+      <% su_name = ((pp = su.user.has_passport? && su.user.passport) ? "#{pp.given_names} #{pp.surname}" : su.user.full_name).gsub("'", '').gsub("-", ' ').strip %>
+      <span class="text-<%= su.ticketed ? 'success' : 'danger' %>"><%= su.ticketed ? 'T' : 'Unt' %>icketed</span> - <%= su_name %> (<%= su.user.category_title %>): <%= "office.downundersports.com/#{su.user.dus_id}" %> <br>
+    <% end %>
+  </div>
+</div>
+<% else %>
+<div class="row">
+  <div class="print-hidden col-lg-<%= (@modular && (@schedule.route_summary.present? && (@schedule.route_summary !~ /nolegs/i))) ? 6 : 12 %> form-group">
+    <%= form_for @schedule, remote: true do |f| %>
+      <%= hidden_field_tag :loaded_at, Time.now.to_s, id: nil, class: 'loaded-at' %>
+      <div class="row">
+        <div class="col-md-6 col-xs-12 form-group text-danger">
+          <%= f.label :pnr, "Amadeus PNR", class: 'text-danger' %>
+          <%= f.text_field :pnr, class: 'form-control text-danger', style: 'color: #a94442' %>
+        </div>
+        <div class="col-md-6 col-xs-12 form-group">
+          <%= f.label :carrier_pnr %>
+          <%= f.text_field :carrier_pnr, class: 'form-control' %>
+        </div>
+        <div class="col-xs-12 form-group">
+          <%= f.label :booking_reference %>
+          <%= f.text_field :booking_reference, class: 'form-control' %>
+        </div>
+        <div class="col-xs-12 form-group">
+          <%= f.label :amount, 'Schedule Price' %>
+          <span class="input-group add-on">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+            <%= f.text_field :amount, class: 'form-control', pattern: '^[0-9]+(\.[0-9][0-9])?$' %>
+          </span>
+        </div>
+        <div class="col-lg-6 form-group">
+          <%= f.label :seats_reserved %>
+          <%= f.text_field :seats_reserved, class: 'form-control', pattern: '^[0-9]+$' %>
+        </div>
+        <div class="col-lg-6 form-group">
+          <%= f.label :names_assigned %>
+          <%= f.text_field :names_assigned, class: 'form-control', pattern: '^[0-9]+$' %>
+        </div>
+        <div class="col-xs-12 form-group">
+          <%= f.label :verified_by_id, 'Schedule Verified By', class: @schedule.verified ? 'text-success' : 'text-danger' %>
+          <%= f.collection_select :verified_by_id, Staff.order(:first, :last), :id, :full_name, {include_blank: true}, class: 'form-control' %>
+        </div>
+        <% if !@modular && @schedule.operator =~ /qantas/i %>
+          <div class="col-xs-12 form-group">
+            <h3>
+              Paste rtaxr here
+            </h3>
+            <%= f.text_area :rtaxr, value: nil, class: 'form-control form-group', rows: 5 %>
+          </div>
+        <% end %>
+      </div>
+      <%= f.submit class: 'btn btn-block btn-primary' %>
+    <% end %>
+  </div>
+  <% if @modular && (@schedule.route_summary.present? && (@schedule.route_summary !~ /nolegs/i))%>
+    <div class="print-hidden col-lg-6 form-group">
+      <div class="row">
+        <div class="col-xs-12 form-group">
+          <div class="row">
+            <div class="col-xs-12" id="schedule_user_error">
+            </div>
+          </div>
+          <%
+            if (
+              travelers =
+              Traveler.
+                active.
+                where.not(departing_from: nil, returning_to: nil).
+                joins(:team, :user).
+                order('teams.name', 'users.category_type', 'users.first', 'users.middle', 'users.last').
+                where(@schedule.where_route_hash).where_not_exists(:schedules, route_summary: @schedule.route_summary)
+            ).size > 0
+          %>
+            <%= form_for @schedule.tickets.build, remote: true do |f| %>
+              <%= f.hidden_field :schedule_id %>
+              <div class="row">
+                <div class="col-xs-12 form-group">
+                  <%= f.label :user_id, 'Select User to Add to PNR' %>
+                  <%= f.collection_select :user_id, travelers, :id, :airfare_details, {include_blank: true}, class: 'form-control' %>
+                </div>
+              </div>
+              <%= f.submit "Add user to #{@schedule.pnr}", class: 'btn btn-block btn-primary' %>
+            <% end %>
+          <% end %>
+          <hr>
+          <%= form_for @schedule.tickets.build, remote: true do |f| %>
+            <%= f.hidden_field :schedule_id %>
+            <div class="row">
+              <div class="col-xs-12 form-group">
+                <%= label_tag :dus_id, 'Enter DUS ID to add user to PNR' %>
+                <%= text_field_tag :dus_id, nil, class: 'form-control' %>
+              </div>
+            </div>
+            <%= f.submit "Add user to #{@schedule.pnr}", class: 'btn btn-block btn-primary', data: {confirm: 'Are you sure you want to add non-route user to this PNR?'} %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      &nbsp; <br>
+    </div>
+    <div class="col-xs-12">
+      <table id='schedule_user_list' class='table table-striped table-scrollable dom-datatable'>
+        <thead>
+          <tr class="filters">
+            <th>
+              <%= text_field_tag 'first', nil, class: "form-control", placeholder: "search first", id: "pnr_user_first_search", data: {type: 'text'} %>
+            </th>
+            <th>
+              <%= text_field_tag 'last', nil, class: "form-control", placeholder: "search last", id: "pnr_user_last_search", data: {type: 'text'} %>
+            </th>
+            <th>
+              <%= text_field_tag 'category', nil, class: "form-control", placeholder: "search category", id: "pnr_user_category_search", data: {type: 'text'} %>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr>
+            <th>
+              Given Names
+            </th>
+            <th>
+              Surname
+            </th>
+            <th>
+              Category
+            </th>
+            <th>
+              Total Paid
+            </th>
+            <th>
+              Current Balance
+            </th>
+            <th>
+              # of Assigned PNRs
+            </th>
+            <th>
+              Status
+            </th>
+            <th>
+              Keep Schedule
+            </th>
+            <th>
+              Ticketed
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="schedule_user_list_body">
+          <% @schedule.tickets.includes(:user).each do |su| %>
+            <!-- <#%= render partial: 'shared/traveling/flights/user_row', locals: {user: su.user, id: su.id, su: su} %> -->
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+<% end %>
+<% if !for_printing %>
+  </div>
+</div>
+<% end %>

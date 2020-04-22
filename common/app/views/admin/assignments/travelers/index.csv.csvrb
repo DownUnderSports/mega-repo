@@ -1,0 +1,29 @@
+# encoding: utf-8
+
+csv << %w[
+  staff_dus_id
+  dus_id
+  category
+  sport
+  state
+  time_zone
+  join_date
+  respond_date
+]
+
+Staff::Assignment::Views::UnassignedTraveler.live_reload
+
+Staff::Assignment::Views::UnassignedTraveler.all.split_batches_values do |r|
+  next unless Interest.contactable(r.interest_id) && r.traveler
+
+  csv << [
+    nil,
+    r.dus_id,
+    r.category_title,
+    r.sport_abbr,
+    r.state_abbr,
+    r.tz_offset,
+    r.joined_at&.to_date,
+    r.responded_at&.to_date,
+  ]
+end

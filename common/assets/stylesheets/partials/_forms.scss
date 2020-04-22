@@ -1,0 +1,127 @@
+form.disabled {
+  * {
+    pointer-events: none;
+  }
+}
+
+.clickable, [data-toggle='popover'] {
+  &, * {
+    cursor: pointer !important;
+  }
+}
+
+.sortable {
+  .form-control {
+    cursor: pointer !important;
+  }
+  .sortable-placeholder {
+    border-radius: 4px;
+    background: white;
+    margin-bottom: 1em;
+  }
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+  }
+}
+
+.btn-dup-check {
+  white-space: nowrap;
+  // min-width: 200px;
+  font-weight: bold;
+  color: #000
+}
+
+.input-group {
+  &.success label {
+    background-color: #dff0d8
+  }
+  &.danger label {
+    background-color: #f2dede
+  }
+}
+
+.form-control {
+  &.half-size {
+    width: 50%
+  }
+}
+
+.btn.btn-fixed-submit {
+  background-color: #A0F;
+  color: $almost-white;
+  position: fixed;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  z-index: 900;
+  font-size: 1.5em;
+  margin-right: auto;
+  margin-left: auto;
+  width: calc(100% - 30px)
+}
+
+.progress {
+  .bar {
+    padding-left: 0.2em;
+    color:   white;
+    display: none;
+  }
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.indirect-box {
+  &, &:checked ~ .indirect-box.negative {
+    visibility: hidden;
+    width:0;
+    height:0;
+  }
+
+  &:checked ~ .indirect-box.positive, &.negative {
+    visibility: visible;
+    width:unset;
+    height:unset;
+  }
+
+  &.three-stage:indeterminate {
+    & ~ .indirect-box.negative {
+      visibility: hidden;
+      width:0;
+      height:0;
+    }
+
+    & ~ .indirect-box.indeterminate {
+      visibility: visible;
+      width:unset;
+      height:unset;
+    }
+  }
+}
+// .btn-file input[type=file] {
+//     text-align: right;
+//     filter: alpha(opacity=0);
+//     opacity: 0;
+//     outline: none;
+//     background: white;
+//     cursor: inherit;
+//     display: block;
+// }

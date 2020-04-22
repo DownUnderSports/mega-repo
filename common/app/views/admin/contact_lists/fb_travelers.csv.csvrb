@@ -1,0 +1,43 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  first
+  last
+  grad
+  school_name
+  school_city
+  school_state
+  team
+  positions
+  height
+  weight
+  stats
+  total_paid
+  join_date
+  url
+]
+
+@travelers.split_batches_values do |traveler|
+  u = traveler.user
+  a = u.athlete
+  a_sport = a.athletes_sports.find_by(sport_id: Sport::FB.id)
+
+  csv << [
+    traveler.dus_id.to_s.scan(/.{1,3}/).join('-').presence,
+    traveler.first,
+    traveler.last,
+    traveler.grad,
+    traveler.school_name,
+    traveler.school_city,
+    traveler.school_state_abbr,
+    traveler.team_name,
+    (traveler.positions_array || []).join(', '),
+    traveler.height,
+    traveler.weight,
+    traveler.stats,
+    StoreAsInt.money(traveler.current_payments.to_i).to_s,
+    traveler.joined_at.presence&.to_date&.to_s,
+    "https://admin.downundersports.com/admin/users/#{traveler.dus_id}"
+  ]
+end

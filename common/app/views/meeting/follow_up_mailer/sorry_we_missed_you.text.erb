@@ -1,0 +1,22 @@
+G'Day Mate!
+
+Sorry we missed you at the online meeting today. We'd love to have you join us another time.
+
+Here are the meetings available for the next week:
+
+<%-
+  Meeting.
+  where(
+    'start_time > :start AND start_time < :end',
+    start: Time.zone.now,
+    end: (Time.zone.now + 7.day)
+  ).each do |mtg|
+-%>
+  <%= mtg.start_time.strftime("%A, %B #{mtg.start_time.day.ordinalize} @ %l:%M %p %Z") %>
+<%- end -%>
+
+If you would like to attend one of these meetings, please reply to this email or call our office at 435-753-4732
+
+Kind Regards,
+
+<%= render partial: 'shared/email_footer' %>

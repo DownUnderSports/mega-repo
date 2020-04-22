@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+find ./build/static/css -name '*.css' -exec sed -i -e 's/body .chat-wrapper{max-width:100vw;padding:0 calc((100vw - 1140px)\/2 - 1.5rem + 24px)}/body .chat-wrapper{max-width:100vw;padding:0 calc((100vw - 1140px)\/2 - (1.5rem + 24px))}/g' {} \;

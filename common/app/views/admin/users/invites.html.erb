@@ -1,0 +1,15 @@
+<% mail_dates = Mailing.invites.uniq_column_values(:sent) %>
+<h1>
+  Download Invites
+</h1>
+<form action="<%= invites_admin_users_path(format: :csv) %>">
+  <label>
+    Start Date*
+    <input class="form-control" type="date" name="start" required value="<%= date = mail_dates.where(Mailing.arel_table[:sent].gteq(Date.today)).take&.sent&.to_s %>">
+  </label>
+  <label>
+    End Date (Optional)
+    <input class="form-control" type="date" name="end">
+  </label>
+  <button type="submit" name="submit">Submit</button>
+</form>

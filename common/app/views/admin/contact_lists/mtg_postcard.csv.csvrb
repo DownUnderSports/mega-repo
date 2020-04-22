@@ -1,0 +1,59 @@
+# encoding: utf-8
+
+sent_date = Date.today.next_weekday
+last_contactable = Interest.order(:id).where(contactable: true).last.id
+no_respond = Interest::NoRespond.id
+
+csv << %w[
+  is_home
+  school
+  sport
+  name
+  address_1
+  address_2
+  address_3
+  city
+  state
+  zip
+  dus_id
+  returned_link
+]
+
+User.
+  athletes.
+  where(interest_id: [*(0..last_contactable), no_respond]).
+  where("users.responded_at < ?", 6.days.ago.midnight).
+  where_not_exists(:mailings, category: :mtg_postcard).
+  where_not_exists(:traveler).
+  split_batches_values do |u|
+    begin
+      next if u.meeting_registrations.attended.any? ||
+              u.video_views.watched.any?
+
+      addr = u.main_address
+      addr = nil if !addr&.verified || addr&.rejected
+      m = u.mailings.create!(category: :mtg_postcard, is_home: !!addr, address: addr || u.athlete.school.address, sent: sent_date)
+
+      streets = m.postcard.split("\n")
+      streets.unshift(u.athlete.school.name) unless m.is_home
+      streets = Array.new(3).fill {|i| streets[i] }
+
+      csv << [
+        m.is_home,
+        u.athlete.school.name,
+        u.team.sport.full,
+        "#{u.basic_name_w_suffix}#{m.is_home ? '' : " (#{u.team.sport.full} Athlete)"}",
+        *streets,
+        m.city,
+        m.state,
+        m.zip,
+        u.dus_id,
+        "d.us/m/#{m.id}"
+      ]
+    rescue
+      begin
+        u.mailings.where(category: :mtg_postcard, sent: sent_date).destroy_all
+      rescue
+      end
+    end
+  end

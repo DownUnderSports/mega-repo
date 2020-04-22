@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+pushd www
+bin/pull_heroku_db
+popd

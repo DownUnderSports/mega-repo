@@ -1,0 +1,48 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Sorry We Missed You</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day Mate!
+      </p>
+      <p>
+        Sorry we missed you at the online meeting today. We'd love to have you join us another time.
+      </p>
+      <p>
+        Here are the meetings available for the next week:
+      </p>
+      <spacer size="16"></spacer>
+      <menu class="vertical">
+        <%-
+          Meeting.
+          where(
+            'start_time > :start AND start_time < :end',
+            start: Time.zone.now,
+            end: (Time.zone.now + 7.day)
+          ).each do |mtg|
+        -%>
+          <th class="menu-item">
+            <%= mtg.start_time.strftime("%A, %B #{mtg.start_time.day.ordinalize} @ %l:%M %p %Z") %>
+          </th>
+        <%- end -%>
+      </menu>
+      <spacer size="16"></spacer>
+      <p>
+        If you would like to attend one of these meetings, please reply to this email or <a href="tel:+14357534732">call our office at <span style="white-space:nowrap">435-753-4732</span></a>.
+      </p>
+      <p>
+        Kind Regards,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

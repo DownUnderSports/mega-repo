@@ -1,0 +1,5 @@
+{
+  "name": "UserForm",
+  "private": true,
+  "main": "./invitable-athlete-form.jsx"
+}

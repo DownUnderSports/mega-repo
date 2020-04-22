@@ -1,0 +1,6 @@
+{
+  "name": "OpenTryoutForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./open-tryout-form.jsx"
+}

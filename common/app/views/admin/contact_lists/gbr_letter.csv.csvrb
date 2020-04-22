@@ -1,0 +1,97 @@
+# encoding: utf-8
+
+sent_date = Date.today.next_weekday
+expiration_date = sent_date + 2.weeks
+
+gbr_offer_attrs = {
+  assigner_id: auto_worker.id,
+  rules: [
+    :share,
+    :deposit,
+    :debit,
+    { base_debit_id: 3, assigner_id: auto_worker.id, amount: 69900 }.to_json,
+    :credit,
+    { assigner_id: auto_worker.id, amount: 69900, name: "Great Barrier Reef Discount" }.to_json,
+    :destroy
+  ],
+  amount: 69900,
+  expiration_date: expiration_date,
+  name: 'GBR Offer'
+}
+
+last_contactable = Interest.order(:id).where(contactable: true).last.id
+no_respond = Interest::NoRespond.id
+
+csv << %w[
+  is_home
+  school
+  sport
+  name
+  address_1
+  address_2
+  address_3
+  city
+  state
+  zip
+  expiration_date
+  dus_id
+  returned_link
+]
+
+watched_views = Meeting::Video::View.watched.
+  where(
+    Meeting::Video::View.
+      arel_table[:first_watched_at].
+      lt(13.days.ago.midnight)
+  )
+
+User.
+  athletes.
+  where(interest_id: [*(0..last_contactable), no_respond]).
+  where.not(responded_at: nil).
+  where_not_exists(:mailings, category: :gbr_free_offer).
+  where_not_exists(:traveler).
+  where(id: watched_views.select(:user_id)).
+  split_batches_values do |u|
+    begin
+      mtg_date = u.video_views.watched.order(:first_watched_at).last&.first_watched_at&.presence || Time.zone.now
+
+      next unless mtg_date < 13.days.ago.midnight
+
+      addr = u.main_address
+
+      addr = nil if !addr&.verified || addr&.rejected
+
+      m = u.mailings.create!(category: :gbr_free_offer, is_home: !!addr, address: addr || u.athlete.school.address, sent: sent_date)
+
+      u.offers.create!(gbr_offer_attrs)
+
+      streets = m.postcard.split("\n")
+      streets.unshift(u.athlete.school.name) unless m.is_home
+      streets = Array.new(3).fill {|i| streets[i] }
+
+      csv << [
+        m.is_home,
+        u.athlete.school.name,
+        u.team.sport.full,
+        "#{u.basic_name_w_suffix}#{m.is_home ? '' : " (#{u.team.sport.full} Athlete)"}",
+        *streets,
+        m.city,
+        m.state,
+        m.zip,
+        expiration_date.to_s,
+        u.dus_id,
+        "d.us/m/#{m.id}"
+      ]
+    rescue
+      begin
+        u.mailings.where(category: :gbr_free_offer, sent: sent_date).destroy_all
+      rescue
+      end
+
+      begin
+        u.offers.where(name: 'GBR Offer', expiration_date: expiration_date).destroy_all
+      rescue
+      end
+    end
+  end

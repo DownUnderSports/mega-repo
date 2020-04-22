@@ -1,0 +1,573 @@
+@import "foundation-emails";
+@import 'partials/bs_variables';
+
+html,
+body,
+* {
+  &,
+  & * {
+    box-sizing: border-box;
+  }
+  .smaller-text p {
+    font-size: 14px;
+  }
+}
+
+body,
+html,
+.body,
+.container {
+  background: #f3f3f3 !important;
+}
+
+html.white-mail,
+.white-mail body,
+.white-mail html,
+.white-mail .body,
+.white-mail .container {
+  background: #ffffff !important;
+}
+
+body,
+html,
+.body,
+.body-border,
+.container.header {
+  margin-top: 12px;
+}
+
+.container.wide {
+  width: 768px !important;
+}
+
+.container.full {
+  width: 100% !important;
+}
+
+.body-border {
+  border-top: 8px solid #1b3f94;
+}
+
+.btn {
+  padding: 12px;
+  text-align: center;
+  display: inline-block;
+  width: 50%;
+
+  &:hover {
+    color: #ffffff !important;
+    text-decoration: none;
+  }
+
+  &.btn-green,
+  &.btn-1 {
+    border: 2px solid #2CA053;
+    color: #2CA053;
+    &:hover {
+      background-color: #2CA053 !important;
+    }
+  }
+
+  &.btn-purple,
+  &.btn-2  {
+    border: 2px solid #865F7F;
+    color: #865F7F;
+    &:hover  {
+      background-color:#865F7F !important;
+    }
+  }
+
+  &.btn-blue,
+  &.btn-3  {
+    border: 2px solid #2199E8;
+    color: #2199E8;
+    &:hover  {
+      background-color:#2199E8 !important;
+    }
+  }
+
+  &.btn-link,
+  &.btn-4 {
+    border: 2px solid #15C;
+    color: #15C;
+    &:hover  {
+      background-color:#15C !important;
+    }
+  }
+
+  &.btn-block {
+    width: 100%;
+  }
+
+  &.inverse {
+    &.btn-green,
+    &.btn-1 {
+      color: #FFF;
+      background-color: #2CA053;
+      &:hover {
+        background-color: #FFF !important;
+        color: #2CA053 !important;
+      }
+    }
+
+    &.btn-purple,
+    &.btn-2  {
+      color: #FFF;
+      background-color:#865F7F;
+      &:hover  {
+        color: #865F7F !important;
+        background-color:#FFF !important;
+      }
+    }
+
+    &.btn-blue,
+    &.btn-3  {
+      color: #FFF;
+      background-color: #2199E8;
+      &:hover  {
+        color:#2199E8 !important;
+        background-color: #FFF !important;
+      }
+    }
+
+    &.btn-link,
+    &.btn-4  {
+      color: #FFF;
+      background-color: #15C;
+      &:hover  {
+        color:#15C !important;
+        background-color: #FFF !important;
+      }
+    }
+  }
+}
+
+
+table.table {
+  margin-bottom: 17px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: $line-height-computed;
+
+  col[class*="col-"] {
+    position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
+    float: none;
+    display: table-column;
+  }
+
+  td,
+  th {
+    &[class*="col-"] {
+      position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
+      float: none;
+      display: table-cell;
+    }
+  }
+
+  &, * {
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 5px;
+  }
+
+  // Cells
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        padding: $table-cell-padding;
+        line-height: $line-height-base;
+        vertical-align: top;
+        border-top: 1px solid $table-border-color;
+      }
+    }
+  }
+  // Bottom align for column headings
+  > thead > tr {
+    > th,
+    > td {
+      font-weight: 700;
+      vertical-align: bottom;
+      border-bottom: 2px solid $table-border-color;
+    }
+  }
+
+  // Remove top border from thead by default
+  > caption + thead,
+  > colgroup + thead,
+  > thead:first-child {
+    > tr:first-child {
+      > th,
+      > td {
+        border-top: 0;
+      }
+    }
+  }
+  // Account for multiple tbody instances
+  > tbody + tbody {
+    border-top: 2px solid $table-border-color;
+  }
+
+  // Nesting
+  .table {
+    background-color: $body-bg;
+  }
+
+  &.row-border-bottom {
+    // Cells
+    > tbody,
+    > tfoot {
+      > tr {
+        > th,
+        > td {
+          border-bottom: 1px solid $table-border-color;
+        }
+      }
+    }
+  }
+
+  // Bordered version
+  //
+  // Add borders all around the table and between all the columns.
+
+  &.table-bordered {
+    border: 1px solid $table-border-color;
+    > thead,
+    > tbody,
+    > tfoot {
+      > tr {
+        > th,
+        > td {
+          border: 1px solid $table-border-color;
+        }
+      }
+    }
+    > thead > tr {
+      > th,
+      > td {
+        border-bottom-width: 2px;
+        &.skip-border {
+          border: none;
+        }
+      }
+    }
+    &.inner-only {
+      border: none
+    }
+  }
+
+  &.hours-table {
+    border: 2px solid #666;
+    > thead,
+    > tbody,
+    > tfoot {
+      > tr {
+        > th,
+        > td {
+          padding: 5px;
+          font-size: 13px;
+          color: #666 !important;
+          border-top: 1px solid #666 !important;
+        }
+      }
+    }
+    > thead > tr {
+      > th,
+      > td {
+        font-size: 14px;
+        border-bottom: 2px solid #666;
+      }
+    }
+  }
+
+  &.signature {
+    border: none;
+
+    thead,
+    tbody,
+    > thead,
+    > tbody {
+      border: none;
+
+      tr,
+      > tr {
+        border: none;
+
+        th,
+        td,
+        > th,
+        > td {
+          font-size: 13px;
+          border: none;
+          padding: 0;
+        }
+      }
+    }
+
+    > thead > tr {
+      > th,
+      > td {
+        font-size: 16px;
+        line-height: 2;
+      }
+    }
+
+    > tbody > tr {
+      > th {
+        padding-right: 5px;
+      }
+      > td {
+        width: 100%;
+      }
+    }
+  }
+
+
+
+
+  // Zebra-striping
+  //
+  // Default zebra-stripe styles (alternating gray and transparent backgrounds)
+
+  &.table-striped {
+    > tbody > tr:nth-of-type(odd) {
+      background-color: $table-bg-accent;
+    }
+  }
+
+
+  // Hover effect
+  //
+  // Placed here since it has to come after the potential zebra striping
+
+  &.table-hover {
+    > tbody > tr:hover {
+      background-color: $table-bg-hover;
+    }
+  }
+
+  &.table-responsive {
+    overflow-x: auto;
+    min-height: 0.01%; // Workaround for IE9 bug (see https://github.com/twbs/bootstrap/issues/14837)
+
+    @media screen and (max-width: 767px) {
+      width: 100%;
+      margin-bottom: ($line-height-computed * 0.75);
+      overflow-y: hidden;
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+      border: 1px solid $table-border-color;
+
+      // Tighten up spacing
+      > .table {
+        margin-bottom: 0;
+
+        // Ensure the content doesn't wrap
+        > thead,
+        > tbody,
+        > tfoot {
+          > tr {
+            > th,
+            > td {
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+
+      // Special overrides for the bordered tables
+      > .table-bordered {
+        border: 0;
+
+        // Nuke the appropriate borders so that the parent can handle them
+        > thead,
+        > tbody,
+        > tfoot {
+          > tr {
+            > th:first-child,
+            > td:first-child {
+              border-left: 0;
+            }
+            > th:last-child,
+            > td:last-child {
+              border-right: 0;
+            }
+          }
+        }
+
+        // Only nuke the last row's bottom-border in `tbody` and `tfoot` since
+        // chances are there will be only one `tr` in a `thead` and that would
+        // remove the border altogether.
+        > tbody,
+        > tfoot {
+          > tr:last-child {
+            > th,
+            > td {
+              border-bottom: 0;
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  tr.text-center {
+    td, th {
+      text-align: center;
+    }
+  }
+
+  tr.text-right {
+    td, th {
+      text-align: right;
+    }
+  }
+}
+
+hr, .hr {
+  margin-top: 17px;
+  margin-bottom: 17px;
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+.text-black {
+  color: #000!important;
+  * {
+    color: #000;
+  }
+}
+.text-white {
+  color: #FFF!important;
+  * {
+    color: #FFF;
+  }
+}
+.text-danger {
+  color: #dc3545!important;
+  * {
+    color: #dc3545;
+  }
+}
+.text-info {
+  color: #17a2b8!important;
+  * {
+    color: #17a2b8;
+  }
+}
+.text-muted {
+  color: #6c757d!important;
+  * {
+    color: #6c757d;
+  }
+}
+.text-primary {
+  color: #007bff!important;
+  * {
+    color: #007bff;
+  }
+}
+.text-success {
+  color: #28a745!important;
+  * {
+    color: #28a745;
+  }
+}
+.text-warning {
+  color: #ddaa11!important;
+  * {
+    color: #ddaa11;
+  }
+}
+
+.text-normal {
+  &,
+  center & {
+    text-align: left;
+  }
+}
+
+.keep-space {
+  white-space: nowrap!important;
+  word-break: keep-all!important;
+  width: 100%;
+  overflow-x:scroll!important;
+}
+
+.spaced-list {
+  li {
+    margin-bottom: 10px;
+
+    ul,
+    ol {
+      margin-top: 10px;
+    }
+  }
+}
+
+center address {
+  text-align: left !important
+}
+
+img {
+  width: 150px;
+  max-width: 100%;
+  &.fluid,
+  &.img-fluid {
+    width: unset;
+  }
+  &.full,
+  &.img-full {
+    width: 100%;
+    max-height: unset
+  }
+}
+
+.mt {
+  margin-top: 1rem;
+}
+
+.pad {
+  padding: 1rem !important;
+}
+
+.pl {
+  padding-left: 1rem !important;
+}
+
+.pr {
+  padding-right: 1rem !important;
+}
+
+.pt {
+  padding-top: 1rem !important;
+}
+
+.pb {
+  padding-bottom: 1rem !important;
+}
+
+p {
+  &.no-margin {
+    margin-bottom: 0 !important
+  }
+  &.warning {
+    color: #C22 !important;
+    font-style: italic;
+    text-decoration: underline;
+  }
+}
+
+.double-under {
+  text-decoration: underline double;
+}
+
+a {
+  color: #15C;
+  &:hover {
+    text-decoration: underline !important;
+  }
+}

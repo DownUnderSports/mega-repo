@@ -1,0 +1,43 @@
+# encoding: utf-8
+
+csv << [
+  'D',
+  'Unique ID',
+  'Last Name',
+  'First Name',
+  'Gender',
+  'DOB (YYYY-MM-DD)',
+  'Team Code',
+  'Team Name',
+  'Event',
+  'Event Age Group',
+  'Entry Mark',
+]
+
+User::EventRegistration.order(:id).split_batches_values do |er|
+  if er.user&.traveler&.active?
+    user = er.user
+    er.events(true).each do |event, details|
+      next if event == :full
+
+      time = details[:time].to_s.gsub('"', "''").gsub('”', "''").gsub('’', "'")
+
+      details[:ages].each do |age|
+        csv << [
+          'D',
+          user.dus_id,
+          user.last,
+          user.first,
+          user.gender,
+          (user.passport&.birth_date || user.birth_date).to_s,
+          'USA',
+          'United States',
+          event,
+          age,
+          time.presence || 'N/A'
+        ]
+      end
+
+    end
+  end
+end

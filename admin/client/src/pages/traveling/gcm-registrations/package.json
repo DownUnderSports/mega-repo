@@ -1,0 +1,5 @@
+{
+  "name": "GCMRegistrationPages",
+  "private": true,
+  "main": "./gcm-registrations.jsx"
+}

@@ -1,0 +1,57 @@
+<% provide :title, @title %>
+<% provide :page_title, @title %>
+<div class="container mt-5">
+  <div class="row form-group">
+    <input type="hidden" id="loaded_dus_id" value="<%= @found_user.dus_id %>">
+    <div class="col-2 d-screen-none" style="height: 1.5in">
+      <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+    </div>
+    <div class="col-10" style="height: 1.5in">
+      <br>
+      <div style="font-size: .2in; text-align: right;">
+        <h4>
+          <%= @found_user.print_names %> - <%= @found_user.dus_id %>
+        </h4>
+        <h5>
+          Travel Information
+        </h5>
+      </div>
+    </div>
+  </div>
+  <% @found_user.departure_videos.each do | link, title | %>
+    <a href="<%= link %>" class="btn btn-block form-group btn-info" target="_blank" rel="noopener noreferrer">
+      <%= title %>
+    </a>
+  <% end %>
+  <a href="<%= "https://www.downundersports.com/travel/my-info/#{@found_user.dus_id}/flights" %>" class="btn btn-block form-group btn-info" target="_view_my_info">
+    View Flights Info
+  </a>
+  <a href="<%= "https://www.downundersports.com/travel/my-info/#{@found_user.dus_id}/teammates" %>" class="btn btn-block form-group btn-info" target="_view_my_info">
+    View Teammates List
+  </a>
+  <% if bus = @found_user.bus %>
+  <% begin %>
+  <%- prep = asset_path("sports/travel/#{bus.sport.abbr.downcase}.pdf") -%>
+  <a href="<%= asset_path("sports/travel/#{bus.sport.abbr.downcase}.pdf") %>" class="btn btn-block form-group btn-info" target="_view_my_info">
+    View Travel Prep
+  </a>
+  <% rescue %>
+  <% end %>
+  <% begin %>
+  <%- itin = asset_path("itineraries/#{bus.sport.abbr.downcase}_#{bus.name.downcase}_#{bus.color.downcase}.pdf") -%>
+  <a href="<%= itin %>" class="btn btn-block form-group btn-info" target="_view_my_info">
+    View Itinerary
+  </a>
+  <% rescue %>
+  <% end %>
+  <% end %>
+  <a href="https://youtu.be/9JORQ8INkrA" class="btn btn-block form-group btn-info" target="_blank" rel="noopener noreferrer">
+    View Free Day Activities Overview
+  </a>
+  <a href="<%= asset_path('free_day_activities.pdf') %>" class="btn btn-block form-group btn-info" target="_view_my_info">
+    View Free Day Activities List
+  </a>
+  <a href="https://www.apf.com.au/club/StudentRegistration.aspx?clubid=36DD2E43044617D04A2688B21E43493C" class="btn btn-block form-group btn-info" target="_blank" rel="noopener noreferrer">
+    View Skydiving Waiver
+  </a>
+</div>

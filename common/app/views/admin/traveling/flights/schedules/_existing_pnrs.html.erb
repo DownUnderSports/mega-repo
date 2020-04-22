@@ -1,0 +1,70 @@
+<h3>
+  Existing PNRs (Reserved: <span id="total-reserved"><%= defined?(total_reserved) ? total_reserved : Flight::Schedule.sum(:seats_reserved)  %></span>)
+</h3>
+<table class="table table-striped table-scrollable dom-datatable" id="existing_pnr_table" data-categories='[&#34;reserved&#34;]'>
+  <thead>
+    <tr class="filters">
+      <th>
+        <%= text_field_tag 'pnr', nil, class: "form-control", placeholder: "search pnr", id: "existing_pnr_table_header_pnr_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'carrier', nil, class: "form-control", placeholder: "search carrier", id: "existing_pnr_table_header_carrier_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'departing', nil, class: "form-control", placeholder: "search departing", id: "existing_pnr_table_header_departing_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'returning', nil, class: "form-control", placeholder: "search returning", id: "existing_pnr_table_header_returning_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'from', nil, class: "form-control", placeholder: "search from", id: "existing_pnr_table_header_from_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'to', nil, class: "form-control", placeholder: "search to", id: "existing_pnr_table_header_to_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'cancels', nil, class: "form-control", placeholder: "search cancels", id: "existing_pnr_table_cancels_to_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'reserved', nil, class: "form-control", placeholder: "search reserved", id: "existing_pnr_table_header_reserved_search", data: {type: 'text'} %>
+      </th>
+      <th>
+        <%= text_field_tag 'verified', nil, class: "form-control", placeholder: "search verified", id: "existing_pnr_table_header_verified_search", data: {type: 'text'} %>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        PNR #
+      </th>
+      <th>
+        Carrier
+      </th>
+      <th>
+        Departing
+      </th>
+      <th>
+        Returning
+      </th>
+      <th>
+        From
+      </th>
+      <th>
+        To
+      </th>
+      <th>
+        Cancels
+      </th>
+      <th>
+        Seats (<span class="total-reserved"></span>)
+      </th>
+      <th>
+        Verified?
+      </th>
+    </tr>
+  </thead>
+  <tbody id="existing_pnr_table_rows">
+    <% Flight::Schedule.order(:pnr).includes(:users).each do |schedule| %>
+      <%= render partial: 'pnr_row', locals: {schedule: schedule} %>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,28 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">
+        Chat Room needs a staff member!
+      </h3>
+
+      <center>
+        <menu class="text-center">
+          <item>Name: <%= @room.name %></item>
+          <item>Email: <%= @room.email %></item>
+          <item>Phone: <%= @room.phone %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border full">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <a href="<%= @room.url %>" class="btn btn-blue btn-block inverse">Open Room</a>
+    </columns>
+  </row>
+</container>

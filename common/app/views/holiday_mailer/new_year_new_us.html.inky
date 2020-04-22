@@ -1,0 +1,29 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag 'new-year-banner.png', class: 'full', alt: 'New Year, New Us!' %>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        We are proud to announce the re-launch of our information video. It's short, sweet, and packed with more information than ever! Our team is so excited to show you what we have been working on.
+      </p>
+      <spacer size="16"></spacer>
+      <%= link_to 'Check Out The New Video Here!', "https://downundersports.com/videos/i/#{@user.dus_id}", class: 'btn btn-block btn-1' %>
+      <spacer size="16"></spacer>
+      <p>
+        Happy New Year!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

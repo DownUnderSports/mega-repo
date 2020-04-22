@@ -1,0 +1,83 @@
+Down Under Sports Payment Receipt
+
+Thank you for your payment to Down Under Sports, a copy of your receipt can be found below.
+
+Down Under Sports' refund policy can be found at: https://downundersports.com/refunds
+
+Cheers,
+<%= render partial: 'shared/email_footer' %>
+
+-------------------------------------------------
+
+
+Payment Information
+
+<%- billing = (@payment.billing || {}).deep_symbolize_keys -%>
+<%- if billing[:street_address].present? -%>
+<%- if billing[:company].present? -%>
+<%= billing[:company] %>
+<%- end -%>
+<%= billing[:name].presence || "#{billing[:first_name]} #{billing[:last_name]}" %>
+<%=  billing[:street_address] %>
+<%- if billing[:extended_address].present? -%>
+<%=  billing[:extended_address] %>
+<%- end -%>
+<%= "#{billing[:locality]}, #{billing[:region]} #{billing[:postal_code]}"%>
+<%= billing[:country_code_alpha3]%>
+<%- if billing[:email].present? -%>
+<%= billing[:email] %>
+<%- end -%>
+<%- if billing[:phone].present? -%>
+<%= billing[:phone] %>
+<%- end -%>
+<%- else -%>
+<%= billing[:name].presence || "#{billing[:first_name]} #{billing[:last_name]}" %>
+<%- end -%>
+
+<%- if @payment.transaction_id.present? -%>
+Transaction ID: <%= @payment.transaction_id %>
+<%- end -%>
+Date: <%= @payment.created_at.to_s(:long) %>
+<%- gateway = (@payment.gateway || {}).deep_symbolize_keys -%>
+Card Number: <%= gateway[:account_number] %>
+Card Type: <%= gateway[:account_type] %>
+Acct Number: <%= gateway[:account_number] %>
+<%- if gateway[:routing_number].present? -%>
+Routing Number: XXXX<%= gateway[:routing_number].to_s[-4..-1] %>
+<%- elsif gateway[:account_type].present? -%>
+Acct Type: <%= gateway[:account_type] %>
+<%- end -%>
+
+<%- if @payment[:status] !~ /(settled|approved)/i -%>
+-------------------------------------------------
+
+
+Payments may be subject to further processing/acceptance before they are finalized
+
+<%- end -%>
+-------------------------------------------------
+
+
+Purchase Information
+<%- i = 0; amount = @payment.amount.to_s(true).size; name = 0; @payment.items.each {|i| name=[name, i.name.to_s.size].max }; lines = name + (amount * 2) + 60 -%>
+
+   # | <%= "name".ljust(name, ' ') %> | <%= "description".ljust(30, ' ') %> | <%= "Price".ljust(amount, ' ') %> | Quantity | Amount
+<%- @payment.items.each do |item| -%>
+<%= "".ljust(lines, '-') %>
+<%- desc = item.description.to_s.ljust(30, ' ') -%>
+<%= "#{i += 1}".rjust(4, " ") %> | <%= item.name.to_s.ljust(name, ' ') %> | <%= desc[0...30] %> | <%= item.price.to_s(true).ljust(amount, ' ') %> | <%= "#{item.quantity}".ljust(8, ' ') %> | <%= item.amount.to_s(true) %>
+<%- while desc.to_s.size > 30 -%>
+<%- desc = desc[30..-1].to_s %>
+     | <%= "".ljust(name, ' ') %> | <%= desc[0...30].ljust(30, ' ') %> | <%= "".ljust(amount, ' ') %> | <%= "".ljust(8, ' ') %> |
+<%- end -%>
+<%- end -%>
+
+TOTAL: <%= @payment.amount.to_s(true) %>
+
+<%- if billing[:notes].present? -%>
+-------------------------------------------------
+
+
+Submitted Notes:
+<%= billing[:notes] %>
+<%- end -%>

@@ -1,0 +1,39 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">We need to know what events you will compete in.</h3>
+      <center>
+        <menu class="text-center">
+          <item href="<%= @user.hash_url('event-registration') %>">Submit Your Event Registration</item>
+        </menu>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+
+      <spacer size="32"></spacer>
+
+      <p>
+        Dear <%= @user.first %>,
+      </p>
+      <p>
+        Competition dates are approaching fast! We haven't received your Event Registration yet. We need to know what you will be competing in as soon as possible, so please <a href="<%= @user.hash_url('event-registration') %>">place your event registration</a> today, it will only take a moment.
+      </p>
+      <p>
+        We look forward to seeing you in Australia.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16"></spacer>
+</container>

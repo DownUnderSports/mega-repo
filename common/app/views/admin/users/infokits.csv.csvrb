@@ -1,0 +1,7 @@
+# encoding: utf-8
+
+csv << Mailing::Infokit.headers
+
+Mailing::Infokit.csv_rows({date: @date}) do |row|
+  csv << row if row.present? && row[0].present?
+end

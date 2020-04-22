@@ -1,0 +1,20 @@
+G'Day Mate!
+
+Thank you so much for joining us at the online meeting today. Here is a link to the meeting recording if you need to review any of the information we covered:
+
+
+Meeting Recording: <%= @meeting.recording_link %>
+Quick View Flyer: https://drive.google.com/file/d/1wRWSDm36CL7VGtZ52NlyC6WcY4I5a8tu/view?usp=sharing
+
+
+Remember to call our office at 435-753-4732 within 48 hours of the meeting to take advantage of the full $700 discount.
+<%- if @deposit_link.present? -%>
+
+You can also visit <%= @deposit_link %> at any time to pay your deposit if you prefer.
+<%- end -%>
+
+We look forward to seeing you in Australia and best of luck with all of your athletic and academic endeavors.
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>

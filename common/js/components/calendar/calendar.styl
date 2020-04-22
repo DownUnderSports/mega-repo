@@ -1,0 +1,155 @@
+.calendar-wrapper
+  position: relative
+  width: 100%
+  padding: 50%
+  .calendar-holder
+    position: absolute
+    left:0
+    top:0
+    width: 100%
+    height: 100%
+.calendar
+  display flex
+  flex-flow column nowrap
+  position relative
+  width 100%
+  background var(--neutral-color)
+  border 1px solid var(--border-color)
+  min-height: 25vh
+  max-height: 75vh
+  height 100%
+
+  .calendar-row
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+
+  .row-middle
+    align-items: center;
+
+  .calendar-col
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+
+  .col-start
+    justify-content: flex-start;
+    text-align: left;
+
+  .col-center
+    justify-content: center;
+    text-align: center;
+
+  .col-end
+    justify-content: flex-end;
+    text-align: right;
+
+  .calendar-header
+    text-transform uppercase
+    font-weight 700
+    font-size 115%
+    border-bottom 1px solid var(--border-color)
+    flex 0 0 auto
+    min-height 3rem
+
+    .calendar-col
+      display: flex
+      align-items: center
+      &[data-label=month-name]
+        white-space nowrap
+
+    h4
+      line-height: 1.5rem
+      margin: 0
+
+    .material-icons
+      cursor pointer
+      transition .15s ease-out
+      &:hover
+        transform scale(1.75)
+        transition .25s ease-out
+        color var(--main-color)
+
+  .calendar-labels
+    flex 0 0 auto
+    text-transform uppercase
+    font-weight 400
+    color var(--text-color-light)
+    font-size 70%
+    border-bottom 1px solid var(--border-color)
+
+    .calendar-col
+      padding .75em
+      border-right: 1px solid var(--border-color)
+      overflow-x: hidden
+      &:last-child
+        border-right: none
+      .col-overflow
+        width: 100%
+        height: 100%
+        overflow-x: hidden
+        white-space: nowrap
+
+  .calendar-body
+    display flex
+    flex-flow column nowrap
+    flex 1 1 auto
+    min-height 78%
+    .cell
+      position relative
+      border-right 1px solid var(--border-color)
+      overflow hidden
+      background var(--neutral-color)
+      transition 0.25s ease-out
+      min-height 2rem
+      &:hover
+        background var(--bg-color)
+        transition 0.5s ease-out
+
+      &:last-child
+        border-right none
+      .number
+        position absolute
+        font-size 82.5%
+        line-height 1
+        top .75em
+        right .75em
+        font-weight 700
+      .bg
+        font-weight 700
+        line-height 1
+        color var(--main-color)
+        opacity 0
+        font-size 4em
+        position absolute
+        top 0
+        right .1rem
+        transition .25s ease-out
+        letter-spacing -.07em
+        transform scale(1.5)
+    .selected
+      border-left 10px solid transparent
+      border-image linear-gradient(45deg, #1a8fff 0%,#53cbf1 40%)
+      border-image-slice 1
+    .today
+      border-left 5px solid transparent
+      border-image linear-gradient(45deg, #CCC 0%,#EEE 40%)
+      border-image-slice 1
+    .calendar-row
+      border-bottom 1px solid var(--border-color)
+      flex: 1
+      &:last-child
+        border-bottom none
+    .disabled
+      color var(--text-color-light)
+    .calendar-col
+      flex-grow 0
+      flex-basis calc(100%/7)
+      width calc(100%/7)
+    .cell:hover
+    .selected
+      .bg
+        opacity 0.15
+        transition .5s ease-in

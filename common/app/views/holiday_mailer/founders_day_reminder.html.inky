@@ -1,0 +1,44 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <h3>
+          Today is Founders Day!
+        </h3>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        <strong>
+          REMINDER: In honor of our late founders, George and Shelley O&rsquo;Scanlon,
+          we are offering our &ldquo;Australia Tournament Package&rdquo; for
+          only <span class="text-danger">$3200*</span>. You must pay a
+          <span class="text-danger">$320*</span> deposit before midnight
+          Mountain Standard Time tonight (<u>February 12<sup>th</sup></u>) to
+          reserve your spot on the team!<span class="text-danger">*</span>
+        </strong>
+      </p>
+      <spacer size="16"></spacer>
+      <%= link_to "#{@user.deposit_url}?amount=320.00", class: 'btn btn-block btn-1' do %>
+        Click Here To Pay Now
+      <% end %>
+      <spacer size="32"></spacer>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+      <spacer size="32"></spacer>
+      <p class="text-danger">
+        * A SINGLE PAYMENT OF EXACTLY <strong>$320</strong> MUST BE MADE ON <u><strong>FEBRUARY 12TH, 2020</strong></u> TO QUALIFY (NON-REFUNDABLE). NO EXTENSIONS OR EXCEPTIONS. NO OTHER DISCOUNTS/INCENTIVES APPLY.
+      </p>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

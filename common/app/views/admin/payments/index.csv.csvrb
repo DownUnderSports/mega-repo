@@ -1,0 +1,37 @@
+csv << [
+  'pmt_id',
+  'user_dus_id',
+  'user_url',
+  'pmt_date',
+  'pmt_type',
+  'pmt_card_type',
+  'pmt_amount',
+  'pmt_transaction_id',
+  'pmt_gateway',
+  'pmt_chargeback_transaction_id',
+  'pmt_chargeback_transaction_type',
+  'pmt_chargeback_gateway',
+  'pmt_remit_number',
+  'pmt_reconciled'
+]
+
+Payment.successful.split_batches_values do |pmt|
+  is_card = pmt.transaction_type =~ /^[A-Z][A-z]/
+  gtwy = pmt.gateway || {}
+  csv << [
+    pmt.id.to_s,
+    pmt.user&.dus_id,
+    pmt.user&.admin_url,
+    pmt.created_at.to_date.to_s,
+    is_card ? 'card' : pmt.transaction_type,
+    is_card ? pmt.transaction_type : nil,
+    pmt.amount.to_s,
+    pmt.transaction_id,
+    pmt.gateway_type,
+    gtwy['chargeback_transaction_id'],
+    gtwy['chargeback_transaction_type'],
+    gtwy['chargeback_gateway'],
+    pmt.remit_number,
+    pmt.reconciled_date,
+  ]
+end

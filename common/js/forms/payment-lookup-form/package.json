@@ -1,0 +1,6 @@
+{
+  "name": "PaymentLookupForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./payment-lookup-form.jsx"
+}

@@ -1,0 +1,26 @@
+<%- current_meta_data = meta_data -%>
+<%=
+  File.read(html_path).
+    sub(/<head>/, <<-HTML.gsub(/\s*\n\s+/, ' ').strip
+      <head>
+        #{current_meta_data[:ograph]}
+        #{current_meta_data[:gschema]}
+        #{current_meta_data[:twitter]}
+        <meta name="current-app-name" content="#{ ENV['CURRENT_APP_NAME'] || 'development' }">
+        <meta name="current-app-origin" content="#{ @header_hash && @header_hash[:Origin] }">
+        <title>
+          #{ (yield :title).presence || current_meta_data[:title].presence || (defined?(title) && title).presence || 'Down Under Sports' }
+        </title>
+      HTML
+    ).
+    sub(/<body.*?>/, <<-HTML.gsub(/\s*\n\s+/, ' ')
+      <body class="#{ ie_str }">
+        <input type="hidden" id="app-version" value="#{ DownUnderSports::VERSION }"/>
+      HTML
+    ).
+    sub(/<page-body>(.*)<\/page-body>/m, yield.presence || '\1').
+    sub(/<about-us>.*<\/about-us>/m, render(partial: 'shared/about_us_subsection').cleanup).
+    sub(/<script>window.fbAppId.*?<\/script>/m, render(partial: 'shared/fb_app_id_script').cleanup).
+    sub(/<noscript>.*?img.*?fb-pixel-img.*?<\/noscript>/m, render(partial: 'shared/fb_app_id_noscript').cleanup).
+    html_safe
+%>

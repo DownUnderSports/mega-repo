@@ -1,0 +1,41 @@
+# encoding: utf-8
+
+csv << %i[
+  pid
+  name
+  allowed
+  allowed_home
+  closed
+  is_foreign
+  rejected
+  street
+  street_2
+  street_3
+  city
+  state_abbr
+  province
+  zip
+  country
+  inline
+]
+
+@schools.split_batches_values do |s|
+  csv << [
+    s.pid,
+    s.name,
+    s.allowed,
+    s.allowed_home,
+    s.closed,
+    s.address&.is_foreign,
+    s.address&.rejected,
+    s.address&.street,
+    s.address&.street_2,
+    s.address&.street_3,
+    s.address&.city,
+    s.address&.state&.abbr,
+    s.address&.province,
+    s.address&.zip,
+    s.address&.country,
+    s.address&.inline
+  ]
+end

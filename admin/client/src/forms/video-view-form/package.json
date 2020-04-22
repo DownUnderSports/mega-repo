@@ -1,0 +1,5 @@
+{
+  "name": "VideoViewForm",
+  "private": true,
+  "main": "./video-view-form.jsx"
+}

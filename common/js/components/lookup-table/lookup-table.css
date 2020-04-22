@@ -1,0 +1,16 @@
+@charset "UTF-8";
+.lookup-table-wrapper .table-footer-sticky {
+  position: sticky;
+  bottom: 1rem;
+}
+.lookup-table-wrapper .la-square-jelly-box {
+  height: 25vw;
+  width: 25vw;
+  max-width: 25vh;
+  max-height: 25vh;
+  margin: 10vh auto;
+  color: #153e7c;
+}
+.lookup-table-wrapper .la-square-jelly-box div:first-child {
+  border: 1.5rem solid #d52027;
+}

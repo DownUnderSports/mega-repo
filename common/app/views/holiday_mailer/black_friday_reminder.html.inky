@@ -1,0 +1,21 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Discount still available!</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        Today (December 2<sup>nd</sup>, 2019) is the final day for us to match any payments made for your Cyber Monday deal;
+        take advantage of this special offer today to get the biggest discount available!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

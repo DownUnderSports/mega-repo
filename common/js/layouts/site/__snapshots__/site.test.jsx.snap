@@ -1,0 +1,203 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Site is snapshotable 1`] = `
+<section
+  className="Site"
+>
+  <header
+    className="Site-header"
+    style={
+      Object {
+        "top": "-0px",
+      }
+    }
+  >
+    <div
+      className="header-content"
+    >
+      <nav
+        className="header-nav nav-unstuck"
+      >
+        <div
+          className="header-logo"
+        >
+          <a
+            className="header-link"
+            href="/"
+            onClick={[Function]}
+          >
+            <img
+              alt="Site Logo"
+              src="dus-logo.png"
+            />
+          </a>
+        </div>
+        <div
+          className="header-menu"
+        >
+          <input
+            checked={false}
+            className="nav-trigger"
+            id="nav-trigger"
+            type="checkbox"
+          />
+          <label
+            htmlFor="nav-trigger"
+            onClick={[Function]}
+          >
+            <span />
+          </label>
+          <div
+            className="header-menu-wrapper"
+          >
+            <a
+              className="header-link "
+              href="/"
+              onClick={[Function]}
+            >
+              Home Page
+            </a>
+            <a
+              className="header-link "
+              href="/infokit"
+              onClick={[Function]}
+            >
+              More Info
+            </a>
+            <a
+              className="header-link "
+              href="/sports/bbb"
+              onClick={[Function]}
+            >
+              Sports
+            </a>
+            <a
+              className="header-link "
+              href="https://downundersports.smugmug.com"
+            >
+              Galleries
+            </a>
+          </div>
+        </div>
+      </nav>
+      <h1
+        className="Site-title"
+      >
+        <div
+          className="top-logo"
+        >
+          <a
+            className="header-link"
+            href="/"
+            onClick={[Function]}
+          >
+            <img
+              alt="Site Logo"
+              src="dus-logo.png"
+            />
+          </a>
+        </div>
+        <span>
+          Down Under Sports
+        </span>
+      </h1>
+    </div>
+  </header>
+  <div
+    className="main Site-main container-fluid"
+    style={
+      Object {
+        "maxWidth": "1140px",
+      }
+    }
+  >
+    <div
+      className="clearfix"
+    />
+  </div>
+  <footer
+    className="Site-footer"
+  >
+    <div
+      className="footer-content container-fluid"
+    >
+      <address>
+        <strong>
+          <i>
+            Down Under Sports
+          </i>
+        </strong>
+        <br />
+        Phone:
+        <a
+          data-content="phone"
+          href="tel:+1-435-753-4732"
+        >
+          435-753-4732
+        </a>
+        <br />
+        Email:
+        <a
+          data-content="email"
+          href="mailto:mail@downundersports.com"
+        >
+          mail@downundersports.com
+        </a>
+        <br />
+        Mailing Address:
+        <br
+          className="d-sm-none"
+        />
+        <a
+          data-content="mailing"
+          href="/"
+          onClick={[Function]}
+        >
+          PO Box 6010, North Logan, UT 84341-6010
+        </a>
+        <br />
+        Physical Location:
+        <br
+          className="d-sm-none"
+        />
+        <a
+          data-content="physical"
+          href="https://maps.google.com/?q=Down Under Sports, 1755 N 400 E, Ste 201, North Logan, UT 84341-6010"
+        >
+          1755 N 400 E, Ste 201, North Logan, UT 84341-6010
+        </a>
+      </address>
+      <hr
+        className="d-md-none"
+      />
+      <div
+        className="footer-menu"
+      >
+        <a
+          className="footer-link bbb-logo"
+          href="https://www.bbb.org/us/ut/north-logan/profile/athletic-organizations/down-under-sports-1166-2001870/#sealclick"
+          style={
+            Object {
+              "backgroundImage": "url(https://seal-utah.bbb.org/logo/ruvtbul/bbb-2001870.png)",
+              "backgroundRepeat": "no-repeat",
+              "backgroundSize": "200%",
+            }
+          }
+        />
+        <a
+          className="footer-link travelex-link"
+          href="https://www.travelexinsurance.com/index.aspx?location=44-0083&go=bp"
+          style={
+            Object {
+              "backgroundImage": "url(https://www.travelexinsurance.com/App_Themes/TIS/images/master_sprite1.png)",
+              "backgroundPosition": "72.179% 0%",
+              "backgroundRepeat": "no-repeat",
+              "backgroundSize": "500%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </footer>
+</section>
+`;

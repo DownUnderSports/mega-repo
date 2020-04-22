@@ -1,0 +1,217 @@
+<!--
+<#% user.time_running_out.each do |message| %>
+<p class="text-danger text-center">
+  <#%= message %>
+</p>
+<#% end %> -->
+<% if user.travel_preparation && user.travel_preparation.deadlines.any? {|k, v| v.present? } %>
+<section>
+
+  <table class="table border-bottom text-screen-fitter">
+    <tbody>
+      <!-- <tr>
+        <th>
+          Payment Page:
+        </th>
+        <td>
+          <%= link_to user.url, user.url %>
+        </td>
+      </tr> -->
+      <!-- <tr>
+        <th>
+          Departure Checklist:
+        </th>
+        <td>
+          <%= link_to user.checklist_url, user.checklist_url %>
+        </td>
+      </tr> -->
+      <% user.travel_preparation.deadlines.each do |k, v| %>
+      <% if v.present? %>
+      <tr>
+        <th>
+          <%= k.titleize %> Deadline:
+        </th>
+        <td>
+          <%= v&.to_date&.to_s(:long) %>
+        </td>
+      </tr>
+      <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+<% end %>
+<section>
+  <header>
+    <h3>Charges: <span class="text-muted float-right" style='font-size: 16px; margin-top: 12px;'><%= time = Time.zone.now.strftime("%B %d, %Y, %l:%M %p (%Z)") %></span></h3>
+  </header>
+  <table class="table table-bordered" style="border:none!important">
+    <thead>
+      <tr>
+        <th colspan="2" style="width: 65%">
+          Description
+        </th>
+        <th style="width: 20%">Add Date</th>
+        <th style="width: 15%">
+          Amount
+        </th>
+      </tr>
+    </thead>
+    <% user.traveler.debits.order(:created_at, "traveler_debits.amount DESC").each do |debit| %>
+    <tbody style="page-break-inside:avoid !important;">
+      <tr>
+        <td colspan="2">
+          <%= debit.name %>
+          <% if debit.description.present? %>
+            <% debit.description.split("\n").each do |detail| %>
+            <br>&nbsp;&nbsp;-<span class="ml-3" style="display: inline-block; max-width: 90%; vertical-align: text-top;"><%= detail %></span>
+            <% end %>
+          <% end %>
+        </td>
+        <td>
+          <%= debit.created_at.to_date.to_s(:long) %>
+        </td>
+        <td nowrap class="text-right">
+          <%= debit.amount.to_s(true) %>
+        </td>
+      </tr>
+    </tbody>
+    <% end %>
+    <% user.traveler.credits.order(amount: :desc).each do |credit| %>
+    <tbody style="page-break-inside:avoid !important;">
+      <tr>
+        <td colspan="2">
+          <%= credit.name %>
+          <% if credit.description.present? %>
+            <% credit.description.split("\n").each do |detail| %>
+            <br>&nbsp;&nbsp;-<span class="ml-3" style="display: inline-block; max-width: 90%; vertical-align: text-top;"><%= detail %></span>
+            <% end %>
+          <% end %>
+        </td>
+        <td >
+          <%= credit.created_at.to_date.to_s(:long) %>
+        </td>
+        <td nowrap class="text-right">
+          - <%= credit.amount.to_s(true) %>
+        </td>
+      </tr>
+    </tbody>
+    <% end %>
+    <tbody style="page-break-inside:avoid !important;">
+      <tr>
+        <th colspan="3" style="background-color: #ffeeba!important;">
+          Total Charges:
+        </th>
+        <th class="text-right" style="background-color: #ffc107!important;">
+          <%= ((@total_debits ||= StoreAsInt.money(user.traveler.debits.sum(:amount))) - (@total_credits ||= StoreAsInt.money(user.traveler.credits.sum(:amount)))).to_s(true) %>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<%= render partial: 'shared/pdf/payment_details', locals: {user: user, time: time} %>
+
+<section style="page-break-inside:avoid !important;">
+  <header>
+    <h3 style="margin-top: .25in; margin-bottom: .25in">Totals For <%= user.full_name %>:</h3>
+  </header>
+  <div class="row">
+    <div class="col-auto">
+      <%= link_to user.url do %>
+      <div class="qr-code-wrapper mr-5 md float-center">
+        <div class="qr-code">
+          <img src="/api/qr_codes/<%= encode64(user.url) %>" />
+        </div>
+        <div class="qr-code-footer">
+          Payment Page
+        </div>
+      </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <table class="table table-bordered" style="border:none!important">
+        <thead>
+          <tr>
+            <th colspan="2">
+              Category
+            </th>
+            <th>
+              Amount
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="pr-3" colspan="2" style="background-color: #ffeeba!important;">
+              Total Charges:<% unless user.traveler.has_insurance? %>**<% end %>
+            </th>
+            <th class="pr-3 text-right" style="background-color: #ffc107!important;">
+              <%= @total_debits.to_s(true) %>
+            </th>
+          </tr>
+        </tbody>
+        <tbody style="border:none!important">
+          <tr>
+            <th class="pr-3" colspan="2">
+              Total Credits/Discounts:
+            </th>
+            <th class="pr-3 text-right">
+              <%= @total_credits.to_s(true) %>
+            </th>
+          </tr>
+        </tbody>
+        <tbody style="border:none!important">
+          <tr>
+            <th class="pr-3" colspan="2" style="background-color: #c3e6cb!important;">
+              Total Payments:
+            </th>
+            <th class="pr-3 text-right" style="background-color: #5ceb89!important;">
+              <%= @total_payments.to_s(true) %>
+            </th>
+          </tr>
+        </tbody>
+        <tbody style="border:none!important">
+          <tr>
+            <th class="pr-3" colspan="2" style="background-color: #f5c6cb!important;">
+              Current Balance:
+            </th>
+            <th class="pr-3 text-right" style="background-color: #ff8692!important;">
+              <%= (@total_debits - (@total_credits + @total_payments)).to_s(true) %>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <table class="table" style="border:none!important">
+    <tbody style="page-break-inside:avoid !important;">
+      <tr>
+        <td colspan="4" nowrap class="text-center text-danger">
+          <%= user.traveler.deposit_dollars %> Deposit is Non-Refundable; all payments are subject to the Down Under Sports Refund Policy
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4" nowrap class="text-center">
+          <strong>
+            Refund Policy: <%= link_to "https://www.downundersports.com/refund-policy", "https://www.downundersports.com/refund-policy", target: '_refund_policy' %>
+          </strong>
+        </td>
+      </tr>
+      <% unless user.traveler.has_insurance? %>
+      <tr>
+        <td colspan="3">
+          Travelex 360 Student Group Premier Travel Protection Plan**<br>
+          **<span class="ml-3" style="display: inline-block; max-width: 90%; vertical-align: text-top;">
+            <i>All Down Under Sports participants must be insured and have adequate coverage for any illness or injury that may occur while traveling internationally. Please let us know if you would like to add the Travelex insurance to your package or if you have your own policy that covers you in Australia. The Travelex insurance premium will automatically be billed to your account if you have not provided proof of coverage by April 15th, 2020</i>
+          </span>
+        </td>
+        <td nowrap class="text-right">
+          <%= user.traveler.insurance_price.to_s(true) %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+<!-- <div style="page-break-after: always">&nbsp;</div> -->

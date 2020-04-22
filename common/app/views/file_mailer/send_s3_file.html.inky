@@ -1,0 +1,12 @@
+<container>
+  <row>
+    <columns>
+      <h3>
+        <%= @message %>
+      </h3>
+      <% if @on_download %>
+        <%= link_to 'Download File', "https://admin.downundersports.com/admin/email_files?object_path=#{CGI.escape(@object_path.to_s)}&file_name=#{CGI.escape(@file_name.to_s)}&should_delete=#{@on_download}", class: 'btn btn-block' %>
+      <% end %>
+    </columns>
+  </row>
+</container>

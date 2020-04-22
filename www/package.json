@@ -1,0 +1,35 @@
+{
+  "name": "DownUnderSports",
+  "version": "0.5.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=11.15.0",
+    "yarn": ">= 1.16.0"
+  },
+  "scripts": {
+    "bad_locks": "yarn bad_locks:base && yarn bad_locks:sub",
+    "bad_locks:base": "rm -f package-lock.json",
+    "bad_locks:sub": "rm -rf /*/package-lock.json",
+    "build": "yarn install && yarn compile && yarn build:finish",
+    "build:finish": "yarn json_files && yarn routes",
+    "compile": "yarn compile:client && yarn compile:offline",
+    "compile:client": "yarn --cwd client build && yarn deploy:client",
+    "compile:offline": "yarn --cwd travel build",
+    "compile:offline:sw": "yarn --cwd travel build:sw",
+    "deploy:client": "cp -a client/build/*.json public/",
+    "heroku-postbuild": "yarn bad_locks && yarn build",
+    "install": "yarn install:client && yarn install:offline",
+    "install:client": "yarn --cwd client install",
+    "install:offline": "yarn --cwd travel install",
+    "json_files": "./vendor/common/scripts/json-files",
+    "routes": "cp -a client/src/routes/routes.json public/routes.json",
+    "files-list": "yarn files-list:clear && yarn files-list:copy",
+    "files-list:clear": "rm -f public/files-list.json",
+    "files-list:copy": "cp -a client/build/files-list.json public/files-list.json 2> /dev/null || :"
+  },
+  "dependencies": {
+    "CompressBuild": "./vendor/common/scripts/compress-build"
+  },
+  "devDependencies": {}
+}

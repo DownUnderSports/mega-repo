@@ -1,0 +1,6 @@
+{
+  "name": "LocationChange",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./location-change.jsx"
+}

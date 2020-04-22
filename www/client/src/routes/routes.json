@@ -1,0 +1,381 @@
+{
+  "domain": "https://downundersports.com",
+  "links": {
+    "root": {
+      "api": "/api/users/",
+      "title": "Down Under Sports: %RESOURCE%",
+      "index_title": "Down Under Sports",
+      "method": "fundraising_names",
+      "path": "",
+      "canonical": "/",
+      "description": "Make a payment for %RESOURCE%",
+      "description_method": "payment_description",
+      "index_description": "Where Champions Meet!",
+      "direct_description": true,
+      "image": "/dus-logo.png",
+      "image_method": "avatar",
+      "image_presence_method": "avatar_attached?",
+      "index_image": "/dus-logo.png",
+      "direct_image": true,
+      "index": true,
+      "resource": true,
+      "model": "user",
+      "regex": "(?:^|\\/)([A-Z]{3}-?[A-Z]{3})(\\?.*)?$",
+      "match_idx": 1,
+      "cache": true,
+      "title_properties": {
+        "view_props": {
+          "className": "d-inline-block font-italic font-weight-bolder border-bottom pb-3"
+        }
+      },
+      "description_properties": {
+        "display_in_header": true,
+        "view_props": {
+          "className": "d-inline-block font-italic font-weight-bold pt-3"
+        }
+      },
+      "image_properties": {
+        "display_in_header": false
+      }
+    },
+    "contact": {
+      "title": "Down Under Sports: Contact Us",
+      "path": "contact",
+      "canonical": "/contact",
+      "image": "dus-logo.png"
+    },
+    "contact-us": {
+      "alias": true,
+      "to": "contact"
+    },
+    "our-staff": {
+      "title": "Down Under Sports: Our Staff",
+      "path": "our-staff",
+      "canonical": "/our-staff",
+      "image": "dus-logo.png"
+    },
+    "privacy": {
+      "title": "Down Under Sports: Privacy Policy",
+      "path": "privacy",
+      "canonical": "/privacy",
+      "image": "dus-logo.png"
+    },
+    "privacy-policy": {
+      "alias": true,
+      "to": "privacy"
+    },
+    "qr-code": {
+      "title": "QR Code Generator",
+      "path": "qr-code",
+      "canonical": "/qr-code",
+      "description": "Down Under Sports: Generate a QR Code!",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "qr-codes": {
+      "alias": true,
+      "to": "qr-code"
+    },
+    "terms": {
+      "title": "Down Under Sports: Terms and Conditions",
+      "path": "terms",
+      "canonical": "/terms",
+      "image": "dus-logo.png"
+    },
+    "refunds": {
+      "title": "Down Under Sports: Refund Policy",
+      "path": "refunds",
+      "canonical": "/refunds",
+      "image": "dus-logo.png"
+    },
+    "refund-policy": {
+      "alias": true,
+      "to": "refunds"
+    },
+    "thank-you-tickets": {
+      "title": "Down Under Sports: Thank You Ticket Rules",
+      "path": "admin/thank-you-tickets",
+      "canonical": "/admin/thank-you-tickets",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "thank_you_tickets": {
+      "title": "Down Under Sports: Thank You Ticket Rules",
+      "path": "admin/thank_you_tickets",
+      "canonical": "/admin/thank_you_tickets",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "infokit": {
+      "title": "Down Under Sports: More Info",
+      "description": "Request More Information about competing in the land down under.",
+      "path": "infokit",
+      "canonical": "/infokit",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "payment": {
+      "api": "/api/users/",
+      "title": "Down Under Sports: %RESOURCE%",
+      "index_title": "Make a Payment",
+      "method": "fundraising_names",
+      "description_method": "payment_description",
+      "path": "payment",
+      "canonical": "/payment",
+      "description": "Make a donation for %RESOURCE%",
+      "index_description": "Make a Payment",
+      "direct_description": true,
+      "index_image": "/dus-logo.png",
+      "image": "",
+      "image_method": "avatar",
+      "image_presence_method": "avatar_attached?",
+      "direct_image": true,
+      "resource": true,
+      "model": "user",
+      "match_idx": 1,
+      "cache": true,
+      "title_properties": {
+        "view_props": {
+          "style": {
+            "background": "rgba(0,0,0,.5)",
+            "padding": ".25rem 1rem",
+            "borderRadius": ".25rem"
+          }
+        }
+      },
+      "description_properties": {
+        "display_in_header": false,
+        "view_props": {
+          "className": "bg-secondary p-3 rounded text-left"
+        }
+      },
+      "image_properties": {
+        "display_in_header": false
+      }
+    },
+    "deposit": {
+      "api": "/api/users/",
+      "title": "Deposit Payment: %RESOURCE%",
+      "method": "fundraising_names",
+      "description_method": "payment_description",
+      "path": "deposit",
+      "canonical": "/deposit",
+      "description": "Pay the deposit for %RESOURCE% and join the team!",
+      "index_title": "Down Under Sports: Pay Deposit",
+      "index_description": "Down Under Sports: Pay Deposit",
+      "direct_description": true,
+      "image": "",
+      "image_method": "avatar",
+      "image_presence_method": "avatar_attached?",
+      "direct_image": true,
+      "resource": true,
+      "model": "user",
+      "match_idx": 1,
+      "cache": true,
+      "title_properties": {
+        "view_props": {
+          "style": {
+            "background": "rgba(0,0,0,.5)",
+            "padding": ".25rem 1rem",
+            "borderRadius": ".25rem"
+          }
+        }
+      },
+      "description_properties": {
+        "display_in_header": false,
+        "view_props": {
+          "className": "bg-secondary p-3 rounded text-left"
+        }
+      },
+      "image_properties": {
+        "display_in_header": false
+      }
+    },
+    "participants": {
+      "title": "Down Under Sports: Past Participants",
+      "description": "View athletes that have competed in the Down Under Sports program from your state",
+      "path": "participants",
+      "canonical": "/participants"
+    },
+    "media": {
+      "title": "Down Under Sports: In the Media",
+      "description": "View media articles the past participants have used to fundraise.",
+      "path": "media",
+      "canonical": "/media"
+    },
+    "meetings": {
+      "api": "/api/meetings/",
+      "title": "Online Meeting",
+      "path": "meetings",
+      "canonical": "/meetings",
+      "description": "View Meeting Details for Meeting on %RESOURCE%",
+      "method": "start_time",
+      "resource": true
+    },
+    "videos": {
+      "title": "View Down Under Sports Videos",
+      "path": "videos",
+      "canonical": "/videos",
+      "description": "View More Information on the Down Under Sports Program"
+    },
+    "payments": {
+      "api": "/api/payments/",
+      "title": "Payment Receipt - %RESOURCE%",
+      "path": "payments",
+      "canonical": "/payments",
+      "description": "View your receipt for payment of %RESOURCE%",
+      "method": "formatted_amount",
+      "resource": true
+    },
+    "sports": {
+      "api": "/api/sports/",
+      "title": "Sports - %RESOURCE%",
+      "method": "full_gender",
+      "path": "sports",
+      "canonical": "/sports",
+      "description": "Down Under Sports: Sports",
+      "image": "dus-logo.png",
+      "index": true,
+      "resource": true,
+      "cache": true
+    },
+    "calendar": {
+      "title": "Calendar",
+      "path": "calendar",
+      "canonical": "/calendar",
+      "description": "Down Under Sports: Event calendar",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "faq": {
+      "title": "Down Under Sports: Frequently Asked Questions",
+      "description": "Get the answers to our most common questions!",
+      "path": "faq",
+      "canonical": "/faq",
+      "title_properties": {
+        "view_props": {
+          "className": "d-inline-block font-italic font-weight-bolder border-bottom pb-3"
+        }
+      },
+      "description_properties": {
+        "display_in_header": true,
+        "view_props": {
+          "className": "d-inline-block font-italic font-weight-bold pt-3"
+        }
+      }
+    },
+    "frequently-asked-questions": {
+      "title": "Down Under Sports: Frequently Asked Questions",
+      "description": "Get the answers to our most common questions!",
+      "path": "frequently-asked-questions",
+      "canonical": "/frequently-asked-questions",
+      "title_properties": {
+        "view_props": {
+          "className": "d-inline-block font-italic font-weight-bolder border-bottom pb-3"
+        }
+      },
+      "description_properties": {
+        "display_in_header": true,
+        "view_props": {
+          "className": "d-inline-block font-italic font-weight-bold pt-3"
+        }
+      }
+    },
+    "travel-info": {
+      "title": "Verify Pre-Travel Details",
+      "path": "travel-info",
+      "canonical": "/travel-info",
+      "description": "Get Ready for Australia!",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "uniform-order": {
+      "title": "Uniform Order",
+      "path": "uniform-order",
+      "canonical": "/uniform-order",
+      "description": "Submit Uniform Order",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "event-registration": {
+      "title": "Event Registration",
+      "path": "event-registration",
+      "canonical": "/event-registration",
+      "description": "Submit Event Registration",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "event-results": {
+      "title": "Event Results",
+      "path": "event-results",
+      "canonical": "/event-results",
+      "description": "View Competition Results!",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "departure-checklist": {
+      "title": "Departure Checklist",
+      "path": "departure-checklist",
+      "canonical": "/departure-checklist",
+      "description": "Get Ready for Australia!",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "legal-documents": {
+      "title": "Departure Checklist: Legal Forms",
+      "path": "legal-documents",
+      "canonical": "/legal-documents",
+      "description": "Get Ready for Australia!",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "over-payment": {
+      "title": "Over-Payment Reimbursement Form",
+      "path": "over-payment",
+      "canonical": "/over-payment",
+      "description": "Return Overpaid Funds",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "open-tryouts": {
+      "title": "Open Tryouts - Try out to compete in Australia!",
+      "path": "open-tryouts",
+      "canonical": "/open-tryouts",
+      "description": "",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "athlete-form": {
+      "title": "Compete in Australia!",
+      "path": "athlete-form",
+      "canonical": "/athlete-form",
+      "description": "",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "nomination-form": {
+      "title": "Nominate Athletes to Compete in Australia!",
+      "path": "nomination-form",
+      "canonical": "/nomination-form",
+      "description": "",
+      "image": "dus-logo.png",
+      "index": false,
+      "cache": true
+    },
+    "fourOhFour": {
+      "title": "Page Not Found",
+      "description": "Down Under Sports: Unknown Route",
+      "image": "dus-logo.png",
+      "index": true
+    }
+  }
+}

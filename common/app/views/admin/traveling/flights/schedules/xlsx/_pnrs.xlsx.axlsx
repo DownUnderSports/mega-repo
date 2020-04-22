@@ -1,0 +1,31 @@
+# encoding: utf-8
+
+wb.add_worksheet(name: 'PNRs') do |sheet|
+  sheet.add_row [
+      'PNR #',
+      'Carrier',
+      'Departing',
+      'Returning',
+      'From',
+      'To',
+      'Cancels',
+      'Seats',
+      'Verified By',
+      'View Schedule'
+  ]
+
+  Flight::Schedule.order(:pnr).includes(:users).each do |schedule|
+    sheet.add_row [
+        schedule.pnr,
+        schedule.operator,
+        (has_schedule = schedule.legs.order(:departing_at).first)&.local_departing_at,
+        has_schedule ? schedule.legs.order(arriving_at: :desc).first.local_arriving_at : '',
+        has_schedule ? schedule.route_summary[/([A-Z]+).*?[A-Z]+/, 1] : 'N/A',
+        has_schedule ? schedule.route_summary[/[A-Z]+.*?([A-Z]+)/, 1] : '',
+        schedule.travelers.where.not(cancel_date: nil).count,
+        schedule.seats_reserved,
+        schedule.verified_by&.full_name,
+        "https://admin.downundersports.com/admin/traveling/flights/schedules/#{schedule.id}"
+    ]
+  end
+end

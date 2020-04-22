@@ -1,0 +1,429 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pages - Admin/Users/Index is snapshotable 1`] = `
+<div
+  className="Users IndexPage row"
+>
+  <table
+    className="table table-striped table-hover table-bordered table-secondary mb-0"
+  >
+    <thead
+      className="thead-dark"
+    >
+      <tr
+        className="clickable text-info"
+        onClick={[Function]}
+      >
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            dus_id
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            first
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            middle
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            last
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            suffix
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            category
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            email
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            phone
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            state
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+        <th
+          className="text-warning no-wrap"
+          scope="col"
+        >
+          <span
+            style={
+              Object {
+                "display": "flex",
+                "flexFlow": "row nowrap",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            sport
+            <i
+              className="material-icons"
+            >
+              unfold_more
+            </i>
+          </span>
+        </th>
+      </tr>
+      <tr>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <select
+            className="form-control"
+            onChange={[Function]}
+            value=""
+          >
+            <option
+              value=""
+            />
+            <option
+              value="athlete"
+            >
+              Athlete
+            </option>
+            <option
+              value="coach"
+            >
+              Coach
+            </option>
+            <option
+              value="staff"
+            >
+              Staff
+            </option>
+            <option
+              value="supporter"
+            >
+              Supporter
+            </option>
+          </select>
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+        <th
+          scope="col"
+        >
+          <input
+            className="form-control"
+            onChange={[Function]}
+            type="text"
+            value=""
+          />
+        </th>
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+  <div
+    className="la-square-jelly-box "
+  >
+    <div />
+    <div />
+  </div>
+  <div
+    className="w-100 bg-dark p-2"
+  >
+    <div
+      className="d-flex justify-content-between"
+    >
+      <div
+        className="col-auto"
+      >
+        <button
+          className="btn btn-info"
+          disabled={true}
+          onClick={[Function]}
+        >
+          Previous Page
+        </button>
+      </div>
+      <div
+        className="col-auto"
+      >
+        <button
+          className="btn btn-warning"
+          disabled={true}
+          onClick={[Function]}
+        >
+          Clear Sort
+        </button>
+      </div>
+      <div
+        className="col-auto text-info display-4"
+        style={
+          Object {
+            "fontSize": "2rem",
+          }
+        }
+      >
+        <strong>
+          Page 
+          1
+           of 
+          1
+        </strong>
+      </div>
+      <div
+        className="col-auto"
+      >
+        <button
+          className="btn btn-warning"
+          onClick={[Function]}
+        >
+          Clear Filters
+        </button>
+      </div>
+      <div
+        className="col-auto"
+      >
+        <button
+          className="btn btn-info float-right"
+          disabled={true}
+          onClick={[Function]}
+        >
+          Next Page
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

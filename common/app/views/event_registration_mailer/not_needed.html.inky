@@ -1,0 +1,31 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">Apologies for the confusion.</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+
+      <spacer size="32"></spacer>
+
+      <p>
+        Dear <%= @user.first %>,
+      </p>
+      <p>
+        You may have recently received an email from us, asking you to submit your event registration. This email was only meant to go to "Track and Field" athletes and you can safely ignore it.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16"></spacer>
+</container>

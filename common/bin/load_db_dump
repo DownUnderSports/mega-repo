@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  puts "\n== Preparing Database =="
+  system! 'bin/rails db:drop'
+  system! 'bin/rails db:create'
+
+  puts "\n== Importing Heroku Data =="
+  system "pg_restore --verbose --clean --no-acl --no-owner -j 8 -d down_under_sports_development  #{ARGV[0] || 'latest.dump'}"
+
+  puts "\n== Setting DB environment =="
+  system! 'bin/rails db:environment:set RAILS_ENV=development'
+
+  puts "\n== Dropping Attachments =="
+  system! 'bin/rails db:drop_attachments'
+
+  puts "\b== Migrating Test Database"
+  system! 'bin/rails db:migrate RAILS_ENV=test'
+end

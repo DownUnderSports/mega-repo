@@ -1,0 +1,11 @@
+csv << [
+  "#{@competing_team.sport.full_gender} Roster - #{@competing_team.name}"
+]
+
+csv << [
+  @competing_team.coach_names
+]
+
+csv << []
+
+render partial: "admin/traveling/ground_control/competing_teams/#{@competing_team.sport.abbr.downcase}", locals: { csv: csv }

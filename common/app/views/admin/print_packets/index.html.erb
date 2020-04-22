@@ -1,0 +1,155 @@
+<div class="row mt-5">
+  <div class="col">
+    <form id="get_packet_print_params">
+      <div class="row">
+        <div class="col form-group">
+          <label for="get_departing_date">
+            Select User Departing Date
+          </label>
+          <input type="date" id="get_departing_date" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <label for="get_team_departing_date">
+            Select Team Departing Date
+          </label>
+          <input type="date" id="get_team_departing_date" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <label for="get_sport_id">
+            Select Sport
+          </label>
+          <select id="get_sport_id" class="form-control">
+            <option value="">Select Sport...</option>
+            <% Sport.all.order(:full, :full_gender).each do |sp| %>
+            <option value="<%= sp.id %>"><%= sp.full_gender %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <label for="get_sport_id">
+            Select Bus
+          </label>
+          <select id="get_bus_id" class="form-control">
+            <option value="">Select Bus...</option>
+            <option value="NONE">NO BUS USERS</option>
+            <% Sport.all.order(:full, :full_gender).each do |sp| %>
+              <optgroup label="<%= sp.full_gender %>">
+                <%= sp.buses.order(:name).each do |bus| %>
+                  <option value="<%= bus.id %>"><%= bus.to_str %></option>
+                <% end %>
+              </optgroup>
+            <% end %>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <label for="get_sport_id">
+            Exclude Users
+          </label>
+          <input type="text" class="form-control" name="exclude_users" id="exclude_users">
+        </div>
+        <div class="col form-group">
+          <label for="get_sport_id">
+            Only Users
+          </label>
+          <input type="text" class="form-control" name="only_users" id="only_users">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <button type="submit" id="teammates" class="btn btn-block btn-primary">
+            Loop Teammates
+          </button>
+        </div>
+        <div class="col form-group">
+          <button type="submit" id="travel_card" class="btn btn-block btn-primary">
+            Loop Travel Card
+          </button>
+        </div>
+        <div class="col form-group">
+          <button type="submit" id="travel_page" class="btn btn-block btn-primary">
+            Loop Travel Page
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <button type="submit" id="get_sheet" class="btn btn-block btn-info">
+            Download CSV
+          </button>
+        </div>
+        <div class="col">
+          <a href="/admin/print_packets.csv" class="btn btn-block btn-secondary">
+            Download All Travelers (Pre-Formatted for ACCDB)
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+  function getSubmit(ev, page) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const dateVal     = String(document.getElementById("get_departing_date").value).replace(/\s+/g, ''),
+          teamDateVal = String(document.getElementById("get_team_departing_date").value).replace(/\s+/g, ''),
+          sportVal    = String(document.getElementById("get_sport_id").value).replace(/\s+/g, ''),
+          busVal      = String(document.getElementById("get_bus_id").value).replace(/\s+/g, ''),
+          excludeVal  = String(document.getElementById("exclude_users").value).replace(/\s+/g, '').split(',').filter(v => !!v),
+          onlyVal     = String(document.getElementById("only_users").value).replace(/\s+/g, '').split(',').filter(v => !!v),
+          queryArgs   = []
+
+    let query = ''
+
+    if(sportVal) {
+      query = '(teams.sport_id = ?)'
+      queryArgs.push(sportVal)
+    }
+
+    if(dateVal) {
+      query = `${query}${query ? ' AND ' : ''}(COALESCE(travelers.departing_date, teams.departing_date) = ?)`
+      queryArgs.push(dateVal)
+    }
+
+    if(teamDateVal) {
+      query = `${query}${query ? ' AND ' : ''}(teams.departing_date = ?)`
+      queryArgs.push(teamDateVal)
+    }
+
+    const url = `${
+            window.location.origin
+          }/admin/print_packets/${
+            String(page || 'teammates')
+          }${page === 'get_sheet' ? '.csv' : '.pdf'}?pp=disable&direct_print=1${
+            busVal && `&bus_id=${busVal}`
+          }${
+            query && `&query=${encodeURIComponent(query)}`
+          }${
+            queryArgs.map((v) => `&query_args[]=${encodeURIComponent(v)}`).join('')
+          }${
+            excludeVal.map((v) => `&exclude_ids[]=${encodeURIComponent(v)}`).join('')
+          }${
+            onlyVal.map((v) => `&only_ids[]=${encodeURIComponent(v)}`).join('')
+          }`;
+
+    window.location = url
+  }
+
+  function onClick(ev) {
+    return getSubmit(ev, ev.target.id)
+  }
+
+  document.getElementById("get_packet_print_params").onsubmit = getSubmit;
+  document.getElementById("teammates").onclick = onClick;
+  document.getElementById("travel_card").onclick = onClick;
+  document.getElementById("travel_page").onclick = onClick;
+  document.getElementById("get_sheet").onclick = onClick;
+</script>

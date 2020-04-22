@@ -1,0 +1,56 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag 'duffel-bag-banner.png', class: 'full', alt: 'OGIO Big Dome Bag!' %>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        Get your account up to $2,500 by <strong>January 31<sup>st</sup>, 2020</strong> and receive a <i>FREE OGIO BIG DOME DUFFEL BAG!</i> <span class="text-danger">**</span>
+      </p>
+      <p>Features:</p>
+      <ul>
+        <li>Front zippered pocket</li>
+        <li>Padded shoulder strap</li>
+        <li>All metal hardware</li>
+        <li>Ventilated shoe compartment with grab handle</li>
+        <li>Fabric wrapped handle</li>
+      </ul>
+      <p>Specs:</p>
+      <ul>
+        <li>Dimensions: 24" x 12" x 9"</li>
+        <li>Weight: 1 lb, 12 oz</li>
+        <li>Capacity: 3403 cu. in.</li>
+        <li>Materials: 300D dobby nylon / 600D poly</li>
+      </ul>
+      <spacer size="16"></spacer>
+      <%= link_to 'Make a Payment Here!', "https://downundersports.com/payment/#{@user.dus_id}", class: 'btn btn-block btn-1' %>
+      <spacer size="32"></spacer>
+      <p>
+        <i>Reminder:</i> you must have a minimum of $2,000 paid into your account by <strong>January 31<sup>st</sup>, 2020</strong> to keep your account current.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p class="text-right">
+        <small class="text-danger">
+          **<i>Charges must include the full &ldquo;Australia Tournament Package&rdquo;; minimum monthly payment of $100 or account balance of at least $1,300 within 30 days of sign up is required</i>
+        </small>
+      </p>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

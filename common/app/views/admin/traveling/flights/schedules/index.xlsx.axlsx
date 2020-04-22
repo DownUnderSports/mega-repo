@@ -1,0 +1,165 @@
+# encoding: utf-8
+
+Traveler.active {|t| t.set_details should_save_details: true }
+
+travelers =
+  Traveler.
+    active.
+    joins(team: :sport).
+    joins(
+      <<-SQL
+        LEFT JOIN (
+          SELECT
+            COALESCE(track_departing_date, '1999-01-01') AS track_departing_date,
+            COALESCE(track_returning_date, '1999-01-01') AS track_returning_date,
+            code
+          FROM flight_airports
+        ) departing_from_airport
+        ON
+          (departing_from_airport.code = travelers.departing_from)
+          AND
+          (sports.abbr = 'TF')
+      SQL
+    ).
+    where.not(user_id: test_user_environment_ids)
+
+flights =
+  travelers.
+    joins(
+      <<-SQL.gsub(/\s*\n?\s+/m, ' ')
+        INNER JOIN (
+          SELECT
+            travelers.id AS traveler_id,
+            (
+              CASE
+              WHEN
+                ( travelers.own_flights = TRUE )
+              THEN 1
+              ELSE 0
+              END
+            ) AS own_flights_int,
+            (
+              CASE
+              WHEN (
+                (travelers.own_flights = FALSE)
+                AND
+                (travelers.balance > 0)
+              )
+              THEN 1
+              ELSE 0
+              END
+            ) AS has_balance_int,
+            (
+              CASE
+              WHEN
+                (
+                  (travelers.own_flights = FALSE)
+                  AND
+                  (thirty_day IS NOT NULL)
+                  AND
+                  (thirty_day < NOW())
+                  AND
+                  (travelers.balance > 0)
+                  AND
+                  (total_payment_amount < 200000)
+                )
+              THEN 1
+              ELSE 0
+              END
+            ) AS within_thirty_int
+          FROM travelers
+          INNER JOIN (
+            SELECT
+              travelers.id AS traveler_id,
+              (COALESCE(first_payments.created_at, travelers.created_at) + interval '30 days') AS thirty_day,
+              COALESCE(total_payments.amount, 0) as total_payment_amount
+            FROM
+              travelers
+            LEFT JOIN payment_items first_payments
+              ON (
+                first_payments.id = (
+                  SELECT
+                    payment_items.id
+                  FROM
+                    payment_items
+                  INNER JOIN payments
+                    ON payments.id = payment_items.payment_id
+                  WHERE (
+                    traveler_id = travelers.id
+                    AND
+                    payments.successful = TRUE
+                  )
+                  ORDER BY payment_items.created_at asc
+                  LIMIT 1
+                )
+              )
+            LEFT JOIN (
+              SELECT
+                payment_items.traveler_id,
+                SUM(payment_items.amount) AS amount
+              FROM
+                payment_items
+              INNER JOIN payments
+                ON payments.id = payment_items.payment_id
+              WHERE
+                payments.successful = TRUE
+              GROUP BY
+                payment_items.traveler_id
+            ) total_payments
+              ON total_payments.traveler_id = travelers.id
+          ) traveler_summary ON traveler_summary.traveler_id = travelers.id
+        ) thirties ON thirties.traveler_id = travelers.id
+      SQL
+    ).
+    where.not(departing_from: nil, returning_to: nil).
+    group('COALESCE(travelers.departing_date, departing_from_airport.track_departing_date, teams.departing_date)', 'COALESCE(travelers.returning_date, departing_from_airport.track_returning_date, teams.returning_date)', :departing_from, :returning_to).
+    order('COALESCE(travelers.departing_date, departing_from_airport.track_departing_date, teams.departing_date)', 'COALESCE(travelers.returning_date, departing_from_airport.track_returning_date, teams.returning_date)', :departing_from, :returning_to).
+    select(
+      'COALESCE(travelers.departing_date, departing_from_airport.track_departing_date, teams.departing_date) AS departing_date',
+      'COALESCE(travelers.returning_date, departing_from_airport.track_returning_date, teams.returning_date) AS returning_date',
+      :departing_from,
+      :returning_to,
+      'COUNT(travelers.id) AS total',
+      'COUNT(travelers.id) - SUM(thirties.own_flights_int) AS total_needed',
+      'SUM(thirties.own_flights_int) AS own_flights_count',
+      'SUM(thirties.has_balance_int) AS has_balance_count',
+      "SUM(thirties.within_thirty_int) AS within_thirty_count",
+    )
+
+airports = {}
+
+Flight::Airport.where(code: travelers.select(:departing_from)).
+or(Flight::Airport.where(code: travelers.select(:returning_to))).
+select(:code, :carrier).each do |a|
+  airports[a.code] = a.carrier.titleize
+end
+
+# where(Traveler.arel_table[:departing_from].eq('GO').or(Traveler.arel_table[:returning_to].eq('GO'))).
+ground_only =
+  travelers.
+    where(own_flights: true).
+    group('COALESCE(travelers.departing_date, departing_from_airport.track_departing_date, teams.departing_date)', 'COALESCE(travelers.returning_date, departing_from_airport.track_returning_date, teams.returning_date)').
+    order('COALESCE(travelers.departing_date, departing_from_airport.track_departing_date, teams.departing_date)', 'COALESCE(travelers.returning_date, departing_from_airport.track_returning_date, teams.returning_date)').
+    select(
+      'COALESCE(travelers.departing_date, departing_from_airport.track_departing_date, teams.departing_date) AS departing_date',
+      'COALESCE(travelers.returning_date, departing_from_airport.track_returning_date, teams.returning_date) AS returning_date',
+      'COUNT(travelers.id) AS total'
+    )
+
+wb = xlsx_package.workbook
+
+render partial: 'admin/traveling/flights/schedules/xlsx/pnrs', locals: {wb: wb}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/needed', locals: {wb: wb, flight_groups: flights, airports: airports}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/no_schedules', locals: {wb: wb}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/trouble_people', locals: {wb: wb}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/ground_only', locals: {wb: wb, ground_only: ground_only}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/flight_deviations', locals: {wb: wb}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/flight_upgrades', locals: {wb: wb}
+
+render partial: 'admin/traveling/flights/schedules/xlsx/flight_requests', locals: {wb: wb}

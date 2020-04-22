@@ -1,0 +1,35 @@
+---
+:concurrency: 7
+:pidfile: ./pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:queues:
+  - default
+  - addresses
+  - error_mailer
+  - important
+  - importing
+  - inventory
+  - mailers
+  - mass_mailer
+  - async_mailer
+  - offers
+  - payment_mailer
+  - route_cache
+  - staff_mailer
+  - video_tracking
+:limits:
+  default:        4
+  addresses:      1
+  error_mailer:   1
+  important:      7
+  importing:      1
+  inventory:      1
+  mailers:        1
+  mass_mailer:    1
+  async_mailer:   3
+  offers:         1
+  payment_mailer: 1
+  route_cache:    1
+  staff_mailer:   1
+  video_tracking: 1
+:daemon: false

@@ -1,0 +1,6 @@
+{
+  "name": "EventRegistrationViewer",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./event-registration-viewer.jsx"
+}

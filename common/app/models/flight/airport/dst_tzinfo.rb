@@ -1,0 +1,66 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
+module Flight
+  class Airport < ApplicationRecord
+    # == Constants ============================================================
+
+    DST_TZINFO = {
+      "#{-12.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+12"),
+      "#{-11.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+11"),
+      "#{-10.hours.to_i}Y"   => ActiveSupport::TimeZone.find_tzinfo("America/Adak"),
+      "#{-10.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+10"),
+      "#{-9.5.hours.to_i}N"  => ActiveSupport::TimeZone.find_tzinfo("Pacific/Marquesas"),
+      "#{-9.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Anchorage"),
+      "#{-9.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+9"),
+      "#{-8.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Los_Angeles"),
+      "#{-8.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+8"),
+      "#{-7.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Denver"),
+      "#{-7.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+7"),
+      "#{-6.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Chicago"),
+      "#{-6.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+6"),
+      "#{-5.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/New_York"),
+      "#{-5.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+5"),
+      "#{-4.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Halifax"),
+      "#{-4.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+4"),
+      "#{-3.5.hours.to_i}Y"  => ActiveSupport::TimeZone.find_tzinfo("America/St_Johns"),
+      "#{-3.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Sao_Paulo"),
+      "#{-3.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+3"),
+      "#{-2.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+2"),
+      "#{-1.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("America/Scoresbysund"),
+      "#{-1.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT+1"),
+      "0Y"                   => ActiveSupport::TimeZone.find_tzinfo("Atlantic/Faroe"),
+      "0N"                   => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT"),
+      "#{1.hours.to_i}Y"     => ActiveSupport::TimeZone.find_tzinfo("Europe/Zurich"),
+      "#{1.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-1"),
+      "#{2.hours.to_i}Y"     => ActiveSupport::TimeZone.find_tzinfo("Europe/Athens"),
+      "#{2.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-2"),
+      "#{3.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-3"),
+      "#{3.5.hours.to_i}Y"   => ActiveSupport::TimeZone.find_tzinfo("Asia/Tehran"),
+      "#{4.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-4"),
+      "#{4.5.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Asia/Kabul"),
+      "#{5.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-5"),
+      "#{5.5.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Asia/Kolkata"),
+      "#{5.75.hours.to_i}N"  => ActiveSupport::TimeZone.find_tzinfo("Asia/Kathmandu"),
+      "#{6.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-6"),
+      "#{6.5.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Asia/Yangon"),
+      "#{7.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-7"),
+      "#{8.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-8"),
+      "#{8.75.hours.to_i}N"  => ActiveSupport::TimeZone.find_tzinfo("Australia/Eucla"),
+      "#{9.hours.to_i}N"     => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-9"),
+      "#{9.5.hours.to_i}Y"   => ActiveSupport::TimeZone.find_tzinfo("Australia/Adelaide"),
+      "#{9.5.hours.to_i}N"   => ActiveSupport::TimeZone.find_tzinfo("Australia/Darwin"),
+      "#{10.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("Australia/Sydney"),
+      "#{10.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-10"),
+      "#{10.5.hours.to_i}Y"  => ActiveSupport::TimeZone.find_tzinfo("Australia/Lord_Howe"),
+      "#{11.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-11"),
+      "#{12.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("Pacific/Auckland"),
+      "#{12.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-12"),
+      "#{12.75.hours.to_i}Y" => ActiveSupport::TimeZone.find_tzinfo("Pacific/Chatham"),
+      "#{13.hours.to_i}Y"    => ActiveSupport::TimeZone.find_tzinfo("Pacific/Apia"),
+      "#{13.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-13"),
+      "#{14.hours.to_i}N"    => ActiveSupport::TimeZone.find_tzinfo("Etc/GMT-14"),
+    }
+
+  end
+end

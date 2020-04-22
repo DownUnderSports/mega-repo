@@ -1,0 +1,5 @@
+{
+  "name": "AdminLayout",
+  "private": true,
+  "main": "./admin.jsx"
+}

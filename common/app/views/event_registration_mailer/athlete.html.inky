@@ -1,0 +1,57 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        Down Under Sports Event Registration Received
+      </h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        Thank you for placing the event registration for <%= @event_reg.user.full_name %>.
+      </p>
+      <p>
+        Details of your submission can be found below. If there are ANY errors with your submission, call our office ASAP @ <a href="tel:+1-435-753-4732">(435) 753-4732</a>.
+      </p>
+      <% if @event_reg.has_event?('hammer') || @event_reg.has_event?('pole vault') %>
+        <p>
+          All <strong>Pole Vault</strong> and <strong>Hammer</strong> entries are subject to a signed certificate of competency from a coach qualified in the relevant discipline. A copy of the certificate for your coach to sign is attached to this email.
+        </p>
+        <% if @event_reg.has_event?('pole vault') %>
+          <p>
+            Pole vaulters must email <a href="mailto:peter@sportscredentials.com.au">peter@sportscredentials.com.au</a> to organize renting a pole in Australia. You will need to include the weight and length of the pole you will need. Be sure to mention you are with Down Under Sports in your email.
+          </p>
+        <% end %>
+      <% end %>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <h3>
+        Event Registration Details
+      </h3>
+      <%= render partial: 'shared/track_events/athlete', locals: { event_registration: @event_reg } %>
+    </columns>
+  </row>
+  <spacer size="16"></spacer>
+  <row>
+    <columns>
+      <p>
+        <strong>Submitted By:</strong> <%= @event_reg.submitter.full_name %> (<%= @event_reg.created_at.strftime("%B %d, %Y %H:%M %Z") %>)
+      </p>
+    </columns>
+  </row>
+</container>

@@ -1,0 +1,9 @@
+<h4>
+  <%= link_to "#{@user.full_name} - #{@user.dus_id}", @user.url(1) %>
+</h4>
+<h5>
+  <%= @user.url(1) %>
+</h5>
+<pre>
+  <code style='color:#222'><%= render(partial: 'shared/get_type', locals: { value: @values, level: 0 }) %></code>
+</pre>

@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col" style="height: 0.25in">
+    <div style="font-size: 0.18in; text-align: right;">
+      PASSENGER - <%= user.passport_name %>
+    </div>
+    <div class="text-muted" style="font-size: 0.1in; text-align: right;">
+      <%= user.dus_id %>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div style='height: 3.25in; width: 1.75in; margin-top: 0.175in; overflow: hidden !important; float: right; text-align: right'>
+  <% if user.tickets.size > 0 %>
+    <h6 class="text-muted" style="font-size: 0.075in">
+      same schedule
+    </h6>
+    <p style="font-size: 0.1in; white-space: nowrap">
+      <% travelers = Traveler.active.where.not(user_id: user.id) %>
+      <% user.tickets.each {|su| travelers = travelers.where_exists(:tickets, schedule_id: su.schedule_id)} %>
+      <% travelers.limit(20).each do |t| %>
+        <%= t.user.flight_name[0..30] %>
+        <br>
+      <% end %>
+      <% if (same_count = travelers.size) > 20 %>
+        + <%= same_count - 20 %> MORE
+      <% end %>
+    </p>
+  <% end %>
+</div>
+<div style='height: 2in; width: 3.75in; margin-top: 1.5in; background: #FFFFFF!important;'>
+  <% if proof = user.passport&.eta_proofs&.take %>
+    <img src="<%= url_for(proof) %>" alt="Restricted ETA Image" class="img-fluid" style="max-height: 100%; max-width: 100%" />
+  <% end %>
+</div>

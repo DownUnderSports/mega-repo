@@ -1,0 +1,27 @@
+csv << %w[
+  Link
+  ID
+  Team\ State
+  School
+  School\ State
+  Name
+  Gender
+  Handicap
+  Phone
+  Email
+]
+
+@competing_team.travelers.athletes.each do |t|
+  csv << [
+    t.user.admin_url,
+    t.user.dus_id,
+    t.team.state.abbr,
+    t.user.athlete&.school&.name,
+    t.user.athlete&.school&.state&.abbr,
+    t.user.basic_name,
+    t.user.gender,
+    t.user.athlete.athletes_sports.find_by(sport_id: @competing_team.sport_id)&.handicap,
+    t.user.athlete_and_parent_phones.first,
+    t.user.athlete_and_parent_emails.first
+  ]
+end

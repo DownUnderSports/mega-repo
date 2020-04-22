@@ -1,0 +1,13 @@
+G'Day Mate!
+
+Below is a link to the informational video you started where we cover all of the most important information about the Down Under Sports Program. Please be sure a parent/guardian is in attendance while you view it.
+
+View Information Video: <%= "https://downundersports.com/videos/i/#{@user&.dus_id}" %>
+
+Pay Deposit & Join The Team: <%= @deposit_link %>
+
+Please call or text our office at 435-753-4732 with any questions you have (see website for office hours). For answers to our most commonly asked questions, check out our F.A.Q. page, at: <%= @faq_link %>.
+
+We look forward to watching you compete!
+
+<%= render partial: 'shared/email_footer' %>

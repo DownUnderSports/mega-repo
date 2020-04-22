@@ -1,0 +1,104 @@
+@charset "UTF-8"
+@require 'common/stylus/colors'
+
+.HomePage
+  padding-top: 1rem
+  padding-bottom: 1rem
+  margin: 1rem 0
+  .verticalCenter,
+  .flexEnd
+    display: flex
+    flex-flow: column nowrap
+    justify-content: space-between
+    align-items: center
+    height: 100%
+    img
+      max-width: 100%
+      max-height: 100%
+    q
+      font-size: 14px
+      line-height: 2.3
+  .flexEnd
+    justify-content: flex-end
+  .attention
+    border: .4rem double white
+    border-radius: 1rem
+    padding: 1em
+    color: $night
+    font-weight: bold
+    // min-height: 21rem
+    &:before
+      border-radius: 1rem
+      position: absolute
+      top: 0
+      left:15px
+      display: block
+      content: ''
+      border: .2rem solid $transparent-blue
+      height: 100%
+      width: calc(100% - 30px)
+    > *
+      // padding: 1rem
+      background: none
+      width: 100%
+      color: transparent
+      opacity: none
+    .attention-text
+      color: #000080
+      padding: .5rem
+      background: #FFF
+      background: rgba(255,255,255,.6)
+      line-height: 1.9
+    .verticalCenter
+      justify-content: center
+  .verticalWrapper
+    padding-bottom: 50%
+    position: relative
+    .innerVertWrapper
+      position: absolute
+      top: 0
+      left: 0
+      height: 100%
+      width: 100%
+      .attention
+        &:before
+          left:0
+          width: 100%
+      // padding: 0 15px
+  .aboutUs
+    background: $almost-white
+    color: $charcoal
+    padding: 2rem
+    margin: 2rem 0
+  .authBtn
+    display: block
+    padding: 1.3rem
+    text-align: center
+    background-color: $transparent-blue
+    width: 100%
+    border: 2px solid $charcoal
+    border-radius: 2px
+    transition: background-color .5s ease-in-out
+    &, &:visited, &:hover
+      color: $almost-white
+      text-decoration: none
+    &:hover
+      background-color: $green
+  .block-header
+    background: #000080
+    border: 0.15em solid #D40000
+    color: #FFF
+    margin-top: 1rem
+    margin-bottom: 1rem
+    border-radius: .5rem
+    h1
+      margin: 0
+  .text-blue
+    color: #000080
+  .text-red
+    color: #D40000
+  .framed
+    background-color: white
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+    > div
+      padding: 1rem 2rem

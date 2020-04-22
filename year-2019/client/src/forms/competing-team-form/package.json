@@ -1,0 +1,5 @@
+{
+  "name": "CompetingTeamForm",
+  "private": true,
+  "main": "./competing-team-form.jsx"
+}

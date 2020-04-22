@@ -1,0 +1,15 @@
+{
+  "name": "DownUnderSportsMegaRepo",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=11.15.0",
+    "yarn": ">= 1.16.0"
+  },
+  "scripts": {
+    "build": "bin/build_all",
+    "install": "bin/install_all"
+  },
+  "dependencies": {}
+}

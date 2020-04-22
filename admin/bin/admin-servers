@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+export $(cat .env | xargs)
+
+if [[ -n $MINIMAL ]]; then
+  export PROCFILE=Procfile.minimal
+elif [[ -n $FULL ]]; then
+  export PROCFILE=Procfile.admin
+else
+  export PROCFILE=Procfile.parallel
+fi
+
+forego start -f $PROCFILE -p "${PORT:-3000}"

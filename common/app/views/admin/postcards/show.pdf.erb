@@ -1,0 +1,21 @@
+<% if @no_address %>
+<script>
+  (function(){
+    document.addEventListener('DOMContentLoaded', function(){ window.location = "<%= @next_user || '/admin/users' %>" }, false);
+  })();
+</script>
+<% else %>
+<%= render partial: 'shared/pdf/postcard', locals: {user: @user} %>
+<% if @direct_print %>
+<script>
+  (function(){
+    document.addEventListener('DOMContentLoaded', function(){ window.print()}, false);
+    window.addEventListener("afterprint", function(){
+      setTimeout(function() {
+        window.location = "<%= @next_user || '/admin/users' %>".replace(/amp;/gi, '')
+      }, 0)
+    })
+  })();
+</script>
+<% end %>
+<% end %>

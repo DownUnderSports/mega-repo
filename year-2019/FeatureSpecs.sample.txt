@@ -1,0 +1,58 @@
+Feature: User Creation
+        Desk admin is given blank form containing
+        fields: First Name, Last Name, Date of Birth, Email address, Phone, Phone Type SSN.
+        The form should accept input as long as name exists AND email is unique for Name/SSN Combo.
+
+    Scenario: Form is blank.
+        Given: I fill out the form.
+        When: I submit a valid entry.
+        Then: The user is created.
+
+    Scenario: Form is blank
+        Given: I fill out the form.
+        When: the entry already exists.
+        Then: the form displays an error message.
+
+
+(for now we will focus on single Dr.)
+Feature: Appointment Scheduling.
+        Desk admin is scheduling an appointment for a patient.
+        A non conflicting timeslot can be allocated to any patient.
+
+    Scenario: Admin selects blank timeslot.
+        Given: Blank time slot.
+        When: I select the time slot and enter patients name, reason for visit and length of appointment.
+        Then: The appointment is created.
+
+    Scenario: Time slot that is already taken.
+        Given: Time slot is already taken.
+        When: I select the timeslot.
+        Then: Error message is displayed notifying me that I an unable to schedule that slot.
+
+
+Feature: Simple Eye Exam.
+        Dr. is preforming an eye exam.
+
+    Scenario: Dr. pulls up simple eye exam form.
+        Given: Blank Exam form.
+        When: Dr enters valid information.
+        Then: The exam is created.
+
+    Scenario: Dr. misses an entry on the exam form.
+        Given: Dr. does not enter one or more fields of the exam form.
+        When: Dr. submits form.
+        Then: Error message is displayed notifying Dr. that not all fields have been filled. Presented with option to continue anyways.
+
+
+Feature: Problem Focused Eye Exam.
+        Dr. is preforming Problem Focused eye exam.
+
+    Scenario: Dr. pulls up simple eye exam form.
+        Given: Blank Exam form.
+        When: Dr enters valid information.
+        Then: The exam is created.
+
+    Scenario: Dr. misses an entry on the exam form.
+        Given: Dr. does not enter one or more fields of the exam form.
+        When: Dr. submits form.
+        Then: Error message is displayed notifying Dr. that not all fields have been filled. Presented with option to continue anyways.

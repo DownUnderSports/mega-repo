@@ -1,0 +1,5 @@
+{
+  "name": "AccountingPages",
+  "private": true,
+  "main": "./accounting.jsx"
+}

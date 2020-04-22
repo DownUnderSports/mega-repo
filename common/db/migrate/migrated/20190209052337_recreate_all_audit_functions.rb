@@ -1,0 +1,43 @@
+class RecreateAllAuditFunctions < ActiveRecord::Migration[5.2]
+  def up
+    %i[
+      active_storage_attachments
+      active_storage_blobs
+      addresses
+      athletes
+      athletes_sports
+      coaches
+      meeting_registrations
+      meeting_video_views
+      meeting_videos
+      meetings
+      payment_items
+      payments
+      schools
+      shirt_order_items
+      shirt_order_shipments
+      shirt_orders
+      sources
+      sports
+      staff_assignments
+      staffs
+      states
+      student_lists
+      traveler_base_debits
+      traveler_credits
+      traveler_debits
+      traveler_offers
+      travelers
+      user_overrides
+      user_relations
+    ].each do |tbl|
+      execute "DROP TRIGGER IF EXISTS audit_trigger_row ON #{tbl};"
+      execute "DROP TRIGGER IF EXISTS audit_trigger_stm ON #{tbl};"
+      audit_table tbl
+    end
+
+    execute "DROP TRIGGER audit_trigger_row ON users;"
+    execute "DROP TRIGGER audit_trigger_stm ON users;"
+    audit_table :users, true, false, %w[ password register_secret certificate updated_at ]
+  end
+end

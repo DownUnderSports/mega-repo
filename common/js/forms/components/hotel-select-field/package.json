@@ -1,0 +1,6 @@
+{
+  "name": "HotelSelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./hotel-select-field.jsx"
+}

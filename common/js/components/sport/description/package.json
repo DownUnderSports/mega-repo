@@ -1,0 +1,6 @@
+{
+  "name": "SportDescription",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./description.jsx"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "AccountingPendingPaymentsPage",
+  "private": true,
+  "main": "./pending-payments.jsx"
+}

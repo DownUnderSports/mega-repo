@@ -1,0 +1,13 @@
+Welcome to the team <%= @user.first %>!
+
+You are now officially <%= @user.is_athlete? ? 'competing in' : 'a part of' %> the Down Under Sports program!
+
+Anytime you want to view your current account status you can use the link below. This link can also be shared with anyone that you want, to give them access to your account statement.
+
+    <%= @user.statement_link %>
+
+If you have any questions, or would like to make any changes to your your account, please call or text our office.
+
+Cheers,
+
+<%= render partial: 'shared/email_footer' %>

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [[ -z $QUEUE_RUNNER_HOSTNAME ]] || [[ $QUEUE_RUNNER_HOSTNAME == $(hostname) ]] ; then
+	if [[ $QUEUE_RUNNER_HOSTNAME == $(hostname) ]]; then
+		echo $QUEUE_RUNNER_HOSTNAME
+	fi
+	redis-server /etc/redis.conf
+fi

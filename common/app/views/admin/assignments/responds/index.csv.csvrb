@@ -1,0 +1,79 @@
+# encoding: utf-8
+
+# csv << %w[
+#   staff_dus_id
+#   dus_id
+#   completed_assignments
+#   last_completed_at
+#   last_assigned_to
+#   last_assigned_to_id
+#   did_view
+#   marked_as_watched
+#   first_viewed
+#   last_viewed
+#   duration
+#   sport
+#   state
+#   time_zone
+#   respond_date
+# ]
+
+csv << %w[
+  staff_dus_id
+  dus_id
+  did_view
+  marked_as_watched
+  first_viewed
+  last_viewed
+  duration
+  sport
+  state
+  time_zone
+  respond_date
+]
+
+Staff::Assignment::Views::UnassignedRespond.live_reload
+
+Staff::Assignment::Views::UnassignedRespond.all.split_batches_values do |r|
+  next if !Interest.contactable(r.interest_id) || r.traveler
+
+  csv << [
+    nil,
+    r.dus_id,
+    !!r.viewed,
+    !!r.watched,
+    r.viewed_at&.to_date,
+    r.last_viewed_at&.to_date,
+    r.duration,
+    r.sport_abbr,
+    r.state_abbr,
+    r.tz_offset.to_i / 1.0.hours,
+    r.responded_at&.to_date,
+  ]
+
+  # staff =
+  #   r.last_completed_at.presence \
+  #   && r.staff_assignments.
+  #       where(reason: 'Respond').
+  #       order(:completed_at).
+  #       last&.
+  #       assigned_to
+
+  # csv << [
+  #   staff&.dus_id,
+  #   r.dus_id,
+  #   r.completed_assignments.to_i
+  #   r.last_completed_at,
+  #   staff&.print_names,
+  #   staff&.dus_id,
+  #   !!r.viewed,
+  #   !!r.watched,
+  #   r.viewed_at&.to_date,
+  #   r.last_viewed_at&.to_date,
+  #   r.duration,
+  #   r.sport_abbr,
+  #   r.state_abbr,
+  #   r.tz_offset,
+  #   r.responded_at&.to_date,
+  # ]
+end

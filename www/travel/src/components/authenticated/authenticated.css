@@ -1,0 +1,11 @@
+.la-square-jelly-box.authenticated-jelly-box {
+  height: 25vw;
+  width: 25vw;
+  max-width: 25vh;
+  max-height: 25vh;
+  margin: 10vh auto;
+  color: #153e7c;
+}
+.la-square-jelly-box.authenticated-jelly-box div:first-child {
+  border: 1.5rem solid #d52027;
+}

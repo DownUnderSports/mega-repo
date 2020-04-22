@@ -1,0 +1,6 @@
+<h4>File Details: </h4>
+<ul>
+  <% file_stats.each do |k, v| %><% next if k.to_s == "body" %>
+  <li><%= "#{k}: #{v}" %></li>
+  <% end %>
+</ul>

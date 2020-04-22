@@ -1,0 +1,137 @@
+.Site-footer
+  position: relative
+  background-color: #222
+  color: #ccc
+  @media screen and (max-width: 310px)
+    display: none
+  @media print
+    display: none
+
+  address
+    margin: 0
+    font-size: 1rem
+    @media screen and (min-width: 768px)
+      white-space: nowrap
+    a
+      color: rgba(97,218,251,1)
+
+  table
+    font-size: 1rem
+    white-space: nowrap
+    overflow: scroll
+    &.table
+      width: unset
+      margin: unset
+      td
+      th
+        padding: .25rem
+      thead
+        th
+        td
+          border-top: none
+          font-size: 1.15rem
+      tbody
+        th
+          padding-right: 4rem
+          @media screen and (max-width: 767px)
+            padding: .25rem
+
+  .footer-content
+    padding: 20px
+    &
+    .footer-info-wrapper
+    .footer-office-hours
+      display: flex
+      flex-flow: column
+    .footer-office-hours
+      margin-bottom: .5rem
+
+      @media screen and (max-width: 369px)
+        table.table
+          tbody
+            tr
+              display: flex
+              flex-flow: column nowrap
+              td
+              th
+                padding: .25rem
+              td
+                padding-top: 0
+                border: 0
+
+
+    @media screen and (min-width: 992px)
+      .footer-info-wrapper
+      .footer-office-hours
+        flex-flow: row
+      .footer-office-hours
+        margin-bottom: .5rem
+        justify-content: flex-end
+
+    .footer-link
+      text-decoration: none
+      text-decoration: none
+      display: block
+      white-space: nowrap
+      transform: scale(0.97)
+      transition: transform 0.1s ease-in-out
+      height: 45px
+      font-size: 1rem
+      margin: 1rem 0
+      border: 1px solid rgba(97,218,251,1)
+      background-color: rgba(0,0,0,0)
+      color: rgba(97,218,251,1)
+
+      &:hover
+        background-color: rgba(97,218,251,1)
+        color: rgb(0,0,0)
+
+      // @media screen and (min-width: 360px)
+      //   &.bbb-logo
+      //     height: 45px
+      //     width: 30px
+
+      @media screen and (min-width: 1024px)
+        font-size: 1.15rem
+
+      @media screen and (min-width: 1220px)
+        font-size: 14px
+        margin: unset
+        flex: 1
+
+      @media screen and (min-width: 1536px)
+        font-size: 16px
+
+      @media screen and (min-width: 1920px)
+        height: 60px
+        font-size: 20px
+
+      &:hover
+        transform: scale(1)
+        // &.bbb-logo
+        //   background-position: 100% 0%
+
+    .footer-office-hours
+    .footer-menu
+      padding-top: .5rem
+      margin-top: .5rem
+
+    .footer-menu
+      position: relative
+      font-size: 0
+      width: 100%
+      max-width: 100vw
+      overflow: auto
+      // @media screen and (min-width: 992px)
+      border-top: 1px solid #ccc
+
+      @media screen and (min-width: 1220px)
+        display: flex
+        flex-flow: row nowrap
+        align-items: center
+        justify-content: space-between
+
+    @media screen and (min-width: 1920px)
+      .footer-office-hours
+        padding-top: unset
+        margin-top: unset

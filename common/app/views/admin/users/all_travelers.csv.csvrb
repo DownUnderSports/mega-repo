@@ -1,0 +1,196 @@
+# encoding: utf-8
+
+airfare_debits =
+  Traveler::BaseDebit.
+    where('(name like ?) OR (name like ?)', '%Domestic%', '%Additional Airfare%').
+    where.not('name ilike ?', '%Upgrade').pluck(:id)
+
+gbr_debit = Traveler::BaseDebit.find_by(name: 'Great Barrier Reef Escape').id
+
+csv << %w[
+  url
+  base_qr_code
+  payment_qr_code
+  dus_id
+  athlete_dus_ids
+  coach_dus_ids
+  main_dus_ids
+  category
+  grad
+  team
+  team_sport
+  team_state
+  2021_status
+  2021_can_transfer
+  2021_can_compete
+  2021_special_notes
+  first
+  middle
+  last
+  suffix
+  print_name
+  print_first_names
+  print_other_names
+  print_first_only
+  print_last_only
+  gender
+  shirt_size
+  birth_date
+  meeting_date
+  video_first_sent_date
+  video_first_watched_date
+  join_date
+  deposit_date
+  cancel_date
+  total_paid
+  total_credits
+  total_debits
+  total_charges
+  current_balance
+  is_deferral
+  transfer_credits
+  offers_count
+  total_offers_amount
+  offer_names
+  has_insurance
+  has_gbr
+  has_domestic
+  has_single
+  departing_date
+  returning_date
+  departing_from
+  returning_to
+  address
+  address_foreign
+  address_street
+  address_street_2
+  address_street_3
+  address_city
+  address_state
+  address_zip
+  address_country
+  phone
+  email
+  parent_1_relationship
+  parent_1_name
+  parent_1_phone
+  parent_1_email
+  parent_2_relationship
+  parent_2_name
+  parent_2_phone
+  parent_2_email
+  parent_3_relationship
+  parent_3_name
+  parent_3_phone
+  parent_3_email
+  handicap
+  positions
+  height
+  weight
+  competing_teams
+  assigned_buses
+  arriving_airport
+  arriving_from
+  arriving_carrier
+  arriving_flight
+  arriving_at
+  arriving_epoch
+  departing_airport
+  departing_to
+  departing_carrier
+  departing_flight
+  departing_at
+  departing_epoch
+]
+
+User.where_exists(:traveler).split_batches_values(preserve_order: true) do |u|
+  a_sport = u.athlete&.athletes_sports&.find_by(sport_id: u.traveler.team.sport_id)
+
+  arriving_flight, departing_flight = u.traveler.international_flights
+  addr = u.main_address.presence
+
+  csv << [
+    u.url(true),
+    u.qr_code_link(u.url),
+    u.qr_code_link(u.payment_url),
+    u.dus_id,
+    u.athlete_dus_ids.presence&.join(','),
+    u.coach_dus_ids.presence&.join(','),
+    u.main_dus_ids.presence&.join(','),
+    u.category_title,
+    u.athlete&.grad,
+    u.team.name,
+    u.team.sport.abbr_gender,
+    u.team.state.abbr,
+    u.get_or_create_transfer_expectation.status,
+    u.transfer_expectation.can_transfer,
+    u.transfer_expectation.can_compete,
+    u.transfer_expectation.notes,
+    u.first,
+    u.middle,
+    u.last,
+    u.suffix,
+    u.print_names,
+    u.print_first_name,
+    u.print_last_name,
+    u.print_first_name_only,
+    u.print_last_name_only,
+    u.gender,
+    u.shirt_size,
+    u.birth_date&.to_s,
+    u.meeting_registrations.where(attended: true).order(:created_at).limit(1).take&.meeting&.start_time&.to_date&.to_s,
+    u.video_views.order(:created_at).limit(1).take&.created_at&.to_date&.to_s,
+    u.video_views.where(watched: true).order(:created_at).limit(1).take&.first_watched&.to_date&.to_s,
+    u.traveler.join_date&.to_s,
+    u.traveler.deposit_date&.to_s,
+    u.traveler.cancel_date&.to_s,
+    u.total_payments.to_s(true),
+    u.total_credits.to_s(true),
+    u.total_debits.to_s(true),
+    (u.total_debits - u.total_credits).to_s(true),
+    u.balance.to_s(true),
+    !!u.traveler.credits.find_by("name ilike '20__ Transfer'"),
+    u.traveler.credits.where("name ilike '20__ Transfer'").sum(:amount).cents.to_s(true),
+    u.offers.count,
+    u.offers.sum(:amount).cents.to_s(true),
+    u.offers.pluck(:name).map(&:to_s).sort.join(' ||| '),
+    u.traveler.has_insurance?,
+    !!(u.traveler.debits.where(base_debit_id: gbr_debit).count > 0),
+    !!(air = u.traveler.debits.where(base_debit_id: airfare_debits).limit(1).take),
+    !!(u.traveler.debits.find_by(base_debit: Traveler::BaseDebit::SingleRoom)),
+    u.traveler&.departing_date,
+    u.traveler&.returning_date,
+    air && ((air.base_debit.name =~ /Own Domestic|No Additional Airfare/) ? 'NONE' : (dep_ret = air.name.split(/\s+/).last.split('-')).first),
+    air && (dep_ret ? dep_ret.last : 'NONE'),
+    addr&.inline,
+    addr&.is_foreign?,
+    addr&.street,
+    addr&.street_2,
+    addr&.street_3,
+    addr&.city,
+    addr&.province_or_state_abbr,
+    addr&.zip,
+    addr&.country,
+    u.ambassador_phone.presence,
+    u.all_ambassador_emails,
+    *u.guardian_contact_info(3).flatten,
+    a_sport&.handicap,
+    (a_sport&.positions_array || []).join(', '),
+    a_sport&.height,
+    a_sport&.weight,
+    u.traveler.competing_teams_string,
+    u.traveler.buses_string,
+    arriving_flight&.arriving_airport_code,
+    arriving_flight&.departing_airport_code,
+    arriving_flight&.schedule&.operator,
+    arriving_flight&.flight_number,
+    arriving_flight&.local_arriving_at&.strftime("%F %R"),
+    arriving_flight&.arriving_at&.to_i,
+    departing_flight&.departing_airport_code,
+    departing_flight&.arriving_airport_code,
+    departing_flight&.schedule&.operator,
+    departing_flight&.flight_number,
+    departing_flight&.local_departing_at&.strftime("%F %R"),
+    departing_flight&.departing_at&.to_i,
+  ]
+end

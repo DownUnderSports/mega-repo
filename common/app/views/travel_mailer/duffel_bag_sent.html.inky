@@ -1,0 +1,54 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <h3>
+          Your ogio bag is on the way!
+        </h3>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>Your ogio duffel bag has been sent out to you. You should receive it in the mail shortly.</p>
+      <p>Features:</p>
+      <ul>
+        <li>Front zippered pocket</li>
+        <li>Padded shoulder strap</li>
+        <li>All metal hardware</li>
+        <li>Ventilated shoe compartment with grab handle</li>
+        <li>Fabric wrapped handle</li>
+      </ul>
+      <p>Specs:</p>
+      <ul>
+        <li>Dimensions: 24" x 12" x 9"</li>
+        <li>Weight: 1 lb, 12 oz</li>
+        <li>Capacity: 3403 cu. in.</li>
+        <li>Materials: 300D dobby nylon / 600D poly</li>
+      </ul>
+      <% unless @user.traveler&.balance <= 100_00 %>
+      <p>
+        <i>Reminder:</i> A <%= link_to 'minimum monthly payment of $100', @user.payment_url(100) %> is required to keep your account active and be eligible for the "early payoff TRAVEL PACK incentive."<span class="text-danger">**</span>
+      </p>
+      <% end %>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p class="text-right">
+        <small class="text-danger">
+          **<i>Charges must include the full &ldquo;Australia Tournament Package&rdquo;</i>
+        </small>
+      </p>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

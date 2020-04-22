@@ -1,0 +1,5 @@
+{
+  "name": "GCMRegistrationsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

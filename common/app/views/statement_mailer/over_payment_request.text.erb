@@ -1,0 +1,5 @@
+Refund Request Submitted For <%= @request.user.full_name %>: <%= @request.user.dus_id %>
+
+Balance: <%= @request.user.traveler&.balance&.to_s(true) %>
+
+Link: <%= @request.url %>

@@ -1,0 +1,41 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        Down Under Sports Uniform Order Received
+      </h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        Thank you for placing the uniform order for <%= @order.user.full_name %>
+      </p>
+      <p>
+        Details of your submission can be found below. If there are ANY errors with your submission, call our office ASAP @ <a href="tel:+1-435-753-4732">(435) 753-4732</a>.
+      </p>
+      <p>
+        Failure to notify us of any errors before your uniform is processed will result in additional charges to order a replacement.
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= render partial: 'uniform_order', locals: { uniform_order: @order, full_details: false } %>
+      </center>
+    </columns>
+  </row>
+</container>

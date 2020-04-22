@@ -1,0 +1,38 @@
+<table class="table">
+  <thead>
+    <tr>
+      <% %w[ dus_id category gender full_name email phone sport state ].each do |col| %>
+        <td scope="col">
+          <%= col %>
+        </td>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.limit(100).each do |u| %>
+      <tr>
+        <td>
+          <%= u.dus_id %>
+        </td>
+        <td>
+          <%= u.category_title %>
+        </td>
+        <td>
+          <%= u.gender %>
+        </td>
+        <td>
+          <%= u.full_name %>
+        </td>
+        <td>
+          <%= u.email %>
+        </td>
+        <td>
+          <%= u.phone %>
+        </td>
+        <td>
+          <%= u.phone %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+chdir APP_ROOT do
+  version = `git log -1 --date=short --format="%ad-%h"|sed 's/-/./g'`.strip
+  
+  %w[
+    admin
+    www
+    year-2019
+  ].each do |app|
+    repo = File.read("#{APP_ROOT}/#{app}/repo_name")
+    `heroku config:set RAILS_CACHE_ID=#{version} -a #{repo}`
+  end
+end

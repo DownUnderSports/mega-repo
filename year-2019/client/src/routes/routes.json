@@ -1,0 +1,100 @@
+{
+  "domain": "https://admin.downundersports.com",
+  "links": {
+    "root": {
+      "alias": true,
+      "to": "users"
+    },
+    "accounting": {
+      "title": "Accounting",
+      "path": "admin/accounting",
+      "canonical": "/admin/accounting",
+      "description": "Down Under Sports: Accounting",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "assignments": {
+      "title": "Staff Assignments",
+      "path": "admin/assignments",
+      "canonical": "/admin/assignments",
+      "description": "Down Under Sports: Staff Assignments",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "encrypted": {
+      "title": "Encrypted File Tester",
+      "description": "Down Under Sports: Client side file encryption",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "schools": {
+      "api": "/admin/schools/",
+      "format": ".json",
+      "title": "%RESOURCE%",
+      "index_title": "School Pages",
+      "method": "name",
+      "description_method": "name",
+      "path": "admin/schools",
+      "canonical": "/admin/schools",
+      "description": "Schools: %RESOURCE%",
+      "index_description": "Schools: Index",
+      "direct_description": true,
+      "image": "dus-logo.png",
+      "index": true,
+      "resource": true,
+      "model": "school",
+      "cache": true
+    },
+    "returned_mails": {
+      "api": "/admin/returned_mails/",
+      "format": ".json",
+      "title": "%RESOURCE%",
+      "index_title": "Returned Mail Pages",
+      "method": "id",
+      "description_method": "category",
+      "path": "admin/returned_mails",
+      "canonical": "/admin/returned_mails",
+      "description": "Sent Mail: %RESOURCE%",
+      "index_description": "Sent Mail: Index",
+      "direct_description": true,
+      "image": "dus-logo.png",
+      "index": true,
+      "resource": true,
+      "model": "mailing",
+      "cache": true
+    },
+    "traveling": {
+      "title": "Traveling",
+      "path": "admin/traveling",
+      "canonical": "/admin/traveling",
+      "description": "Down Under Sports: Travel Prep",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "users": {
+      "api": "/api/users/",
+      "title": "%RESOURCE%",
+      "index_title": "User Pages",
+      "method": "print_names",
+      "description_method": "category_title",
+      "path": "admin/users",
+      "canonical": "/admin/users",
+      "description": "Users: %RESOURCE%",
+      "index_description": "Users: Index",
+      "direct_description": true,
+      "image": "dus-logo.png",
+      "index": true,
+      "resource": true,
+      "model": "user",
+      "match_idx": 1,
+      "regex": "(?:^|\\/)([A-Z]{3}-?[A-Z]{3}|[0-9]+)(\\/\\w+)?(\\?.*)?$",
+      "cache": false
+    },
+    "fourOhFour": {
+      "title": "Page Not Found",
+      "description": "Down Under Sports: Unknown Route",
+      "image": "dus-logo.png",
+      "index": true
+    }
+  }
+}

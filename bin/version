@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+chdir APP_ROOT do
+  version = `git log -1 --date=short --format="%ad-%H"|sed 's/-/./g'`.strip
+  Dir["#{APP_ROOT}/**/config/version.rb"].map do |file|
+    txt = File.read(file)
+    txt.sub!(/VERSION\s*=\s*\'\d+\.\d+\.\d+.[A-Za-z0-9]+\'/, "VERSION = '#{version}'")
+    File.open(file, 'w') {|f| f << txt}
+  end
+end

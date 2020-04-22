@@ -1,0 +1,80 @@
+<% provide :outer_class, "white-mail" %>
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag '32-years-banner.png', class: 'full', alt: 'Celebrating 32 Years!' %>
+      </center>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        <strong>
+          In honor of our late founders, George and Shelley O&rsquo;Scanlon,
+          we are offering our &ldquo;Australia Tournament Package&rdquo; for
+          only <span class="text-danger">$3200*</span>. Just pay a
+          <span class="text-danger">$320*</span> deposit on
+          <u>February 12<sup>th</sup></u> to reserve your spot on the team!
+        </strong>
+      </p>
+      <spacer size="16"></spacer>
+      <%= link_to "#{@user.deposit_url}?amount=320.00", class: 'btn btn-block btn-1' do %>
+        Click Here <u><strong>ON FEB 12</strong>!</u>
+      <% end %>
+      <spacer size="16"></spacer>
+    </columns>
+  </row>
+  <row>
+    <columns small="12" large="4">
+      <%= image_tag 'our-founders.png', class: 'full', alt: 'Our Founders' %>
+    </columns>
+    <columns small="12" large="8">
+      <p>
+        Down Under Sports was founded in 1989, based on the dream
+        of two New Zealanders named George and Shelley O&rsquo;Scanlon.
+        They fell in love with athletics, especially American football
+        (gridiron). Their dream was to promote football in Australia
+        and New Zealand. In 1979, George founded the New Zealand
+        American Football Association (NZAFA). This was the first
+        time that American Football was played in the Pacific! In
+        1989, they began inviting American high school football
+        players to compete in New Zealand and Australia. Over the
+        years, this tournament, which was given the name &ldquo;The Down
+        Under Bowl&rdquo;, started to see overwhelming success.
+      </p>
+      <p>
+        We saw this as an exciting opportunity to include other young
+        athletes in this fun and rewarding experience. Over the last
+        three decades, Down Under Sports has shared the land down
+        under with thousands of athletes from all across the United
+        States! No matter the sport, the goal has been the same; to
+        use the common language of sports to bridge the continents.
+        Through Down Under Sports, countless friendships and
+        memories have been made.
+      </p>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <%= link_to "#{@user.deposit_url}?amount=320.00", class: 'btn btn-block btn-1' do %>
+        Click Here <u><strong>ON FEB 12</strong>!</u>
+      <% end %>
+      <spacer size="32"></spacer>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+      <spacer size="32"></spacer>
+      <p class="text-danger">
+        * A SINGLE PAYMENT OF EXACTLY <strong>$320</strong> MUST BE MADE ON <u><strong>FEBRUARY 12TH, 2020</strong></u> TO QUALIFY (NON-REFUNDABLE). NO EXTENSIONS OR EXCEPTIONS. NO OTHER DISCOUNTS/INCENTIVES APPLY.
+      </p>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

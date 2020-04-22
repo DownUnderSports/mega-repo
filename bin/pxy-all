@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+popd () {
+    command popd "$@" > /dev/null
+}
+
+echo "proxying to admin/bin/$1 ${@:2}"
+pushd admin
+bin/$1 "${@:2}"
+popd
+echo "proxying to www/bin/$1 ${@:2}"
+pushd www
+bin/$1 "${@:2}"
+popd
+echo "proxying to year-2019/bin/$1 ${@:2}"
+pushd year-2019
+bin/$1 "${@:2}"
+popd

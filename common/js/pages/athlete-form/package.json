@@ -1,0 +1,5 @@
+{
+  "name": "AthleteFormPage",
+  "private": true,
+  "main": "./athlete-form.jsx"
+}

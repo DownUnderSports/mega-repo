@@ -1,0 +1,50 @@
+<div style="font-size: .15in; text-align: right;">
+  <table class="table mb-0">
+    <% unless !!@payments_only %>
+    <tr>
+      <td class="p-0" style="border: none;width: 70%" colspan="2">
+        Current Balance:
+      </td>
+      <td class="p-0" style="border: none" nowrap>
+        <span class="bg-success text-white px-1"><%= ((@total_debits ||= StoreAsInt.money(user.traveler.debits.sum(:amount))) - ((@total_credits = StoreAsInt.money(user.traveler.credits.sum(:amount))) + (@total_payments ||= StoreAsInt.money(user.traveler.items.sum(:amount))))).to_s(true) %></span>
+      </td>
+    </tr>
+    <% end %>
+    <tr>
+      <td class="p-0" style="border: none" colspan="2">
+        DUS ID:
+      </td>
+      <td class="p-0" style="border: none" nowrap>
+        <span class="bg-primary text-white px-1"><%= user.dus_id %></span>
+      </td>
+    </tr>
+    <tr>
+      <td class="p-0" style="border: none" colspan="2">
+        Team:
+      </td>
+      <td class="p-0" style="border: none" nowrap>
+        <span class="px-1"><%= user.team.title %></span>
+      </td>
+    </tr>
+    <% unless !!@payments_only || user.is_deferral? %>
+    <tr>
+      <td class="p-0" style="border: none" colspan="2">
+        Departing On:
+      </td>
+      <td class="p-0" style="border: none" nowrap>
+        <span class="px-1"><%= user.departing_dates %></span>
+      </td>
+    </tr>
+    <% unless user.traveler.returning_date_is_delegated? %>
+    <tr>
+      <td class="p-0" style="border: none" colspan="2">
+        Returning On:
+      </td>
+      <td class="p-0" style="border: none" nowrap>
+        <span class="px-1"><%= user.traveler.returning_date.to_s(:long) %></span>
+      </td>
+    </tr>
+    <% end %>
+    <% end %>
+  </table>
+</div>

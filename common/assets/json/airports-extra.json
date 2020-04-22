@@ -1,0 +1,54 @@
+{
+  "BZN": [
+    "Bozeman Yellowstone International Airport, MT",
+    "Bozeman, MT"
+  ],
+  "DRO": [
+    "Durango La Plata County Airport, CO",
+    "Durango, CO"
+  ],
+  "EUG": [
+    "Eugene Airport, OR",
+    "Eugene, OR"
+  ],
+  "FRA": [
+    "Frankfurt International Airport, GER",
+    "Frankfurt, GER"
+  ],
+  "MOB": [
+    "Mobile Regional Airport, AL",
+    "Mobile, AL"
+  ],
+  "MYR": [
+    "Myrtle Beach International Airport, SC",
+    "Myrtle Beach, SC"
+  ],
+  "SAN": [
+    "San Diego International Airport, CA",
+    "San Diego, CA"
+  ],
+  "TYS": [
+    "McGhee Tyson Airport, TN",
+    "Alcoa, TN"
+  ],
+  "VLI": [
+    "Bauerfield International Airport, VUT",
+    "Port Villa, VUT"
+  ],
+  "XNA": [
+    "Bentonville Arkansas Regional Airport, AR",
+    "Bentonville, AR"
+  ],
+  "YVR": [
+    "Vancouver International Airport, BC",
+    "Richmond, BC"
+  ],
+  "YYC": [
+    "Calgary International Airport, AB",
+    "Calgary, AB"
+  ],
+  "YYZ": [
+    "Toronto Pearson International Airport, ON",
+    "Mississauga, ON"
+  ]
+}

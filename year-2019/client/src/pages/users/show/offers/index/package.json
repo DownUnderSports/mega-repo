@@ -1,0 +1,5 @@
+{
+  "name": "UserOffersIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

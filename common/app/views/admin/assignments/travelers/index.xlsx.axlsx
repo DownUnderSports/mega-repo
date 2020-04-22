@@ -1,0 +1,7 @@
+wb = xlsx_package.workbook
+
+render partial: 'admin/assignments/travelers/all', locals: {wb: wb}
+
+User.staff.where_exists(:assignments, reason: 'Traveler').order(:first, :last).each do |staff|
+  render partial: 'admin/assignments/travelers/staff', locals: {wb: wb, staff: staff}
+end

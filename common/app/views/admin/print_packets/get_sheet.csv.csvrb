@@ -1,0 +1,28 @@
+# encoding: utf-8
+
+csv << %w[
+  dus_id
+  initial
+  first
+  last
+  suffix
+  bus
+  team
+]
+
+next_user = user = nil
+
+while next_user = (user ? @travelers.find_by(user_id: user.id)&.next_id : @travelers.find_by(lag_lead: { prev_id: nil })&.user_id)
+  user = User.find(next_user)
+
+  csv << [
+    user.dus_id,
+    user.last.first,
+    user.first,
+    user.last,
+    user.suffix,
+    user.bus&.name,
+    user.competing_team&.name
+  ]
+
+end

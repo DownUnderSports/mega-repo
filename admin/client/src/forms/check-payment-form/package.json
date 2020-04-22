@@ -1,0 +1,6 @@
+{
+  "name": "CheckPaymentForm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./check-payment-form.jsx"
+}

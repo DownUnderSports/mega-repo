@@ -1,0 +1,23 @@
+# encoding: utf-8
+
+csv << %i[
+  url
+  user_page
+  category
+  sent_date
+  is_home
+  failed
+  address
+]
+
+@mailings.all.split_batches_values do |m|
+  csv << [
+    "https://admin.downundersports.com/admin/returned_mails/#{m.id}",
+    m.user.url(true),
+    m.category,
+    m.sent,
+    m.is_home,
+    m.failed,
+    Address.new(m.address).inline
+  ]
+end

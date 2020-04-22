@@ -1,0 +1,6 @@
+<%= provide :title, "Fundraising Packets - Upload" %>
+<h1>Upload A CSV for Marking Fundraising Packets</h1>
+<%= render partial: 'shared/forms/upload_form', locals: {upload_title: 'Fundraising Packets', upload_fields: :fundraising_packet_fields, upload_path: :admin_fundraising_packets_upload_path} %>
+<script>
+  history.replaceState({}, 'Fundraising Packets - Upload', location.pathname)
+</script>

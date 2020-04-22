@@ -1,0 +1,24 @@
+<%- current_meta_data = meta_data -%>
+<%=
+  File.read(html_path).
+    sub(/<head>/, <<-HTML.gsub(/\s*\n\s+/, ' ')
+      <head>
+        #{current_meta_data[:ograph]}
+        #{current_meta_data[:gschema]}
+        #{current_meta_data[:twitter]}
+        <meta name="current-app-name" content="#{ ENV['CURRENT_APP_NAME'] || 'development' }">
+        <meta name="current-app-origin" content="#{ @header_hash && @header_hash[:Origin] }">
+        <title>
+          #{ (yield :title).presence || (defined?(title) && title).presence || "Down Under Sports Office" }
+        </title>
+      HTML
+    ).
+    sub(/<body.*?>/, <<-HTML.gsub(/\s*\n\s+/, ' ')
+      <body>
+        <input type="hidden" id="app-version" value="#{ DownUnderSports::VERSION }"/>
+        <input type="hidden" id="device-id" value="#{ @requesting_device_id }" />
+      HTML
+    ).
+    sub(/<page-root>(.*)<\/page-root>/, (yield rescue nil).presence || '\1').
+    html_safe
+%>

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Header::Links is snapshotable 1`] = `
+<div
+  className="header-menu"
+>
+  <input
+    checked={false}
+    className="nav-trigger"
+    id="nav-trigger"
+    type="checkbox"
+  />
+  <label
+    htmlFor="nav-trigger"
+    onClick={[Function]}
+  >
+    <span />
+  </label>
+  <div
+    className="header-menu-wrapper"
+  >
+    <a
+      className="header-link "
+      href="/test"
+      onClick={[Function]}
+    >
+      TEST
+    </a>
+    <a
+      className="header-link "
+      href="/test/2"
+      onClick={[Function]}
+    >
+      TEST 2
+    </a>
+    <a
+      className="header-link "
+      href="/test/3"
+      onClick={[Function]}
+    >
+      <div>
+        <h1>
+          TEST 3
+        </h1>
+      </div>
+    </a>
+  </div>
+</div>
+`;

@@ -1,0 +1,121 @@
+# encoding: utf-8
+
+wb = xlsx_package.workbook
+
+styles = {}
+
+wb.styles do |s|
+  styles[:default] = s.add_style font_name: 'Calibri', sz: 11
+  styles[:header] = s.add_style font_name: 'Calibri', sz: 11, b: true
+end
+
+[
+  ['Qantas', %q(flight_schedules.operator = 'Qantas')],
+  ['Air Canada', %q(flight_schedules.operator = 'Air Canada')],
+  ['Virgin Australia', %q(flight_schedules.operator = 'Virgin Australia')],
+].each do |carrier, query|
+  unticketed_sheet = wb.add_worksheet(name: "Unticketed - #{carrier}")
+  ticketed_sheet = wb.add_worksheet(name: "Ticketed - #{carrier}")
+
+  [
+    unticketed_sheet,
+    ticketed_sheet
+  ].each do |sheet|
+    sheet.add_row [
+      'pnr',
+      'name',
+      'tsa',
+      'departing',
+      'team departing',
+      "TICKETED",
+      "BALANCE",
+      "CHARGES",
+      "PAYMENTS",
+      "PP SUBMITTED",
+      "PP CHECKED",
+      "LINK"
+    ], style: styles[:header]
+
+    sheet.column_widths 15, 60, 60, nil, nil, nil, nil, nil, nil, nil, nil, nil
+  end
+
+  Flight::Schedule.
+    where(query).
+    where_exists(:tickets).
+    includes(tickets: { user: [:passport, :traveler] }).
+    joins(
+      <<-SQL
+        INNER JOIN (
+          SELECT flight_legs.schedule_id, MIN(flight_legs.departing_at) as departing_at
+          FROM flight_legs
+          GROUP BY flight_legs.schedule_id
+        ) legs ON legs.schedule_id = flight_schedules.id
+      SQL
+    ).
+    order('legs.departing_at', :pnr, :id).
+    each do |schedule|
+      q = schedule.tickets.
+        joins(traveler: :user).
+        includes(traveler: :user).
+        joins(
+          <<-SQL
+            LEFT JOIN user_passports
+              ON user_passports.user_id = users.id
+          SQL
+        ).
+        where(travelers: { cancel_date: nil }).
+        order('COALESCE(user_passports.surname, users.last)', 'COALESCE(user_passports.given_names, users.first)', :id)
+
+      ticketed = q.where.not(ticket_number: nil)
+      unticketed = q.where(ticket_number: nil)
+      [
+        [ ticketed_sheet,   ticketed ],
+        [ unticketed_sheet, unticketed ],
+      ].each do |(sheet, tickets)|
+
+        if tickets.size > 0
+          sheet.add_row [
+            schedule.pnr,
+            "First Flight: #{schedule.legs.first_departing&.local_departing_at&.to_date&.strftime('%d %b, %y')}",
+          ], style: styles[:default]
+
+          i = 0
+
+          tickets.each do |ticket|
+            u = pp = last = first = sex = birth_date = nil
+
+            u = ticket.traveler.user
+            pp = u.passport
+
+            if pp
+              last       = pp.surname.to_s.gsub("'", '').gsub("-", ' ').strip.upcase.presence
+              first      = pp.given_names.to_s.gsub("'", '').gsub("-", ' ').strip.upcase.presence
+              sex        = pp.sex
+              birth_date = pp.birth_date
+            end
+
+            last       ||= "#{u.last} #{u.suffix}".gsub("'", '').gsub("-", ' ').strip.upcase.presence
+            first      ||= "#{u.first} #{u.middle}".gsub("'", '').gsub("-", ' ').strip.upcase.presence
+            sex        ||= (u.gender == "U") ? nil : u.gender
+            birth_date ||= u.birth_date
+
+            i += 1
+            sheet.add_row [
+              nil,
+              "srdocsyyhk1-----#{birth_date&.strftime('%d%b%y')}-#{sex == 'U' ? nil : sex}--#{last}-#{first}/p#{i};",
+              "nm1#{last}/#{first};",
+              ticket.traveler.departing_date.strftime('%d %b, %y'),
+              ticket.traveler.team.departing_date.strftime('%d %b, %y'),
+              ticket.ticketed.y_n_to_s,
+              ticket.traveler.balance.to_s,
+              ticket.traveler.total_charges.to_s,
+              ticket.traveler.total_payments.to_s,
+              (!!pp).y_n_to_s,
+              (!!pp&.second_checker_id.present?).y_n_to_s,
+              u.admin_url
+            ], style: styles[:default]
+          end
+        end
+      end
+    end
+end

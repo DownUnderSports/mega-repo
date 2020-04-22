@@ -1,0 +1,4 @@
+{
+  "main.js": "/travel/service-worker.js",
+  "main.js.map": "/travel/service-worker.js.map"
+}

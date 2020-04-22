@@ -1,0 +1,6 @@
+{
+  "name": "CompressBuild",
+  "version": "0.0.0",
+  "private": false,
+  "main": "./compress-build.js"
+}

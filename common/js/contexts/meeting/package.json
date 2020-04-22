@@ -1,0 +1,6 @@
+{
+  "name": "MeetingContext",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./meeting.jsx"
+}

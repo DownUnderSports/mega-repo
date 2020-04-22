@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd $(git rev-parse --show-toplevel)
+bin/version
+git add config/version.rb

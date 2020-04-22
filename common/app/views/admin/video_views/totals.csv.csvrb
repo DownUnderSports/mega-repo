@@ -1,0 +1,19 @@
+# encoding: utf-8
+
+csv << %w[
+  category
+  contactable
+  uncontactable
+  traveling
+  cancels
+]
+
+@totals.each do |category, values|
+  csv << [
+    category,
+    values[:contactable],
+    values[:uncontactable],
+    values[:traveling],
+    values[:cancels],
+  ]
+end

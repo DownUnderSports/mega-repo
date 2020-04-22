@@ -1,0 +1,6 @@
+<%= provide :title, "Imports - Upload" %>
+<h1>Upload A CSV for Importing Athletes</h1>
+<%= render partial: 'shared/forms/upload_form', locals: {upload_title: 'Athlete Imports', upload_fields: :import_fields, upload_path: :admin_imports_upload_path, alternate_fields: :invite_date_fields, alternate_title: 'To marking invite dates, file'} %>
+<script>
+  history.replaceState({}, 'Imports - Upload', location.pathname)
+</script>

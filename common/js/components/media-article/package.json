@@ -1,0 +1,6 @@
+{
+  "name": "MediaArticle",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./media-article.jsx"
+}

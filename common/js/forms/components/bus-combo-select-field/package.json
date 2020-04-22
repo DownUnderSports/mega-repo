@@ -1,0 +1,6 @@
+{
+  "name": "BusComboSelectField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./bus-combo-select-field.jsx"
+}

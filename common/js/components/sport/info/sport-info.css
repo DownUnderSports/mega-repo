@@ -1,0 +1,12 @@
+.sport-information .list-group .list-group-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+.sport-information .list-group .list-group-item .col:last-child {
+  color: #073b8a;
+}
+@media (min-width: 768px) {
+  .sport-information .list-group .list-group-item .col:last-child {
+    white-space: nowrap;
+  }
+}

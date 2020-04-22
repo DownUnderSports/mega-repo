@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - InfokitForm is snapshotable 1`] = `
+<form
+  action={undefined}
+  className="infokit-form"
+  method="post"
+  onSubmit={[Function]}
+>
+  <section>
+    <header>
+      <div
+        className="row"
+      >
+        <div
+          className="col"
+        />
+      </div>
+      <h1>
+        Information Request Form
+      </h1>
+    </header>
+    <div>
+      <div
+        className="row"
+      >
+        <div
+          className="col form-group"
+        >
+          <label
+            htmlFor="infokit[dus_id]"
+          >
+            DUS ID
+          </label>
+          <input
+            autoComplete="off"
+            className="form-control"
+            id="infokit[dus_id]"
+            name="infokit[dus_id]"
+            onBlur={[Function]}
+            onChange={[Function]}
+            required={true}
+            type="text"
+            value="UND-EFI"
+          />
+          <small
+            className="form-control-focused"
+          >
+            
+          </small>
+        </div>
+      </div>
+      <hr />
+      <div
+        className="row"
+      >
+        <div
+          className="col form-group "
+          id={undefined}
+        >
+          <label
+            htmlFor="infokit[type]"
+          >
+            I am an
+          </label>
+          <div
+            className=" row form-group"
+            id="infokit_type"
+          >
+            <div
+              className="col"
+            >
+              <div
+                className=" input-group clickable"
+                onClick={[Function]}
+              >
+                <div
+                  className="input-group-prepend"
+                >
+                  <input
+                    checked={false}
+                    className="indirect-box"
+                    name="infokit[type]"
+                    onChange={[Function]}
+                    required={true}
+                    type="radio"
+                    value="athlete"
+                  />
+                  <div
+                    className="input-group-text text-success"
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "&nbsp;&nbsp;&nbsp;",
+                      }
+                    }
+                  />
+                </div>
+                <label
+                  className="form-control "
+                  htmlFor="infokit_type_input_0"
+                >
+                  Athlete
+                </label>
+              </div>
+            </div>
+            <div
+              className="col"
+            >
+              <div
+                className=" input-group clickable"
+                onClick={[Function]}
+              >
+                <div
+                  className="input-group-prepend"
+                >
+                  <input
+                    checked={false}
+                    className="indirect-box"
+                    name="infokit[type]"
+                    onChange={[Function]}
+                    required={true}
+                    type="radio"
+                    value="guardian"
+                  />
+                  <div
+                    className="input-group-text text-success"
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "&nbsp;&nbsp;&nbsp;",
+                      }
+                    }
+                  />
+                </div>
+                <label
+                  className="form-control "
+                  htmlFor="infokit_type_input_1"
+                >
+                  Guardian
+                </label>
+              </div>
+            </div>
+          </div>
+          <small
+            className="form-control-focused"
+          >
+            
+          </small>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+`;

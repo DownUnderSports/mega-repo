@@ -1,0 +1,5 @@
+{
+  "name": "TravelingGroundControlHotelsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

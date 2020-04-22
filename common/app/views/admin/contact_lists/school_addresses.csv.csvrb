@@ -1,0 +1,37 @@
+# encoding: utf-8
+
+csv << %w[
+  school_pid
+  name
+  street
+  street_2
+  street_3
+  city
+  state
+  zip
+  #\ responds
+  #\ travelers
+  url
+]
+
+wrong_id = wrong_school&.id
+
+School.
+  order(:id).
+  where_exists(:address, verified: true, rejected: false).
+  split_batches_values(preserve_order: true) do |school|
+    next unless (school.id != wrong_id) && school.address&.state
+    csv << [
+      school.pid,
+      school.name,
+      school.address.street,
+      school.address.street_2,
+      school.address.street_3,
+      school.address.city,
+      school.address.state.abbr,
+      school.address.zip,
+      school.athletes.where_exists(:user, id: User::Message.where("message LIKE '2019 Interest Level:%'").where.not(message: '2019 Interest Level: Unknown').select(:user_id)).count(1),
+      school.athletes.where_exists(:user, id: User::Message.where(message: '2019 Traveler').select(:user_id)).count(1),
+      "https://admin.downundersports.com/admin/schools/#{school.pid}"
+    ]
+  end

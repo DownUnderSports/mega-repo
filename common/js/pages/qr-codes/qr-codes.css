@@ -1,0 +1,75 @@
+.QRCode-page {
+  margin-top: 2rem;
+}
+.qr-code-wrapper {
+  display: inline-block;
+  padding: 0.5rem;
+  background: #153e7c;
+  border: 0px solid #153e7c;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+.qr-code-wrapper .qr-code {
+  width: 100%;
+  background: #fff;
+  border: 0px solid #153e7c;
+  border-radius: 0.5rem;
+  padding: 0.125rem;
+}
+.qr-code-wrapper .qr-code img {
+  width: 100%;
+  max-width: 100%;
+}
+.qr-code-wrapper .qr-code-footer {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  margin: 0.25rem;
+}
+.qr-code-wrapper a,
+a .qr-code-wrapper {
+  color: #fff;
+}
+.qr-code-wrapper a:hover,
+a .qr-code-wrapper:hover {
+  color: #fff;
+  font-weight: bolder;
+  text-decoration: underline;
+}
+.qr-code-wrapper.sm .qr-code {
+  max-width: 100px;
+  max-height: 100px;
+}
+.qr-code-wrapper.sm .qr-code-footer {
+  max-width: 100px;
+  max-height: 100px;
+}
+.qr-code-wrapper.md .qr-code {
+  max-width: 150px;
+  max-height: 150px;
+}
+.qr-code-wrapper.md .qr-code-footer {
+  max-width: 150px;
+  max-height: 150px;
+}
+.qr-code-wrapper.lg .qr-code {
+  max-width: 250px;
+  max-height: 250px;
+}
+.qr-code-wrapper.lg .qr-code-footer {
+  max-width: 250px;
+  max-height: 250px;
+}
+.qr-code-wrapper.xl .qr-code {
+  max-width: 500px;
+  max-height: 500px;
+}
+.qr-code-wrapper.xl .qr-code-footer {
+  max-width: 500px;
+  max-height: 500px;
+}

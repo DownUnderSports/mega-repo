@@ -1,0 +1,28 @@
+# encoding: utf-8
+
+wb.add_worksheet(name: 'Travelers') do |sheet|
+  sheet.add_row %W[
+    Link
+    Joined
+    Canceled
+    Category
+    First
+    Last
+    State
+    Sport
+  ]
+
+  Traveler.joins(:user).order("users.first", "users.last").split_batches_values do |t|
+    u = t.user
+    sheet.add_row [
+      u.admin_url,
+      t.join_date.to_s,
+      t.cancel_date&.to_s,
+      u.category_title,
+      u.first,
+      u.last,
+      t.team.state.abbr,
+      t.team.sport.abbr_gender
+    ]
+  end
+end

@@ -1,0 +1,2 @@
+www-node: yarn --cwd client start
+www-rails: bundle exec rails s

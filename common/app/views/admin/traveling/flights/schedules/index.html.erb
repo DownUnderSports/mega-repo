@@ -1,0 +1,146 @@
+<h1 data-toggle="#easy-paste">
+  Flights Needed Report<% if @current_user && @current_user.it %><sup style="color: #337ab7; cursor: pointer">?</sup><% end %>
+</h1>
+<h3 class="form-group">
+</h3>
+<div id="easy-paste" style='display:none'>
+  <% if @current_user && @current_user.it %>
+
+  click the box below to copy the function, paste it into chrome devtools console AFTER the amadeus shell is completely loaded for click-to-copy pnr strings
+
+  <ol>
+    <li>
+      Click anywhere in the box below
+    </li>
+    <li>
+      log in to amadeus website
+    </li>
+    <li>
+      Wait until the command page is done loading (i.e. once you can pull up a pnr)
+    </li>
+    <li>
+      press F12
+    </li>
+    <li>
+      click the &apos;console&apos; tab in devtools
+    </li>
+    <li>
+      paste the easy copy code into the console and press enter
+    </li>
+    <li>
+      try pulling up a pnr and using click-to-copy
+    </li>
+    <li>
+      if click to copy didn't work, repeat steps 6 &amp; 7
+    </li>
+  </ol>
+
+  <pre class="copy-clip text">
+    var shellements = document.querySelectorAll('.cshell');
+    window.copyToClipBoard = function(text) {
+      var ex, textarea;
+      if (window.clipboardData && window.clipboardData.setData) {
+        return clipboardData.setData("Text", text);
+      } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          return document.execCommand("copy");
+        } catch (error) {
+          ex = error;
+          console.warn("Copy to clipboard failed.", ex);
+          return false;
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
+    };
+    for(let i = 0; i < shellements.length; i++){
+      console.log(shellements[i])
+      shellements[i].addEventListener('click', function(e){
+        console.log(e, e.target, e.target.matches('pre.speedModePanel,pre.text3270.theme2,code'), e.target.matches('span'))
+        if(e.target.matches('pre.speedModePanel,pre.text3270.theme2,code')) copyToClipBoard(e.target.innerText)
+        else if(e.target.matches('span')) {
+          const target = e.target.closest('pre')
+          if(target.matches('pre.speedModePanel,pre.text3270.theme2,code')) copyToClipBoard(target.innerText)
+        }
+      }, true)
+    }
+    shellements
+  </pre>
+  <% end %>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-md-6 form-group">
+    Pull Up a Qantas PNR
+    <ol>
+      <li>
+        <span class="copy-clip text">rt</span> PNRNUMBER
+      </li>
+      <li>
+        Paste PNR Below
+      </li>
+      <li>
+        click &apos;Create Schedule&apos;
+      </li>
+      <li>
+        <span class="copy-clip text">rtaxr</span>
+      </li>
+      <li>
+        Paste RTAXR into 'Paste rtaxr here' input
+      </li>
+    </ol>
+  </div>
+  <div class="col-xs-12 col-md-6 form-group">
+    Pull Up an Air Canada PNR
+    <ol>
+      <li>
+        <span class="copy-clip text">ro ac </span>PNRNUMBER
+      </li>
+      <li>
+        Paste PNR Below
+      </li>
+      <li>
+        click &apos;Create Schedule&apos;
+      </li>
+      <li>
+        <span class="copy-clip text">ig</span>
+      </li>
+      <li>
+        click &apos;Update Schedule&apos;
+      </li>
+    </ol>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-5">
+    <div class="row">
+      <div class="col-xs-12" id="pnr_error">
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-12">
+        <h3>
+          Add PNR
+        </h3>
+        <!-- <#%= form_for Flight::Schedule.new, remote: true do |f| %> -->
+          <!-- <#%= hidden_field_tag :loaded_at, Time.now.to_s, id: nil, class: 'loaded-at' %> -->
+          <!-- <#%= f.text_area :original_value, class: 'form-control form-group', style: 'height: 25vh;resize: vertical' %> -->
+          <!-- <#%= f.submit class: 'btn btn-block btn-primary' %> -->
+        <!-- <#% end %> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12" id="pnr_result">
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7" id="existing_pnr_table_wrapper">
+    <%= render partial: 'existing_pnrs', locals: {total_reserved: Flight::Schedule.sum(:seats_reserved)} %>
+  </div>
+</div>
+<hr>
+<hr>

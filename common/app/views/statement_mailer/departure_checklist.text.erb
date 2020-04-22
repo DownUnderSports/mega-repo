@@ -1,0 +1,17 @@
+G'day <%= @user.first %>!
+
+We need to finalize the details for your travel package ASAP. Below is a link to view a checklist of everything we currently need from you to continue preparing for your trip.
+
+-------------------------------------------
+
+  Checklist Link: <%= @user.checklist_url %>
+
+-------------------------------------------
+
+Your checklist link can also be found on your statement. We will continue to update your departure checklist as we get closer to your travel dates. Please check back weekly for updates.
+
+Call or text our staff at (435) 753-4732 if you have any questions.
+
+Cheers,
+
+<%= render partial: 'shared/email_footer' %>

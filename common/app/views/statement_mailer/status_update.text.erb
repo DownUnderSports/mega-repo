@@ -1,0 +1,21 @@
+G'day <%= @user.first %>!
+
+Thanks for continuing to work hard to be a part of the Down Under Sports program. Below is a quick summary of your account (as of <%= Date.today.to_s(:long) %>), and a link to view your full account statement.
+
+Remember, anytime you want to view your current account status you can use the link below. This link can also be shared with anyone that you want, to give them access to your account statement.
+
+-------------------------------------------
+
+  Total Charges: <%= (@user.total_debits - @user.total_credits).to_s(true) %>
+  Total Payments: <%= @user.total_payments.to_s(true) %>
+  Current Balance: <%= ((@user.total_debits - @user.total_credits) - @user.total_payments).to_s(true) %>
+
+  Statement Link: <%= @user.statement_link %>
+
+-------------------------------------------
+
+If you have any questions, or would like to make any changes to your your account, please call or text our office.
+
+Cheers,
+
+<%= render partial: 'shared/email_footer' %>

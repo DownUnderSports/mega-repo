@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+shopt -s nullglob
+
+if [ ! -d public/json ];  then
+  mkdir public/json
+fi
+
+if [ -d ./client/src/assets/json ]; then
+  for f in ./client/src/assets/json/*; do
+    echo $(pwd)
+    echo "$f"
+    cp -a "$f" "public/json/"
+  done
+fi
+
+if [ -d client/src/common/assets/json ]; then
+  for f in client/src/common/assets/json/*; do
+    cp -a $f "public/json/"
+  done
+fi

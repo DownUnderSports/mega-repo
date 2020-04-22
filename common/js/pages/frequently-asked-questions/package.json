@@ -1,0 +1,5 @@
+{
+  "name": "FrequentlyAskedQuestionsPage",
+  "private": true,
+  "main": "./frequently-asked-questions.jsx"
+}

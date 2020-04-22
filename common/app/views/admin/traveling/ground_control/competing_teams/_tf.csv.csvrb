@@ -1,0 +1,29 @@
+csv << %w[
+  Link
+  ID
+  Team\ State
+  School
+  School\ State
+  Name
+  Gender
+  Events
+  Relays
+  Phone
+  Email
+]
+
+@competing_team.travelers.athletes.each do |t|
+  csv << [
+    t.user.admin_url,
+    t.user.dus_id,
+    t.team.state.abbr,
+    t.user.athlete&.school&.name,
+    t.user.athlete&.school&.state&.abbr,
+    t.user.basic_name,
+    t.user.gender,
+    (er = t.user.event_registration)&.events&.keys&.map(&:to_s)&.sort&.join(', '),
+    er&.relays&.keys&.map(&:to_s)&.sort&.join(', '),
+    t.user.athlete_and_parent_phones.first,
+    t.user.athlete_and_parent_emails.first
+  ]
+end

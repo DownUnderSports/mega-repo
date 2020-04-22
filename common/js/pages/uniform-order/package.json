@@ -1,0 +1,5 @@
+{
+  "name": "UniformOrderPage",
+  "private": true,
+  "main": "./uniform-order.jsx"
+}

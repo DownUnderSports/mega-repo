@@ -1,0 +1,13 @@
+<textarea rows="10" style='width: 100%; margin-bottom: 1rem; padding: 1rem; border-radius: .2rem'><%= @renderable.to_json %></textarea>
+
+<form method="POST">
+  <select name="user_id" style='width: 100%; margin-bottom: 1rem; padding: .25rem; border-radius: .2rem'>
+    <% User.staff.order(:first).each do |u| %>
+      <option value="<%= u.id %>">
+        <%= u.print_names %>
+      </option>
+    <% end %>
+  </select>
+  <input type="password" name="cert_password" value="" style='width: 100%; margin-bottom: 1rem; padding: .25rem; border-radius: .2rem'>
+  <button type="submit" name="button">SUBMIT</button>
+</form>

@@ -1,0 +1,79 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">G'day <%= @user.first %>!</h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="<%= @user.url %>">DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        Thanks for continuing to work hard to be a part of the Down Under Sports program. Below is a quick summary of your account (as of <%= Date.today.to_s(:long) %>), and a link to view your full account statement.
+      </p>
+      <p>
+        Remember, anytime you want to view your current account status you can use the link below. This link can also be shared with anyone that you trust to give them access to your account statement. Please be aware this link cannot change, so only share it with people you trust.
+      </p>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <table class="table row-border-bottom">
+        <tbody>
+          <tr>
+            <th>
+              Total Charges:
+            </th>
+            <td>
+              <%= @user.total_charges.to_s(true) %>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              Total Payments:
+            </th>
+            <td>
+              <%= @user.total_payments.to_s(true) %>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              Current Balance:
+            </th>
+            <td>
+              <%= @user.balance.to_s(true) %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p>
+        If you have any questions, or would like to make any changes to your account, <a href="tel:+1-435-753-4732">please call or text our office at (435) 753-4732</a>.
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'View Full Statement', @user.statement_link, class: 'btn btn-block btn-1' %>
+      </center>
+    </columns>
+  </row>
+</container>

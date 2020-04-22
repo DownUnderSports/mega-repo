@@ -1,0 +1,12 @@
+{
+  "Brumbies":    { "color": "Gold", "name": "Brumbies" },
+  "Crocodiles":  { "color": "Green", "name": "Crocodiles" },
+  "Dingoes":     { "color": "Blue", "name": "Dingoes" },
+  "Emus":        { "color": "Purple", "name": "Emus" },
+  "Kangaroos":   { "color": "Red", "name": "Kangaroos" },
+  "Koalas":      { "color": "White", "name": "Koalas" },
+  "Kookaburras": { "color": "Yellow", "name": "Kookaburras" },
+  "Lorikeets":   { "color": "Silver", "name": "Lorikeets" },
+  "Wallabies":   { "color": "Pink", "name": "Wallabies" },
+  "Wombats":     { "color": "Orange", "name": "Wombats" },
+}

@@ -1,0 +1,11 @@
+<% provide :page_title, "#{@competing_team.sport.full_gender} Travel Team - #{@competing_team.name}" %>
+<% provide :title do %>
+  <div>
+    <strong>
+      <%= "#{@competing_team.sport.full_gender} Team - #{@competing_team.name}" %>
+    </strong>
+  </div>
+  <%= @competing_team.coach_names %>
+<% end %>
+<% provide :skip_address, true %>
+<%= render partial: 'shared/pdf/teammate_rows', locals: { competing_team: @competing_team } %>

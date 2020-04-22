@@ -1,0 +1,5 @@
+{
+  "name": "AccountingDirectPaymentPage",
+  "private": true,
+  "main": "./direct-payment.jsx"
+}

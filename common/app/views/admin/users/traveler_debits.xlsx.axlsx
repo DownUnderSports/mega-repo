@@ -1,0 +1,40 @@
+wb = xlsx_package.workbook
+left_cell  = wb.styles.add_style alignment: { horizontal: :left }, font_name: 'Courier New'
+right_cell = wb.styles.add_style alignment: { horizontal: :right }, font_name: 'Courier New'
+cell_style = [left_cell, left_cell, left_cell, left_cell, left_cell, right_cell, right_cell, left_cell, left_cell, left_cell, right_cell, right_cell]
+
+wb.add_worksheet(name: 'travelers') do |worksheet|
+  worksheet.add_row %w[
+    DUS_ID
+    TRAVEL_STATUS
+    DEBIT_URL
+    NAME
+    DESCRIPTION
+    AMOUNT
+    PRETTY
+    SPACER
+    OG_NAME
+    OG_DESCRIPTION
+    OG_AMOUNT
+    OG_PRETTY
+  ]
+
+  Traveler.all.split_batches_values do |traveler|
+    traveler.debits.order(:created_at).each do |d|
+      worksheet.add_row [
+        traveler.user.dus_id,
+        traveler.status,
+        "#{traveler.user.admin_url.sub("100", "000")}/debits/#{d.id}",
+        d.name,
+        d.description,
+        d.amount.to_d,
+        d.amount.to_s(true, padding: 7),
+        "".rjust(10, " "),
+        d.base_debit.name,
+        d.base_debit.description,
+        d.base_debit.amount.to_d,
+        d.base_debit.amount.to_s(true, padding: 7),
+       ], style: cell_style
+    end
+  end
+end

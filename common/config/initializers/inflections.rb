@@ -1,0 +1,18 @@
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym 'MD'
+  inflect.acronym 'PhD'
+  inflect.acronym 'DDS'
+  inflect.acronym 'CPA'
+  inflect.acronym 'GCM'
+  inflect.acronym 'II'
+  inflect.acronym 'III'
+  inflect.acronym 'III'
+  inflect.acronym 'IV'
+  inflect.acronym 'VI'
+  inflect.acronym 'VII'
+  inflect.acronym 'VIII'
+  inflect.acronym 'NSW'
+  inflect.acronym 'QLD'
+  inflect.acronym 'VIC'
+  inflect.acronym 'ATTN'
+end

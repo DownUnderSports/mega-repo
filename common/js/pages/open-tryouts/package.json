@@ -1,0 +1,5 @@
+{
+  "name": "OpenTryoutsPage",
+  "private": true,
+  "main": "./open-tryouts.jsx"
+}

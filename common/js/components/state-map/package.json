@@ -1,0 +1,6 @@
+{
+  "name": "StateMap",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./state-map.jsx"
+}

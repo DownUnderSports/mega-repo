@@ -1,0 +1,25 @@
+G'Day Mate!
+
+Thank you for registering for the online information meeting <%= (same_day = (@meeting.start_time.to_date == Date.today)) ? 'today,' : 'on' %> <%= @meeting.start_time.strftime('%A, %B %d') %>, at <%= @meeting.start_time.strftime('%I:%M %p') %> Mountain Time (be sure to adjust for your local time). We will cover everything you need to know about the Down Under Sports Tournaments in order to make a well-informed decision. Please be sure a parent/guardian is in attendance.
+
+-------------------------------------------------
+
+Eastern: <%= (@meeting.start_time + 2.hour).strftime('%I:%M %p') %> (+2 hours)
+Central: <%= (@meeting.start_time + 1.hour).strftime('%I:%M %p') %> (+1 hour)
+Pacific: <%= (@meeting.start_time - 1.hour).strftime('%I:%M %p') %> (-1 hour)
+Alaska: <%= (@meeting.start_time - 2.hour).strftime('%I:%M %p') %> (-2 hours)
+Hawaii: <%= (@meeting.start_time - 3.hour).strftime('%I:%M %p') %> (-3 hours)
+
+-------------------------------------------------
+
+Approximately 45 minutes before the meeting begins, you will recieve an email from &ldquo;no-reply@livestormevents.com&rdquo; with a unique link to join the presentation. Each link can only be used by one device at a time.
+
+<%- if same_day -%>
+If you have any issues connecting, or to reschedule, please call 435-753-4732
+<%- else -%>
+If you have any questions, or to reschedule, please call 435-753-4732
+<%- end -%>
+
+We look forward to meeting with you!
+
+<%= render partial: 'shared/email_footer' %>

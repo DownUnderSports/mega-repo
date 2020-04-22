@@ -1,0 +1,15 @@
+G'Day Mate!
+
+Thank you for your interest in the Down Under Sports Program. Below is a link to an informational video where we go into detail about how to fundraise to cover the cost of competing in the Down Under Sports Tournaments.
+
+View Fundraising Video: <%= "https://downundersports.com/videos/f/#{@user&.dus_id}" %>
+
+Spots are filling up fast. If you intend to go, sign up now to confirm your place on the team and get your official fundraising packet.
+
+Pay Deposit & Join The Team: <%= @deposit_link %>
+
+If we can help with anything, please call or text our office at 435-753-4732 (see website for office hours). For answers to our most commonly asked questions, check out our F.A.Q. page, at: <%= @faq_link %>.
+
+Cheers!
+
+<%= render partial: 'shared/email_footer' %>

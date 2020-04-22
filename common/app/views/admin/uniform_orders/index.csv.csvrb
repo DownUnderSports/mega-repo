@@ -1,0 +1,35 @@
+if params[:sport].present?
+  csv.set(
+    User::UniformOrder.create_bulk_order_csv(
+      Sport[params[:sport]]&.id \
+      || Sport.where(abbr: params[:sport].to_s.upcase).select(:sport_id)
+    )
+  )
+else
+  csv << %w[
+    sport
+    total_submitted_count
+    active_unsubmitted_count
+    canceled_unsubmitted_count
+  ]
+
+  Sport.order(:abbr_gender).each do |sport|
+    orders = User::UniformOrder.where(sport: sport)
+    csv << [
+      sport.abbr_gender,
+      orders.
+        where.
+        not(submitted_to_shop_at: nil).
+        count(1),
+      orders.
+        where(user_id: Traveler.active.select(:user_id)).
+        where(submitted_to_shop_at: nil).
+        count(1),
+      orders.
+        where.
+        not(user_id: Traveler.active.select(:user_id)).
+        where(submitted_to_shop_at: nil).
+        count(1)
+    ]
+  end
+end

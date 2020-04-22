@@ -1,0 +1,53 @@
+# encoding: utf-8
+
+csv << %w[
+  status
+  dus_id
+  category
+  first
+  last
+  state
+  sport
+  country_code
+  answered_visa_questions
+  checked_once
+  checked_twice
+  departing_date
+  returning_date
+  full_name_in_db
+  full_name_on_passport
+  gender_in_db
+  gender_on_passport
+  birth_date_in_db
+  birth_date_on_passport
+  phones
+  emails
+  user_page
+]
+
+Traveler.active do |t|
+  csv << [
+    t.user.passport_status || 'Not Submitted',
+    t.user.dus_id,
+    t.user.category_title,
+    t.user.first,
+    t.user.last,
+    t.team.state.abbr,
+    t.team.sport.abbr_gender,
+    t.user.passport&.code,
+    !!t.user.passport&.has_all_questions_answered?,
+    !!t.user.passport&.checker_id,
+    !!t.user.passport&.second_checker_id,
+    t.departing_date.to_s,
+    t.returning_date.to_s,
+    t.user.full_name.upcase,
+    t.user.passport&.full_name,
+    t.user.gender,
+    t.user.passport&.sex,
+    t.user.birth_date.to_s,
+    t.user.passport&.birth_date&.to_s,
+    t.user.athlete_and_parent_emails.join(';'),
+    t.user.athlete_and_parent_phones.join(';'),
+    t.user.admin_url,
+  ]
+end

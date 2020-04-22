@@ -1,0 +1,11 @@
+<% if @user %>
+  <%= render partial: 'admin/clocks/show_clocks', locals: { all_clocks: @all_clocks, user: @user, no_button: true } %>
+<% else %>
+<section>
+  <header>
+    <h3>
+      Staff Not Found
+    </h3>
+  </header>
+</section>
+<% end %>

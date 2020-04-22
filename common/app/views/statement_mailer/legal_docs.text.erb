@@ -1,0 +1,56 @@
+G'day <%= @user.first %>!
+
+We still do not have a signed copy of your legal documents. If we do not have your completed forms by June 10, 2020 we may have to cancel your reservation. Read below for detailed instructions. If your document requires 2 signatures, we must have the copy with both signatures completed. Partially completed documents will not be accepted. Click the link below to begin.
+
+-------------------------------------------
+
+  Start Legal Documents: <%= @user.hash_url('legal-documents') %>
+
+  DUS ID: <%= @user.dus_id %>
+
+-------------------------------------------
+
+We highly recommend using a laptop or desktop computer so you can see the entirety of each page.
+
+Tips for completing legal documents:
+
+    1.  After clicking the "Start Legal Documents" button above answer the question about the age of the traveler then click the "Click Here" button. You will be redirected to a page through SignNow that will ask for 1 email if the traveler is an adult or 2 emails if the traveler is a minor.
+
+
+    2.  For Minors: Your legal document must be completed in 2 steps.
+
+        Step 1: Legal Guardian receives an emailed link and completes their portion of the document. This must be done before step 2 can be started.
+
+        Step 2: Dependent receives an emailed link and completes their portion of the document.
+
+      Once both steps are complete you will receive a confirmation email to indicate you are finished.
+
+      Note: You may use the same email address for Legal Guardian and Dependent; however, it will still require 2 steps to complete.
+
+
+    3.  For Adults:
+
+      An email is sent to the address you provide with a link to fill in your documents.
+
+      Once complete, you will receive a confirmation email to indicate you are finished.
+
+
+    4.  You will be asked for the traveler's DUS ID, which can be found at the top of this email.
+
+
+    5.  When filling out the documents, you will be only be allowed to click "Done" once every field is filled in. Please read the document in its entirety.
+
+
+    6.  After you complete the documents on the SignNow website you are not required to upload your copy on Down Under Sport's website, though you can do so to help track your progress. To upload your copy, download the PDF you receive in the confirmation email and upload it using your checklist page. After uploading your copy, your checklist page will show your document status as "Pending Approval". If you opt to skip this step, we will still receive a copy directly from SignNow.
+
+
+    7.  Your Legal Documents will not be marked as "Completed" until Down Under Sports has verified the accuracy of your signed Legal Document.
+
+
+Once you have finished your Legal Documents, review your Departure Checklist for any other items that may be incomplete. If you have any questions, please call or text our staff at (435) 753-4732 or email us at mail@downundersports.com
+
+We are excited to have you traveling and competing with us in Australia!
+
+Cheers,
+
+<%= render partial: 'shared/email_footer' %>

@@ -1,0 +1,5 @@
+{
+  "name": "SchoolForm",
+  "private": true,
+  "main": "./school-form.jsx"
+}

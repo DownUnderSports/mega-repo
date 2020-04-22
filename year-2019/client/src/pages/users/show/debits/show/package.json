@@ -1,0 +1,5 @@
+{
+  "name": "UserDebitsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

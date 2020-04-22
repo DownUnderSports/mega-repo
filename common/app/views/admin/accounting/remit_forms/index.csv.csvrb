@@ -1,0 +1,28 @@
+# encoding: utf-8
+
+csv << [
+  'Remit Number',
+  'Positive Amount',
+  'Negative Amount',
+  'Successful Amount',
+  'Failed Amount',
+  'Net Amount',
+  'Recorded?',
+  'Reconciled?',
+  'Locked?',
+  'Link'
+]
+@remittance_list.split_batches_values(preserve_order: true) do |remittance|
+  csv << [
+    remittance.remit_number,
+    StoreAsInt.money(remittance.positive_amount).to_s,
+    StoreAsInt.money(remittance.negative_amount).to_s,
+    StoreAsInt.money(remittance.successful_amount).to_s,
+    StoreAsInt.money(remittance.failed_amount).to_s,
+    StoreAsInt.money(remittance.net_amount).to_s,
+    !!remittance[:recorded] ? 'Yes' : 'No',
+    !!remittance[:reconciled] ? 'Yes' : 'No',
+    (!!remittance[:recorded] && !!remittance[:reconciled]) ? 'Yes' : 'No',
+    "https://admin.downundersports.com/admin.accounting/remit_forms/#{remittance.remit_number}",
+  ]
+end

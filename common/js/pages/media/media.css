@@ -1,0 +1,57 @@
+@charset "UTF-8";
+.MediaPage {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background: #eee;
+  color: #333;
+}
+.MediaPage .scroller-wrapper {
+  margin-bottom: 25vh;
+}
+.MediaPage .scroller-wrapper .scroller {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+.MediaPage .scroller-wrapper .scroller .image-wrapper {
+  padding: 15px;
+  position: relative;
+}
+.MediaPage .scroller-wrapper .scroller .image-wrapper h4 {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  width: calc(100% - 30px);
+  background: #333;
+  color: #fff;
+  z-index: 10;
+  padding: 5px;
+}
+.MediaPage .scroller-wrapper .scroller .image-wrapper img {
+  border: 1px solid #333;
+  width: 100%;
+  transition: all 0.5s;
+  transform-origin: left top;
+  position: relative;
+  background: #fff;
+}
+@media (max-width: 767px) {
+  .MediaPage .scroller-wrapper .scroller .image-wrapper {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .MediaPage .scroller-wrapper .scroller .image-wrapper {
+    width: calc(100% / 3);
+  }
+  .hoverable .MediaPage .scroller-wrapper .scroller .image-wrapper img:hover {
+    -webkit-transform: scale(1.7);
+    -moz-transform: scale(1.7);
+    -o-transform: scale(1.7);
+    transform: scale(1.7);
+    z-index: 100;
+  }
+  .hoverable .MediaPage .scroller-wrapper .scroller .image-wrapper:nth-child(3n) img {
+    transform-origin: right top;
+  }
+}

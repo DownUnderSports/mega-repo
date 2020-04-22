@@ -1,0 +1,23 @@
+@charset "UTF-8";
+.Users.ShowPage {
+  padding-top: 3rem;
+}
+.Users.ShowPage .la-square-jelly-box {
+  height: 25vw;
+  width: 25vw;
+  max-width: 25vh;
+  max-height: 25vh;
+  margin: 10vh auto;
+  color: #153e7c;
+}
+.Users.ShowPage .la-square-jelly-box div:first-child {
+  border: 1.5rem solid #d52027;
+}
+.Users.ShowPage form {
+  border: 1px solid rgba(0,0,0,0.125);
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+.Users.ShowPage .card-body form {
+  border: none;
+}

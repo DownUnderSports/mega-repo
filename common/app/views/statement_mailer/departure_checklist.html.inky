@@ -1,0 +1,45 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">G'day <%= @user.first %>!</h3>
+
+      <center>
+        <menu class="text-center">
+          <item href="<%= @user.url %>">DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        We need to finalize the details for your travel package ASAP. Below is a link to view a checklist of everything we currently need from you to continue preparing for your trip.
+      </p>
+      <p>
+        Your checklist link can also be found on your statement. We will continue to update your departure checklist as we get closer to your travel dates. Please check back weekly for updates.
+      </p>
+      <p>
+        If you have any questions, <a href="tel:+1-435-753-4732">please call or text our staff at (435) 753-4732</a>.
+      </p>
+      <p>
+        Cheers,
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'View Departure Checklist', @user.checklist_url, class: 'btn btn-block
+         btn-1' %>
+      </center>
+    </columns>
+  </row>
+</container>

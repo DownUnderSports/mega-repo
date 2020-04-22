@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="twitter:dnt" content="on">
+    <meta name="current-app-name" content="<%= ENV['CURRENT_APP_NAME'] || 'development' %>">
+    <!-- Firefox, Chrome, Safari, IE 11+ and Opera. 96x96 pixels in size. -->
+    <link rel="icon" type="image/png" href="<%= asset_path('favicon-96x96.png') %>" sizes="96x96" />
+
+
+    <title>Down Under Sports</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap.min.css" rel="preload" as="style">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="preload" as="style">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="preload" as="style">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <style>
+      body a:not([disabled])[target],
+      body .anchor-button:not([disabled])[target],
+      body .btn:not([disabled])[target],
+      body .clickable:not([disabled])[target],
+      body .pointer:not([disabled])[target],
+      body a:not([disabled]):not([disabled])[target],
+      body .anchor-button:not([disabled]):not([disabled])[target],
+      body .btn:not([disabled]):not([disabled])[target],
+      body .clickable:not([disabled]):not([disabled])[target],
+      body .pointer:not([disabled]):not([disabled])[target],
+      body a:not([disabled])[target] *,
+      body .anchor-button:not([disabled])[target] *,
+      body .btn:not([disabled])[target] *,
+      body .clickable:not([disabled])[target] *,
+      body .pointer:not([disabled])[target] *,
+      body a:not([disabled]):not([disabled])[target] *,
+      body .anchor-button:not([disabled]):not([disabled])[target] *,
+      body .btn:not([disabled]):not([disabled])[target] *,
+      body .clickable:not([disabled]):not([disabled])[target] *,
+      body .pointer:not([disabled]):not([disabled])[target] * {
+        cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAXCAYAAAAGAx/kAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsJFAAfjTMaRQAAAtVJREFUOMudlE1LZEcUhp/qW/fWvbe8PdGWhNZgsgiNkPyE4LjIJuAu/2Bg/oGSRVxnExpcZOUqkIUroXUhiKA2KrNwlm4cP6A1PRqiKNqZtvt+nCzUpunRQXOg4KUO9XDOeatK8cTwPO/EcZwXQBBFEQBKKeI4xnVd1FNBjuPEBwcH2hjzUa5YLMJzQM1mUx4KQJ4MyuVybd/348HBQVlfX///IOAnY0xreXlZREQWFhY+CcoBFggADZ0ZjgdB0FhZWRERkaWlJfE871FQLoqiX40xN57ntTzP+wXwAaW1vi6XyyIisra2JtbaDHgUVDDGtI6OjmR7e1vCMLwGvryr7Edr7b8zMzNirf0A/AyI1jrVWqfdIAV85ft+W0Tk5OREgiD4AJSAe7/HXde9BCaAfqDYvXRXRQ/dKRfwgARYj+P4s0ddfSzRarV8a+2bMAwPgfE7AzzA+ZS1Cvj6vrXT01OZmJiQer0u5XJZjDGNMAyvwzC8BF4Dn9+1nOuFuECpe0azs7MiIlKv16VUKkmtVpPNzU0JgiBxXTfp6+v7625e3v1YvvN9/8JxnMRam9yDdnd3O/ZOTU119OTkpIiIzM3NieM4KfAt4GGt/WN6ejrb2dmRfD6fiYicn59LHMedw1tbWx1drVY72vf9GPgeCOnv739XrVbl+PhY8vn8g48yy7KOTpKkF/QSsLkkSQpDQ0MYY1Dq9gacnZ1xeHhImqZcXFywv79Pq9Wi0Wiwt7f3oFs6yzI3CAIGBgbY2NhARFhcXMRxHEZGRqhUKmitGR4eZn5+Htd1GR0d/dh2Y0yzVqv5hUKB50YURcnNzc0PwFudpqmO45irq6tnQbIsI8syBaQA2vf9f1ZXV4tjY2PPAlUqFYwxZ+12+xoQBbwyxvyulNJaaxERdfsz3EaP7rxHpVSz2Wz+BvwJvFdACHwBfANEvR10fRFZz/4l8B74G2j+Bx4o1cS4grKVAAAAAElFTkSuQmCC") 4 7, pointer;
+      }
+    </style>
+  </head>
+  <body class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

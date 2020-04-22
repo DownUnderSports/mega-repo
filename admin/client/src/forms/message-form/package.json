@@ -1,0 +1,5 @@
+{
+  "name": "MessageForm",
+  "private": true,
+  "main": "./message-form.jsx"
+}

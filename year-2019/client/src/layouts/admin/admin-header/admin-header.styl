@@ -1,0 +1,23 @@
+.Admin-header
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  transition: background-image 2s ease-in-out
+  width: 100vw;
+
+  & > nav
+    overflow: auto
+    border-bottom: 1px solid black
+    .nav-item
+      border-left: 1px solid #333
+      padding: .25rem .5rem
+      min-height: 2rem
+      &:last-child
+        border-right: 1px solid #333
+    .navbar-brand
+      padding-left: .5rem;
+
+  .header-logo
+    img
+      max-width: 30px
+      max-height: 30px

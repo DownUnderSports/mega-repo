@@ -1,0 +1,71 @@
+csv << %w[
+  missing-clock-out
+  date
+  day
+  time
+  in-out-for
+  in-out-for-decimal
+  total
+  total-decimal
+]
+
+total = 0.0
+value = nil
+clock_in = ->(clock) do
+  csv << [
+    nil,
+    clock.created_at.to_date.to_s,
+    clock.created_at.strftime("%a"),
+    clock.created_at.strftime("%r"),
+    nil,
+    nil,
+    Time.zone.at(total).utc.strftime("%H:%M:%S.%L"),
+    (total / 1.hour).round(5),
+  ]
+end
+
+clock_out = ->(clock) do
+  csv << [
+    nil,
+    clock.created_at.to_date.to_s,
+    clock.created_at.strftime("%a"),
+    clock.created_at.strftime("%r"),
+    Time.zone.at(value).utc.strftime("%H:%M:%S.%L"),
+    (value / 1.hour).round(5),
+    Time.zone.at(total).utc.strftime("%H:%M:%S.%L"),
+    (total / 1.hour).round(5),
+  ]
+end
+
+clock_missing = -> do
+  csv << [
+    'Yes',
+    nil,
+    nil,
+    nil,
+    '00:00:00.0',
+    '0.0',
+    Time.zone.at(total).utc.strftime("%H:%M:%S.%L"),
+    (total / 1.hour).round(5),
+  ]
+end
+
+user.staff.clocks_since(all_clocks ? nil : two_mondays_ago).each do |clock|
+  if value
+    value = clock.created_at.to_f - value.to_f
+    if value > 23.hours
+      value = clock.created_at
+      clock_missing.call
+      clock_in.call clock
+    else
+      total += value
+      clock_out.call clock
+      value = nil
+    end
+  else
+    value = clock.created_at
+    clock_in.call clock
+  end
+end
+
+clock_missing.call if value

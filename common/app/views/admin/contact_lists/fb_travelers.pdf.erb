@@ -1,0 +1,41 @@
+<% provide :mass_printing, true %>
+<% provide :extra_footer_space, true %>
+<section>
+  <header>
+    <h3>Football Travelers: <span class="text-muted float-right" style='font-size: 16px; margin-top: 12px;'><%= time = Time.zone.now.strftime("%B %d, %Y, %l:%M %p (%Z)") %></span></h3>
+  </header>
+  <table class="table table-bordered" style="border:none!important; margin-bottom: 0">
+    <thead>
+      <tr>
+        <th>first</th>
+        <th>last</th>
+        <th>sch_nm</th>
+        <th>sch_st</th>
+        <th>pos</th>
+        <th>hgt</th>
+        <th>wgt</th>
+        <th>sts</th>
+        <th>paid</th>
+        <th>join</th>
+        <th>id</th>
+      </tr>
+    </thead>
+    <tbody style="page-break-inside:avoid !important;">
+      <% @travelers.each do |traveler| %>
+      <tr>
+        <td><%= traveler.first %></td>
+        <td><%= traveler.last %></td>
+        <td><%= traveler.school_name %></td>
+        <td><%= traveler.school_state_abbr %></td>
+        <td><%= (traveler.positions_array || []).join(', ') %></td>
+        <td><%= traveler.height %></td>
+        <td><%= traveler.weight %></td>
+        <td><%= traveler.stats %></td>
+        <td><%= StoreAsInt.money(traveler.current_payments.to_i).to_s(true) %></td>
+        <td><%= traveler.joined_at&.to_date&.to_s %></td>
+        <td><%= traveler.dus_id %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

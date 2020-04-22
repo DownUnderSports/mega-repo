@@ -1,0 +1,6 @@
+{
+  "name": "CreditCardField",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./credit-card-field.jsx"
+}

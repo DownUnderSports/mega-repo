@@ -1,0 +1,59 @@
+html,
+body,
+#root {
+  height: 100%;
+  position: relative;
+  top: 0;
+}
+* {
+  box-sizing: border-box !important;
+}
+img {
+  max-height: 100%;
+  max-width: 100%;
+}
+section header {
+  text-align: center;
+}
+section main {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+section main.card-body {
+  margin-bottom: unset;
+}
+.Admin {
+  padding-top: 10rem;
+}
+.Admin .Admin-title {
+  font-size: 1.5em;
+}
+.Admin .Admin-subtitle {
+  font-size: 1.15em;
+}
+.Admin .Admin-main {
+  min-height: 100%;
+  min-height: 100vh;
+  min-height: calc(100vh - 13rem);
+  min-height: -webkit-calc(100vh - 13rem);
+  min-height: -moz-calc(100vh - 13rem);
+  min-height: calc(100vh - 13rem);
+}
+.Admin .Admin-main .below-header {
+  display: flex;
+  position: fixed;
+  z-index: 1100;
+  width: 100vw;
+  top: 100px;
+  left: 0;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 0.25rem;
+  overflow: auto;
+  flex-flow: row nowrap;
+  white-space: nowrap;
+}
+.Admin .Admin-main .below-header * {
+  flex: 0;
+  margin: auto;
+}

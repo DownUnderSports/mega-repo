@@ -1,0 +1,7 @@
+# encoding: utf-8
+
+csv << Invite.headers
+
+Invite.csv_rows(@params) do |row, id|
+  csv << row unless id
+end

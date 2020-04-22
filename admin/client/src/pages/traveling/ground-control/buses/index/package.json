@@ -1,0 +1,5 @@
+{
+  "name": "TravelingGroundControlBusesIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

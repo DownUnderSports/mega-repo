@@ -1,0 +1,62 @@
+# encoding: utf-8
+
+csv << %w[
+  url
+  dus_id
+  athlete_dus_ids
+  coach_dus_ids
+  main_dus_ids
+  category
+  team
+  team_sport
+  team_state
+  2021_status
+  2021_can_transfer
+  2021_can_compete
+  birth_date
+  age
+  as_of_date
+  cancel_date
+  insurance_amount
+  total_paid
+  total_credits
+  total_debits
+  total_charges_for_insurance
+  current_balance
+  address_state
+]
+date = Date.today
+Traveler.
+  where(Traveler.arel_table[:cancel_date].eq(nil).or(Traveler.arel_table[:cancel_date].gt(Date.parse('2020-03-19')))).
+  where_exists(:debits, base_debit_id: Traveler::BaseDebit::Insurance.id).split_batches_values(preserve_order: true) do |t|
+    u = t.user
+    addr = u.main_address.presence
+    
+    next if (t.total_payments - t.deposit_amount) < t.insurance_charge
+
+    csv << [
+      u.url(true),
+      u.dus_id,
+      u.athlete_dus_ids.presence&.join(','),
+      u.coach_dus_ids.presence&.join(','),
+      u.main_dus_ids.presence&.join(','),
+      u.category_title,
+      u.team.name,
+      u.team.sport.abbr_gender,
+      u.team.state.abbr,
+      u.get_or_create_transfer_expectation.status,
+      u.transfer_expectation.can_transfer,
+      u.transfer_expectation.can_compete,
+      u.birth_date&.to_s,
+      u.birth_date ? (date.year - u.birth_date.year - ((date.month > u.birth_date.month || (date.month == u.birth_date.month && date.day >= u.birth_date.day)) ? 0 : 1)) : nil,
+      date.to_s,
+      t.cancel_date&.to_s,
+      t.insurance_charge.to_s(true),
+      t.total_payments.to_s(true),
+      t.total_credits.to_s(true),
+      t.total_debits.to_s(true),
+      t.total_insurance_charges.to_s(true),
+      t.balance.to_s(true),
+      addr&.province_or_state_abbr
+    ]
+  end

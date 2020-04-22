@@ -1,0 +1,45 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag image_url('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center mt">
+        How was your experience?
+      </h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        G'Day!
+      </p>
+      <p>
+        There is still time to let us know how your experience was in Australia! All trip participants who complete this survey will be entered in a drawing to win a <strong>$50 Amazon gift card</strong>. Each participant (supporters, athletes, coaches, and officials) is welcome to complete the survey individually.
+      </p>
+      <p>
+        Complete the survey by this Sunday, August 18 to be entered into the drawing.
+      </p>
+      <p>
+        Please click the link below to give us your feedback. The survey should take less than 10 minutes.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'Post-Trip Survey', "https://www.surveymonkey.com/r/7R76RVZ", class: 'btn btn-block btn-1' %>
+      </center>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

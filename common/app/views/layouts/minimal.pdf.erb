@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= (yield(:title).presence || (defined?(title) && title).presence || "Down Under Sports") %></title>
+    <meta charset='utf-8' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" media="all"> -->
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("pdf.css"), media: 'all', 'data-turbolinks-track': 'reload' -%>
+  </head>
+  <body class="container" style="max-width: 8in; font-size: 11px">
+    <div class="row">
+      <div class="col-2" style="height: .75in">
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: .5in" %>
+      </div>
+      <div class="col-10" style="height: .75in">
+        <div style="font-size: .2in; text-align: right;">
+          <%= (yield(:title).presence || "Down Under Sports") %>
+        </div>
+        <div style="font-size: .1in; text-align: right;">
+          <%= (yield(:subtitle).presence || "").html_safe %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div id="content" class="col-12">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

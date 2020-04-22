@@ -1,0 +1,11 @@
+<% provide :title, "#{user.full_name} - #{user.category_title} Account Payments"%>
+<% provide :subtitle do %>
+  <%= render partial: 'shared/pdf/subtitle', locals: {user: user} %>
+<% end %>
+<% provide :sublink do %>
+  <%= render partial: 'shared/pdf/sublink', locals: {user: user} %>
+<% end %>
+<% provide :address do %>
+  <%= render partial: 'shared/pdf/address', locals: {user: user} %>
+<% end %>
+<%= render partial: 'shared/pdf/payment_details', locals: {user: user} %>

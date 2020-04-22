@@ -1,0 +1,5 @@
+{
+  "name": "BenefitsUploadForm",
+  "private": true,
+  "main": "./benefits-upload-form.jsx"
+}

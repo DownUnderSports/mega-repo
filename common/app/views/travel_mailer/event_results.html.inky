@@ -1,0 +1,46 @@
+<container class="header">
+  <row>
+    <columns>
+      <center>
+        <%= image_tag wicked_pdf_asset_base64('dus-logo.png'), class: 'img-fluid', style: "max-height: 1.5in" %>
+      </center>
+      <h3 class="text-center">
+        <%= @subject %>
+      </h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <spacer size="32"></spacer>
+  <row>
+    <columns>
+      <p>
+        G'Day!
+      </p>
+      <p>
+        <% @description.split("\n").each_with_index do |line, i| %>
+          <% if i > 0 %>
+            <br>
+          <% end %>
+          <%= line %>
+        <% end %>
+      </p>
+      <p>
+        Use the link below to view all results available for <%= @sport.full_gender %>.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'View Results', "https://www.DownUnderSports.com/event-results/#{ @sport.abbr_gender }", class: 'btn btn-block btn-1' %>
+      </center>
+    </columns>
+  </row>
+</container>

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+function clobber_assets() {
+  pushd $1
+  rails assets:clobber
+  rm -rf tmp/cache
+  popd
+}
+clobber_assets www
+clobber_assets admin
+clobber_assets year-2019

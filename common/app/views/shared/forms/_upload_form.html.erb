@@ -1,0 +1,76 @@
+<% fields = FileValidation.__send__(upload_fields) %>
+<h3><%= upload_title %> must must include a header row with the following column names (In No Particular Order, omit descriptions in parentheses):</h3>
+<h4><b>All Headers are CaSE sEnSitvE</b></h4>
+<div class="row">
+  <div class="col">
+    <div class="overflow-auto">
+      <table class="table table-bordered table-centered">
+        <tr>
+          <% fields.each do |field| %>
+            <td>
+              <%= link_to_if field['link'], field['col'], field['link'], style: 'font-weight: bold' do %>
+                <%= field %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<% if defined?(alternate_fields) && (alt_fields = FileValidation.__send__(alternate_fields)) %>
+<h2>OR</h2>
+<h3><%= defined?(alternate_title) ? alternate_title : upload_title %> must contain ONLY the following columns:</h3>
+<div class="row">
+  <div class="col">
+    <div class="overflow-auto">
+      <table class="table table-bordered table-centered">
+        <tr>
+          <% alt_fields.each do |field| %>
+            <td>
+              <%= link_to_if field['link'], field['col'], field['link'], style: 'font-weight: bold' do %>
+                <%= field %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= form_tag send(upload_path), method: :post, multipart: true do %>
+  <%= fields_for :upload do |f| %>
+  <div class="row">
+    <div class="col-lg-4 col-md-6">
+      <div class="form-group <%= 'hidden' if defined?(skip_template) && skip_template %>">
+        <label>Download</label>
+        <%= link_to 'Download Template', send(upload_path, format: :csv), class: 'btn btn-block btn-info' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :file, "File to Upload" %>
+        <%= f.file_field :file,
+          accept: "text/comma-separated-values, text/csv, application/csv, application/excel, application/vnd.ms-excel, application/vnd.msexcel, text/anytext, .csv",
+          class: "form-control csv"
+        %>
+      </div>
+      <div class="form-group">
+        <%= f.submit "upload CSV", id: "upload_submit", class:'btn btn-primary btn-block' %>
+      </div>
+    </div>
+    <% if @file_stats.present? %>
+    <div class="col">
+      <hr class="d-md-none">
+      <div class="card"">
+        <div class="card-header">
+          <h5 class="card-title text-center">Your File has been uploaded and is being processed</h5>
+        </div>
+        <div class="card-body">
+          <%= render partial: 'shared/upload_details', locals: {file_stats: @file_stats} %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <% end %>
+<% end %>

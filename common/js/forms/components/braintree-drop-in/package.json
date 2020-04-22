@@ -1,0 +1,6 @@
+{
+  "name": "BraintreeDropIn",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./braintree-drop-in.jsx"
+}

@@ -1,0 +1,932 @@
+/*
+* Layout
+* ========================================================================== */
+@require "common/stylus/colors"
+@require "common/stylus/fonts"
+@require "common/stylus/media-queries"
+@require "common/stylus/utils"
+@require "common/stylus/common"
+
+$border-radius = .25rem
+
+:root
+  --main-color: #1a8fff;
+  --text-color: #777;
+  --text-color-light: #ccc;
+  --border-color: #eee;
+  --bg-color: #f9f9f9;
+  --neutral-color: #fff;
+
+tooltip-attributes(pfx)
+  pfx = pfx ? ('-' + pfx) : ''
+
+  &.tooltip{pfx}-right
+  &[data-tooltip{pfx}-right]:not([data-tooltip{pfx}-right=false])
+    &:before
+      left: auto
+      right: -.25rem
+      bottom: auto
+      top: 50%
+      transform: translate(100%, -50%) scale(0)
+      transform-origin: left center
+      z-index: 1000000
+    &:hover:before
+      transform: translate(100%, -50%) scale(1)
+  &.tooltip{pfx}-left
+  &[data-tooltip{pfx}-left]:not([data-tooltip{pfx}-left=false])
+    &:before
+      left: -.25rem
+      right: auto
+      bottom: auto
+      top: 50%
+      transform: translate(-100%, -50%) scale(0)
+      transform-origin: right center
+    &:hover:before
+      transform: translate(-100%, -50%) scale(1)
+  &.tooltip{pfx}-top
+  &.tooltip{pfx}-top-right
+  &.tooltip{pfx}-top-left
+  &[data-tooltip{pfx}-top]:not([data-tooltip{pfx}-top=false])
+  &[data-tooltip{pfx}-top-right]:not([data-tooltip{pfx}-top-right=false])
+  &[data-tooltip{pfx}-top-left]:not([data-tooltip{pfx}-top-left=false])
+    &:before
+      bottom: auto
+      top: -.25rem
+      transform-origin: bottom center
+    &:hover:before
+      transform: translate(-50%, -100%) scale(1)
+  &.tooltip{pfx}-top-right
+  &[data-tooltip{pfx}-top-right]:not([data-tooltip{pfx}-top-right=false])
+    &:before
+      left: auto
+      right: 0
+      transform: translateY(-100%) scale(0)
+      transform-origin: right bottom
+    &:hover:before
+      transform: translateY(-100%) scale(1)
+  &.tooltip{pfx}-top-left
+  &[data-tooltip{pfx}-top-left]:not([data-tooltip{pfx}-top-left=false])
+    &:before
+      left: 0
+      right: auto
+      transform: translateY(-100%) scale(0)
+      transform-origin: left bottom
+    &:hover:before
+      transform: translateY(-100%) scale(1)
+  &.tooltip{pfx}-bottom-right
+  &.tooltip{pfx}-bottom-left
+  &[data-tooltip{pfx}-bottom-right]:not([data-tooltip{pfx}-bottom-right=false])
+  &[data-tooltip{pfx}-bottom-left]:not([data-tooltip{pfx}-bottom-left=false])
+    &:before
+      bottom: -.25rem
+      top: auto
+  &.tooltip{pfx}-bottom-right
+  &[data-tooltip{pfx}-bottom-right]:not([data-tooltip{pfx}-bottom-right=false])
+    &:before
+      left: auto
+      right: 0px
+      transform: translateY(100%) scale(0)
+      transform-origin: right top
+    &:hover:before
+      transform: translateY(100%) scale(1)
+  &.tooltip{pfx}-bottom-left
+  &[data-tooltip{pfx}-bottom-left]:not([data-tooltip{pfx}-bottom-left=false])
+    &:before
+      left: 0px
+      right: auto
+      transform: translateY(100%) scale(0)
+      transform-origin: left top
+    &:hover:before
+      transform: translateY(100%) scale(1)
+  &[data-tooltip{pfx}='']
+    &:before
+      display: none
+  &.tooltip{pfx}-enabled
+  &[data-tooltip{pfx}-enabled]:not([data-tooltip{pfx}-enabled=false])
+    &:before
+      display: block!important
+  &.tooltip{pfx}-disabled
+  &[data-tooltip{pfx}-disabled]:not([data-tooltip{pfx}-disabled=false])
+    &:before
+      display: none!important
+  &.tooltip{pfx}-nowrap
+  &[data-tooltip{pfx}-nowrap]:not([data-tooltip{pfx}-nowrap=false])
+    &:before
+      white-space: nowrap!important
+
+for num in 25 50 75
+  .vh-{num}
+    height: s('%svh', num) !important
+  .vw-{num}
+    height: s('%svw', num) !important
+
+body
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+
+  .main-site-seal
+    display: flex;
+    flex-flow row;
+    justify-content: flex-start;
+    padding: 0 15px;
+    margin-bottom: -3rem
+    width: 100%
+    max-width: 1140px
+
+    @media (min-width: 768px)
+      position: sticky;
+      bottom: 1rem;
+      z-index: 998
+
+    @media (min-width: 1250px)
+      padding: 0 1rem
+
+  .chat-wrapper
+    position: sticky;
+    bottom: 1rem;
+    padding: 0 15px
+    max-height: 90vh
+    overflow: auto
+    display: flex;
+    flex-flow row;
+    justify-content: flex-end;
+    margin-bottom: 1rem
+    margin-left: auto
+    margin-right: auto
+    width: 100%
+    max-width: 1140px
+    z-index: 999
+
+    @media (min-width: 1250px)
+      max-width: calc(100vw)
+      // padding: 0 calc(((100vw - 1140px) / 2) - 5rem)
+      padding: 0 1rem
+
+    > button.chat-btn
+      position: relative
+
+    &.true
+      margin: 0
+      display: block
+      padding: 1rem !important;
+      background: #000080
+      color: #fff
+      z-index: 3000
+      position: fixed
+      right: 1rem
+      left: 1rem
+      margin: unset
+      width: unset
+      @media (min-width: 900px)
+        left: unset
+        width: 600px
+
+    &.disconnected
+      background: #222;
+      & > button.chat-btn
+        display: none
+
+    .chat-messages
+      width: 100%
+      min-height: 200px
+      max-height: 50vh
+      // border: 1px solid #222
+      background: #DDF
+      border-radius: .25rem
+      padding: 1rem
+      overflow: auto
+
+      @media (max-width: 889px)
+        max-height: unset
+        height: 50vh
+
+      .chat-bubble
+        position: relative
+        background: #ffffff
+        border-radius: .4em
+        margin-bottom: 1rem
+        padding: .5rem
+        font-size: 1rem
+        white-space: pre-wrap
+        a
+          color: navy
+          text-decoration: underline
+        &::after
+          content: ''
+          position: absolute
+          top: 100%
+          width: 0
+          height: 0
+          border: 1rem solid transparent
+          margin-top: -1.2rem
+        &.right
+          &::after
+            right: 0
+            border-left-color: #ffffff
+            border-right: 0
+            border-bottom: 0
+            margin-right: -14px
+        &.left
+          background: #6fc1ff
+          &::after
+            left: 0
+            border-right-color: #6fc1ff
+            border-left: 0
+            border-bottom: 0
+            margin-left: -14px
+
+
+
+    .chat-messages
+    input
+    textarea
+      color: #222
+
+
+  .modal
+    z-index: 2000
+
+  .col.label-hidden
+    > label:first-child
+      display: none
+
+  .custom-file
+    .custom-file-label
+      &.with-text
+        padding: 0 5rem 0 0
+      .custom-file-text
+          overflow-x: auto
+          display: block
+          height: 100%
+          width: 100%
+          padding: .375rem .75rem
+          white-space: nowrap
+
+
+  .bg-warning-light
+    background-color: #FFBF67!important
+  .bg-info-light
+    background-color: #9BD6E0!important
+  .bg-danger-light
+    background-color: #FF5060!important
+
+  [data-tooltip]
+    position: relative
+    &:before
+      display: block
+      content: attr(data-tooltip)
+      position: absolute
+      bottom: -.25rem
+      left: 50%
+      padding: 8px
+      transform: translate(-50%, 100%) scale(0)
+      transition: transform 0.3s ease-in-out
+      transform-origin: top
+      background: #616161e6
+      color: white
+      border-radius: .25rem
+      font-size: .75rem
+      font-family: Roboto,sans-serif
+      font-weight: 400
+      z-index: 1000
+    &:hover:before
+      transform: translate(-50%, 100%) scale(1)
+
+    tooltip-attributes ''
+
+    @media (min-width: 576px)
+      &[data-tooltip-sm]:not([data-tooltip-sm=false])
+        &:before
+          display: block
+          content: attr(data-tooltip-sm)
+      tooltip-attributes 'sm'
+    @media (min-width: 768px)
+      &[data-tooltip-md]:not([data-tooltip-md=false])
+        &:before
+          display: block
+          content: attr(data-tooltip-md)
+      tooltip-attributes 'md'
+    @media (min-width: 992px)
+      &[data-tooltip-lg]:not([data-tooltip-lg=false])
+        &:before
+          display: block
+          content: attr(data-tooltip-lg)
+      tooltip-attributes 'lg'
+    @media (min-width: 1200px)
+      &[data-tooltip-xl]:not([data-tooltip-xl=false])
+        &:before
+          display: block
+          content: attr(data-tooltip-xl)
+      tooltip-attributes 'xl'
+
+
+  .form-control
+    padding: .25rem .4rem
+    placeholder-color = rgba(0,0,0,.3)
+
+    &::placeholder
+      color: placeholder-color
+
+    &:-ms-input-placeholder
+      color: placeholder-color
+
+    &::-ms-input-placeholder
+      color: placeholder-color
+
+  .was-validated
+    .form-control
+    textarea.form-control
+      &:valid
+      &:invalid
+        validation()
+      &:invalid
+        invalidImage()
+  .form-control
+    &.is-valid
+    &.is-invalid
+      validation()
+    &.is-invalid
+      invalidImage()
+
+  .Select
+    placeholder-color = rgba(0,0,0,.6)
+    input::placeholder
+      opacity: 0
+      color: #FFF0
+    .Select-control
+      .Select-placeholder
+        color: #FFF0
+      .Select-input.form-control
+        border: 0 !important
+      .Select-value
+        margin-top: 0rem
+      .Select-value-label
+        color: placeholder-color !important
+
+  .ellipses
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  .centered
+    position: absolute
+    margin: auto
+    bottom: 0px
+    left: 0px
+    top: 0px
+    right: 0px
+
+  .card-body.list-group
+    padding: 0
+
+    .list-group-item
+      border-radius: 0
+      border-width: 1px 0
+      &:last-child
+        border-bottom: 0
+
+  .no-wrap
+    white-space: nowrap
+
+  .word-break
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+  a
+  .anchor-button
+  .btn
+  .clickable
+  .pointer
+    &[disabled]
+    &.disabled
+      pointer-events: none;
+      cursor: default;
+      &.btn
+        opacity: .65
+
+    &:not([disabled])
+    &:not([disabled]):not([disabled])
+      &, *
+        cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAXCAYAAAAGAx/kAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsJFAAxUeUXigAAAj5JREFUOMvtlM1OU0EYhp/h/Mycc9om0EQjCHFhGhK9BIMuXPYqTLwDWMnajWHnipWJC1YkDRdA0gBxgctuENKkYAFjSQk0aU97znwubCvWBq0LV76rdyYzT753Zr6B//pnckbGU0AIuP2x/A10KpvNvtZad3zfj33ffwUYQE0Kymut4+PjY9nf35cwDK+B+zequ1WDRQrIKKXU/Pw8nuchIk4/pgMkv41zw4+L4AH+mLO8FfST4jg2URR9CMOwCjwDgj+BKuCBMaYrInJ+fi7FYlHq9bqsra2J1roVhuF1GIaXwEvgDqBHC1H9CIUB6OzsTNbX10VEpF6vS6FQkFqtJru7uxIEQeJ5XpLJZD4DxX6VCuCxMabpOE4SRVEyAB0cHMhAKysrQ7+8vCwiIhsbG+I4Tgo8AnyiKHq3urpqK5WK5HI5KyJycXEhvV5vuHlvb2/oy+Xy0BtjesATIGR6evpTuVyWk5MTyeVyMk7W2qFPkmQU9BSIppIkyc/OzqK1RqnvL6DRaFCtVknTlGazydHREXEc02q1ODw8HP8grbVeEATMzMyws7ODiLC1tYXjOCwsLFAqlXBdl7m5OTY3N/E8j8XFxV+vXWvdrtVqJp/PT9yc2Ww26XQ6z4GPbpqmbq/X4+rqaiKItRZrrQJSANcY83V7e/ve0tLSRKBSqYTWutHtdq8BUcALrfVbpZTruq6IiBL58Q2N+GE/KqXa7Xb7DfAeOFX9Dr8LPASyowlufG52ZP4SOAW+AO1vPI1K+YCnca0AAAAASUVORK5CYII=") 4 7, pointer;
+
+      &[target], &[target] *
+        cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAXCAYAAAAGAx/kAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsJFAAfjTMaRQAAAtVJREFUOMudlE1LZEcUhp/qW/fWvbe8PdGWhNZgsgiNkPyE4LjIJuAu/2Bg/oGSRVxnExpcZOUqkIUroXUhiKA2KrNwlm4cP6A1PRqiKNqZtvt+nCzUpunRQXOg4KUO9XDOeatK8cTwPO/EcZwXQBBFEQBKKeI4xnVd1FNBjuPEBwcH2hjzUa5YLMJzQM1mUx4KQJ4MyuVybd/348HBQVlfX///IOAnY0xreXlZREQWFhY+CcoBFggADZ0ZjgdB0FhZWRERkaWlJfE871FQLoqiX40xN57ntTzP+wXwAaW1vi6XyyIisra2JtbaDHgUVDDGtI6OjmR7e1vCMLwGvryr7Edr7b8zMzNirf0A/AyI1jrVWqfdIAV85ft+W0Tk5OREgiD4AJSAe7/HXde9BCaAfqDYvXRXRQ/dKRfwgARYj+P4s0ddfSzRarV8a+2bMAwPgfE7AzzA+ZS1Cvj6vrXT01OZmJiQer0u5XJZjDGNMAyvwzC8BF4Dn9+1nOuFuECpe0azs7MiIlKv16VUKkmtVpPNzU0JgiBxXTfp6+v7625e3v1YvvN9/8JxnMRam9yDdnd3O/ZOTU119OTkpIiIzM3NieM4KfAt4GGt/WN6ejrb2dmRfD6fiYicn59LHMedw1tbWx1drVY72vf9GPgeCOnv739XrVbl+PhY8vn8g48yy7KOTpKkF/QSsLkkSQpDQ0MYY1Dq9gacnZ1xeHhImqZcXFywv79Pq9Wi0Wiwt7f3oFs6yzI3CAIGBgbY2NhARFhcXMRxHEZGRqhUKmitGR4eZn5+Htd1GR0d/dh2Y0yzVqv5hUKB50YURcnNzc0PwFudpqmO45irq6tnQbIsI8syBaQA2vf9f1ZXV4tjY2PPAlUqFYwxZ+12+xoQBbwyxvyulNJaaxERdfsz3EaP7rxHpVSz2Wz+BvwJvFdACHwBfANEvR10fRFZz/4l8B74G2j+Bx4o1cS4grKVAAAAAElFTkSuQmCC") 4 7, pointer;
+
+  a
+  .anchor-button
+    color: #007BFF
+    text-decoration: none
+    background: none
+    padding: 0
+    font: inherit
+    border: none
+    &:hover
+      text-decoration: underline
+      color: #0056B3
+    .hover-success &:hover
+      color: $green
+    .hover-primary &:hover
+      color: $navy
+    .hover-inverse &:hover
+      color: $white
+
+  .copy-clip
+  .copyable
+    &:not([disabled])
+    &:not([disabled]):not([disabled])
+      cursor: url("data:image/png;base64,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") 0 0, pointer;
+
+  .indirect-box
+    position: absolute
+    opacity: 0
+    z-index:  -1
+
+  .Select
+    width: 100%;
+    min-width: 10rem
+    .Select-menu-outer
+      background: #fff !important
+      color: #222 !important
+      min-width: 200px
+
+  .form-control-focused
+    display: none;
+  .form-control:focus ~ .form-control-focused,
+  .input-group:focus-within ~ .form-control-focused
+    display: block
+
+  .material-icons
+    font-size: 24px;
+    /* Rules for sizing the icon. */
+    &.md-18
+      font-size: 18px
+    &.md-24
+      font-size: 24px
+    &.md-36
+      font-size: 36px
+    &.md-48
+      font-size: 48px
+
+    /* Rules for using icons as black on a light background. */
+    &.md-dark
+      color: rgba(0, 0, 0, 0.54)
+      &.md-inactive
+        color: rgba(0, 0, 0, 0.26)
+
+    /* Rules for using icons as white on a dark background. */
+    &.md-light
+      color: rgba(255, 255, 255, 1)
+      &.md-inactive
+        color: rgba(255, 255, 255, 0.3)
+
+  .form-group.d-flex.flex-wrap
+    label
+      flex: 0 0 100%
+
+    .form-control
+      position: relative;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+      width: 1%;
+      margin-bottom: 0;
+
+      &:not(:first-child)
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+
+      &:not(:last-child)
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+
+      &.form-group
+        &, & ~ .input-group-append
+          margin-bottom: 1rem;
+
+    .input-group-append
+      .btn
+      .input-group-text
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+
+  .table-striped
+    tbody
+      tr
+        &.bg-danger
+          background-color: rgba(200, 0, 0, .3) !important
+        &.bg-success
+          background-color: rgba(0, 200, 0, .3) !important
+        &.bg-warning
+          background-color: rgba(255, 193, 0, .3) !important
+
+        &:nth-of-type(odd)
+          &.bg-danger
+            background-color: rgba(200, 0, 0, .5) !important
+          &.bg-success
+            background-color: rgba(0, 200, 0, .5) !important
+          &.bg-warning
+            background-color: rgba(255, 193, 0, .5) !important
+
+  .g-recaptcha
+    width: 100%
+
+  ul.countdown-timer
+    list-style: none
+
+  .quote-card
+    background: #fff
+    color: #222222
+    box-sizing: border-box
+    box-shadow: 0 1px 2px rgba(34, 34, 34, 0.12), 0 2px 4px rgba(34, 34, 34, 0.24)
+    position: relative
+    overflow: hidden
+    padding: 1rem
+
+    p
+      margin: 0 -1rem
+      font-size: 1.25rem
+      padding: 0 3.75rem 0 2.75rem
+      margin-bottom: 2rem
+      position: relative
+      &:before
+        font-family: Georgia, serif
+        content: "“"
+        position: absolute
+        top: .25rem
+        left: .5rem
+        font-size: 5rem
+        color: rgba(238, 238, 238, 0.8)
+        font-weight: normal
+        line-height: .75
+        height:0
+
+      &:after
+        font-family: Georgia, serif
+        content: "”"
+        position: absolute
+        bottom: 0
+        right: 0
+        font-size: 10rem
+        color: rgba(238, 238, 238, 0.8)
+        font-weight: normal
+        line-height: .5
+        height: 0
+
+    cite
+      font-size: 1rem
+      margin-top: 10px
+      display: block
+      font-weight: 200
+      opacity: 0.8
+      position:relative
+
+    &.bg-primary
+      background-color: rgba(52, 140, 234, 1) !important
+      p:before
+      p:after
+        color: rgba(72, 160, 254, 1)
+
+    &.bg-light
+      background-color: rgba(243, 244, 245, 1) !important
+      p:before
+      p:after
+        color: rgba(228, 229, 230, 1)
+
+    &.bg-gray
+      background-color: rgba(158, 167, 185, 1) !important
+      p:before
+      p:after
+        color: rgba(178, 187, 205, 1)
+
+    &.bg-secondary
+      background-color: rgba(98, 107, 115, 1) !important
+      p:before
+      p:after
+        color: rgba(118, 127, 135, 1)
+
+    &.bg-info
+      background-color: rgba(23, 162, 184, 1) !important
+      p:before
+      p:after
+        color: rgba(43, 182, 214, 1)
+
+    &.bg-success
+      background-color: rgba(40, 167, 69, 1) !important
+      p:before
+      p:after
+        color: rgba(60, 187, 99, 1)
+
+
+    &.bg-danger
+      background-color: rgba(220, 53, 69, 1) !important
+      p:before
+      p:after
+        color: rgba(240, 73, 89, 1)
+
+    &.bg-gray
+    &.bg-primary
+    &.bg-secondary
+    &.bg-info
+    &.bg-success
+    &.bg-danger
+      &
+      cite
+        color: #ffffff
+
+    &.bg-warning
+      background-color: rgba(255, 193, 7, 1) !important
+      p:before
+      p:after
+        color: rgba(255, 213, 27, 1)
+      cite
+        color: #333
+
+    .rounded-0
+      &.rounded-top
+        border-top-left-radius: $border-radius !important
+        border-top-right-radius: $border-radius !important
+      &.rounded-right
+        border-top-right-radius: $border-radius !important
+        border-bottom-right-radius: $border-radius !important
+      &.rounded-bottom
+        border-bottom-right-radius: $border-radius !important
+        border-bottom-left-radius: $border-radius !important
+      &.rounded-left
+        border-top-left-radius: $border-radius !important
+        border-bottom-left-radius: $border-radius !important
+      &.rounded-circle
+        border-radius: 50% !important
+  .opacity-0
+    opacity: 0 !important
+  .opacity-25
+    opacity: 0.25 !important
+  .opacity-50
+    opacity: 0.5 !important
+  .opacity-75
+    opacity: 0.75 !important
+  .opacity-100
+    opacity: 1 !important
+  @media (min-width: 576px)
+    .opacity-sm-0
+      opacity: 0 !important
+    .opacity-sm-25
+      opacity: 0.25 !important
+    .opacity-sm-50
+      opacity: 0.5 !important
+    .opacity-sm-75
+      opacity: 0.75 !important
+    .opacity-sm-100
+      opacity: 1 !important
+  @media (min-width: 768px)
+    .opacity-md-0
+      opacity: 0 !important
+    .opacity-md-25
+      opacity: 0.25 !important
+    .opacity-md-50
+      opacity: 0.5 !important
+    .opacity-md-75
+      opacity: 0.75 !important
+    .opacity-md-100
+      opacity: 1 !important
+  @media (min-width: 992px)
+    .opacity-lg-0
+      opacity: 0 !important
+    .opacity-lg-25
+      opacity: 0.25 !important
+    .opacity-lg-50
+      opacity: 0.5 !important
+    .opacity-lg-75
+      opacity: 0.75 !important
+    .opacity-lg-100
+      opacity: 1 !important
+  @media (min-width: 1200px)
+    .opacity-xl-0
+      opacity: 0 !important
+    .opacity-xl-25
+      opacity: 0.25 !important
+    .opacity-xl-50
+      opacity: 0.5 !important
+    .opacity-xl-75
+      opacity: 0.75 !important
+    .opacity-xl-100
+      opacity: 1 !important
+      @charset "UTF-8";
+      @require 'common/stylus/colors'
+
+  nav.nav-tabs
+    margin: 0 auto;
+    margin: 2rem 0;
+    display: block;
+
+    input.nav-trigger
+      position: absolute
+      opacity: 0
+      z-index:  -1
+
+    .nav-link
+      transition: all 0.25s ease-in-out
+      text-decoration: none
+      white-space: nowrap
+
+      &:hover
+        color: rgba(97, 218, 251, 1) !important
+        background-color: rgba(32, 67, 115, 1) !important
+        z-index: 100
+      &.active
+        position: relative;
+        font-weight: bold
+        background-color: initial !important
+        color: initial !important
+
+        &.bg-dark
+          background-color: #343A40 !important
+          color: #FFF !important
+          border-color: #343A40 !important
+
+        &.bg-light
+          background-color: #F8F9FA !important
+          border-color: #DEE2E6 !important
+          border-bottom-color: #F8F9FA !important
+
+    @media(min-width:768px)
+      display: flex !important;
+      flex-flow: row nowrap;
+      .nav-link
+        background-color: #ddd
+        color: #777
+        margin-left: .25rem
+
+    @media(min-width:992px) and (max-width:1150px)
+      .nav-link
+        padding: .5rem .7rem
+
+    @media(min-width:768px) and (max-width:991px)
+      .nav-link
+        font-size: .9rem;
+        padding: .5rem
+
+
+    @media(max-width:767px)
+      border: none
+
+      label.nav-trigger
+      label[for=nav-trigger]
+        position: relative;
+        cursor: pointer
+        & > span
+          position:absolute
+          display: inline-block;
+          right: 1rem
+          width: 2rem
+          height: 2rem
+          span
+            position:relative
+            top: .85rem
+            &,
+            &:before,
+            &:after
+              width: 2rem
+              height: .3rem
+              background: rgba(255,255,255,.7)
+              position: absolute
+              display: block
+              content: ''
+              transition: all 500ms ease-in-out
+
+            &:before
+              top: -.5rem
+
+            &:after
+              bottom: -.5rem
+
+      .nav-link
+        border-radius: unset;
+        opacity: 1;
+        border-top: 1px solid rgba(255,255,255, 1)
+        border-bottom: 1px solid rgba(255,255,255, 1)
+        background-color: rgba(34,34,34,1)
+        color: #ddd
+        overflow: hidden;
+        position: relative;
+
+        &.active
+          border-color: rgba(34,34,34,1)
+          background: rgba(255,255,255, 1)
+          display: block !important;
+          max-height: 500px
+          padding: .5em 1em !important
+          border-top: 1px solid rgba(34,34,34, 1)
+          border-bottom: 1px solid rgba(34,34,34, 1)
+          background-color: rgba(34,34,34,1)
+          color: #ddd
+
+      a.nav-link
+        max-height: 0
+        padding: 0
+        border-top-width: 0
+        border-bottom-width: 0
+
+      .nav-trigger:checked
+        & ~ .nav-link
+          display: block;
+          max-height: 100%
+          padding: .5em 1em
+          background-color: rgba(34,34,34,1)
+          color: #ddd
+          border-width: 1px
+
+        &+label.nav-trigger
+          span
+            background-color: transparent
+            &:before,
+            &:after
+              background: rgba(251,97,97,.8)
+              top: 0
+              box-shadow: 0 0 7px 1px #efefef
+              width: 2rem
+            &:before
+              transform: rotate(45deg)
+            &:after
+              transform: rotate(-45deg)
+  .text-colored
+    font-weight: bold
+    &.Blue
+    &.blue
+      color: #0000FF
+    &.Gold
+    &.gold
+      color: #DDBB00
+    &.Green
+    &.green
+      color: #008000
+    &.Orange
+    &.orange
+      color: #FFA500
+    &.Pink
+    &.pink
+      color: #FF46B5
+    &.Purple
+    &.purle
+      color: #9900FF
+    &.Red
+    &.red
+      color: #FF0000
+    &.Silver
+    &.silver
+      color: #999999
+    &.White
+    &.white
+      color: #FFFFFF
+      -webkit-text-stroke: 1px #8a8a8a;
+    &.Yellow
+    &.yellow
+      color: #EEDD00
+
+
+.la-square-jelly-box.page-loader
+  height: 25vw
+  width: 25vw
+  max-width: 25vh
+  max-height: 25vh
+  margin: 10vh auto
+  color: #153e7c
+
+  div:first-child
+    border: 1.5rem solid #d52027
+
+.date-modal-open
+  overflow: hidden
+  .Site-header
+  .Site-footer
+  .Admin-header
+  .below-header
+    position: relative
+    z-index: 0
+    display: block
+    height: 0
+    overflow: hidden
+
+table
+  .border-active
+    &,
+    td
+      border: 2px dashed #DD66EE !important
+    td
+      border-width: 1px !important
+
+  .border-orange
+    &,
+    td
+      border: 2px dotted #FB0
+    td
+      border-width: 1px !important
+hr
+  &.styled
+    border: 0
+    height: 1px
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0))
+@require "common/stylus/videos"

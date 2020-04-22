@@ -1,0 +1,5 @@
+{
+  "name": "TravelingFlightsSchedulePages",
+  "private": true,
+  "main": "./schedules.jsx"
+}

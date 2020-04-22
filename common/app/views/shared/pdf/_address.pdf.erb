@@ -1,0 +1,26 @@
+<%= link_to user.url do %>
+<div class="qr-code-wrapper sm float-right">
+  <div class="qr-code">
+    <img src="/api/qr_codes/<%= encode64(user.url) %>" />
+  </div>
+  <div class="qr-code-footer">
+    Payment Page <span class="d-print-none">(Click Here!)</span>
+  </div>
+</div>
+<% end %>
+<address class="text-left" style="<%= begin style rescue "padding: 0.15in; padding-left: 0.75in; font-size: 0.15in" end %>">
+  <strong><%= user.full_name %></strong><br>
+  <% if (address = user.address).present? %>
+    <%= address.street %><br>
+    <% if address.street_2.present? %>
+      <%= address.street_2 %><br>
+    <% end %>
+    <% if address.street_3.present? %>
+      <%= address.street_3 %><br>
+    <% end %>
+    <%= address.city %>, <%= address.province.presence || address.state.abbr %> <%= address.zip %>
+    <% if address.is_foreign? %>
+      <br><%= address.country  %>
+    <% end %>
+  <% end %>
+</address>

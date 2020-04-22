@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components - Calendar::Labels is snapshotable 1`] = `
+<div
+  className="calendar-labels calendar-row"
+>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+  <div
+    className="calendar-col col-center"
+    data-purpose="calendar-label"
+  >
+    <div
+      className="col-overflow"
+    >
+      Invalid Date
+    </div>
+  </div>
+</div>
+`;

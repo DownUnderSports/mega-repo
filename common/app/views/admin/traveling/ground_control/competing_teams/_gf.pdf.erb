@@ -1,0 +1,60 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>
+        Team
+      </th>
+      <th>
+        ID
+      </th>
+      <th>
+        State
+      </th>
+      <th>
+        Name
+      </th>
+      <th>
+        Gender
+      </th>
+      <th>
+        Handicap
+      </th>
+      <th>
+        Phone
+      </th>
+      <th>
+        Email
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @competing_team.travelers.athletes.each do |t| %>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+        <td style="white-space: nowrap">
+          <%= t.user.dus_id %>
+        </td>
+        <td>
+          <%= t.team.state.abbr %>
+        </td>
+        <td>
+          <%= t.user.basic_name %>
+        </td>
+        <td>
+          <%= t.user.gender %>
+        </td>
+        <td>
+          <%= t.user.athlete.athletes_sports.find_by(sport_id: @competing_team.sport_id)&.handicap %>
+        </td>
+        <td style="white-space: nowrap">
+          <%= t.user.athlete_and_parent_phones.first %>
+        </td>
+        <td style="white-space: nowrap">
+          <%= t.user.athlete_and_parent_emails.first %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

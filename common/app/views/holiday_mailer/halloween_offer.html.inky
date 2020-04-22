@@ -1,0 +1,26 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Happy Halloween from Down Under Sports!</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day!
+      </p>
+      <p>
+        This Halloween we are offering a $700 discount on your trip to compete in Australia! Pay your deposit by the end of Halloween day to qualify for this one-time offer. For questions or more details, <a href="tel:+14357534732">call/text our office at 435-753-4732</a> or reply to this email.
+      </p>
+      <p>
+        Happy Halloween!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

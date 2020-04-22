@@ -1,0 +1,11 @@
+{
+  "domain": "https://downundersports.com/travel/",
+  "links": {
+    "fourOhFour": {
+      "title": "Page Not Found",
+      "description": "Down Under Sports: Unknown Route",
+      "image": "dus-logo.png",
+      "index": true
+    }
+  }
+}

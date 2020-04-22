@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+.MediaPage
+  padding-top: 1rem
+  padding-bottom: 1rem
+  background: #eee
+  color: #333
+
+  .scroller-wrapper
+    margin-bottom: 25vh
+    .scroller
+      display: flex
+      flex-flow: row wrap
+      justify-content: flex-start
+      .image-wrapper
+        padding: 15px
+        position: relative
+
+        h4
+          position: absolute
+          bottom: 0
+          display: block
+          width: calc(100% - 30px)
+          background: #333
+          color: #fff
+          z-index: 10
+          padding: 5px
+
+        img
+          border: 1px solid #333
+          width: 100%
+          transition: all .5s
+          transform-origin: left top
+          position: relative
+          background: #fff
+
+
+
+        @media(max-width: 767px)
+          width: 100%
+
+        @media(min-width: 768px)
+          width: calc(100% / 3)
+
+          .hoverable &
+            img:hover
+              -webkit-transform: scale(1.7)
+              -moz-transform: scale(1.7)
+              -o-transform: scale(1.7)
+              transform: scale(1.7)
+              z-index: 100
+
+            &:nth-child(3n) img
+              transform-origin: right top

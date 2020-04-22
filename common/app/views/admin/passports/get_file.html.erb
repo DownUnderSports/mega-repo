@@ -1,0 +1,75 @@
+<style>
+  object, img {
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    overflow: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+</style>
+<div class="row m-3">
+  <div class="col-auto">
+    <button id="rotate-left" class="btn btn-secondary">
+      Rotate Left
+    </button>
+  </div>
+  <!-- <div class="col-auto">
+    <button id="zoom-out" class="btn btn-secondary">
+      Zoom -
+    </button>
+  </div> -->
+  <div class="col text-center text-muted">
+    <a class="btn btn-warning" href="<%= get_file_value_admin_user_passport_path(user) %>">Open Direct File</a>
+  </div>
+  <!-- <div class="col-auto">
+    <button id="zoom-in" class="btn btn-secondary">
+      Zoom +
+    </button>
+  </div> -->
+  <div class="col-auto">
+    <button id="rotate-right" class="btn btn-secondary">
+      Rotate Right
+    </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <div id="passport-file" class="border">
+      <object data="<%= get_file_value_admin_user_passport_path(user) %>" type="<%= content_type %>">
+        <a href="<%= get_file_value_admin_user_passport_path(user) %>">Open Direct File</a>
+      </object>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let rotation = 0, isEven = true;
+  const fileFrame   = document.getElementById('passport-file'),
+        leftButton  = document.getElementById('rotate-left'),
+        rightButton = document.getElementById('rotate-right'),
+        portrait = window.innerWidth < window.innerHeight,
+        rotations = {};
+
+  const setRotation = function setRotation() {
+    isEven = (rotation / 10) % 2 === 0
+    fileFrame.style.transform = "rotate(" + rotation + "deg)"
+    fileFrame.style.height = fileFrame.style.width = "calc(100" + (portrait ? "vh" : "vw") + " - 30px)";
+  }
+
+  const rotateRight = function rotateRight() {
+    rotation = rotation + 90
+    if(rotation > 360) rotation = rotation - 360
+    setRotation()
+  }
+
+  const rotateLeft = function rotateRight() {
+    rotation = rotation - 90
+    if(rotation < 0) rotation = rotation + 360
+    setRotation()
+  }
+
+  leftButton.addEventListener('click', rotateLeft)
+  rightButton.addEventListener('click', rotateRight)
+  setRotation()
+</script>

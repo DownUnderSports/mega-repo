@@ -1,0 +1,15 @@
+<% @errors.each do |k, v| %>
+<%= k %>:
+<pre>
+  <code style='color:#222'><%= render(partial: 'shared/get_type', locals: { value: v, level: 0 }) %></code>
+</pre>
+<hr>
+<% end %>
+<hr>
+<hr>
+<h3>
+  Console History (max last 100):
+</h3>
+<pre>
+  <code style='color:#222'><%= render(partial: 'shared/get_type', locals: { value: @console || [], level: 0 }) %></code>
+</pre>

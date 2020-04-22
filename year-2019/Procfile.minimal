@@ -1,0 +1,2 @@
+2019-node: yarn --cwd client start
+2019-rails: bundle exec rails s

@@ -1,0 +1,42 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">Thank You for Attending</h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day Mate!
+      </p>
+      <p>
+        Thank you so much for joining us at the online meeting today. Here is a link to the meeting recording if you need to review any of the information we covered:
+      </p>
+      <p>
+        Remember to <a href="tel:+14357534732">call our office at <span style="white-space:nowrap">435-753-4732</span></a><% if @deposit_link.present? %> or <a href="<%= @deposit_link %>">click here to pay online</a><% end %> within 48 hours of the meeting to take advantage of the full $700 discount.
+      </p>
+      <p>
+        We look forward to seeing you in Australia and best of luck with all of your athletic and academic endeavors.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer' %>
+    </columns>
+  </row>
+  <spacer size="16" class="hr"></spacer>
+  <row>
+    <columns>
+      <center>
+        <%= link_to 'Meeting Video', @meeting.recording_link || '#', class: 'btn btn-block btn-2' %>
+        <spacer size="8"></spacer>
+        <%= link_to 'Quick View Flyer', "https://drive.google.com/file/d/1wRWSDm36CL7VGtZ52NlyC6WcY4I5a8tu/view?usp=sharing", class: 'btn btn-block btn-1' %>
+      </center>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>
