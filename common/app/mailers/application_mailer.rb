@@ -22,6 +22,15 @@ class ApplicationMailer < ActionMailer::Base
     emails - Unsubscriber.where(category: 'E', value: emails, all: all).pluck(:value)
   end
 
+  def get_full_path_to_asset(filename)
+    manifest_file = Rails.application.assets_manifest.assets[filename]
+    if manifest_file
+      File.join(Rails.application.assets_manifest.directory, manifest_file)
+    else
+      Rails.application.assets&.[](filename)&.filename
+    end
+  end
+
   def mail(email: nil, skip_filter: false, **params)
     headers['List-Unsubscribe'] = '<mailto:unsubscribe@downundersports.com>'
     params.reverse_merge!(apply_defaults({}).slice(:use_account))

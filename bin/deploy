@@ -35,9 +35,10 @@ function pull_heroku_repo() {
 }
 
 # config
-PROJECT="downundersports-mega-repo"
-REPO="git@github.com:SampsonCrowley/$PROJECT.git"
-TMPDIR="/var/tmp/heroku"
+PROJECT="mega-repo"
+NAMESPACE="down-under-sports"
+REPO="git@github.com:DownUnderSports/$PROJECT.git"
+TMPDIR="/var/tmp/heroku/$NAMESPACE"
 COMMIT_LOG="`parse_git_branch`: `parse_commit_hash`"
 
 # globals
@@ -60,7 +61,7 @@ prepare() {
   echo
 
   # make sure TMPDIR is in place and go there
-  if [ ! -d $TMPDIR ];  then mkdir $TMPDIR;    fi
+  mkdir -p $TMPDIR
   cd $TMPDIR
 
   # make sure REPO is in place and go there

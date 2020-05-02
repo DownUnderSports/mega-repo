@@ -1,6 +1,15 @@
 class TravelMailer < ImportantMailer
   # default use_account: :travel
 
+  def may_newsletter
+    attachments["may-newsletter.pdf"] = {
+      mime_type: 'application/pdf',
+      content: File.read(get_full_path_to_asset('may_2020_newsletter.pdf'))
+    }
+
+    mail skip_filter: true, to: params[:email].presence, subject: "May Newsletter"
+  end
+
   def april_deadline_approaching
     @user = User.get(params[:user_id])
     email = @user.athlete_and_parent_emails.presence || [ 'mail@downundersports.com' ]

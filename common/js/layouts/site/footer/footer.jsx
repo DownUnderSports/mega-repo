@@ -10,14 +10,24 @@ import insurancePDF from 'common/assets/pdfs/insurance.pdf'
 
 const dateToLocalTime = (d) => d.toLocaleTimeString('en-us',{timeZoneName:'short'}).replace(/:0+/g, '').replace(/[A-Z]+$/, '($&)')
 
-/* MDT */
+/* MDT FULL */
 // const startTime    = new Date('2019-08-31T16:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),
 //       longEndTime  = dateToLocalTime(new Date('2019-08-31T00:00:00Z')),
 //       shortEndTime = dateToLocalTime(new Date('2019-08-31T19:00:00Z'))
 
-/* MST */
+/* MST FULL */
+// const startTime    = new Date('2019-11-31T17:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),
+//       longEndTime  = dateToLocalTime(new Date('2019-11-31T01:00:00Z')),
+//       shortEndTime = dateToLocalTime(new Date('2019-11-31T20:00:00Z'))
+
+/* MDT SUMMER */
+// const startTime    = new Date('2019-08-31T16:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),
+//       longEndTime  = dateToLocalTime(new Date('2019-08-31T22:00:00Z')),
+//       shortEndTime = dateToLocalTime(new Date('2019-08-31T19:00:00Z'))
+
+/* MST SUMMER */
 const startTime    = new Date('2019-11-31T17:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),
-      longEndTime  = dateToLocalTime(new Date('2019-11-31T01:00:00Z')),
+      longEndTime  = dateToLocalTime(new Date('2019-11-31T23:00:00Z')),
       shortEndTime = dateToLocalTime(new Date('2019-11-31T20:00:00Z'))
 
 export default class Footer extends PureComponent {

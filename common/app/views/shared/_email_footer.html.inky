@@ -1,5 +1,8 @@
+<%- skip_hours = nil unless defined? skip_hours -%>
+<%- summer = (skip_hours == :summer) -%>
+<%- skip_hours = nil if summer %>
 <row>
-  <% if defined?(skip_hours) && skip_hours %>
+  <% if skip_hours %>
   <columns>
     <%= render partial: 'shared/signature' %>
   </columns>
@@ -8,7 +11,7 @@
     <%= render partial: 'shared/signature' %>
   </columns>
   <columns small="12" large="6">
-    <%= render partial: 'shared/hours' %>
+    <%= render partial: "shared/#{summer ? 'summer_' : ''}hours" %>
   </columns>
   <% end %>
 </row>
