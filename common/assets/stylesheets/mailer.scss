@@ -498,6 +498,10 @@ hr, .hr {
 }
 
 .spaced-list {
+  &.extra-padding {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
   li {
     margin-bottom: 10px;
 

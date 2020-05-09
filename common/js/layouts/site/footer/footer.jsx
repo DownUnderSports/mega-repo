@@ -83,7 +83,7 @@ export default class Footer extends PureComponent {
                 <thead>
                   <tr>
                     <th colSpan="2">
-                      Office Hours
+                      Office Hours (Limited)
                     </th>
                   </tr>
                 </thead>

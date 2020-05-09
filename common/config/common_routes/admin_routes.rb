@@ -228,6 +228,8 @@ module AdminRoutes
             patch :travel_preparation
             get :infokit
             post :on_the_fence
+            post :selected_cancel
+            post :unselected_cancel
             delete :cancel
             get :main_address
             get :travel_teams, defaults: { format: :pdf }

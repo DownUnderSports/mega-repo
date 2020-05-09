@@ -29,7 +29,7 @@ export default class UsersShowInfoPage extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { receiptUrl: false, relations: [], sponsorPhoto: false, sponsorPhotoErrors: [], sponsorPhotoLoading: false, resetting: false, onTheFence: '', sendingOnTheFence: false }
+    this.state = { receiptUrl: false, relations: [], sponsorPhoto: false, sponsorPhotoErrors: [], sponsorPhotoLoading: false, resetting: false, overrideEmailAddress: '', sendingCoronaEmail: false }
   }
 
   get hash() {
@@ -105,30 +105,53 @@ export default class UsersShowInfoPage extends Component {
   newLookup = () => this.setState({receiptUrl: false, showCheckEntry: false, showLookup: true, showPmt: false})
   newCheckEntry = () => this.setState({receiptUrl: false, showCheckEntry: true, showLookup: false, showPmt: false})
 
-  onTheFenceChange = (ev) => this.setState({ onTheFence: ev.currentTarget.value || '' })
-  sendOnTheFence = (ev) => {
+  overrideEmailAddressChange = (ev) => this.setState({ overrideEmailAddress: ev.currentTarget.value || '' })
+  sendCoronaEmail = (ev, location, confirmation_message) => {
     try {
       ev.preventDefault()
       ev.stopPropagation()
     } catch(_) {}
 
-    this.setState({ sendingOnTheFence: true }, async () => {
-      const options = {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        },
-      }
+    if(
+      this.state.overrideEmailAddress
+      && !/^([^@;]+@[^@;]+\.[^@;.]+)([;]\s*[^@;]+@[^@;]+\.[^@;.]+)*$/.test(this.state.overrideEmailAddress)
+    ) {
+      window.alert('Invalid Email(s) Given. Email override must be separated by a semi-colon (;) for multiple emails')
+      return false
+    }
 
-      if(this.state.onTheFence) options.body = JSON.stringify({ email: this.state.onTheFence })
+    if(
+      window.confirm(`Are you sure you want to send ${
+        confirmation_message
+      } to ${
+        this.state.overrideEmailAddress
+        || 'this user and their parents/guardians (if minor)'
+      }?`)
+    ) {
+      this.setState({ sendingCoronaEmail: true }, async () => {
+        const options = {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+        }
 
-      const result = await fetch(`/admin/users/${this.props.id}/on_the_fence`, options)
+        if(this.state.overrideEmailAddress) options.body = JSON.stringify({ email: this.state.overrideEmailAddress })
 
-      await result.json()
+        const result = await fetch(`/admin/users/${this.props.id}/${location}`, options)
 
-      this.setState({ sendingOnTheFence: false })
-    })
+        await result.json()
+
+        this.setState({ sendingCoronaEmail: false })
+      })
+    }
   }
+
+  sendOnTheFence = (ev) => this.sendCoronaEmail(ev, 'on_the_fence', '"On the Fence"')
+  sendSelectedCancel = (ev) =>
+    this.sendCoronaEmail(ev, 'selected_cancel', 'Cancelation Options (Preselected)')
+  sendUnselectedCancel = (ev) =>
+    this.sendCoronaEmail(ev, 'unselected_cancel', 'Cancelation Options (Unselected)')
 
   componentWillUnmount() {
     this._unmounted = true
@@ -141,6 +164,7 @@ export default class UsersShowInfoPage extends Component {
         avatar_attached = false,
         avatar,
         can_send_fence,
+        can_send_corona,
         dus_id,
         category,
         traveler = false,
@@ -154,8 +178,8 @@ export default class UsersShowInfoPage extends Component {
     {
       receiptUrl,
       relations = [],
-      onTheFence = '',
-      sendingOnTheFence = false
+      overrideEmailAddress = '',
+      sendingCoronaEmail = false
     } = this.state || {}
 
     return (
@@ -206,11 +230,21 @@ export default class UsersShowInfoPage extends Component {
                     />
                   </div>
                   {
-                    !!can_send_fence && (
-                      <DisplayOrLoading display={!sendingOnTheFence}>
+                    !!can_send_corona && (
+                      <DisplayOrLoading display={!sendingCoronaEmail}>
                         <div className="list-group-item">
-                          <button className="btn btn-block btn-success form-group" onClick={this.sendOnTheFence}>
-                            Send &ldquo;On The Fence&rdquo; Email
+                          {
+                            !!can_send_fence && (
+                              <button className="btn btn-block btn-success form-group" onClick={this.sendOnTheFence}>
+                                Send &ldquo;On The Fence&rdquo; Email
+                              </button>
+                            )
+                          }
+                          <button className="btn btn-block btn-warning form-group" onClick={this.sendUnselectedCancel}>
+                            Send &ldquo;Unselected&rdquo; Cancel Email
+                          </button>
+                          <button className="btn btn-block btn-warning form-group" onClick={this.sendSelectedCancel}>
+                            Send &ldquo;Preselected&rdquo; Cancel Email
                           </button>
                           <div className="row">
                             <div className="col">
@@ -221,8 +255,8 @@ export default class UsersShowInfoPage extends Component {
                                 type="text"
                                 id="on-the-fence"
                                 className="form-control"
-                                value={onTheFence}
-                                onChange={this.onTheFenceChange}
+                                value={overrideEmailAddress}
+                                onChange={this.overrideEmailAddressChange}
                               />
                             </div>
                           </div>

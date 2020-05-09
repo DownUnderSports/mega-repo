@@ -102,7 +102,20 @@ class UserPolicy < ApplicationPolicy
     user_is_staff? && user.dus_id.in?(%[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN ])
   end
 
+  def selected_cancel?
+    corona_emails?
+  end
+
+  def unselected_cancel?
+    corona_emails?
+  end
+
   private
+    def corona_emails?
+      user_is_staff? &&
+      user.dus_id.in?(%[ DAN-IEL GAY-LEO KAR-ENJ SAR-ALO SAM-PSN SHR-RIE ])
+    end
+
     def allowed?
       user_is_staff? || [user.id, *user.relations.pluck(:related_user_id)].include?(record.id)
     end

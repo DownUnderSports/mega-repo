@@ -9,6 +9,8 @@ module Admin
     IDBuilder = Struct.new(:id)
 
     # == Class Methods ======================================================
+    FENCEABLE_USERS = %[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN ].freeze
+    CORONABLE_USERS = %[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN SHR-RIE KAR-ENJ ].freeze
 
     # == Pre/Post Flight Checks =============================================
     before_action :lookup_user, except: [ :cancel, :download, :index, :infokits, :invitable, :invites, :responds, :uncontacted_last_year_responds ]
@@ -177,7 +179,8 @@ module Admin
 
               deflator.stream false, :avatar_attached, @found_user.avatar.attached?
               deflator.stream true,  :avatar, @found_user.avatar.attached? ? url_for(@found_user.avatar.variant(resize: '500x500>', auto_orient: true)) : '/mstile-310x310.png'
-              deflator.stream true,  :can_send_fence, current_user&.dus_id&.in?(%[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN ])
+              deflator.stream true,  :can_send_fence, current_user&.dus_id&.in?(FENCEABLE_USERS)
+              deflator.stream true,  :can_send_corona, current_user&.dus_id&.in?(CORONABLE_USERS)
               deflator.stream true,  :dus_id, @found_user.dus_id
               deflator.stream true,  :statement_link, @found_user.statement_link
               deflator.stream true,  :over_payment_link, @found_user.over_payment_link
@@ -302,6 +305,30 @@ module Admin
         )
 
       return render json: { sent: email }, status: 200
+    end
+
+    def selected_cancel
+      CoronaMailer.
+        with(
+          user_id: @found_user.id,
+          email: params[:email].presence
+        ).
+        cancel_selected.
+        deliver_later
+
+      return render json: { sent: params[:email].presence }, status: 200
+    end
+
+    def unselected_cancel
+      CoronaMailer.
+        with(
+          user_id: @found_user.id,
+          email: params[:email].presence
+        ).
+        cancel_unselected.
+        deliver_later
+
+      return render json: { sent: params[:email].presence }, status: 200
     end
 
     def main_address
