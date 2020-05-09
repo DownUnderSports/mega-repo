@@ -8,7 +8,7 @@ class InfokitMailer < ApplicationMailer
     m = mail to: @user.email, subject: "Program Information (Coaches Copy)"
 
     if m
-      m.after_send do |result|
+      m.after_send do
         @user.contact_histories.create(message: 'Sent Infokit Email', category: :email, staff_id: auto_worker.category_id)
       end
     end
@@ -38,7 +38,7 @@ class InfokitMailer < ApplicationMailer
 
     m = mail to: email, subject: 'Program Information'
     if m
-      m.after_send do |result|
+      m.after_send do
         unless @user.contact_histories.where('message ilike ?', '%sent infokit email%').count > 0 || filter_emails(email).blank?
           InfokitMailer.
             send_followup_details(athlete_id, email, dus_id, false).
@@ -78,7 +78,7 @@ class InfokitMailer < ApplicationMailer
     m = mail to: email, subject: 'More Info'
 
     if m
-      m.after_send do |result|
+      m.after_send do
         @user.contact_histories.create(message: 'Sent Kit Followup Email', category: :email, staff_id: auto_worker.category_id)
       end
     end

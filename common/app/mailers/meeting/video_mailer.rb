@@ -23,7 +23,7 @@ class Meeting < ApplicationRecord
       m = mail(to: params[:email] || 'mail@downundersports.com', subject: 'Down Under Sports Information Video')
 
       if m && @user
-        m.after_send do |result|
+        m.after_send do
           message = params[:message] || @user.video_views.find_by(video_id: @video.id).video_message
           @user.contact_histories.create(
             category: :email,
@@ -63,7 +63,7 @@ class Meeting < ApplicationRecord
       m = mail(to: params[:email] || 'mail@downundersports.com', subject: 'Thanks for Watching')
 
       if m && @user
-        m.after_send do |result|
+        m.after_send do
           message = params[:message] || @user.video_views.find_by(video_id: @video.id).video_watched_message
           @user.contact_histories.create(
             category: :email,
@@ -93,7 +93,7 @@ class Meeting < ApplicationRecord
       m = mail(to: params[:email] || 'mail@downundersports.com', subject: 'Down Under Sports Fundraising Video')
 
       if m && @user
-        m.after_send do |result|
+        m.after_send do
           message = params[:message] || @user.video_views.find_by(video_id: @video.id).video_message
           @user.contact_histories.create(
             category: :email,

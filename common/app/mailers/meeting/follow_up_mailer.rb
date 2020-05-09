@@ -40,7 +40,7 @@ class Meeting < ApplicationRecord
       m = mail(to: email, subject: subject)
 
       if u && m
-        m.after_send do |result|
+        m.after_send do
           message = "Sent #{subject} email for meeting @ #{@meeting.start_time.to_s(:long_ordinal)}"
           u.contact_histories.create(
             category: :email,

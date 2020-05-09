@@ -47,7 +47,7 @@ class HolidayMailer < MarketingMailer
     m = mail to: emails, subject: 'In Honor of Our Founders'
 
     if m
-      m.after_send do |_|
+      m.after_send do
         @user.contact_histories.create(
           message: 'Sent Founders Day Email',
           category: :email,
@@ -67,7 +67,7 @@ class HolidayMailer < MarketingMailer
     m = mail to: emails, subject: 'Today is Founders Day!'
 
     if m
-      m.after_send do |_|
+      m.after_send do
         @user.contact_histories.create(
           message: 'Sent Founders Day Reminder Email',
           category: :email,

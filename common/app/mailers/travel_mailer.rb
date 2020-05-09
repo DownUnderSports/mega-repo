@@ -16,7 +16,7 @@ class TravelMailer < ImportantMailer
     m = mail skip_filter: true, to: email, subject: 'Down Under Sports - Travel Preparations'
 
     if m
-      m.after_send do |result|
+      m.after_send do
         @user.contact_histories.create(message: "Sent 4/20 Deadlines Email to #{email.join(';')}", category: :email, staff_id: auto_worker.category_id)
       end
     end

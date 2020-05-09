@@ -2,36 +2,35 @@
 # frozen_string_literal: true
 
 module MailMessageCallBacks
-  def deliver
-    run_after_send(super)
-  end
-
-  def deliver!
-    @email_was_delivered ||= run_after_send(super)
+  def inform_observers
+    run_after_send
+    super
   end
 
   def after_send(&block)
-    @after_send_actions ||= []
-    @after_send_actions << block
+    after_send_actions << block
   end
 
-  def run_after_send(result)
-    unless called
-      (@after_send_actions || []).each do |block|
+  def after_send_actions
+    @after_send_actions ||= []
+  end
+
+  def run_after_send
+    unless after_send_called
+      after_send_actions.each do |block|
         begin
-          block.call(result)
+          block.call
         rescue
-          p $!.message
-          p $!.backtrace
+          Rails.logger.error $!.message
+          Rails.logger.error $!.backtrace
         end
       end
     end
-    result
   end
 
-  def called
-    val = !!@called
-    @called ||= true
+  def after_send_called
+    val = !!@after_send_called
+    @after_send_called ||= true
     val
   end
 end
