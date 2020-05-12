@@ -64,6 +64,11 @@ module Admin
       create_blob
     end
 
+    def fundraising_idea
+      authorize FundraisingIdea
+      create_blob
+    end
+
     # == Cleanup ============================================================
 
     # == Utilities ==========================================================
