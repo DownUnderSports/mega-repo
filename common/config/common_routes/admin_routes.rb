@@ -200,6 +200,12 @@ module AdminRoutes
 
         resources :returned_mails
 
+        resources :fundraising_ideas do
+          scope module: :fundraising_ideas do
+            resources :images
+          end
+        end
+
         resources :postcards, only: :index, defaults: { format: :pdf }
         resources :statements, only: :index, defaults: { format: :pdf }
         resources :video_views, only: :index, defaults: { format: :csv }

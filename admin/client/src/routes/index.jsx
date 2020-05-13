@@ -5,6 +5,7 @@ import { TravelingIndexPage } from 'pages/traveling'
 import { AssignmentsIndexPage } from 'pages/assignments'
 import ChatPage from 'pages/chat'
 import { MailingsIndexPage, MailingsShowPage } from 'pages/mailings'
+import { FundraisingIdeasIndexPage, FundraisingIdeasShowPage } from 'pages/fundraising_ideas'
 import { SchoolsIndexPage, SchoolsShowPage } from 'pages/schools'
 import { UsersIndexPage, UsersShowPage } from 'pages/users'
 
@@ -53,6 +54,14 @@ const routes = [
   {
     path: '/admin/returned_mails',
     component: MailingsIndexPage
+  },
+  {
+    path: '/admin/fundraising_ideas/:id',
+    component: FundraisingIdeasShowPage
+  },
+  {
+    path: '/admin/fundraising_ideas',
+    component: FundraisingIdeasIndexPage
   },
   {
     path: '/admin/schools/:id',
@@ -134,6 +143,14 @@ const routes = [
   {
     path: '/qr-codes',
     component: QrCodesPage,
+  },
+  {
+    path: '/fundraising_ideas/:id',
+    component: FundraisingIdeasShowPage
+  },
+  {
+    path: '/fundraising_ideas',
+    component: FundraisingIdeasIndexPage
   },
   {
     path: '/:id([A-Za-z-]+)',

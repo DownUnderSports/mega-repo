@@ -14,7 +14,7 @@ module Admin
                 id: idea.id,
                 title: idea.title,
                 description: idea.description,
-                display_order: idea.display_order
+                display_order: idea.display_order,
                 image_count: idea.images.size
               }
             end
@@ -24,6 +24,7 @@ module Admin
     end
 
     def show
+      puts current_user
       idea = authorize FundraisingIdea.find_by(id: params[:id])
       if stale? idea
         return render json: idea_json(idea)
@@ -31,6 +32,7 @@ module Admin
     end
 
     def update
+      puts current_user
       idea = authorize FundraisingIdea.find_by(id: params[:id])
       if idea
         idea.assign_attributes(whitelisted_idea_params)
@@ -45,14 +47,22 @@ module Admin
       save_idea(idea)
     end
 
+    rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
+      render json: {
+        errors: [
+          "Required parameter missing: #{parameter_missing_exception.param}"
+        ]
+      }, :status => :bad_request
+    end
+
     private
       def idea_json(idea, skip_images: false)
         {
           id: idea.id,
           title: idea.title,
           description: idea.description,
-          display_order: idea.display_order
-          images: skip_images ? [] : (
+          display_order: idea.display_order,
+          images: skip_images ? nil : (
             idea.images.ordered.with_attached_file.map do |image|
               {
                 id: image.id,
@@ -74,13 +84,14 @@ module Admin
       end
 
       def whitelisted_idea_params
-        params.
-          require(:fundraising_idea).
-          permit(
-            :title,
-            :description,
-            :display_order,
-          )
+        base =
+          begin
+            params.require(:fundraising_idea)
+          rescue ActionController::ParameterMissing
+            params.require(:idea)
+          end
+
+          base ? base.permit(:title, :description, :display_order) : {}
       end
   end
 end

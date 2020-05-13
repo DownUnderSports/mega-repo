@@ -8,17 +8,17 @@ module API
     end
 
     def index
-      @fundraising_ideas = FundraisingIdea.ordered
+      ideas = FundraisingIdea.ordered
 
-      if stale? @fundraising_ideas
+      if stale? ideas
         return render json: {
           fundraising_ideas: (
-            @fundraising_ideas.map do |idea|
+            ideas.map do |idea|
               {
                 id: idea.id,
                 title: idea.title,
                 description: idea.description,
-                display_order: idea.display_order
+                display_order: idea.display_order,
                 images: (
                   idea.images.ordered.with_attached_file.map do |image|
                     {

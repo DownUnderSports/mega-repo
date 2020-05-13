@@ -144,6 +144,14 @@
       "image": "dus-logo.png",
       "index": true
     },
+    "fundraising_ideas": {
+      "title": "Fundraising Ideas",
+      "path": "admin/fundraising_ideas",
+      "canonical": "/admin/fundraising_ideas",
+      "description": "Down Under Sports: Edit or Add Fundraising Ideas",
+      "image": "dus-logo.png",
+      "index": true
+    },
     "thank-you-tickets": {
       "title": "Thank You Ticket Rules",
       "path": "admin/thank-you-tickets",

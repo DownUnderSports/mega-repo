@@ -12079,6 +12079,72 @@ ALTER SEQUENCE public.flight_tickets_id_seq OWNED BY public.flight_tickets.id;
 
 
 --
+-- Name: fundraising_idea_images; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fundraising_idea_images (
+    id bigint NOT NULL,
+    fundraising_idea_id bigint NOT NULL,
+    alt text,
+    display_order integer,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: fundraising_idea_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fundraising_idea_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fundraising_idea_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fundraising_idea_images_id_seq OWNED BY public.fundraising_idea_images.id;
+
+
+--
+-- Name: fundraising_ideas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.fundraising_ideas (
+    id bigint NOT NULL,
+    title text NOT NULL,
+    description text,
+    display_order integer,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: fundraising_ideas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.fundraising_ideas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fundraising_ideas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.fundraising_ideas_id_seq OWNED BY public.fundraising_ideas.id;
+
+
+--
 -- Name: import_athletes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15330,6 +15396,20 @@ ALTER TABLE ONLY public.flight_schedules ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.flight_tickets ALTER COLUMN id SET DEFAULT nextval('public.flight_tickets_id_seq'::regclass);
+
+
+--
+-- Name: fundraising_idea_images id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fundraising_idea_images ALTER COLUMN id SET DEFAULT nextval('public.fundraising_idea_images_id_seq'::regclass);
+
+
+--
+-- Name: fundraising_ideas id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fundraising_ideas ALTER COLUMN id SET DEFAULT nextval('public.fundraising_ideas_id_seq'::regclass);
 
 
 --
@@ -19237,6 +19317,22 @@ ALTER TABLE ONLY public.flight_tickets
 
 
 --
+-- Name: fundraising_idea_images fundraising_idea_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fundraising_idea_images
+    ADD CONSTRAINT fundraising_idea_images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: fundraising_ideas fundraising_ideas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fundraising_ideas
+    ADD CONSTRAINT fundraising_ideas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: import_athletes import_athletes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23001,6 +23097,20 @@ CREATE INDEX index_flight_tickets_on_schedule_id ON public.flight_tickets USING 
 --
 
 CREATE INDEX index_flight_tickets_on_traveler_id ON public.flight_tickets USING btree (traveler_id);
+
+
+--
+-- Name: index_fundraising_idea_images_on_display_order; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fundraising_idea_images_on_display_order ON public.fundraising_idea_images USING btree (display_order);
+
+
+--
+-- Name: index_fundraising_idea_images_on_fundraising_idea_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fundraising_idea_images_on_fundraising_idea_id ON public.fundraising_idea_images USING btree (fundraising_idea_id);
 
 
 --
@@ -27045,6 +27155,14 @@ ALTER TABLE ONLY public.user_ambassadors
 
 
 --
+-- Name: fundraising_idea_images fk_rails_6cc1cc062a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.fundraising_idea_images
+    ADD CONSTRAINT fk_rails_6cc1cc062a FOREIGN KEY (fundraising_idea_id) REFERENCES public.fundraising_ideas(id);
+
+
+--
 -- Name: shirt_order_shipments fk_rails_74abb24728; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -28335,6 +28453,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200323172526'),
 ('20200326011539'),
 ('20200327164625'),
-('20200407141011');
+('20200407141011'),
+('20200511221632'),
+('20200511222029');
 
 
