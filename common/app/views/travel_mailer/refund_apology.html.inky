@@ -1,3 +1,11 @@
+<% provide :additional_styles do %>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style type="text/css">
+    .header h3 {
+      font-family: 'Pacifico', cursive, sans-serif;
+    }
+  </style>
+<% end %>
 <container class="header">
   <row>
     <columns>
@@ -34,7 +42,7 @@
         Sincerely,
       </p>
       <p>
-        Gayle and Sara O'Scanlon
+        The O'Scanlon Family
       </p>
     </columns>
   </row>

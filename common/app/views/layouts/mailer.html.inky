@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width" />
 
     <%= stylesheet_link_tag 'mailer.css', media: 'all' %>
+    <%= yield(:additional_styles) %>
   </head>
 
   <body style="width:100vw;width:100%;">
