@@ -72,6 +72,15 @@ class TravelMailer < ImportantMailer
     mail skip_filter: true, to: params[:email].presence, subject: "We Appreciate Your Understanding"
   end
 
+  def refund_apology
+    @user = User[params[:user_id]]
+    email = params[:email].presence || @user.athlete_and_parent_emails
+
+    return false unless email.present?
+
+    mail skip_filter: true, to: email, subject: "Refund Information"
+  end
+
   def duffel_bag_sent
     @user = User[params[:user_id]]
 
@@ -118,7 +127,7 @@ class TravelMailer < ImportantMailer
   def travel_packet
     @user = User[params[:user_id]]
 
-    email = @user.athlete_and_parent_emails.presence
+    email = params[:email].presence || @user.athlete_and_parent_emails
 
     m = mail skip_filter: true, to: email, subject: "Down Under Sports Travel Details"
 

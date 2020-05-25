@@ -307,6 +307,30 @@ module Admin
       return render json: { sent: email }, status: 200
     end
 
+    def refund_apology
+      TravelMailer.
+        with(user_id: @found_user.id, email: params[:email].presence).
+        refund_apology.
+        deliver_later
+
+        email =
+          params[:email].presence \
+            ? [params[:email]] \
+            : @found_user.athlete_and_parent_emails.first
+
+      @found_user.
+        contact_histories.
+        create(
+          message: "Sent Refund Information/Apology Email to: #{email}",
+          category: :email,
+          reason: :other,
+          reviewed: true,
+          staff_id: (current_user || auto_worker).category_id
+        )
+
+      return render json: { sent: email }, status: 200
+    end
+
     def selected_cancel
       CoronaMailer.
         with(

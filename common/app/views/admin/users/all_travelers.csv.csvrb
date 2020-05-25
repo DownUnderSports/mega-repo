@@ -16,6 +16,7 @@ csv << %w[
   coach_dus_ids
   main_dus_ids
   category
+  interest
   grad
   team
   team_sport
@@ -118,6 +119,7 @@ User.where_exists(:traveler).split_batches_values(preserve_order: true) do |u|
     u.coach_dus_ids.presence&.join(','),
     u.main_dus_ids.presence&.join(','),
     u.category_title,
+    u.interest&.level,
     u.athlete&.grad,
     u.team.name,
     u.team.sport.abbr_gender,

@@ -1,0 +1,41 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">Our Apologies</h3>
+    </columns>
+  </row>
+</container>
+<container class="body-border full">
+  <spacer size="32"></spacer>
+</container>
+<container>
+  <row>
+    <columns>
+      <p>
+        G'day!
+      </p>
+      <p>
+        Whether it be healthwise or economically, it's likely that you or someone you love has been directly affected by this pandemic; our staff and families are no exception.
+      </p>
+      <p>
+        Our founders George and Shelley O'Scanlon passed away tragically in the winter of 2018-19. Thanks to their dream and hard work, Down Under Sports has shared the land down under with athletes from all across the United States. Our goal throughout all of this is to keep George and Shelley’s dream alive. Please accept our deepest apologies for the time it has taken to deal with this unprecedented situation.
+      </p>
+      <p>
+        We will begin processing refunds according to our refund policy, which includes a non-refundable deposit and travel insurance premium (for those who opted into the Travelex plan). Many of the costs associated with this program are incurred prior to and throughout the regular course of business.
+      </p>
+      <p>
+        If you are owed a refund, you will receive a separate email with specifics on your refund amount and expected date. Please respond to that email if you wish to select one of the other account options presented to you in May.
+      </p>
+      <p>
+        We wish you all the best in your future endeavors.
+      </p>
+      <p>
+        Sincerely,
+      </p>
+      <p>
+        Gayle and Sara O'Scanlon
+      </p>
+    </columns>
+  </row>
+</container>
