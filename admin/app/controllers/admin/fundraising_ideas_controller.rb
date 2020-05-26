@@ -6,7 +6,7 @@ module Admin
     def index
       fundraising_ideas = FundraisingIdea.ordered
 
-      if stale? fundraising_ideas
+      if Rails.env.development? || stale?(fundraising_ideas)
         return render json: {
           fundraising_ideas: (
             fundraising_ideas.map do |idea|
@@ -26,7 +26,7 @@ module Admin
     def show
       puts current_user
       idea = authorize FundraisingIdea.find_by(id: params[:id])
-      if stale? idea
+      if Boolean.parse(params[:force].presence) || stale?(idea)
         return render json: idea_json(idea)
       end
     end
@@ -63,12 +63,14 @@ module Admin
           description: idea.description,
           display_order: idea.display_order,
           images: skip_images ? nil : (
-            idea.images.ordered.with_attached_file.map do |image|
+            idea.images.ordered.map do |image|
               {
                 id: image.id,
                 alt: image.alt,
                 display_order: image.display_order,
-                src: url_for(image.variant(resize: '1024x500>'))
+                src: image.attached? ?
+                  url_for(image.variant(resize: '1024x500>')) :
+                  nil
               }
             end
           )

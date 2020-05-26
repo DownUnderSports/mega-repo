@@ -20,7 +20,7 @@ module API
                 description: idea.description,
                 display_order: idea.display_order,
                 images: (
-                  idea.images.ordered.with_attached_file.map do |image|
+                  idea.images.ordered.map do |image|
                     {
                       id: image.id,
                       alt: image.alt,

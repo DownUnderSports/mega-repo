@@ -2,12 +2,10 @@ import React from 'react';
 import AuthStatus from 'common/js/helpers/auth-status'
 import AsyncComponent from 'common/js/components/component/async'
 import { DirectUploadProvider } from 'react-activestorage-provider'
-import { Link } from 'react-component-templates/components';
 import { DisplayOrLoading } from 'react-component-templates/components'
 import { Objected } from 'react-component-templates/helpers';
 import SimpleMDE from 'simplemde'
 import 'simplemde/dist/simplemde.min.css'
-import withRedirect from 'common/js/helpers/with-redirect'
 
 const fundraisingIdeasUrl = `/admin/fundraising_ideas/:id.json`
 const fundraisingIdeasImageUrl = `/admin/fundraising_ideas/:id/images/:img_id.json`
@@ -214,15 +212,39 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
   selectImage = (ev) => {
     const id    = ev.currentTarget.dataset.id,
           files = ev.currentTarget.files
+
+    console.log(id, files, this.state.images)
     this.setState((state, _) => {
       for (let i = 0; i < this.state.images.length; i++) {
         const img = this.state.images[i]
+
         if(
-          (String(img.id || '') === id)
+          (String(img.id || '') === String(id))
           || (!id && !img.id)
         ) {
           const images = Objected.deepClone(this.state.images)
           images[i].files = files
+
+          return { images }
+        }
+      }
+    })
+  }
+
+  resetImgUpload = (ev) => {
+    const id = ev.currentTarget.dataset.id
+
+    this.setState((state, _) => {
+      for (let i = 0; i < this.state.images.length; i++) {
+        const img = this.state.images[i]
+
+        if(
+          (String(img.id || '') === String(id))
+          || (!id && !img.id)
+        ) {
+          const images = Objected.deepClone(this.state.images)
+          images[i].files = []
+
           return { images }
         }
       }
@@ -230,7 +252,6 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
   }
 
   handleUpload = async (signedIds) => {
-    console.info(this.imageAction(), signedIds)
     if(!this.state.loading) this.setState({ loading: true })
 
     try {
@@ -240,6 +261,29 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
           "Content-Type": "application/json; charset=utf-8"
         },
         body: JSON.stringify({ image: { file: signedIds[0] } })
+      });
+
+      await result.json()
+
+      if(this._isMounted) return await this.getFundraisingIdea()
+    } catch(err) {
+      await this.handleError(err)
+    }
+  }
+
+  destroyImage = async (ev) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const id = ev.currentTarget.dataset.id
+    this.setState({ loading: true })
+
+    try {
+      const result = await fetch(this.imageAction(id), {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        },
       });
 
       await result.json()
@@ -361,7 +405,7 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
         {
           images.map(
             img =>
-              !!img.src
+              (!!img.src || !!img.id)
                 ? this.renderExistingImage(img)
                 : this.renderNewImage(img)
           )
@@ -381,43 +425,55 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
         action={this.imageAction(imgId)}
         onSubmit={this.handleImageSubmit}
       >
-        <div className="form-group">
-          <img src={src} alt={alt} />
-        </div>
-        <div className="form-group">
-          <label htmlFor={`img_${imgId}_alt`}>Summary (Accessibility Field)</label>
-          <input
-            type="text"
-            data-id={imgId}
-            id={`img_${imgId}_alt`}
-            className="form-control"
-            value={alt || ''}
-            name="alt"
-            onChange={this.onTitleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor={`img_${imgId}_display_order`}>
-            Order (lowest goes first on page; empty values go last)
-          </label>
-          <input
-            type="number"
-            step="1"
-            min="0"
-            id={`img_${imgId}_display_order`}
-            className="form-control"
-            value={String(display_order) === '0' ? display_order : (display_order || '')}
-            name="display_order"
-            onChange={this.onOrderChange}
-          />
-        </div>
-        <div className="row">
-          <div className="col"></div>
-          <div className="col-auto">
-            <button type="submit" className="btn btn-block btn-primary">
-              Save
-            </button>
+        <div className="card form-group">
+          <img src={src} alt={alt} className="card-img-top" />
+          <div className="card-body">
+            <div className="form-group">
+              <label htmlFor={`img_${imgId}_alt`}>Summary (Accessibility Field)</label>
+              <input
+                type="text"
+                data-id={imgId}
+                id={`img_${imgId}_alt`}
+                className="form-control"
+                value={alt || ''}
+                name="alt"
+                onChange={this.onTitleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor={`img_${imgId}_display_order`}>
+                Order (lowest goes first on page; empty values go last)
+              </label>
+              <input
+                type="number"
+                step="1"
+                min="0"
+                id={`img_${imgId}_display_order`}
+                className="form-control"
+                value={String(display_order) === '0' ? display_order : (display_order || '')}
+                name="display_order"
+                onChange={this.onOrderChange}
+              />
+            </div>
+            <div className="row">
+              <div className="col-auto">
+                <button
+                  type="submit"
+                  className="btn btn-block btn-danger"
+                  onClick={this.destroyImage}
+                  data-id={imgId}
+                >
+                  Delete
+                </button>
+              </div>
+              <div className="col"></div>
+              <div className="col-auto">
+                <button type="submit" className="btn btn-block btn-primary">
+                  Save
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </form>

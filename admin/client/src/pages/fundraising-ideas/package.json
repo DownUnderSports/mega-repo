@@ -1,5 +1,5 @@
 {
   "name": "FundraisingIdeaPages",
   "private": true,
-  "main": "./fundraising_ideas.jsx"
+  "main": "./fundraising-ideas.jsx"
 }

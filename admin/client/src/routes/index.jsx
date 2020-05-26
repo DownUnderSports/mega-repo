@@ -5,7 +5,7 @@ import { TravelingIndexPage } from 'pages/traveling'
 import { AssignmentsIndexPage } from 'pages/assignments'
 import ChatPage from 'pages/chat'
 import { MailingsIndexPage, MailingsShowPage } from 'pages/mailings'
-import { FundraisingIdeasIndexPage, FundraisingIdeasShowPage } from 'pages/fundraising_ideas'
+import { FundraisingIdeasIndexPage, FundraisingIdeasShowPage } from 'pages/fundraising-ideas'
 import { SchoolsIndexPage, SchoolsShowPage } from 'pages/schools'
 import { UsersIndexPage, UsersShowPage } from 'pages/users'
 

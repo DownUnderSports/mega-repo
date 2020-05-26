@@ -13,18 +13,19 @@ module Admin
       # == Actions ============================================================
       def index
         idea = get_idea
-
-        return render json: {
-          user_name: "#{idea.given_names} #{idea.surname} (#{idea.user.dus_id})",
-          status: idea.extra_eta_processing ? 'Extra Processing Needed' : (idea.images.attached? ? 'Completed' : 'Not Submitted'),
-          can_delete: current_user&.staff&.admin?,
-          images: idea.images.map do |proof|
-            {
-              id: proof.id,
-              link: url_for(proof),
-            }
-          end
-        }
+        if Rails.env.development? || stale?(idea.images)
+          return render json: {
+            can_delete: current_user&.staff&.admin?,
+            images: idea.images.map do |image|
+              unless image.file.attached?
+                image.destroy if image.created_at < 24.hours.ago
+                next
+              end
+              p image_json(image)
+              image_json(image)
+            end.select(&:present?)
+          }
+        end
       end
 
       def create
@@ -43,12 +44,7 @@ module Admin
 
         return render json: {
           message: 'Image Uploaded',
-          image: {
-            id: image.id,
-            alt: image.alt,
-            display_order: image.display_order,
-            src: url_for(image.variant(resize: '1024x500>'))
-          }
+          image: image_json(image)
         }, status: 200
       rescue Exception
         return render json: {
@@ -75,11 +71,28 @@ module Admin
       # == Utilities ==========================================================
       private
         def get_idea(*args)
-          idea = authorize FundraisingIdea, *args
+          idea =
+            authorize(
+              FundraisingIdea.find_by(id: params[:fundraising_idea_id]),
+              *args
+            )
 
           raise "Idea Not Found" unless idea
 
           idea
+        end
+
+        def image_json(image)
+          {
+            id: image.id,
+            alt: image.alt,
+            display_order: image.display_order,
+            src: url_for(image.file.variant(resize: '1024x500>'))
+          }
+        end
+
+        def whitelisted_image_params
+          params.require(:image).permit(:file, :alt, :display_order)
         end
 
 
