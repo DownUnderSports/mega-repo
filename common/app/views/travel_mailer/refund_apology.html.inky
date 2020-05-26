@@ -6,11 +6,14 @@
     }
   </style>
 <% end %>
-<container class="header">
+<container class="header full">
   <row>
+    <columns small="4">&nbsp;</columns>
     <columns>
-      <spacer size="16"></spacer>
       <h1 class="text-center">Our Apologies</h1>
+    </columns>
+    <columns small="4">
+      <%= image_tag image_url('silver-fern.png'), class: 'img-fluid', style: "max-height: 1.5in; float: right" %>
     </columns>
   </row>
 </container>
@@ -21,19 +24,19 @@
   <row>
     <columns>
       <p>
-        G'day!
+        Kia Ora,
       </p>
       <p>
-        In the winter of 2018-19, our founders George and Shelley O'Scanlon passed away tragically. It was through their dream and hard work that Down Under Sports has shared the land down under with athletes from all across the United States, and it has been our goal to keep George and Shelley’s dream alive; including during this international crisis.
+        In the winter of 2018-19, our founders George and Shelley O'Scanlon passed away tragically. It was through their dream and hard work that Down Under Sports has shared the land down under with athletes from all across the United States.
       </p>
       <p>
-        Whether it be healthwise or economically, it's likely that you or someone you love has been directly affected by this pandemic; our staff and families are no exception. Please accept our deepest apologies for the time it has taken to deal with this unprecedented situation. We will begin processing refunds according to our refund policy, which includes a non-refundable deposit and travel insurance premium (for those who opted into the Travelex plan). Many of the costs associated with this program are incurred prior to and throughout the regular course of business.
+        Although we were devastated by their loss, it has been our goal to keep George and Shelley's dream alive. This international crisis has certainly reinforced the importance of family and tradition. Whether it be health-wise or economically, it is likely that you or someone you love has been directly affected by the pandemic; our staff and families are no exception. We extend our deepest apologies for the time it has taken to deal with these unprecedented situations and to find workable solutions for our cancelled travelers. Please keep in mind that many of the costs associated with this program are incurred prior to and throughout the regular course of business.
       </p>
       <p>
-        If you are owed a refund, you will receive a separate email with specifics on your refund amount and expected date. Please respond to that email if you wish to select one of the other account options presented to you in May.
+        As such, we will begin processing cancellations according to our refund policy, which includes a non-refundable deposit and travel insurance premium (for those who opted into the Travelex plan). If you are owed a refund, you will receive a separate email with specifics on the amount and expected date to receive the funds. Please respond to that email if you wish to select one of the other account options presented to you in May.
       </p>
       <p>
-        We wish you all the best in your future endeavors.
+        We wish you and your families all the best.
       </p>
       <p>
         Sincerely,
