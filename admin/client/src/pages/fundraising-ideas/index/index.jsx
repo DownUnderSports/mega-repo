@@ -2,7 +2,7 @@ import React from 'react';
 import Component from 'common/js/components/component'
 import { DisplayOrLoading, Link } from 'react-component-templates/components'
 
-const fundraisingIdeasUrl = '/admin/fundraising_ideas'
+const fundraisingIdeasUrl = '/admin/fundraising_ideas.json'
 
 export default class FundraisingIdeasIndexPage extends Component {
   state = { loading: true, ideas: [], errors: null }
@@ -41,26 +41,29 @@ export default class FundraisingIdeasIndexPage extends Component {
   }
 
   showIdea = ({ id, title, description, display_order, image_count }) =>
-    <div className="row form-group">
-      <div className="col-2">
-        <Link to={`${fundraisingIdeasUrl}/${id}`}>
+    <tr key={id}>
+      <td colSpan="2">
+        <Link to={fundraisingIdeasUrl.replace('.json', `/${id}`)}>
           Edit { id }
         </Link>
-      </div>
-      <div className="col-4">
+      </td>
+      <td colSpan="4">
         { title }
-      </div>
-      <div className="col-5">
+      </td>
+      <td colSpan="5">
         { String(description || 'No Description Given').substring(0, 25) }{
           (String(description).length > 25)
             ? '...'
             : ''
         }
-      </div>
-      <div className="col-1">
+      </td>
+      <td colSpan="1">
         { Number(image_count || 0) }
-      </div>
-    </div>
+      </td>
+      <td colSpan="1">
+        { display_order ? Number(display_order) : 'Created At' }
+      </td>
+    </tr>
 
   renderErrors = () =>
     !!this.state.errors && (
@@ -81,15 +84,31 @@ export default class FundraisingIdeasIndexPage extends Component {
     const { ideas = [], errors } = this.state
     return (
       <div className="FundraisingIdeas IndexPage">
-        <h3 className="text-center">
+        <h3 className="text-center mb-5">
           Fundraising Ideas
+          <Link
+            to="/admin/fundraising_ideas/new"
+            className="btn btn-info float-right"
+          >
+            New Idea
+          </Link>
         </h3>
-        <hr/>
         { this.renderErrors() }
         <DisplayOrLoading display={!this.state.loading}>
-          {
-            ideas.map(this.showIdea)
-          }
+          <table className="table">
+            <thead>
+              <tr>
+                <th colSpan="2">Link</th>
+                <th colSpan="4">Title</th>
+                <th colSpan="5">Description</th>
+                <th colSpan="1">Image Count</th>
+                <th colSpan="1">Order</th>
+              </tr>
+            </thead>
+            <tbody>
+              { ideas.map(this.showIdea) }
+            </tbody>
+          </table>
         </DisplayOrLoading>
       </div>
     );

@@ -12087,6 +12087,7 @@ CREATE TABLE public.fundraising_idea_images (
     fundraising_idea_id bigint NOT NULL,
     alt text,
     display_order integer,
+    hide boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
@@ -23111,6 +23112,13 @@ CREATE INDEX index_fundraising_idea_images_on_display_order ON public.fundraisin
 --
 
 CREATE INDEX index_fundraising_idea_images_on_fundraising_idea_id ON public.fundraising_idea_images USING btree (fundraising_idea_id);
+
+
+--
+-- Name: index_fundraising_idea_images_on_hide; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_fundraising_idea_images_on_hide ON public.fundraising_idea_images USING btree (hide);
 
 
 --

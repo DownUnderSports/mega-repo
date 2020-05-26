@@ -87,12 +87,16 @@ module Admin
             id: image.id,
             alt: image.alt,
             display_order: image.display_order,
-            src: url_for(image.file.variant(resize: '1024x500>'))
+            hide: !!image.hide,
+            small: url_for(image.variant(resize: '640x360>')),
+            medium: url_for(image.variant(resize: '1280x720>')),
+            large: url_for(image.variant(resize: '1920x1080>')),
+            src: url_for(image.variant(resize: '1024x576>')),
           }
         end
 
         def whitelisted_image_params
-          params.require(:image).permit(:file, :alt, :display_order)
+          params.require(:image).permit(:file, :alt, :hide, :display_order)
         end
 
 

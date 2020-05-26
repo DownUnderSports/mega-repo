@@ -4,35 +4,43 @@
 module Admin
   class FundraisingIdeasController < ::Admin::ApplicationController
     def index
-      fundraising_ideas = FundraisingIdea.ordered
+      respond_to do |format|
+        format.html { fallback_index_html }
+        format.any do
+          fundraising_ideas = FundraisingIdea.ordered
 
-      if Rails.env.development? || stale?(fundraising_ideas)
-        return render json: {
-          fundraising_ideas: (
-            fundraising_ideas.map do |idea|
-              {
-                id: idea.id,
-                title: idea.title,
-                description: idea.description,
-                display_order: idea.display_order,
-                image_count: idea.images.size
-              }
-            end
-          )
-        }
+          if Rails.env.development? || stale?(fundraising_ideas)
+            return render json: {
+              fundraising_ideas: (
+                fundraising_ideas.map do |idea|
+                  {
+                    id: idea.id,
+                    title: idea.title,
+                    description: idea.description,
+                    display_order: idea.display_order,
+                    image_count: idea.images.size
+                  }
+                end
+              )
+            }
+          end
+        end
       end
     end
 
     def show
-      puts current_user
-      idea = authorize FundraisingIdea.find_by(id: params[:id])
-      if Boolean.parse(params[:force].presence) || stale?(idea)
-        return render json: idea_json(idea)
+      respond_to do |format|
+        format.html { fallback_index_html }
+        format.any do
+          idea = authorize FundraisingIdea.find_by(id: params[:id])
+          if Boolean.parse(params[:force].presence) || stale?(idea)
+            return render json: idea_json(idea)
+          end
+        end
       end
     end
 
     def update
-      puts current_user
       idea = authorize FundraisingIdea.find_by(id: params[:id])
       if idea
         idea.assign_attributes(whitelisted_idea_params)

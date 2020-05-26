@@ -65,7 +65,7 @@ export default class FundraisingIdeasPage extends Component {
             }
             { parsed && <hr/> }
             <div className="row">
-              { images.map(this.showImage) }
+              { images.map((img) => this.showImage(img, images.size)) }
             </div>
           </div>
         </div>
@@ -97,17 +97,18 @@ export default class FundraisingIdeasPage extends Component {
     }
   }
 
-  showImage = ({id, alt, src}) => {
+  showImage = ({id, alt, src}, imgCount) => {
     if(!src) return false
 
     const isImg = this.state.selectedImg
                     && (String(this.state.selectedImg) === String(id)),
-          imgClass = isImg ? this.state.selectedImgClass : ''
+          imgClass = isImg ? this.state.selectedImgClass : '',
+          size = imgCount > 2 ? '-4' : ''
 
     return (
       <div
         key={id}
-        className={`col-4 form-group idea-img ${imgClass}`}
+        className={`col${size} form-group idea-img ${imgClass}`}
       >
         <div
           className="img-wrapper"
