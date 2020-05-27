@@ -21,6 +21,7 @@ class FundraisingIdea < ApplicationRecord
 
     # == Scopes ===============================================================
     scope :ordered, -> { order(display_order: :asc, created_at: :asc) }
+    scope :visible, -> { where.not(hide: true) }
 
     # == Callbacks ============================================================
     after_commit :touch_idea

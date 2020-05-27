@@ -34,8 +34,8 @@ module Admin
         image = idea.images.create(whitelisted_image_params)
 
         unless image.persisted? && image.attached?
-          image.destroy
-          if image.valid?
+          image.destroy if image.persisted?
+          unless image.valid?
             raise image.errors.full_messages.first
           else
             raise "Invalid File Type"
@@ -46,10 +46,23 @@ module Admin
           message: 'Image Uploaded',
           image: image_json(image)
         }, status: 200
-      rescue Exception
+      rescue
+        return render json: { errors: [ $!.message ] }, status: 500
+      end
+
+      def update
+        idea = get_idea
+
+        raise "Image Not Found" unless image = idea&.images&.find(params[:id])
+
+        image.update! whitelisted_image_params
+
         return render json: {
-          errors: [ $!.message ]
-        }, status: 500
+          message: 'Image Uploaded',
+          image: image_json(image)
+        }, status: 200
+      rescue
+        return render json: { errors: [ $!.message ] }, status: 500
       end
 
       def destroy

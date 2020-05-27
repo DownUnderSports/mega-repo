@@ -63,10 +63,16 @@ export default class FundraisingIdeasPage extends Component {
                 />
               )
             }
-            { parsed && <hr/> }
-            <div className="row">
-              { images.map((img) => this.showImage(img, images.size)) }
-            </div>
+            {
+              !!parsed
+              && !!images.length
+              && (
+                <div className="row">
+                  <div className="col-12"><hr/></div>
+                  { images.map((img) => this.showImage(img, images.size)) }
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
@@ -97,7 +103,7 @@ export default class FundraisingIdeasPage extends Component {
     }
   }
 
-  showImage = ({id, alt, src}, imgCount) => {
+  showImage = ({ id, alt, src, full_size }, imgCount) => {
     if(!src) return false
 
     const isImg = this.state.selectedImg
@@ -118,7 +124,7 @@ export default class FundraisingIdeasPage extends Component {
         >
           <img
             className={`img-fluid ${isImg ? 'centered' : 'clickable'} rounded`}
-            src={src}
+            src={isImg ? (full_size || src) : src}
             alt={alt}
           />
           <button

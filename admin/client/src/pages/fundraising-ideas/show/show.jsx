@@ -4,6 +4,7 @@ import AsyncComponent from 'common/js/components/component/async'
 import { DirectUploadProvider } from 'react-activestorage-provider'
 import { DisplayOrLoading } from 'react-component-templates/components'
 import { Objected } from 'react-component-templates/helpers';
+import CopyClip from 'common/js/helpers/copy-clip'
 import SimpleMDE from 'simplemde'
 import 'simplemde/dist/simplemde.min.css'
 
@@ -134,6 +135,37 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
   onDescriptionChange = (ev) => this.onIdeaChange('description', ev)
   onOrderChange = (ev) => this.onIdeaChange('display_order', ev)
 
+  onImgChange = (key, ev) => {
+    const id    = ev.currentTarget.dataset.id,
+          value = ev.currentTarget.value
+
+    this.setState((state, _) => {
+      for (let i = 0; i < this.state.images.length; i++) {
+        const img = this.state.images[i]
+
+        if(
+          (String(img.id || '') === String(id))
+          || (!id && !img.id)
+        ) {
+          const images = Objected.deepClone(this.state.images)
+          if(/hide/.test(key)) {
+            images[i][key] = !images[i][key]
+          } else {
+            images[i][key] = value
+          }
+
+          return { images }
+        }
+      }
+
+      return null
+    })
+  }
+
+  onImgHiddenChange = (ev) => this.onImgChange('hide', ev)
+  onImgAltChange = (ev) => this.onImgChange('alt', ev)
+  onImgOrderChange = (ev) => this.onImgChange('display_order', ev)
+
   handleSubmit = async (ev) => {
     try {
       ev.preventDefault()
@@ -158,6 +190,39 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
       const idea = await result.json()
 
       if(this._isMounted) return id ? (await this.afterFetch({idea})) : this.locateIdea(idea)
+    } catch(err) {
+      await this.handleError(err)
+    }
+  }
+
+  handleImageSubmit = async (ev) => {
+    try {
+      ev.preventDefault()
+      ev.stopPropagation()
+    } catch(_) {}
+
+    const id = ev.currentTarget.dataset.id
+
+    if(!this.state.loading) this.setState({ loading: true })
+
+    try {
+      for(let i = 0; i < this.state.images.length; i++) {
+        const image = this.state.images[i]
+        if(String(image.id) === String(id)) {
+          const result = await fetch(this.imageAction(id), {
+            method: 'PATCH',
+            headers: {
+              "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({ image })
+          });
+
+          await result.json()
+
+          if(this._isMounted) return await this.getFundraisingIdea()
+          else break
+        }
+      }
     } catch(err) {
       await this.handleError(err)
     }
@@ -213,7 +278,6 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
     const id    = ev.currentTarget.dataset.id,
           files = ev.currentTarget.files
 
-    console.log(id, files, this.state.images)
     this.setState((state, _) => {
       for (let i = 0; i < this.state.images.length; i++) {
         const img = this.state.images[i]
@@ -228,6 +292,8 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
           return { images }
         }
       }
+
+      return null
     })
   }
 
@@ -248,6 +314,8 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
           return { images }
         }
       }
+
+      return null
     })
   }
 
@@ -292,6 +360,29 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
     } catch(err) {
       await this.handleError(err)
     }
+  }
+
+  copyImageMarkdown = (ev) => {
+    /* ![](http://) */
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    const id   = ev.currentTarget.dataset.id,
+          size = ev.currentTarget.dataset.size || 'src'
+    try {
+      for(let i = 0; i < this.state.images.length; i++) {
+        const image = this.state.images[i]
+        if(String(image.id) === String(id)) {
+          return CopyClip.prompted(
+            `![${
+              image.alt
+              || this.state.title
+              || 'Idea Helper Image'
+            }](${image[size]})`
+          )
+        }
+      }
+    } catch(_) {}
   }
 
   render() {
@@ -418,44 +509,105 @@ export default class FundraisingIdeasShowPage extends AsyncComponent {
     alt = '',
     display_order = '',
     src = '',
+    hide = false
   }) =>
     <div key={imgId || 'new'} className="col-4">
       <form
         id={`image_form_${imgId || 'new'}`}
         action={this.imageAction(imgId)}
         onSubmit={this.handleImageSubmit}
+        data-id={imgId}
       >
         <div className="card form-group">
           <img src={src} alt={alt} className="card-img-top" />
           <div className="card-body">
+            <div className="form-group form-check">
+              <input
+                type="checkbox"
+                data-id={imgId}
+                id={`img_${imgId}_hidden`}
+                className="form-check-input"
+                value="1"
+                name={`images[${imgId}][hide]`}
+                onChange={this.onImgHiddenChange}
+                checked={!!hide}
+              />
+              <label htmlFor={`img_${imgId}_hidden`}>
+                Hidden (image is only for markdown above)
+              </label>
+            </div>
             <div className="form-group">
-              <label htmlFor={`img_${imgId}_alt`}>Summary (Accessibility Field)</label>
+              <label htmlFor={`img_${imgId}_alt`}>
+                Summary (Accessibility Field)
+              </label>
               <input
                 type="text"
                 data-id={imgId}
                 id={`img_${imgId}_alt`}
                 className="form-control"
                 value={alt || ''}
-                name="alt"
-                onChange={this.onTitleChange}
+                name={`images[${imgId}][alt]`}
+                onChange={this.onImgAltChange}
                 required
               />
             </div>
-            <div className="form-group">
-              <label htmlFor={`img_${imgId}_display_order`}>
-                Order (lowest goes first on page; empty values go last)
-              </label>
-              <input
-                type="number"
-                step="1"
-                min="0"
-                id={`img_${imgId}_display_order`}
-                className="form-control"
-                value={String(display_order) === '0' ? display_order : (display_order || '')}
-                name="display_order"
-                onChange={this.onOrderChange}
-              />
-            </div>
+            {
+              hide ? (
+                <div className="row form-group">
+                  <div className="col-12 text-center">
+                    Copy Image Markdown
+                  </div>
+                  <div className="col">
+                    <button
+                      data-id={imgId}
+                      data-size="small"
+                      className="btn btn-block btn-info"
+                      onClick={this.copyImageMarkdown}
+                    >
+                      Small
+                    </button>
+                  </div>
+                  <div className="col">
+                    <button
+                      data-id={imgId}
+                      data-size="medium"
+                      className="btn btn-block btn-info"
+                      onClick={this.copyImageMarkdown}
+                    >
+                      Medium
+                    </button>
+                  </div>
+                  <div className="col">
+                    <button
+                      data-id={imgId}
+                      data-size="large"
+                      className="btn btn-block btn-info"
+                      onClick={this.copyImageMarkdown}
+                    >
+                      Large
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="form-group">
+                  <label htmlFor={`img_${imgId}_display_order`}>
+                    Image List Order
+                    (lowest goes first on page; empty values go last)
+                  </label>
+                  <input
+                    data-id={imgId}
+                    type="number"
+                    step="1"
+                    min="0"
+                    id={`img_${imgId}_display_order`}
+                    className="form-control"
+                    value={String(display_order) === '0' ? display_order : (display_order || '')}
+                    name={`images[${imgId}][display_order]`}
+                    onChange={this.onImgOrderChange}
+                  />
+                </div>
+              )
+            }
             <div className="row">
               <div className="col-auto">
                 <button

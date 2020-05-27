@@ -20,12 +20,13 @@ module API
                 description: idea.description,
                 display_order: idea.display_order,
                 images: (
-                  idea.images.ordered.map do |image|
+                  idea.images.ordered.visible.map do |image|
                     {
                       id: image.id,
                       alt: image.alt,
                       display_order: image.display_order,
-                      src: url_for(image.variant(resize: '1024x500>'))
+                      src: url_for(image.variant(resize: '1024x576>')),
+                      full_size: url_for(image)
                     }
                   end
                 )

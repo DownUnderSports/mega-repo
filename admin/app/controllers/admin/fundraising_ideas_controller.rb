@@ -76,10 +76,15 @@ module Admin
                 id: image.id,
                 alt: image.alt,
                 display_order: image.display_order,
-                src: image.attached? ?
-                  url_for(image.variant(resize: '1024x500>')) :
-                  nil
-              }
+                hide: !!image.hide,
+              }.merge(
+                image.attached? ? {
+                  small: url_for(image.variant(resize: '640x360>')),
+                  medium: url_for(image.variant(resize: '1280x720>')),
+                  large: url_for(image.variant(resize: '1920x1080>')),
+                  src: url_for(image.variant(resize: '1024x576>')),
+                } : {}
+              )
             end
           )
         }
