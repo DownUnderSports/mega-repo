@@ -281,6 +281,11 @@
         }
       }
     },
+    "fundraising-ideas": {
+      "path": "fundraising-ideas",
+      "canonical": "/fundraising-ideas",
+      "index": true
+    },
     "travel-info": {
       "title": "Verify Pre-Travel Details",
       "path": "travel-info",

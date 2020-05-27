@@ -1,0 +1,5 @@
+{
+  "name": "FundraisingIdeasShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

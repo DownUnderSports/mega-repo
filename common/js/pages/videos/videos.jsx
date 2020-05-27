@@ -268,10 +268,10 @@ class VideoPlayer extends Component {
       // played,
       playing,
       // duration
-      watched = false,
-      deadline = '',
+      // watched = false,
+      // deadline = '',
       // twoWeeks = '',
-      traveler = false,
+      // traveler = false,
     } = this.state
 
     return (

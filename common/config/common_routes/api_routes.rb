@@ -83,6 +83,9 @@ module APIRoutes
         resources :sessions, only: :index, defaults: { format: :json }
         resources :chat_rooms, only: :create
 
+        resources :fundraising_ideas, only: %i[ index ]
+
+
         get 'version', to: '/application#version'
       end
 

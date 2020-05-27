@@ -8,6 +8,7 @@ const EncryptedFileTestPage = lazy(() => import(/* webpackChunkName: "uniform-or
 const EventRegistrationPage = lazy(() => import(/* webpackChunkName: "event-registration-page" */ 'common/js/pages/event-registration'))
 const EventResultsPage = lazy(() => import(/* webpackChunkName: "event-results-page" */ 'pages/event-results'))
 const FrequentlyAskedQuestionsPage = lazy(() => import(/* webpackChunkName: "f-a-q-page" */ 'common/js/pages/frequently-asked-questions'))
+const FundraisingIdeasPage = lazy(() => import(/* webpackChunkName: "fundraising-ideas-client-page" */ 'common/js/pages/fundraising-ideas'))
 const HomePage = lazy(() => import(/* webpackChunkName: "home-page", webpackPrefetch: true */ 'common/js/pages/home'))
 const InformationPage = lazy(() => import(/* webpackChunkName: "information-page" */ 'common/js/pages/information'))
 const LegalDocumentsPage = lazy(() => import(/* webpackChunkName: "legal-requirements-page" */ 'common/js/pages/legal-documents'))
@@ -48,6 +49,14 @@ const routes = [
   {
     path: '/encrypted',
     component: EncryptedFileTestPage,
+  },
+  {
+    path: '/fundraising-ideas',
+    component: FundraisingIdeasPage,
+  },
+  {
+    path: '/fundraising_ideas',
+    component: FundraisingIdeasPage,
   },
   {
     path: '/sports',
