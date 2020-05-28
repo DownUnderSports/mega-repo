@@ -77,7 +77,7 @@ class Site extends Component {
           {/*<Header key="site-header" navClass={this.state.navClass} heightRef={(height) => this.setState({height}, this.bindScroll)}/>*/}
           <Header key="site-header" navClass={this.state.navClass} heightRef={(height) => this.setState({ height })}/>
         </ErrorBoundary>
-        <div key="special-offer" className="container-fluid mt-3" style={{maxWidth: '1140px'}}>
+        <div key="special-offer" className="d-print-none container-fluid mt-3" style={{maxWidth: '1140px'}}>
           <div className="Site-special-offer">
             <div className="ribbon-wrapper">
               <h3 className="ribbon">

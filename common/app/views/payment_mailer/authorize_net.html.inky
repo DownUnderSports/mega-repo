@@ -181,9 +181,12 @@
         </row>
         <row>
           <columns>
-            <a href="https://downundersports.com/refunds">
-              Click Here to view the Down Under Sports Refund Policy
-            </a>
+            <div style="text-align: center">
+              All payments are subject to the
+              <a href="https://downundersports.com/refunds">
+                Down Under Sports Refund Policy
+              </a>
+            </div>
           </columns>
         </row>
       </center>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Objected } from 'react-component-templates/helpers';
-import { DisplayOrLoading } from 'react-component-templates/components';
+import { DisplayOrLoading, Link } from 'react-component-templates/components';
 import { currencyFormat } from 'react-component-templates/form-components';
 import FieldsFromJson from 'common/js/components/fields-from-json';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
@@ -28,6 +28,7 @@ export default class PaymentForm extends Component {
       form: {
         state_id: props.stateId || '',
         sport_id: props.sportId || '',
+        agreed: !!this.props.agreed,
         payment: {
           anonymous: false,
           gateway_type: 'auth_net',
@@ -102,6 +103,8 @@ export default class PaymentForm extends Component {
     this.setState({submitting: true}, () => this.handleSubmit())
 
   }
+
+  stopPropagation = (ev) => ev.stopPropagation()
 
   invalidAmount = (amount) => parseFloat(amount || 0, 10) < (this.props.minimum ? Math.min(parseFloat(this.props.minimum, 10), parseFloat(20, 10)) : parseFloat(1, 10))
 
@@ -657,10 +660,28 @@ export default class PaymentForm extends Component {
                                 ]
                               },
                               {
+                                field: 'BooleanField',
+                                skipTopLabel: true,
+                                label: <>
+                                  <span key="text">
+                                    Check this box to signify you have read and agree to the
+                                  </span> <Link onClick={this.stopPropagation} key="link" to="/refunds" target="refund_terms" rel="noopener noreferrer">
+                                    Down Under Sports Refund Policy
+                                  </Link>
+                                </>,
+                                name: 'agreed',
+                                wrapperClass: `col-12 form-group`,
+                                checked: !!this.state.form.agreed,
+                                value: !!this.state.form.agreed,
+                                toggle: true,
+                                className: ''
+                              },
+                              {
                                 field: 'button',
                                 wrapperClass: 'col-12 form-group',
                                 className: 'btn btn-primary btn-lg active float-right',
                                 type: 'submit',
+                                disabled: !this.state.form.agreed,
                                 children: [
                                   `Submit Payment of $${parseFloat(this.state.form.payment.amount)}`
                                 ]

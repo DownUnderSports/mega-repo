@@ -95,8 +95,16 @@ class User < ApplicationRecord
         @protected_statuses ||= %w[ confirmed completed ].freeze
       end
 
+      def mind_changed?
+        self.confirmed_status? &&
+        (
+          previous_changes.key?("can_transfer") ||
+          previous_changes.key?(:can_transfer)
+        )
+      end
+
       def send_confirmations
-        if previous_changes.key?(:status) || previous_changes.key?("status")
+        if previous_changes.key?(:status) || previous_changes.key?("status") || mind_changed?
           if self.confirmed_status?
             self.class.transaction do
               if self.can_transfer == 'Y'
@@ -106,14 +114,17 @@ class User < ApplicationRecord
                 unless self.user.traveler.canceled?
                   self.user.traveler.update!(cancel_date: Date.today)
                 end
-                if self.user.can_send_transfer?
+                if self.user.can_send_transfer? || mind_changed?
                   self.user.send_transfer_email
                 end
               elsif self.can_transfer == 'N'
+                if self.user.is_deferral?
+                  self.user.notes.find_by(message: 'Deferral to 2021')&.destroy!
+                end
                 unless self.user.traveler.canceled?
                   self.user.traveler.update!(cancel_date: Date.today)
                 end
-                if self.user.can_send_cancellation?
+                if self.user.can_send_cancellation? || mind_changed?
                   self.user.send_cancellation_email
                   UserMailer.
                     with(
