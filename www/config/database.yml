@@ -90,6 +90,7 @@ production: &production
 
 year_public: &year_public
   schema_search_path: public
+
 <% %w[ development test production ].each do |env_name| %>
 year_public_<%= env_name %>:
   <<: *<%= env_name %>

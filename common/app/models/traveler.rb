@@ -134,18 +134,23 @@ class Traveler < ApplicationRecord
 
   # == Class Methods ========================================================
   def self.active
-    if block_given?
-      Traveler.
-        where(cancel_date: nil).
-        where.not(user_id: test_user_environment_ids).
-        split_batches_values do |t|
-          yield t
-        end
-    else
+    q =
       Traveler.
         where(cancel_date: nil).
         where.not(user_id: test_user_environment_ids)
-    end
+
+    block_given? ? q.split_batches_values {|t| yield t } : q
+  end
+
+  def self.cancels(hide_deferrals: false)
+    q =
+      Traveler.
+        where.not(cancel_date: nil).
+        where.not(user_id: test_user_environment_ids)
+
+    q = q.where.not(user_id: User.deferrals.select(:id)) if hide_deferrals
+
+    block_given? ? q.split_batches_values {|t| yield t } : q
   end
 
   def self.additional_sport_base_debit

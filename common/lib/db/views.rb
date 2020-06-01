@@ -48,15 +48,18 @@ module Views
           %w[
             2019
             2020
+            2021
           ].each do |year|
-            ENV['CURRENT_YEAR'] = year
-            reset_cached_usable_schema_year
+            if schema_exists? "year_#{year}"
+              ENV['CURRENT_YEAR'] = year
+              reset_cached_usable_schema_year
 
-            with_year(year) do
-              raise usable_schema_year unless usable_schema_year =~ /#{year}/
-              EnsuredMigrator.new(:down, [
-                ViewsMigration.new(nil, EnsuredMigrator.current_version)
-              ]).migrate
+              with_year(year) do
+                raise usable_schema_year unless usable_schema_year =~ /#{year}/
+                EnsuredMigrator.new(:down, [
+                  ViewsMigration.new(nil, EnsuredMigrator.current_version)
+                ]).migrate
+              end
             end
           end
         else
@@ -80,15 +83,18 @@ module Views
           %w[
             2019
             2020
+            2021
           ].each do |year|
-            ENV['CURRENT_YEAR'] = year
-            reset_cached_usable_schema_year
+            if schema_exists? "year_#{year}"
+              ENV['CURRENT_YEAR'] = year
+              reset_cached_usable_schema_year
 
-            with_year(year) do
-              raise usable_schema_year unless usable_schema_year =~ /#{year}/
-              EnsuredMigrator.new(:up, [
-                ViewsMigration.new(nil, EnsuredMigrator.current_version + 1)
-              ]).migrate
+              with_year(year) do
+                raise usable_schema_year unless usable_schema_year =~ /#{year}/
+                EnsuredMigrator.new(:up, [
+                  ViewsMigration.new(nil, EnsuredMigrator.current_version + 1)
+                ]).migrate
+              end
             end
           end
         else
@@ -114,13 +120,15 @@ module Views
         2019,
         2020
       ].each do |year|
-        ENV['CURRENT_YEAR'] = year
-        reset_cached_usable_schema_year
+        if schema_exists? "year_#{year}"
+          ENV['CURRENT_YEAR'] = year
+          reset_cached_usable_schema_year
 
-        with_year(year) do
-          EnsuredMigrator.new(:up, [
-            ViewsMigration.new(nil, EnsuredMigrator.current_version + 1)
-          ]).migrate
+          with_year(year) do
+            EnsuredMigrator.new(:up, [
+              ViewsMigration.new(nil, EnsuredMigrator.current_version + 1)
+            ]).migrate
+          end
         end
       end
     ensure

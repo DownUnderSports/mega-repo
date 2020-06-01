@@ -10,6 +10,15 @@ class TravelMailer < ImportantMailer
     mail skip_filter: true, to: params[:email].presence, subject: "May Newsletter"
   end
 
+  def june_newsletter
+    attachments["june-newsletter.pdf"] = {
+      mime_type: 'application/pdf',
+      content: File.read(get_full_path_to_asset('june_2020_newsletter.pdf'))
+    }
+
+    mail skip_filter: true, to: params[:email].presence, subject: "June Newsletter"
+  end
+
   def april_deadline_approaching
     @user = User.get(params[:user_id])
     email = @user.athlete_and_parent_emails.presence || [ 'mail@downundersports.com' ]

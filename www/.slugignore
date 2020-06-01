@@ -15,6 +15,7 @@ client-old
 spec
 db/seeds/shared/*
 db/migrate/migrated/*
+db/migrate/pre-migrate/*
 db/*.png
 db/insert_column_at_position.rb
 db/postgres-validate-one-of.rb
@@ -26,6 +27,7 @@ lib/templates
 extensions
 /vendor/common/db/seeds/shared/*
 /vendor/common/db/migrate/migrated/*
+/vendor/common/db/migrate/pre-migrate/*
 /vendor/common/db/*.png
 /vendor/common/db/insert_column_at_position.rb
 /vendor/common/db/postgres-validate-one-of.rb

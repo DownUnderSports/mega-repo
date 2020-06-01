@@ -48,6 +48,7 @@ module Views
         <<-SQL
           SELECT DISTINCT
             users.*,
+            athletes.grad,
             COALESCE(video_views.duration, '00:00:00') AS duration,
             video_views.first_watched_at AS watched_at,
             video_views.first_viewed_at AS viewed_at,

@@ -46,6 +46,14 @@ module Admin
       return redirect_to admin_clocks_path
     end
 
+    def destroy
+      if current_user&.dus_id == 'SAM-PSN'
+        clock = current_user.staff.clocks.find(params[:id])
+        clock.destroy
+      end
+      return redirect_to admin_clocks_path
+    end
+
     # == Cleanup ============================================================
 
     # == Utilities ==========================================================

@@ -82,7 +82,7 @@ development:
 
 test:
   <<: *default
-  database: down_under_sports_test
+  database: down_under_sports_mega_test
 
 production:
   <<: *default

@@ -170,7 +170,7 @@ class ApplicationRecord < BetterRecord::Base
   end
 
   def self.is_active_year?
-    active_schema_year == active_year
+    active_schema_year >= active_year
   end
 
   def self.is_public_schema?
@@ -274,18 +274,19 @@ class ApplicationRecord < BetterRecord::Base
   def transfer_to_db_year(year_to_use)
     v = nil
     transaction do
+      pk_to_use = self.class.primary_key || :id
+
       self.class.connection.execute <<-SQL
         WITH deleted AS (
           DELETE FROM ONLY "#{self.class.schema_qualified[:schema_name]}"."#{self.class.schema_qualified[:table_name]}"
-          WHERE id = '#{self.__send__(self.class.primary_key || :id)}'
+          WHERE #{pk_to_use} = '#{self.__send__(pk_to_use)}'
           RETURNING *
         )
         INSERT INTO "#{get_schema_name_from_year(year_to_use)}"."#{self.class.schema_qualified[:table_name]}"
         SELECT * FROM deleted;
       SQL
-      with_year(year_to_use) do
-        v = self.class.find(self.__send__(self.class.primary_key || :id))
-      end
+
+      with_year(year_to_use) { v = self.class.find(self.__send__(pk_to_use)) }
     end
     v
   end

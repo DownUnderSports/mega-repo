@@ -31,6 +31,7 @@ module Views
 
         migration.add_index(table_name, :id, unique: true)
         migration.add_index(table_name, :dus_id)
+        migration.add_index(table_name, :grad)
         migration.add_index(table_name, :assigned_to_id)
         migration.add_index(table_name, :assigned_by_id)
         migration.add_index(table_name, :completed)
@@ -129,6 +130,7 @@ module Views
             (COALESCE(users.first, '') || ' ' || COALESCE(users.last, '')) AS name,
             states.id AS state_id,
             sports.id AS sport_id,
+            athletes.grad,
             (COALESCE(states.abbr, '') || ' ' || COALESCE(sports.abbr_gender, '')) AS team_name,
             COALESCE(addresses.tz_offset, school_addresses.tz_offset, states.tz_offset) AS tz_offset,
             COALESCE(interests.level, 'Unknown') AS interest_level,

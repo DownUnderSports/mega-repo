@@ -6,6 +6,6 @@ require_dependency 'traveler/base_debit'
 class Traveler < ApplicationRecord
   class BaseDebit < ApplicationRecord
     # == Constants ============================================================
-    SingleRoom = self.find_by(name: 'Single Room')
+    SingleRoom = self.single_room
   end
 end

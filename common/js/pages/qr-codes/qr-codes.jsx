@@ -5,6 +5,8 @@ import FileDownload from 'common/js/components/file-download'
 import dusIdFormat from 'common/js/helpers/dus-id-format'
 import './qr-codes.css'
 
+const withHttp = (src) => /\:\/\//.test(src) ? src : `https://${src}`
+
 export default class QrCodesPage extends Component {
   state = {
     url: '',
@@ -19,7 +21,7 @@ export default class QrCodesPage extends Component {
 
   getUrlCode = async () =>
     this.wrapFunction(() => {
-      if(/[a-z]+\.[a-z]+(\/|\?|$)/i.test(this.state.url)) return this.getCode(this.state.url, { url: '' })
+      if(/[a-z]+\.[a-z]+(\/|\?|$)/i.test(this.state.url)) return this.getCode(withHttp(this.state.url), { url: '' })
 
       throw new Error("Invalid URL")
     })
@@ -193,7 +195,7 @@ export default class QrCodesPage extends Component {
                     </div>
                   </FileDownload>
 
-                  <a key="link" className="btn btn-block btn-dark" href={this.state.imgUrl} rel="noopener noreferrer" target="_qrcode">{this.state.imgUrl}</a>
+                  <a key="link" className="btn btn-block btn-dark" href={withHttp(this.state.imgUrl)} rel="noopener noreferrer" target="_qrcode">{withHttp(this.state.imgUrl)}</a>
                 </>
 
               )

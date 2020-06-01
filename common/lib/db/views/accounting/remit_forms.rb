@@ -31,7 +31,7 @@ module Views
         migration.add_index(table_name, :net_amount, name: :"#{usable_schema_year}_remit_forms_view_on_net_amount")
         migration.add_index(table_name, :successful_amount, name: :"#{usable_schema_year}_remit_forms_view_on_successful_amount")
         migration.add_index(table_name, :failed_amount, name: :"#{usable_schema_year}_remit_forms_view_on_failed_amount")
-        migration.add_index(table_name, :recorded, name: :"#{usable_schema_year}_remit_forms_view_on_reecorded")
+        migration.add_index(table_name, :recorded, name: :"#{usable_schema_year}_remit_forms_view_on_recorded")
         migration.add_index(table_name, :reconciled, name: :"#{usable_schema_year}_remit_forms_view_on_reconciled")
       end
 

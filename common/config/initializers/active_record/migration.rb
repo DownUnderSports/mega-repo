@@ -5,6 +5,7 @@ ActiveSupport.on_load(:active_record) do
         %w[
           year_2019
           year_2020
+          year_2021
         ].each do |year|
           audit_table("#{year}.#{table_name}", *args)
         end
@@ -15,6 +16,7 @@ ActiveSupport.on_load(:active_record) do
           public
           year_2019
           year_2020
+          year_2021
         ].each do |schema|
           change_table("#{schema}.#{table_name}", options) do |t|
             block.call(t, schema)
@@ -24,6 +26,7 @@ ActiveSupport.on_load(:active_record) do
 
       def drop_yearly_table(table_name)
         %w[
+          year_2021
           year_2020
           year_2019
           public
@@ -86,7 +89,8 @@ ActiveSupport.on_load(:active_record) do
 
             [
               2019,
-              2020
+              2020,
+              2021
             ].each do |year|
               execute <<-SQL
                 CREATE TABLE IF NOT EXISTS "year_#{year}"."#{table_name}" (
@@ -132,7 +136,8 @@ ActiveSupport.on_load(:active_record) do
           d.down do
             [
               2019,
-              2020
+              2020,
+              2021
             ].each do |year|
               execute %Q(DROP TABLE IF EXISTS "year_#{year}"."#{table_name}" CASCADE;)
             end

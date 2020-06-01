@@ -2,8 +2,8 @@
   <div class="row my-5">
     <div class="col">
       <%= form_for @clock, url: admin_clock_path(@clock) do |f| %>
-        <p>Original: <%= @clock.created_at.strftime("%T.%L") %> </p>
-        <%= time_field_tag "time", @clock.created_at.strftime("%T.%L"), class: 'form-control form-group', step: '.1' %>
+        <p>Original: <%= @clock.created_at.strftime("%Y-%m-%d %T.%L") %> </p>
+        <%= text_field_tag "time", @clock.created_at.strftime("%Y-%m-%d %T.%L"), class: 'form-control form-group', step: '.1' %>
         <button class="btn btn-success">UPDATE</button>
       <% end %>
     </div>

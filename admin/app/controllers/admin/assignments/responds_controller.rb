@@ -28,7 +28,7 @@ module Admin
                 base_assignments = base_assignments.where('1=0')
               end
             else
-              filter, options = filter_records boolean_regex: /^(visited|watched|viewed|locked)$/, interval_regex: /duration/
+              filter, options = filter_records boolean_regex: /^(visited|watched|viewed|locked)$/, interval_regex: /duration/, integer_regex: /(_count|_offset|_id|grad)$/
 
               base_assignments = authorize filter ?
                 base_assignments.where(filter, options.deep_symbolize_keys) :
@@ -64,6 +64,7 @@ module Admin
                   duration: a.duration,
                   dus_id: a.dus_id,
                   follow_up_date: a.follow_up_date&.strftime('%b %d'),
+                  grad: a.grad,
                   id: a.id,
                   interest_id: a.interest_id,
                   interest_level: a.interest_level,
@@ -276,6 +277,7 @@ module Admin
             :duration,
             :dus_id,
             :follow_up_date,
+            :grad,
             :interest_id,
             :interest_level,
             :last_messaged_at,

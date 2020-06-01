@@ -37,6 +37,10 @@ class Traveler < ApplicationRecord
       find_by(name: 'Travelex Insurance')
     end
 
+    def self.single_room
+      find_by(name: 'Single Room')
+    end
+
     def self.tournament_packages
       where(%Q(name LIKE ?), '%Tournament Package')
     end
