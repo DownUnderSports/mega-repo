@@ -4,7 +4,7 @@ default: &default
 
 development:
   <<: *default
-  channel_prefix: down_under_sports_development
+  channel_prefix: down_under_sports_mega_development
 
 test:
   <<: *default

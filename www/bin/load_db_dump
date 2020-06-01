@@ -18,8 +18,8 @@ chdir APP_ROOT do
 
 
   # remove parallel restore for PSQL 12
-  # system "pg_restore --verbose --clean --no-acl --no-owner -j 8 -d down_under_sports_development  #{ARGV[0] || 'latest.dump'}"
-  system "pg_restore --verbose --clean --no-acl --no-owner -j 1 -d down_under_sports_development  #{ARGV[0] || 'latest.dump'}"
+  # system "pg_restore --verbose --clean --no-acl --no-owner -j 8 -d down_under_sports_mega_development  #{ARGV[0] || 'latest.dump'}"
+  system "pg_restore --verbose --clean --no-acl --no-owner -j 1 -d down_under_sports_mega_development  #{ARGV[0] || 'latest.dump'}"
 
   puts "\n== Setting DB environment =="
   system! 'bin/rails db:environment:set RAILS_ENV=development'

@@ -88,7 +88,7 @@ class Site extends Component {
             </div>
             <hr className="d-block w-100"/>
             <p className="text-dark">
-              Our office will have limited availability throughout the month of May while our communities address COVID-19. If you are unable to reach us, please leave a message or send us an email and we will get back to you as soon as we are able. We appreciate your understanding.
+              Our office will continue to have limited availability this month while our communities address COVID-19. If you are unable to reach us, please leave a message or send us an email and we will get back to you as soon as we are able. We appreciate your understanding.
             </p>
           </div>
         </div>
