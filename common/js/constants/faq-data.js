@@ -13,11 +13,20 @@ export const faqData = [
       We recruit athletes just like a college does. We get our names from local publications, recruiting websites such as max preps and mile split, and from coach recommendations.
     `
   },
+  // {
+  //   question: 'When is it?',
+  //   key: 'eND7GwRaFEA',
+  //   text: `
+  //     The Down Under Sports Tournaments take place in June and July each year.
+  //   `
+  // },
   {
-    question: 'When is it?',
-    key: 'eND7GwRaFEA',
+    question: 'Will I be chaperoned?',
+    key: 'SfZo6YFYtZ8',
     text: `
-      The Down Under Sports Tournaments take place in June and July each year.
+      The Down Under Sports programs are fully guided tours. Down Under Sports hand selects local Australians to pick you up from the airport, manage head counts, answer questions and act as "Tour Guides".
+
+      Tour Guides stay in the same hotels as participants and travel on the buses to all events.
     `
   },
   {

@@ -74,10 +74,10 @@ class PaymentPage extends Component {
           if(!!dusId) {
             switch (Number(this.state.type)) {
               case 2:
-                if(/deposit/.test(this.props.location.pathname)) return this.props.history.push(`/payment/${dusId}${this.props.location.search}`)
+                if(/deposit/.test(this.props.location.pathname)) return this.props.history.replace(`/payment/${dusId}${this.props.location.search}`)
                 break;
               case 1:
-                if(/payment/.test(this.props.location.pathname)) return this.props.history.push(`/deposit/${dusId}${this.props.location.search}`)
+                if(/payment/.test(this.props.location.pathname)) return this.props.history.replace(`/deposit/${dusId}${this.props.location.search}`)
                 console.log(this.props)
                 break;
               default:

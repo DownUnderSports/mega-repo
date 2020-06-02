@@ -4,11 +4,12 @@ class SeedTeamsFor2021 < ActiveRecord::Migration[5.2]
       set_db_year 2021
 
       [
-        ["BB", '2021-07-12', '2021-07-21', '2021-07-20'],
-        ["XC", '2021-06-27', '2021-07-06', '2021-07-02'],
-        ["FB", '2021-06-28', '2021-07-07', '2021-07-04'],
-        ["GF", '2021-07-11', '2021-07-20', '2021-07-16'],
-        ["VB", '2021-07-11', '2021-07-20', '2021-07-17'],
+        ["XC", '2021-06-26', '2021-07-05', '2021-07-01'],
+        ["CH", '2021-06-27', '2021-07-06', '2021-07-03'],
+        ["FB", '2021-06-27', '2021-07-06', '2021-07-03'],
+        ["GF", '2021-07-10', '2021-07-19', '2021-07-15'],
+        ["VB", '2021-07-10', '2021-07-19', '2021-07-16'],
+        ["BB", '2021-07-11', '2021-07-20', '2021-07-19'],
       ].each do |sp, dep, ret, gbr|
         Sport.where(abbr: sp).each do |sport|
           State.where_not_exists(:teams, sport_id: sport.id).each do |state|
@@ -25,13 +26,19 @@ class SeedTeamsFor2021 < ActiveRecord::Migration[5.2]
       end; nil
 
       first_group = %w[ Pacific Mountain ]
-      base_date = Date.parse('2021-07-04')
+      base_date = Date.parse('2021-07-03')
       sport_id = Sport::TF.id
 
       [
-        State.where(conference: first_group),
-        State.where.not(conference: first_group)
-      ].map do |query|
+        [
+          State.where(conference: first_group),
+          '2021-07-08'
+        ],
+        [
+          State.where.not(conference: first_group),
+          '2021-07-12'
+        ]
+      ].map do |query, gbr_date|
         query.where_not_exists(:teams, sport_id: sport_id).each do |state|
           p Team.create(
             name: "#{state.abbr} TF",
@@ -39,7 +46,7 @@ class SeedTeamsFor2021 < ActiveRecord::Migration[5.2]
             state: state,
             departing_date: base_date,
             returning_date: base_date + 9,
-            gbr_date: base_date + 5
+            gbr_date: gbr_date
           )
         end
 

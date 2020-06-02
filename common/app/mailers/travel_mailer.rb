@@ -82,8 +82,7 @@ class TravelMailer < ImportantMailer
   end
 
   def refund_apology
-    @user = User[params[:user_id]]
-    email = params[:email].presence || @user.athlete_and_parent_emails
+    email = params[:email].presence || User[params[:user_id]]&.athlete_and_parent_emails
 
     return false unless email.present?
 

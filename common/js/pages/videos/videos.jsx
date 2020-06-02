@@ -252,6 +252,79 @@ class VideoPlayer extends Component {
             + (trackingId ? `Athlete%20DUS%20ID:%20${trackingId}%0D%0A` : 'Athlete Name:%20%0D%0A')
   }
 
+  get showPDF() {
+    if(!this.state.visiblePDF) return false
+
+    return <div id="pdf-viewer" key={this.state.visiblePDF} className="col-12 mb-3">
+      <DisplayOrLoading message=" " loadingElement=" " display={this.state.visiblePDF !== 'buffer'} >
+        <button
+          className="btn btn-dark btn-block mb-1"
+          onClick={this.setPDF}
+        >
+          Close PDF
+        </button>
+        <Link
+          to={this.state.visiblePDF}
+          className="btn btn-info btn-block btn-warning mb-1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Direct Link (Opens in a New Tab)
+        </Link>
+        <object
+          data={this.state.visiblePDF}
+          width="100%"
+          height="500"
+          type="application/pdf"
+          className="mb-1 vh-75"
+        >
+          <object
+            data={`https://docs.google.com/viewer?embedded=true&url=${this.state.visiblePDF}`}
+            width="100%"
+            height="500"
+            className="mb-1 vh-75"
+          >
+            <p>
+              Your Browser Does Not Support Embedded PDFs
+            </p>
+          </object>
+        </object>
+        <button
+          className="btn btn-dark btn-block mb-3"
+          onClick={this.setPDF}
+        >
+          Close PDF
+        </button>
+      </DisplayOrLoading>
+    </div>
+  }
+
+  setPDF = (ev) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    const visiblePDF = ev.currentTarget.dataset.link || ''
+    this.setState(
+      { visiblePDF: visiblePDF ? "buffer" : '' },
+      () => visiblePDF && setTimeout(() => this.setState({ visiblePDF }, this.scrollFrameIntoView))
+    )
+  }
+
+  scrollFrameIntoView() {
+    const viewer = document.getElementById('pdf-viewer'),
+          rect = viewer.getBoundingClientRect(),
+          scrollTop = window.pageYOffset
+                      || document.documentElement.scrollTop,
+          top = rect.top + scrollTop - 150
+    try {
+      window.scrollTo({
+        top,
+        behavior: 'smooth'
+      })
+    } catch (err) {
+      window.scroll(0, top)
+    }
+  }
+
   // onClickFullscreen = () => {
   //   screenfull.request(findDOMNode(this.player))
   // }
@@ -372,12 +445,22 @@ class VideoPlayer extends Component {
                               <h3 className="card-title text-center text-success">You've Already Joined the Team!</h3>
                               <div className="row">
                                 <div className="col-auto">
-                                  <Link className='btn btn-info btn-lg' to="https://drive.google.com/file/d/1b5dMilMB5k4NE7JJiuGaeNSpZuqvh23M/view?usp=sharing" target='_info_program'>
+                                  <Link
+                                    onClick={this.setPDF}
+                                    className="btn btn-info btn-lg"
+                                    to="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/direct_access/2019+Down+Under+Sports+Program.pdf"
+                                    data-link="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/direct_access/2019+Down+Under+Sports+Program.pdf"
+                                  >
                                     2019 Program
                                   </Link>
                                 </div>
                                 <div className="col">
-                                  <Link className='btn btn-success btn-lg btn-block' to={`/payment/${trackingId}`}>Click Here to Make a Payment</Link>
+                                  <Link
+                                    className="btn btn-success btn-lg btn-block"
+                                    to={`/payment/${trackingId}`}
+                                  >
+                                    Click Here to Make a Payment
+                                  </Link>
                                 </div>
                               </div>
                             </div>
@@ -441,33 +524,47 @@ class VideoPlayer extends Component {
                           )
                           */
                         }
-                        <div className="col-auto">
-                          <Link className='btn btn-info btn-lg' to="https://drive.google.com/file/d/1ynXn4-yJiAORz3PweFB9ZpDhk3RoN-ti/view?usp=sharing" target='_info_flyer'>
+                        <div className="col-12 col-sm col-md-auto mb-3">
+                          <Link
+                            onClick={this.setPDF}
+                            className="btn btn-info btn-lg btn-block"
+                            to="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/direct_access/DUS+Info+Flyer.pdf"
+                            data-link="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/direct_access/DUS+Info+Flyer.pdf"
+                          >
                             Price
                           </Link>
                         </div>
-                        <div className="col-auto">
-                          <Link className='btn btn-secondary btn-lg' to="https://drive.google.com/file/d/1b5dMilMB5k4NE7JJiuGaeNSpZuqvh23M/view?usp=sharing" target='_info_program'>
+                        <div className="col-12 col-sm-8 col-md-auto mb-3">
+                          <Link
+                            onClick={this.setPDF}
+                            className="btn btn-secondary btn-lg btn-block"
+                            to="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/direct_access/2019+Down+Under+Sports+Program.pdf"
+                            data-link="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/direct_access/2019+Down+Under+Sports+Program.pdf"
+                          >
                             2019 Program
                           </Link>
                         </div>
-                        <div className="col-auto">
-                          <Link className='btn btn-primary btn-lg' to={`/frequently-asked-questions?dus_id=${trackingId}`}>
+                        <div className="col-12 col-sm col-md-auto mb-3">
+                          <Link
+                            className="btn btn-primary btn-lg btn-block"
+                            to={`/frequently-asked-questions?dus_id=${trackingId}`}
+                          >
                             F.A.Q.
                           </Link>
                         </div>
-                        <div className='col'>
+                        <div className="col-12 col-sm-8 col-md mb-3">
                           <Link
-                            className='btn btn-success btn-lg btn-block'
+                            className="btn btn-success btn-lg btn-block"
                             to={this.reserveSpot}
                           >
                             Reserve Your Spot!
                           </Link>
                         </div>
-                        <div className="col-12 my-3">
-                          <hr/>
+                        { this.showPDF }
+                        <div className="col-12 mb-3">
+                          <hr className="mt-0"/>
                           <Link
-                            className='btn btn-secondary float-right'
+                            className="btn btn-secondary float-right"
                             to="https://www.meetingbird.com/l/DownUnderSports/one-on-one"
                             onClick={this.scheduleAppt}
                           >
@@ -494,23 +591,23 @@ class VideoPlayer extends Component {
                             </div>
                           </div>
                         </div>
-                        <div className="col-auto">
-                          <Link className='btn btn-primary btn-lg' to={`/frequently-asked-questions${trackingId ? `?dus_id=${trackingId}` : ''}`}>
+                        <div className="col-12 col-sm-auto mb-3">
+                          <Link className='btn btn-primary btn-lg btn-block' to={`/frequently-asked-questions${trackingId ? `?dus_id=${trackingId}` : ''}`}>
                             F.A.Q.
                           </Link>
                         </div>
                         <div className='col'>
                           <Link
-                            className='btn btn-success btn-lg btn-block'
+                            className="btn btn-success btn-lg btn-block"
                             to={this.reserveSpot}
                           >
                             Reserve Your Spot!
                           </Link>
                         </div>
-                        <div className="col-12 my-3">
-                          <hr/>
+                        <div className="col-12 mb-3">
+                          <hr className="mt-0"/>
                           <Link
-                            className='btn btn-secondary float-right'
+                            className="btn btn-secondary float-right"
                             to="https://www.meetingbird.com/l/DownUnderSports/one-on-one"
                             onClick={this.scheduleAppt}
                           >
