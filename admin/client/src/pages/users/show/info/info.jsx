@@ -158,6 +158,13 @@ export default class UsersShowInfoPage extends Component {
     clearTimeout(this.locationScroller)
   }
 
+  get refundAmountView() {
+    const id = this.props.id,
+          { host, protocol = "https:" } = window.location,
+          base_host = host.replace(/^(authorize|admin|www)\./, '').replace("3000", "3100")
+    return `${protocol}//authorize.${base_host}/admin/users/${id}/refund_view`
+  }
+
   render() {
     const {
       user: {
@@ -170,7 +177,8 @@ export default class UsersShowInfoPage extends Component {
         traveler = false,
         team,
         staff_page = false,
-        final_packet_base = ''
+        final_packet_base = '',
+        is_fully_canceled = false
       },
       id,
       lastFetch = 0
@@ -229,6 +237,15 @@ export default class UsersShowInfoPage extends Component {
                       id={id}
                     />
                   </div>
+                  {
+                    !!can_send_fence && !!is_fully_canceled && (
+                      <div className="list-group-item">
+                        <a href={this.refundAmountView} className="btn btn-block btn-secondary form-group">
+                          Open Refund Summary Form
+                        </a>
+                      </div>
+                    )
+                  }
                   {
                     !!can_send_corona && (
                       <DisplayOrLoading display={!sendingCoronaEmail}>

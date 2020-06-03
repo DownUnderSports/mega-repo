@@ -5,7 +5,7 @@ import FileDownload from 'common/js/components/file-download'
 import dusIdFormat from 'common/js/helpers/dus-id-format'
 import './qr-codes.css'
 
-const withHttp = (src) => /\:\/\//.test(src) ? src : `https://${src}`
+const withHttp = (src) => /:\/\//.test(src) ? src : `https://${src}`
 
 export default class QrCodesPage extends Component {
   state = {

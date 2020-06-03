@@ -469,7 +469,7 @@ class Traveler < ApplicationRecord
   def refundable_amount
     [
       total_payments - (deposit_amount + insurance_charge),
-      0
+      0.cents
     ].max
   end
 

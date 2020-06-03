@@ -1,17 +1,34 @@
 Hi <%= @user.print_first_name_only %>,
 
 Below you will find an accounting of the funds submitted to Down Under Sports (as of <%= pretty_date_text Date.today %>), as well as a link to your statement.
+<% if @refundable_amount > 0 %>
 
-<%= @user.print_names %>, <%= @user.team.sport.full %> <%= @user.category_title %> (<%= @user.dus_id %>)
-Total Paid: <%= @user.traveler.total_payments.to_s(true) %>
-Total Refundable: <%= @refundable_amount.to_s(true) %>
+Our office will continue to have limited availability throughout the summer due to our 2020 tours being postponed. Normal operations must resume in order for Down Under Sports to begin refunding monies owed to cancelled travelers.
 
-*The deposit is non-refundable<% if @user.traveler.insurance_debit %>, as well as the insurance premium<% end %>; however you may apply your deposit<% if @user.traveler.insurance_debit %> and insurance premium<% end %> to 2021 participation if you would like to travel with us next year. This needs to be requested by you before August 31st, 2020.
-
-STATEMENT LINK: <%= @user.statement_link %>
-
-Our office will continue to have limited availability throughout the summer due to our 2020 tours being postponed. Normal operations must resume in order for Down Under Sports to begin refunding monies owed to cancelled travelers. We understand that this is not ideal; however, we are committed to getting you the total refundable amount in a timely fashion and in a way that allows us to continue operations and pay our employees as well as providing this once in a lifetime experience to our participants next summer.
+We understand that this is not ideal; however, we are committed to getting you the total refundable amount in a timely fashion and in a way that allows us to continue operations and pay our employees as well as provide this once in a lifetime experience to our participants next summer.
+<% end %>
 
 Cheers!
 
 <%= render partial: "shared/email_footer", locals: { skip_hours: :summer } %>
+
+################################################################################
+#
+# <%= @user.print_names %>, <%= @user.team.sport.full %> <%= @user.category_title %> (<%= @user.dus_id %>)
+# Total Paid: <%= @user.traveler.total_payments.to_s(true) %>
+# Total Refundable: <%= @refundable_amount.to_s(true) %>
+#
+<%- if @has_insurance -%>
+# *The deposit is non-refundable, as well as the insurance premium; however you
+# may apply your deposit and insurance premium to 2021 participation if you would
+# like to travel with us next year. This needs to be requested by you before
+# August 31st, 2020.
+<%- else -%>
+# *The deposit is non-refundable; however you may apply your deposit to 2021
+# participation if you would like to travel with us next year. This needs to be
+# requested by you before August 31st, 2020.
+<%- end -%>
+#
+# STATEMENT LINK: <%= @user.statement_link %>
+#
+################################################################################

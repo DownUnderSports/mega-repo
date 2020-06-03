@@ -336,50 +336,60 @@ module Invite
       invite_rule.certifiable ? "Y" : nil
     end
 
+    def plural_team
+
+    end
+
     def p1
       if ok_invite?
         return <<-PARAGRAPH
-          Down Under Sports is pleased to announce that #{certificate == 'Y' ? 'based on your overall performance ' : ''}you have been invited to represent #{state.full} at the 32nd annual Down Under Sports tournaments hosted on the Gold Coast of Australia. #{certificate == 'Y' ? 'We proudly present your certificate for this achievement (enclosed).' : ''}
+          Down Under Sports is pleased to announce that #{certificate == 'Y' ? 'based on your overall performance ' : ''}you have been invited to compete in our 2021 Down Under Sports tournaments hosted on the Gold Coast of Queensland, Australia.#{certificate == 'Y' ? ' We proudly present your certificate for this achievement (enclosed).' : ''}
         PARAGRAPH
       else
         return <<-PARAGRAPH
-          You have been invited to the ONLINE OPEN TRYOUT for the 32nd annual Down Under Sports tournaments hosted on the Gold Coast of Australia. This tryout will culminate in the selection of our 2020 USA #{sport_full} Team. Be ready to discuss your sport stats, achievements, and any other qualities you would like us to consider in the selection process.
+          You have been invited to the online open tryout for the 2021 Down Under Sports tournaments hosted on the Gold Coast of Australia. This tryout will culminate in the selection of our 2021 USA #{sport_full.downcase} team.
         PARAGRAPH
       end
     end
 
     def p2
       return <<-PARAGRAPH
-        #{ok_invite? ? 'You' : 'If you are selected, you'} will join the ranks of thousands of exceptional athletes who have participated in this once-in-a-lifetime experience. Our #{sport_full.downcase} teams depart on #{departing} to meet up with our Down Under Sports coaches and staff and spend ten days traveling, competing and sight-seeing in Australia. See enclosed sample itinerary for more information.
+        This is a rewarding experience that will help you network with coaches and athletes who share your passion for sports. We #{ok_invite? ? 'recruit' : 'invite'} athletes from all around the U.S. to experience the culture, beauty, and grandeur of Australia while competing in a renowned tournament. Since 1989, we have helped tens of thousands of high school athletes take advantage of this once-in-a-lifetime opportunity to showcase their talents on the international stage.#{ok_invite? ? "We hope you will join our #{sport_full.downcase} teams departing on #{departing}." : ''}
       PARAGRAPH
     end
 
     def p3
-      if ok_invite?
-        return <<-PARAGRAPH
-          We have developed a proven sponsorship fundraising program and special offers to help our athletes cover the cost of this event. Request a no obligation information packet at downundersports.com/#{dus_id} or call/text us at 435-753-4732. After submitting a request, along with a packet in the mail you'll receive a link to a short video for you to watch with a parent/guardian. This video will cover the most important details of our program, including available discounts, so you can make a well-informed decision.
-        PARAGRAPH
-      else
-        return <<-PARAGRAPH
-          To ensure that every selected athlete can participate in this once-in-a-lifetime experience, we have developed a proven sponsorship fundraising program and special offers to help our athletes cover the cost of this event. To try out for the team, request more information at downundersports.com/#{dus_id} or call/text us at 435-753-4732.
-        PARAGRAPH
-      end
+      return <<-PARAGRAPH
+        #{ok_invite? ? "" : "Our #{sport_full.downcase} team departs on #{departing}. "}Athletes will meet up with our Down Under Sports coaches and staff and spend ten days traveling, competing and sight-seeing in Australia. See enclosed sample itinerary for more details. We have developed a proven sponsorship fundraising program and special offers to help our selected athletes cover the cost of this trip. #{archive_line} #{instruction_line}
+      PARAGRAPH
     end
 
     def p4
       if ok_invite?
         return <<-PARAGRAPH
-          We look forward to speaking with you about your invitation to compete in the land down under.
+          We look forward to speaking with you about competing in the land down under.
         PARAGRAPH
       else
         return <<-PARAGRAPH
-          We look forward to hearing from you soon and hope to see you in the land down under.
+          We look forward to speaking with you about your sport stats, achievements, and any other qualities you would like us to consider in the selection process.
         PARAGRAPH
       end
     end
 
+    def archive_line
+      "Check us out on social media and visit downundersports.com/sports/#{sport.abbr_gender} to see our #{sport_full.downcase} tournament archives."
+    end
+
     def ps_line
-      "P.S. Check us out on social media and visit downundersports.com/sports/#{sport.abbr_gender} to see our #{sport_full.downcase} tournament archives."
+      ""
+    end
+
+    def instruction_line
+      if ok_invite?
+        "If you are as excited as we are about this opportunity, request and information guide at downundersports.com/#{dus_id} (your DUS ID is #{dus_id}). You can also call/text us at 435-753-4732."
+      else
+        "If you would like to try out for the team, complete the open tryout form at downundersports.com/open-tryouts"
+      end
     end
 
     def invite_rule

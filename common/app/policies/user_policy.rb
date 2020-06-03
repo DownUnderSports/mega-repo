@@ -99,7 +99,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def on_the_fence?
-    user_is_staff? && user.dus_id.in?(%[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN ])
+    fence_emails?
   end
 
   def selected_cancel?
@@ -110,10 +110,23 @@ class UserPolicy < ApplicationPolicy
     corona_emails?
   end
 
+  def refund_view?
+    corona_emails?
+  end
+
+  def refund_amount_email?
+    corona_emails?
+  end
+
   private
+    def fence_emails?
+      user_is_staff? &&
+      user.dus_id.in?(User::FENCEABLE_IDS)
+    end
+
     def corona_emails?
       user_is_staff? &&
-      user.dus_id.in?(%[ DAN-IEL GAY-LEO KAR-ENJ SAR-ALO SAM-PSN SHR-RIE ])
+      user.dus_id.in?(User::CORONABLE_IDS)
     end
 
     def allowed?

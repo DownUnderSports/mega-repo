@@ -23,16 +23,21 @@
         Below you will find an accounting of the funds submitted to Down Under
         Sports (as of <%= pretty_date Date.today %>), as well as a link to your statement.
       </p>
+      <% if @refundable_amount > 0 %>
       <p>
         Our office will continue to have limited availability throughout the
         summer due to our 2020 tours being postponed. Normal operations must
         resume in order for Down Under Sports to begin refunding monies owed to
-        cancelled travelers. We understand that this is not ideal; however, we
+        cancelled travelers.
+      </p>
+      <p>
+        We understand that this is not ideal; however, we
         are committed to getting you the total refundable amount in a timely
         fashion and in a way that allows us to continue operations and pay our
-        employees as well as providing this once in a lifetime experience to our
+        employees as well as provide this once in a lifetime experience to our
         participants next summer.
       </p>
+      <% end %>
       <p>
         Cheers!
       </p>
@@ -49,8 +54,8 @@
         Total Paid: <strong><%= @user.traveler.total_payments.to_s(true) %></strong><br>
         Total Refundable: <strong><%= @refundable_amount.to_s(true) %></strong><br>
         <i>
-          <sup>*</sup>The deposit is non-refundable<% if @user.traveler.insurance_debit %>, as well as the insurance premium<% end %>;
-          however you may apply your deposit<% if @user.traveler.insurance_debit %> and insurance premium<% end %>
+          <sup>*</sup>The deposit is non-refundable<% if @has_insurance %>, as well as the insurance premium<% end %>;
+          however you may apply your deposit<% if @has_insurance %> and insurance premium<% end %>
           to 2021 participation if you would like to travel with us next year.
           This needs to be requested by you before August 31<sup>st</sup>, 2020.
         </i>

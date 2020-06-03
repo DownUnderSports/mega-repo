@@ -16,6 +16,9 @@ class User < ApplicationRecord
       %w[ evaluated contacted confirmed completed ].
         each_with_object({}) {|cat, obj| obj[cat] = cat}.
         freeze
+
+    PROTECTED_STATUSES = %w[ confirmed completed ].freeze
+
     # == Attributes ===========================================================
     enum difficulty: self::DIFFICULTIES, _suffix: :difficulty
     enum status: self::STATUSES, _suffix: :status
@@ -59,6 +62,15 @@ class User < ApplicationRecord
       changed_by&.staff&.check(:admin)
     end
 
+    def mind_is_set?
+      status.in?(PROTECTED_STATUSES)
+    end
+
+    def fully_canceled?
+      (can_transfer == 'N') &&
+      mind_is_set?
+    end
+
     # == Instance Methods =====================================================
     private
       def refresh_views
@@ -68,8 +80,8 @@ class User < ApplicationRecord
 
       def check_changes
         unless allow_revert?
-          if status_was.in? protected_statuses
-            unless allow_revert? || status.in?(protected_statuses)
+          if status_was.in? PROTECTED_STATUSES
+            unless allow_revert? || status.in?(PROTECTED_STATUSES)
               errors.add(:status, 'revert not allowed')
             end
             unless allow_confirm?
@@ -79,7 +91,7 @@ class User < ApplicationRecord
                 errors.add(:base, 'changes not allowed without permission')
               end
             end
-          elsif status.in?(protected_statuses)
+          elsif status.in?(PROTECTED_STATUSES)
             unless allow_confirm?
               errors.add(:status, 'upgrade not allowed')
             end
@@ -89,10 +101,6 @@ class User < ApplicationRecord
 
       def changed_by
         User[self.staff_user_id]
-      end
-
-      def protected_statuses
-        @protected_statuses ||= %w[ confirmed completed ].freeze
       end
 
       def mind_changed?

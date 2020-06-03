@@ -9,11 +9,9 @@ module Admin
     IDBuilder = Struct.new(:id)
 
     # == Class Methods ======================================================
-    FENCEABLE_USERS = %[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN ].freeze
-    CORONABLE_USERS = %[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN SHR-RIE KAR-ENJ ].freeze
 
     # == Pre/Post Flight Checks =============================================
-    before_action :lookup_user, except: [ :cancel, :download, :index, :infokits, :invitable, :invites, :responds, :uncontacted_last_year_responds ]
+    before_action :lookup_user, except: [ :cancel, :download, :index, :infokits, :invitable, :invites, :responds, :uncontacted_last_year_responds, :refund_view, :refund_amount_email ]
 
     # == Actions ============================================================
     def index
@@ -179,8 +177,8 @@ module Admin
 
               deflator.stream false, :avatar_attached, @found_user.avatar.attached?
               deflator.stream true,  :avatar, @found_user.avatar.attached? ? url_for(@found_user.avatar.variant(resize: '500x500>', auto_orient: true)) : '/mstile-310x310.png'
-              deflator.stream true,  :can_send_fence, current_user&.dus_id&.in?(FENCEABLE_USERS)
-              deflator.stream true,  :can_send_corona, current_user&.dus_id&.in?(CORONABLE_USERS)
+              deflator.stream true,  :can_send_fence, current_user&.dus_id&.in?(User::FENCEABLE_IDS)
+              deflator.stream true,  :can_send_corona, current_user&.dus_id&.in?(User::CORONABLE_IDS)
               deflator.stream true,  :dus_id, @found_user.dus_id
               deflator.stream true,  :statement_link, @found_user.statement_link
               deflator.stream true,  :over_payment_link, @found_user.over_payment_link
@@ -225,6 +223,7 @@ module Admin
                 deflator.stream true,  :allow_travel_dates, current_user&.staff&.check(:flights)
                 deflator.stream true,  :departing_date_override, @found_user.departing_date_override
                 deflator.stream true,  :returning_date_override, @found_user.returning_date_override
+                deflator.stream true,  :is_fully_canceled, !!@found_user.transfer_expectation&.fully_canceled?
 
                 deflator.stream true,  :pnrs, t.flight_schedules&.map(&:pnr)
                 deflator.stream true,  :buses, (
@@ -284,6 +283,62 @@ module Admin
         'User not found',
         $!.message
       ], 422)
+    end
+
+    def refund_view
+      authorize (@found_user = User.get(params[:user_id]))
+      return render :refund_view, layout: 'internal'
+    rescue not_authorized_error
+      return redirect_back fallback_location: admin_user_url(params[:user_id]).sub(":3100", ":3000")
+    end
+
+    def refund_amount_email
+      authorize(@found_user = User.get(params[:user_id]))
+
+      permitted =
+        params.
+          require(:email_overrides).
+          permit(
+            :refundable_amount,
+            :override_refundable,
+            :emails,
+            :override_emails,
+            :force_insurance
+          )
+
+      options = {
+        user_id: @found_user.id,
+        staff_id: current_user&.category_id
+      }
+
+      options[:email] = permitted[:emails] if Boolean.parse(permitted[:override_emails])
+      options[:refundable_amount] = permitted[:refundable_amount] if Boolean.parse(permitted[:override_refundable])
+      options[:force_insurance] = Boolean.parse(permitted[:force_insurance])
+
+      @found_user.contact_histories.create(
+        category: :email,
+        message: "Marked Refund Amount Email To Be Sent",
+        staff_id: options[:staff_id].presence || auto_worker.category_id
+      )
+
+      TravelMailer.
+        with(**options).
+        refund_amount.
+        deliver_later(queue: :async_mailer)
+
+      return redirect_to @found_user.admin_url.sub(":3100", ":3000"), status: 303
+    rescue not_authorized_error
+      return redirect_back fallback_location: admin_user_url(params[:user_id]).sub(":3100", ":3000")
+    rescue
+      @errors = [
+        $!.message,
+        *$!.backtrace.first(20)
+      ]
+
+      Rails.logger.error $!.message
+      Rails.logger.error $!.backtrace
+
+      return render :refund_view, layout: 'internal'
     end
 
     def on_the_fence

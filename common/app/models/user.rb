@@ -9,6 +9,8 @@ class User < ApplicationRecord
   # == Constants ============================================================
   NON_DUPABLE_KEYS = Set.new(%i[ dus_id ])
   FORWARDED_DUS_IDS = ForwardedId.get_ids.freeze
+  CORONABLE_IDS = %[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN SHR-RIE KAR-ENJ ].freeze
+  FENCEABLE_IDS = %[ DAN-IEL GAY-LEO SAR-ALO SAM-PSN ].freeze
 
   # == Attributes ===========================================================
   has_protected_password

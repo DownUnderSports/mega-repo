@@ -94,11 +94,26 @@ class TravelMailer < ImportantMailer
     email = params[:email].presence || @user&.athlete_and_parent_emails
     email = [email].flatten.select(&:present?).presence
 
-    return false unless @user.present? && email.present?
+    unless @user.present? &&
+            email.present? &&
+            (@user.transfer_expectation&.fully_canceled? || (@user == test_user))
+
+      @user&.contact_histories&.create(
+        category: :email,
+        message: "Failed to Send Refund Amount Email: #{email ? 'No Email Found' : 'User Not Fully Canceled'}",
+        staff_id: params[:staff_id].presence || auto_worker.category_id
+      )
+
+      return false
+    end
+
+    @has_insurance =
+      Boolean.parse(params[:force_insurance]) ||
+      !!@user.traveler.insurance_debit
 
     @refundable_amount =
       StoreAsInt.money(
-        params[:refundable_override].presence ||
+        params[:refundable_amount].presence ||
         @user.traveler.refundable_amount
       )
 
@@ -108,7 +123,7 @@ class TravelMailer < ImportantMailer
       m.after_send do
         @user.contact_histories.create(
           category: :email,
-          message: "Sent Refund Amount Email to: #{email.join("; ")}",
+          message: "Sent Refund Amount Email (#{@refundable_amount.to_s(true)}) to: #{email.join("; ")}",
           staff_id: params[:staff_id].presence || auto_worker.category_id
         )
       end

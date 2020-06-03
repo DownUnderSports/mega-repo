@@ -81,7 +81,6 @@ export default class FundraisingIdeasPage extends Component {
   toggleImageClass = (ev) => {
     ev.preventDefault()
     ev.stopPropagation()
-    console.log(ev.currentTarget)
     const id = ev.currentTarget.dataset.id
     try {
       if(!id || (id === this.state.selectedImg)) {

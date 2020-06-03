@@ -81,7 +81,7 @@ export default class FundraisingIdeasIndexPage extends Component {
     )
 
   render() {
-    const { ideas = [], errors } = this.state
+    const { ideas = [] } = this.state
     return (
       <div className="FundraisingIdeas IndexPage">
         <h3 className="text-center mb-5">

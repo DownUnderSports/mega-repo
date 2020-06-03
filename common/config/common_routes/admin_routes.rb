@@ -1,11 +1,31 @@
 module AdminRoutes
+  AUTHORIZED_DOMAIN_TEST = %r{
+    ^
+    auth(enticate|orize)
+    (?:
+      \.localhost
+      |\.lvh(\.me)?
+      |\.downundersports(\.com)?
+    )?
+    $
+  }x.freeze
+
+  def self.with_auth(router)
+    router.instance_exec do
+      self.class.define_method(:with_auth) do |&block|
+        constraints(subdomain: AUTHORIZED_DOMAIN_TEST) { block.call }
+      end
+    end
+  end
+
   def self.extended(router)
+    with_auth(router)
     router.instance_exec do
       namespace :admin do
         get :whats_my_url, to: 'application#whats_my_url'
         get :no_op, to: 'application#no_op'
 
-        constraints(subdomain: /^auth(enticate|orize)(?:\.localhost|\.lvh(\.me)?|\.downundersports(\.com)?)?$/) do
+        with_auth do
           get :test_departure_checklist, to: "users#test_departure_checklist"
 
           resources :sampson, only: [ :index, :create ]
@@ -246,6 +266,11 @@ module AdminRoutes
               end
             end
             resource :transfer_expectation, only: [ :show, :update ], defaults: { format: :json }
+          end
+
+          with_auth do
+            get :refund_view, defaults: { format: :html }
+            post :refund_amount_email
           end
 
           resource :returned_mail, only: %i[ show ]
