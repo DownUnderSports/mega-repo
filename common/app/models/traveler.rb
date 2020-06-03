@@ -466,6 +466,13 @@ class Traveler < ApplicationRecord
     user.offers
   end
 
+  def refundable_amount
+    [
+      total_payments - (deposit_amount + insurance_charge),
+      0
+    ].max
+  end
+
   def reload
     @deposit_date = @first_payment = nil
     super

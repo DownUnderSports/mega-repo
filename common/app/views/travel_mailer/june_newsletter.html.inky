@@ -2,7 +2,7 @@
   <row>
     <columns>
       <spacer size="16"></spacer>
-      <h3 class="text-center">Live the Dream!</h3>
+      <h3 class="text-center">Getting Started</h3>
     </columns>
   </row>
 </container>
@@ -13,27 +13,22 @@
   <row>
     <columns>
       <p>
-        Over the last three decades, Down Under Sports has shared the land down
-        under with thousands of athletes from all across the United States!
+        G'day!
       </p>
       <p>
-        Through Down Under Sports, countless friendships and memories have been
-        made. While we are disappointed that we can’t provide this once in a
-        lifetime opportunity in 2020, we can’t wait to carry on this wonderful
-        tradition and keep our founders' dream alive!
+        We are getting your 2021 fundraising information ready to send out this
+        month. We want you to have plenty of time to prepare for your trip next
+        summer. Please see our June newsletter attached to read a fundraising
+        success story about one of our athletes from West Virginia.
+      </p>
+      <p>
+        Be sure to check your state health and safety guidelines before resuming
+        any fundraising activities.
       </p>
       <p>
         Cheers,
       </p>
       <%= render partial: 'shared/email_footer', locals: { skip_hours: :summer } %>
-    </columns>
-  </row>
-  <row>
-    <columns>
-      <p>
-        <strong>PS:</strong> Check out the attached newsletter for a fun way to
-        learn a little more about Australia!
-      </p>
     </columns>
   </row>
 </container>

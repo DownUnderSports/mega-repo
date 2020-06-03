@@ -1,0 +1,64 @@
+<container class="header">
+  <row>
+    <columns>
+      <h1 class="text-center">Summary of Account</h1>
+      <center>
+        <menu class="text-center">
+          <item>DUS ID: <%= @user.dus_id %></item>
+        </menu>
+      </center>
+    </columns>
+  </row>
+</container>
+<container class="body-border full">
+  <spacer size="32"></spacer>
+</container>
+<container>
+  <row>
+    <columns>
+      <p>
+        Hi <%= @user.print_first_name_only %>,
+      </p>
+      <p>
+        Below you will find an accounting of the funds submitted to Down Under
+        Sports (as of <%= pretty_date Date.today %>), as well as a link to your statement.
+      </p>
+      <p>
+        Our office will continue to have limited availability throughout the
+        summer due to our 2020 tours being postponed. Normal operations must
+        resume in order for Down Under Sports to begin refunding monies owed to
+        cancelled travelers. We understand that this is not ideal; however, we
+        are committed to getting you the total refundable amount in a timely
+        fashion and in a way that allows us to continue operations and pay our
+        employees as well as providing this once in a lifetime experience to our
+        participants next summer.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: "shared/email_footer", locals: { skip_hours: :summer } %>
+    </columns>
+  </row>
+</container>
+<container class="full">
+  <row>
+    <columns>
+      <hr>
+      <p>
+        <strong><%= @user.print_names %>, <%= @user.team.sport.full %> <%= @user.category_title %> (<%= @user.dus_id %>)</strong><br>
+        Total Paid: <strong><%= @user.traveler.total_payments.to_s(true) %></strong><br>
+        Total Refundable: <strong><%= @refundable_amount.to_s(true) %></strong><br>
+        <i>
+          <sup>*</sup>The deposit is non-refundable<% if @user.traveler.insurance_debit %>, as well as the insurance premium<% end %>;
+          however you may apply your deposit<% if @user.traveler.insurance_debit %> and insurance premium<% end %>
+          to 2021 participation if you would like to travel with us next year.
+          This needs to be requested by you before August 31<sup>st</sup>, 2020.
+        </i>
+      </p>
+      <center>
+        <%= link_to "CLICK HERE TO VIEW YOUR STATEMENT", @user.statement_link, class: 'btn btn-block' %>
+      </center>
+      <hr>
+    </columns>
+  </row>
+</container>

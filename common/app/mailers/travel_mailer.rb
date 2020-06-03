@@ -82,11 +82,39 @@ class TravelMailer < ImportantMailer
   end
 
   def refund_apology
-    email = params[:email].presence || User[params[:user_id]]&.athlete_and_parent_emails
+    email = params[:email].presence
 
     return false unless email.present?
 
     mail skip_filter: true, to: email, subject: "Refund Information"
+  end
+
+  def refund_amount
+    @user = User[params[:user_id]]
+    email = params[:email].presence || @user&.athlete_and_parent_emails
+    email = [email].flatten.select(&:present?).presence
+
+    return false unless @user.present? && email.present?
+
+    @refundable_amount =
+      StoreAsInt.money(
+        params[:refundable_override].presence ||
+        @user.traveler.refundable_amount
+      )
+
+    m = mail skip_filter: true, to: email, subject: "Refund Summary"
+
+    if m
+      m.after_send do
+        @user.contact_histories.create(
+          category: :email,
+          message: "Sent Refund Amount Email to: #{email.join("; ")}",
+          staff_id: params[:staff_id].presence || auto_worker.category_id
+        )
+      end
+    end
+
+    m
   end
 
   def duffel_bag_sent
