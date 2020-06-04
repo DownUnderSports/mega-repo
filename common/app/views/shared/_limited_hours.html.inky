@@ -1,0 +1,27 @@
+<table class="table hours-table">
+  <thead>
+    <tr>
+      <th colspan="2">
+        Office Hours (Limited)
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>
+        Tue - Thu
+      </th>
+      <td>
+        2 PM - 4 PM (<%= Time.zone.now.zone %>)
+      </td>
+    </tr>
+    <tr>
+      <th>
+        Fri - Mon
+      </th>
+      <td>
+        Closed
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -276,4 +276,16 @@ module ViewAndControllerMethods
       require "base64"
       Base64.strict_encode64 str
     end
+
+    def get_hours_settings(skip_hours = false)
+      hours_type = "hours"
+      case skip_hours
+      when Symbol
+        hours_type = "#{skip_hours}_hours"
+        skip_hours = nil
+      else
+        skip_hours = !!skip_hours
+      end
+      [ hours_type, skip_hours ]
+    end
 end

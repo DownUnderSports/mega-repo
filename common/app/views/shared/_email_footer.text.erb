@@ -1,5 +1,6 @@
+<%- hours_type, skip_hours = get_hours_settings(defined?(skip_hours) && skip_hours) -%>
 <%= render partial: 'shared/signature' %>
-<%- unless defined?(skip_hours) && skip_hours -%>
+<%- unless skip_hours -%>
 
-<%= render partial: 'shared/hours' %>
+<%= render partial: "shared/#{hours_type}" %>
 <%- end -%>

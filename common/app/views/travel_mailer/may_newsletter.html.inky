@@ -25,7 +25,7 @@
       <p>
         Cheers,
       </p>
-      <%= render partial: 'shared/email_footer', locals: { skip_hours: :summer } %>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :limited } %>
     </columns>
   </row>
   <row>
