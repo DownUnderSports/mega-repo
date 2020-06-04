@@ -91,45 +91,45 @@ class TravelMailer < ImportantMailer
 
   def refund_amount
     @user = User[params[:user_id]]
-    email = params[:email].presence || @user&.athlete_and_parent_emails
-    email = [email].flatten.select(&:present?).presence
+    # email = params[:email].presence || @user&.athlete_and_parent_emails
+    # email = [email].flatten.select(&:present?).presence
 
-    unless @user.present? &&
-            email.present? &&
-            (@user.transfer_expectation&.fully_canceled? || (@user == test_user))
+    # unless @user.present? &&
+    #         email.present? &&
+    #         (@user.transfer_expectation&.fully_canceled? || (@user == test_user))
+    @user&.contact_histories&.create(
+      category: :email,
+      message: "Failed to Send Refund Amount Email: Disabled until Further Notice",
+      # message: "Failed to Send Refund Amount Email: #{email ? 'No Email Found' : 'User Not Fully Canceled'}",
+      staff_id: params[:staff_id].presence || auto_worker.category_id
+    )
 
-      @user&.contact_histories&.create(
-        category: :email,
-        message: "Failed to Send Refund Amount Email: #{email ? 'No Email Found' : 'User Not Fully Canceled'}",
-        staff_id: params[:staff_id].presence || auto_worker.category_id
-      )
+    return false
+    # end
 
-      return false
-    end
-
-    @has_insurance =
-      Boolean.parse(params[:force_insurance]) ||
-      !!@user.traveler.insurance_debit
-
-    @refundable_amount =
-      StoreAsInt.money(
-        params[:refundable_amount].presence ||
-        @user.traveler.refundable_amount
-      )
-
-    m = mail skip_filter: true, to: email, subject: "Refund Summary"
-
-    if m
-      m.after_send do
-        @user.contact_histories.create(
-          category: :email,
-          message: "Sent Refund Amount Email (#{@refundable_amount.to_s(true)}) to: #{email.join("; ")}",
-          staff_id: params[:staff_id].presence || auto_worker.category_id
-        )
-      end
-    end
-
-    m
+    # @has_insurance =
+    #   Boolean.parse(params[:force_insurance]) ||
+    #   !!@user.traveler.insurance_debit
+    #
+    # @refundable_amount =
+    #   StoreAsInt.money(
+    #     params[:refundable_amount].presence ||
+    #     @user.traveler.refundable_amount
+    #   )
+    #
+    # m = mail skip_filter: true, to: email, subject: "Refund Summary"
+    #
+    # if m
+    #   m.after_send do
+    #     @user.contact_histories.create(
+    #       category: :email,
+    #       message: "Sent Refund Amount Email (#{@refundable_amount.to_s(true)}) to: #{email.join("; ")}",
+    #       staff_id: params[:staff_id].presence || auto_worker.category_id
+    #     )
+    #   end
+    # end
+    #
+    # m
   end
 
   def duffel_bag_sent
