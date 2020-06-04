@@ -360,7 +360,7 @@ module Invite
 
     def p3
       return <<-PARAGRAPH
-        #{ok_invite? ? "" : "Our #{sport_full.downcase} team departs on #{departing}. "}Athletes will meet up with our Down Under Sports coaches and staff and spend ten days traveling, competing and sight-seeing in Australia. See enclosed sample itinerary for more details. We have developed a proven sponsorship fundraising program and special offers to help our selected athletes cover the cost of this trip. #{archive_line} #{instruction_line}
+        #{ok_invite? ? "" : "Our #{sport_full.downcase} team departs on #{departing}. "}Athletes will meet up with our Down Under Sports coaches and staff and spend ten days traveling, competing and sight-seeing in Australia. See enclosed sample itinerary for more details. We have developed a proven sponsorship fundraising program and special offers to help our selected athletes cover the cost of this trip. #{instruction_line}
       PARAGRAPH
     end
 
