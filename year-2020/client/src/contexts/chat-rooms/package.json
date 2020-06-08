@@ -1,6 +1,0 @@
-{
-  "name": "ChatRoomsContext",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./chat-rooms.jsx"
-}

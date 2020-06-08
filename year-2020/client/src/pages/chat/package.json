@@ -1,5 +1,0 @@
-{
-  "name": "ChatPage",
-  "private": true,
-  "main": "./chat.jsx"
-}

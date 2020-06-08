@@ -16,7 +16,6 @@ import StatesRedux from 'common/js/contexts/states';
 import StaffUsersRedux from 'common/js/contexts/staff-users';
 import VideoRedux from 'common/js/contexts/video';
 import CurrentUserRedux from 'common/js/contexts/current-user';
-import ChatRoomsRedux from 'contexts/chat-rooms'
 // import UserRedux from 'common/js/contexts/user';
 import PropTypes from 'prop-types';
 
@@ -38,40 +37,38 @@ export default class AdminRouter extends Component {
 
   render () {
     return (
-      <ChatRoomsRedux>
-        <HotelRedux>
-          <NationalityRedux>
-            <StatesRedux>
-              <SportRedux>
-                <VideoRedux>
-                  <MeetingRedux>
-                    <CurrentUserRedux>
-                      <StaffUsersRedux>
-                        <InterestRedux>
-                          <MenuRedux>
-                            <Router>
-                              <Admin>
-                                <Suspense fallback={<JellyBox className="page-loader" />}>
-                                  <Switch>
-                                    {
-                                      routes.map((route, i) => <Route key={i} {...route}/>)
-                                    }
-                                  </Switch>
-                                </Suspense>
-                              </Admin>
-                            </Router>
-                            <QueueTracker />
-                          </MenuRedux>
-                        </InterestRedux>
-                      </StaffUsersRedux>
-                    </CurrentUserRedux>
-                  </MeetingRedux>
-                </VideoRedux>
-              </SportRedux>
-            </StatesRedux>
-          </NationalityRedux>
-        </HotelRedux>
-      </ChatRoomsRedux>
+      <HotelRedux>
+        <NationalityRedux>
+          <StatesRedux>
+            <SportRedux>
+              <VideoRedux>
+                <MeetingRedux>
+                  <CurrentUserRedux>
+                    <StaffUsersRedux>
+                      <InterestRedux>
+                        <MenuRedux>
+                          <Router>
+                            <Admin>
+                              <Suspense fallback={<JellyBox className="page-loader" />}>
+                                <Switch>
+                                  {
+                                    routes.map((route, i) => <Route key={i} {...route}/>)
+                                  }
+                                </Switch>
+                              </Suspense>
+                            </Admin>
+                          </Router>
+                          <QueueTracker />
+                        </MenuRedux>
+                      </InterestRedux>
+                    </StaffUsersRedux>
+                  </CurrentUserRedux>
+                </MeetingRedux>
+              </VideoRedux>
+            </SportRedux>
+          </StatesRedux>
+        </NationalityRedux>
+      </HotelRedux>
     )
   }
 }

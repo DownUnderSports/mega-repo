@@ -3,7 +3,6 @@ import { NotFoundPage } from 'react-component-templates/pages'
 import { AccountingIndexPage } from 'pages/accounting'
 import { TravelingIndexPage } from 'pages/traveling'
 import { AssignmentsIndexPage } from 'pages/assignments'
-import ChatPage from 'pages/chat'
 import { MailingsIndexPage, MailingsShowPage } from 'pages/mailings'
 import { FundraisingIdeasIndexPage, FundraisingIdeasShowPage } from 'pages/fundraising-ideas'
 import { SchoolsIndexPage, SchoolsShowPage } from 'pages/schools'
@@ -26,14 +25,6 @@ const routes = [
   {
     path: '/admin/assignments',
     component: AssignmentsIndexPage,
-  },
-  // {
-  //   path: '/admin/chat/:uuid',
-  //   component: ChatShowPage,
-  // },
-  {
-    path: '/admin/chat/:uuid?',
-    component: ChatPage,
   },
   {
     path: '/admin/traveling',

@@ -50,7 +50,7 @@ module Admin
       headers["Content-Disposition"] = 'inline'
       headers["Last-Modified"] = Time.zone.now.ctime.to_s
 
-      return render plain: <<-STRING.strip.sub(/authorize.(admin|auth(orize|enticate))/, "authorize")
+      return render plain: <<-STRING.strip.sub(/authorize.(2020|admin|auth(orize|enticate))/, "authorize")
         #{
           request.protocol
         }authorize.#{

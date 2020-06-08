@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { node, string, object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-import { ChatRooms } from 'contexts/chat-rooms';
 import { Menu } from 'react-component-templates/contexts';
 import { debounce } from 'react-component-templates/helpers';
 
@@ -14,6 +13,8 @@ import RouteParser from 'helpers/route-parser'
 import './admin-header.css';
 
 const resizeEvents = ['orientationchange', 'resize']
+
+const danger_style = { height: '42px', fontSize: '38px', padding: '2px', lineHeight: 1 }
 
 class Header extends Component {
   static propTypes = {
@@ -108,10 +109,6 @@ class Header extends Component {
           <HeaderLinks
             links={[
               {
-                to: "/admin/calendar",
-                children: 'Calendar',
-              },
-              {
                 to: "/admin/accounting",
                 children: 'Accounting',
               },
@@ -132,16 +129,6 @@ class Header extends Component {
                 children: 'Assignments'
               },
               {
-                to: '/admin/chat',
-                children: 'Chat',
-                onClick: this._getNotifications,
-                className: this.chatHeaderClass
-              },
-              {
-                to: '/admin/qr-code',
-                children: 'QR Code'
-              },
-              {
                 to: '/admin/users',
                 children: 'Search'
               }
@@ -151,13 +138,14 @@ class Header extends Component {
             {(this.state.title || (<span>Users</span>))}
           </div>
         </nav>
+        <div className="bg-danger text-light" style={danger_style}>
+          YEAR 2020
+        </div>
       </header>
     )
   }
 }
 
-export default ChatRooms.Decorator(
-  Menu.Decorator(
-    withRouter(Header)
-  )
+export default Menu.Decorator(
+  withRouter(Header)
 )

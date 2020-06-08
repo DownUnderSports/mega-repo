@@ -1,6 +1,0 @@
-{
-  "name": "ChatContext",
-  "version": "0.0.1",
-  "private": true,
-  "main": "./chat.jsx"
-}

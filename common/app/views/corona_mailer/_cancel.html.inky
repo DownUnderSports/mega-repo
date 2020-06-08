@@ -29,15 +29,15 @@
       <p>
         We apologize about the interruption in customer service as we are
         following state and national COVID-19 guidelines. We will still have
-        limited availability for at least the first half of May as we start to
-        bring staff back and get everyone caught up, while staying safe and
-        continuing to follow health and safety guidelines.
+        limited availability as we start to bring staff back and get everyone
+        caught up, while staying safe and continuing to follow health and safety
+        guidelines.
       </p>
       <%= yield :selection_message %>
       <ol class="spaced-list extra-padding ">
         <li>
           I would like to participate in the 2021 tournaments as an athlete,
-          coach’s assistant, supporter, or another role (depending on
+          coach's assistant, supporter, or another role (depending on
           eligibility). Please roll my account over for the 2021 program.
         </li>
         <li>
