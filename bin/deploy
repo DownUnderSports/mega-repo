@@ -207,7 +207,8 @@ function deploy() {
       [ "$1" = "authorize" ]    ||
       [ "$1" = "www" ]          ||
       [ "$1" = "elixir_www" ]   ||
-      [ "$1" = "year-2019" ];   then
+      [ "$1" = "year-2019" ]    ||
+      [ "$1" = "year-2020" ];   then
 
     if [ -f "$CODE_SOURCE_DIR/$1/repo_name" ]; then
       REPO_NAME=$(cat "$CODE_SOURCE_DIR/$1/repo_name")
