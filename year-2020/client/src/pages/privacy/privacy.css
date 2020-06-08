@@ -1,0 +1,24 @@
+.Privacy ol,
+.Privacy ol > li {
+  list-style-type: decimal;
+}
+.Privacy ol > li h5 {
+  font-weight: bold;
+}
+.Privacy ol > li > ol,
+.Privacy ol > li > ol > li {
+  list-style-type: lower-alpha;
+}
+.Privacy ol > li > ol > li > ol,
+.Privacy ol > li > ol > li > ol > li {
+  list-style-type: lower-roman;
+}
+.Privacy ol > li > ol > li > ol > li > ol,
+.Privacy ol > li > ol > li > ol > li > ol > li {
+  list-style-type: decimal;
+}
+.Privacy .editor-toolbar.fullscreen,
+.Privacy .CodeMirror-fullscreen,
+.Privacy .editor-preview-side {
+  z-index: 1000;
+}

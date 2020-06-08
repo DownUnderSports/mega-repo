@@ -1,0 +1,5 @@
+{
+  "name": "TravelingGroundControlHotelsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

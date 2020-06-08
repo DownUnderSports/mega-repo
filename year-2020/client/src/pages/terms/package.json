@@ -1,0 +1,5 @@
+{
+  "name": "TermsPage",
+  "private": true,
+  "main": "./terms.jsx"
+}

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+echo "$(hostname) != $QUEUE_RUNNER_HOSTNAME"
+maxwait=30
+
+pid=`pgrep -f [s]idekiq`
+echo $pid
+pkill -f [s]idekiq
+
+i=0
+while kill -0 $pid; do
+	echo "waiting ${i}"
+	if [ $i -gt $maxwait ]; then
+		echo "Error: Waited more than ${maxwait} seconds for process with pid ${pid} to die. Forcing." >&2
+		kill -9 -f sidekiq
+	fi
+
+	i=$((i + 1))
+	sleep 1
+done
+
+if [[ ! -v RAILS_ENV ]]; then
+	RAILS_ENV=development
+fi
+
+echo $RAILS_ENV
+# uncomment to add delayed job back into the mix
+#	bundle exec sidekiq && rails jobs:work
+bundle exec sidekiq

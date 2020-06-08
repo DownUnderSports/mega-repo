@@ -1,0 +1,5 @@
+{
+  "name": "TravelingFlightsSchedulesShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

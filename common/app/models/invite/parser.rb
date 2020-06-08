@@ -333,7 +333,8 @@ module Invite
     end
 
     def certificate
-      invite_rule.certifiable ? "Y" : nil
+      # invite_rule.certifiable ? "Y" : nil
+      nil
     end
 
     def plural_team

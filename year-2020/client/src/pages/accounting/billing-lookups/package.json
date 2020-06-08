@@ -1,0 +1,5 @@
+{
+  "name": "AccountingBillingLookupsPage",
+  "private": true,
+  "main": "./billing-lookups.jsx"
+}

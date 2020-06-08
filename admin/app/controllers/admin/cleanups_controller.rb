@@ -24,7 +24,8 @@ module Admin
         sport: @athletes_sport.sport.abbr_gender,
         stats: @athletes_sport.stats,
         transferability: @athletes_sport.transferability,
-        user_id: @athletes_sport.athlete.user.id
+        user_id: @athletes_sport.athlete.user.id,
+        standard: @athletes_sport.sport.standard.attached? ? url_for(@athletes_sport.sport.standard) : nil
       }.null_to_str, status: 200
     end
 

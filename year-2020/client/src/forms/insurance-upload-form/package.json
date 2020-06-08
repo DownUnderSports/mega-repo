@@ -1,0 +1,5 @@
+{
+  "name": "InsuranceUploadForm",
+  "private": true,
+  "main": "./insurance-upload-form.jsx"
+}

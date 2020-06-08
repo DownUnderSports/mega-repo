@@ -1,0 +1,5 @@
+{
+  "name": "UsersShowCallsPage",
+  "private": true,
+  "main": "./calls.jsx"
+}

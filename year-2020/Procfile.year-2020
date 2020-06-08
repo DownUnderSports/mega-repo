@@ -1,0 +1,4 @@
+admin-node: yarn --cwd client start
+admin-rails: bundle exec rails s
+admin-queue: bin/run_queue
+admin-redis: redis-server

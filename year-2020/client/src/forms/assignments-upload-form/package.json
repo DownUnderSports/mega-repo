@@ -1,0 +1,5 @@
+{
+  "name": "AssignmentsUploadForm",
+  "private": true,
+  "main": "./assignments-upload-form.jsx"
+}

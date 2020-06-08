@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Objected } from 'react-component-templates/helpers';
-import { DisplayOrLoading, CardSection } from 'react-component-templates/components';
+import { DisplayOrLoading, CardSection, Link } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import { SelectField } from 'react-component-templates/form-components';
 
@@ -194,7 +194,7 @@ export default class InvitableAthleteForm extends Component {
           <form
             action={this.action}
             method='post'
-            className='invitable-athlete-form mb-3'
+            className='invitable-athlete-form'
             onSubmit={this.onSubmit}
             autoComplete="off"
           >
@@ -275,29 +275,58 @@ export default class InvitableAthleteForm extends Component {
                 </a>
               </div>
               <div className="col-md">
-                <div className="row">
-                  <div className="col-12 form-group">
-                    <SelectField
-                      viewProps={selectViewProps}
-                      options={selectOptions}
-                      name="athlete.transferability"
-                      value={athlete.transferability}
-                      onChange={this.onTransferabilityChange}
-                      skipExtras
-                    />
-                  </div>
-                  <div className="col">
-                    <button
-                      type="submit"
-                      onClick={this.onSubmit}
-                      className="btn btn-block btn-primary"
-                    >
-                      Submit
-                    </button>
-                  </div>
+                <div className="form-group">
+                  <SelectField
+                    viewProps={selectViewProps}
+                    options={selectOptions}
+                    name="athlete.transferability"
+                    value={athlete.transferability}
+                    onChange={this.onTransferabilityChange}
+                    skipExtras
+                  />
                 </div>
+                <button
+                  type="submit"
+                  onClick={this.onSubmit}
+                  className="btn btn-block btn-primary"
+                >
+                  Submit
+                </button>
               </div>
             </div>
+            {
+              !!athlete.standard && (
+                <div>
+                  <hr/>
+                  <Link
+                    to={athlete.standard}
+                    className="btn btn-info btn-block btn-warning mb-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open {athlete.sport} Standards in New Tab
+                  </Link>
+                  <object
+                    data={athlete.standard}
+                    width="100%"
+                    height="500"
+                    type="application/pdf"
+                    className="mb-1 vh-75"
+                  >
+                    <object
+                      data={`https://docs.google.com/viewer?embedded=true&url=${athlete.standard}`}
+                      width="100%"
+                      height="500"
+                      className="mb-1 vh-75"
+                    >
+                      <p>
+                        Your Browser Does Not Support Embedded PDFs
+                      </p>
+                    </object>
+                  </object>
+                </div>
+              )
+            }
           </form>
         </CardSection>
       </DisplayOrLoading>

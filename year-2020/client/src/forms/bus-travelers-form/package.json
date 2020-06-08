@@ -1,0 +1,5 @@
+{
+  "name": "BusTravelersForm",
+  "private": true,
+  "main": "./bus-travelers-form.jsx"
+}

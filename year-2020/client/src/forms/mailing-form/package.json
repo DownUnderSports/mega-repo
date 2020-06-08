@@ -1,0 +1,5 @@
+{
+  "name": "MailingForm",
+  "private": true,
+  "main": "./mailing-form.jsx"
+}

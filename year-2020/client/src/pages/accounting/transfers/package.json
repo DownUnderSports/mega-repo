@@ -1,0 +1,5 @@
+{
+  "name": "AccountingTransfersPage",
+  "private": true,
+  "main": "./transfers.jsx"
+}

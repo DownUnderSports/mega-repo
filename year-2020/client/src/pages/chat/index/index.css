@@ -1,0 +1,45 @@
+@charset "UTF-8";
+.Chat .la-square-jelly-box {
+  height: 25vw;
+  width: 25vw;
+  max-width: 25vh;
+  max-height: 25vh;
+  margin: 10vh auto;
+  color: #153e7c;
+}
+.Chat .la-square-jelly-box div:first-child {
+  border: 1.5rem solid #d52027;
+}
+.Chat .chat-links a {
+  display: block;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem;
+  position: relative;
+}
+.Chat .chat-links a.active {
+  background: #000080;
+  color: #fff;
+  border-color: #f00;
+  border-width: 2px;
+}
+.Chat .chat-links a.notify {
+  background: #f27272;
+  color: #000;
+}
+.Chat .chat-links a.notify::after,
+.Chat .chat-links a.notify::before {
+  content: "";
+  display: block;
+  background: #007bff;
+  width: 7px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+.Chat .chat-links a.notify::after {
+  right: -7px;
+}
+.Chat .chat-links a.notify::before {
+  left: -7px;
+}

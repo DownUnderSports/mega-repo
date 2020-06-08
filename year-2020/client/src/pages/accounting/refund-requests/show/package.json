@@ -1,0 +1,5 @@
+{
+  "name": "AccountingRefundRequestsShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "GCMRegistrationsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

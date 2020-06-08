@@ -1,0 +1,5 @@
+{
+  "name": "UserPages",
+  "private": true,
+  "main": "./users.jsx"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "UsersShowInfoPage",
+  "private": true,
+  "main": "./info.jsx"
+}

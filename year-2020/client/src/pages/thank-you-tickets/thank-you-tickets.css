@@ -1,0 +1,19 @@
+.Terms ol,
+.Terms ol > li {
+  list-style-type: decimal;
+}
+.Terms ol > li h5 {
+  font-weight: bold;
+}
+.Terms ol > li > ol,
+.Terms ol > li > ol > li {
+  list-style-type: lower-alpha;
+}
+.Terms ol > li > ol > li > ol,
+.Terms ol > li > ol > li > ol > li {
+  list-style-type: lower-roman;
+}
+.Terms ol > li > ol > li > ol > li > ol,
+.Terms ol > li > ol > li > ol > li > ol > li {
+  list-style-type: decimal;
+}

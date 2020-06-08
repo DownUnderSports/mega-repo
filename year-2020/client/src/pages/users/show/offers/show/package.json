@@ -1,0 +1,5 @@
+{
+  "name": "UserOffersShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

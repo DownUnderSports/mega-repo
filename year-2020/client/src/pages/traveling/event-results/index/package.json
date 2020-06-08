@@ -1,0 +1,5 @@
+{
+  "name": "TravelingEventResultsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

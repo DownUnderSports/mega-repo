@@ -1,0 +1,5 @@
+{
+  "name": "TravelingPages",
+  "private": true,
+  "main": "./traveling.jsx"
+}

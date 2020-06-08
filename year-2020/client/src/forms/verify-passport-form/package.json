@@ -1,0 +1,5 @@
+{
+  "name": "VerifyPassportForm",
+  "private": true,
+  "main": "./verify-passport-form.jsx"
+}

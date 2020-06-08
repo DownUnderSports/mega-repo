@@ -1,0 +1,5 @@
+{
+  "name": "EventResultForm",
+  "private": true,
+  "main": "./event-result-form.jsx"
+}

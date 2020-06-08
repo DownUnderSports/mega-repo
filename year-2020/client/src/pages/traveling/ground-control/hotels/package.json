@@ -1,0 +1,5 @@
+{
+  "name": "TravelingGroundControlHotelPages",
+  "private": true,
+  "main": "./hotels.jsx"
+}

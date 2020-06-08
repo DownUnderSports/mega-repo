@@ -1,0 +1,5 @@
+{
+  "name": "AccountingRefundRequestsIndexPage",
+  "private": true,
+  "main": "./index.jsx"
+}

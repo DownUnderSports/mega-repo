@@ -1,0 +1,5 @@
+{
+  "name": "MailingPages",
+  "private": true,
+  "main": "./mailings.jsx"
+}

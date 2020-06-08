@@ -1,0 +1,5 @@
+{
+  "name": "HotelForm",
+  "private": true,
+  "main": "./hotel-form.jsx"
+}

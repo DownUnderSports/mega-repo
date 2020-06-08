@@ -1,0 +1,5 @@
+{
+  "name": "ScheduleForm",
+  "private": true,
+  "main": "./schedule-form.jsx"
+}

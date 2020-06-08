@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+export $(cat .env | xargs)
+forego start -f Procfile.prod -p "${PORT:-3000}"

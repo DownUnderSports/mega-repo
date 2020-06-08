@@ -1,0 +1,5 @@
+{
+  "name": "FundraisingPacketUploadForm",
+  "private": true,
+  "main": "./fundraising-packet-upload-form.jsx"
+}

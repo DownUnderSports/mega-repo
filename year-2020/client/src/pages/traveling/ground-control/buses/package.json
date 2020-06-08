@@ -1,0 +1,5 @@
+{
+  "name": "TravelingGroundControlBusPages",
+  "private": true,
+  "main": "./buses.jsx"
+}

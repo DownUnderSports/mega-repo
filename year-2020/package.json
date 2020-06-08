@@ -1,0 +1,27 @@
+{
+  "name": "DownUnderSports",
+  "version": "0.5.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=11.1.0",
+    "yarn": ">= 1.9.4"
+  },
+  "scripts": {
+    "bad_locks": "yarn bad_locks:base && yarn bad_locks:sub",
+    "bad_locks:base": "rm -f package-lock.json",
+    "bad_locks:sub": "rm -rf /*/package-lock.json",
+    "build": "yarn install && yarn compile && yarn build:finish",
+    "build:finish": "yarn json_files && yarn routes",
+    "compile": "yarn --cwd client build && yarn deploy",
+    "deploy": "cp -a client/build/*.json public/",
+    "heroku-postbuild": "yarn bad_locks && yarn build",
+    "install": "yarn --cwd client install",
+    "json_files": "./vendor/common/scripts/json-files",
+    "routes": "cp -a client/src/routes/routes.json public/routes.json"
+  },
+  "dependencies": {
+    "CompressBuild": "./vendor/common/scripts/compress-build"
+  },
+  "devDependencies": {}
+}

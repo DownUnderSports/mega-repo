@@ -1,0 +1,5 @@
+{
+  "name": "AccountingRemitFormsIndexPage",
+  "private": true,
+  "main": "./remit-forms-index.jsx"
+}

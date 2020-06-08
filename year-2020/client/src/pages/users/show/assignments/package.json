@@ -1,0 +1,5 @@
+{
+  "name": "UserAssignmentsPage",
+  "private": true,
+  "main": "./assignments.jsx"
+}

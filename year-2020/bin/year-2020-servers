@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+export $(cat .env | xargs)
+
+if [[ -n $MINIMAL ]]; then
+  export PROCFILE=Procfile.minimal
+else
+  export PROCFILE=Procfile.year-2020
+fi
+
+CURRENT_YEAR=2020 forego start -f $PROCFILE -p "${PORT-3000}"

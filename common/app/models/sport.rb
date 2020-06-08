@@ -22,6 +22,8 @@ class Sport < ApplicationRecord
   has_many :teams, inverse_of: :sport
   has_many :uniform_orders, inverse_of: :sport
 
+  has_one_attached :standard
+
   accepts_nested_attributes_for :info
   delegate :title,  :tournament,  :first_year,  :departing_dates,  :team_count,  :team_size,  :description,  :bullet_points_array,  :additional, to: :info
 
