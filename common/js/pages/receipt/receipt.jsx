@@ -110,7 +110,7 @@ export default class ReceiptPage extends Component {
     const pending = status === 'PENDING REVIEW'
 
     const {amount = {str_pretty: '$0.00'}, created_at = "2017-01-01T00:00:00.000-06:00", label = 'Payment', billing = {}, gateway = {}, itemized = false} = payment
-    let payDate = created_at && dateFns.format(dateFns.parse(created_at), 'DD MMM, YYYY HH:MM A')
+    let payDate = created_at && dateFns.format(dateFns.parse(created_at), 'Do MMM, YYYY hh:mm A')
 
     return (
       <section className="receipt-container">

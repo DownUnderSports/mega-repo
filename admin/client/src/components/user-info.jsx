@@ -77,7 +77,7 @@ export default class UserInfo extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { user: {}, fullStats: false, reloading: !!this.props.id, showForm: !this.props.id }
+    this.state = { user: {}, fullStats: false, reloading: !!this.props.id, showForm: !this.props.id, showInterestHistory: false }
   }
 
   async componentDidMount(){
@@ -130,6 +130,12 @@ export default class UserInfo extends Component {
     e.preventDefault();
     e.stopPropagation();
     this.getUser(true)
+  }
+
+  toggleInterestHistories = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({ showInterestHistory: !this.state.showInterestHistory })
   }
 
   requestInfokit = async (e) => {
@@ -264,6 +270,7 @@ export default class UserInfo extends Component {
         // suffix,
         // title,
         interest_level,
+        interest_histories = [],
         contactable,
         traveler,
         ground_only,
@@ -279,7 +286,8 @@ export default class UserInfo extends Component {
       },
       fullStats = false,
       reloading = false,
-      showForm
+      showForm,
+      showInterestHistory
     } = this.state || {}
 
     const travel_preparation = travel_preparation_attributes || {}
@@ -435,16 +443,68 @@ export default class UserInfo extends Component {
                   </div>
                 </div>
               </div>
+                {
+                  showInterestHistory
+                    ? (
+                      <table className="table" onClick={this.toggleInterestHistories}>
+                        <thead>
+                          <tr>
+                            <th className="text-center" colSpan="3">
+                              Interest Level History
+                              <i className="material-icons float-right">
+                                arrow_drop_up
+                              </i>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th>
+                              Level
+                            </th>
+                            <th>
+                              Set At
+                            </th>
+                            <th>
+                              Set By
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            Array.isArray(interest_histories) && interest_histories
+                              .map((history, idx) => {
+                                const date = dateFns.parse(history.changed_at)
+                                return <tr key={history.id}>
+                                  <td>
+                                    { history.interest_level } { !idx && "(Current)" }
+                                  </td>
+                                  <td>
+                                    <span
+                                      className="tooltip-nowrap tooltip-underline tooltip-right tooltip-legible pointer"
+                                      data-tooltip={dateFns.format(date, 'dddd, MMM Do, YYYY HH:mm:ss.SSS')}
+                                    >
+                                      { dateFns.format(date, 'MM/DD/YYYY h:mm A') }
+                                    </span>
+                                  </td>
+                                  <td>
+                                    { history.changed_by || "Unknown" }
+                                  </td>
+                                </tr>
+                              })
+                          }
+                        </tbody>
+                      </table>
+                    )
+                  : (
+                    <div className="list-group-item clickable" onClick={this.toggleInterestHistories}>
+                      <strong key="label">Interest:</strong> {interest_level}
+                      <i className="material-icons float-right">
+                        arrow_drop_down
+                      </i>
+                    </div>
+                  )
+                }
               <div className="list-group-item">
                 <div className="row">
-                  <div className="col-md col-12">
-                    <strong>Interest:</strong> {interest_level}
-                    {
-                      traveler ? (
-                        <hr className='d-md-none'/>
-                      ) : ''
-                    }
-                  </div>
                   {
                     traveler ? (
                       <Fragment>

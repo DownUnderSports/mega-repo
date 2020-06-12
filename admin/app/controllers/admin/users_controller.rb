@@ -679,6 +679,7 @@ module Admin
         begin
           user.interest_histories.map do |history|
             {
+              id: history.id,
               interest_id: history.interest_id,
               interest_level: Interest.level(history.interest_id),
               changed_at: history.created_at,
