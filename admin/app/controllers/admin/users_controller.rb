@@ -210,6 +210,7 @@ module Admin
               deflator.stream true,  :has_infokit, @found_user.has_infokit?
               deflator.stream true,  :interest_id, @found_user.interest_id
               deflator.stream true,  :interest_level, Interest.level(@found_user.interest_id)
+              deflator.stream true,  :interest_histories, map_interest_histories(@found_user)
               deflator.stream true,  :contactable, Interest.contactable(@found_user.interest_id)
               deflator.stream true,  :traveler, (t = @found_user.traveler)&.as_json
               deflator.stream true,  :ground_only, !!t&.ground_only?
@@ -671,6 +672,22 @@ module Admin
       def lookup_user
         unless request.format.html? && !current_token
           authorize (@found_user = User.get(params[:id]))
+        end
+      end
+
+      def map_interest_histories(user)
+        begin
+          user.interest_histories.map do |history|
+            {
+              interest_id: history.interest_id,
+              interest_level: Interest.level(history.interest_id),
+              changed_at: history.created_at,
+              changed_by: history.changed_by&.print_names
+            }
+          end
+        rescue ActiveRecord::StatementInvalid => ex
+          raise ex unless ex.cause.is_a?(PG::UndefinedTable)
+          []
         end
       end
 

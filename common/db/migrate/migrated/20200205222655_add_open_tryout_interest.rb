@@ -17,11 +17,7 @@ class AddOpenTryoutInterest < ActiveRecord::Migration[5.2]
           time_out_blocker.call
 
           previous_level = Interest.find_by(id: interest.id - 1)
-          if previous_level
-            interest.update_columns(level: previous_level.level)
-          else
-            interest.destroy
-          end
+          interest.update_columns(level: previous_level.level)
         end
 
       Interest.find_by(id: 7).update_columns(level: 'Open Tryout', contactable: true)

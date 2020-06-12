@@ -38,13 +38,6 @@ CREATE SCHEMA year_2020;
 
 
 --
--- Name: year_2021; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA year_2021;
-
-
---
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -5000,193 +4993,6 @@ COMMENT ON COLUMN auditing.logged_actions_payment_items.statement_only IS '''t''
 
 
 --
--- Name: logged_actions_payment_join_terms; Type: TABLE; Schema: auditing; Owner: -
---
-
-CREATE TABLE auditing.logged_actions_payment_join_terms (
-    event_id bigint DEFAULT nextval('auditing.logged_actions_event_id_seq'::regclass),
-    schema_name text,
-    table_name text,
-    full_name text,
-    relid oid,
-    session_user_name text,
-    app_user_id integer,
-    app_user_type text,
-    app_ip_address inet,
-    action_tstamp_tx timestamp with time zone,
-    action_tstamp_stm timestamp with time zone,
-    action_tstamp_clk timestamp with time zone,
-    transaction_id bigint,
-    application_name text,
-    client_addr inet,
-    client_port integer,
-    client_query text,
-    action text,
-    row_id bigint,
-    row_data public.hstore,
-    changed_fields public.hstore,
-    statement_only boolean,
-    CONSTRAINT logged_actions_action_check CHECK ((action = ANY (ARRAY['I'::text, 'D'::text, 'U'::text, 'T'::text, 'A'::text]))),
-    CONSTRAINT logged_actions_payment_join_terms_table_name_check CHECK ((table_name = 'payment_join_terms'::text))
-)
-INHERITS (auditing.logged_actions);
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.event_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.event_id IS 'Unique identifier for each auditable event';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.schema_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.schema_name IS 'Database schema audited table for this event is in';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.table_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.table_name IS 'Non-schema-qualified table name of table event occured in';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.full_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.full_name IS 'schema-qualified table name of table event occured in';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.relid; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.relid IS 'Table OID. Changes with drop/create. Get with ''tablename''::regclass';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.session_user_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.session_user_name IS 'Login / session user whose statement caused the audited event';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.app_user_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.app_user_id IS 'Application-provided polymorphic user id';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.app_user_type; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.app_user_type IS 'Application-provided polymorphic user type';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.app_ip_address; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.app_ip_address IS 'Application-provided ip address of user whose statement caused the audited event';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.action_tstamp_tx; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.action_tstamp_tx IS 'Transaction start timestamp for tx in which audited event occurred';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.action_tstamp_stm; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.action_tstamp_stm IS 'Statement start timestamp for tx in which audited event occurred';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.action_tstamp_clk; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.action_tstamp_clk IS 'Wall clock time at which audited event''s trigger call occurred';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.transaction_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.transaction_id IS 'Identifier of transaction that made the change. May wrap, but unique paired with action_tstamp_tx.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.application_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.application_name IS 'Application name set when this audit event occurred. Can be changed in-session by client.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.client_addr; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.client_addr IS 'IP address of client that issued query. Null for unix domain socket.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.client_port; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.client_port IS 'Remote peer IP port address of client that issued query. Undefined for unix socket.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.client_query; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.client_query IS 'Top-level query that caused this auditable event. May be more than one statement.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.action; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.action IS 'Action type; I = insert, D = delete, U = update, T = truncate, A = archive';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.row_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.row_id IS 'Record primary_key. Null for statement-level trigger. Prefers NEW.id if exists';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.row_data; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.row_data IS 'Record value. Null for statement-level trigger. For INSERT this is the new tuple. For DELETE and UPDATE it is the old tuple.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.changed_fields; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.changed_fields IS 'New values of fields changed by UPDATE. Null except for row-level UPDATE events.';
-
-
---
--- Name: COLUMN logged_actions_payment_join_terms.statement_only; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_payment_join_terms.statement_only IS '''t'' if audit event is from an FOR EACH STATEMENT trigger, ''f'' for FOR EACH ROW';
-
-
---
 -- Name: logged_actions_payment_remittances; Type: TABLE; Schema: auditing; Owner: -
 --
 
@@ -9298,193 +9104,6 @@ COMMENT ON COLUMN auditing.logged_actions_traveler_offers.changed_fields IS 'New
 --
 
 COMMENT ON COLUMN auditing.logged_actions_traveler_offers.statement_only IS '''t'' if audit event is from an FOR EACH STATEMENT trigger, ''f'' for FOR EACH ROW';
-
-
---
--- Name: logged_actions_traveler_requests; Type: TABLE; Schema: auditing; Owner: -
---
-
-CREATE TABLE auditing.logged_actions_traveler_requests (
-    event_id bigint DEFAULT nextval('auditing.logged_actions_event_id_seq'::regclass),
-    schema_name text,
-    table_name text,
-    full_name text,
-    relid oid,
-    session_user_name text,
-    app_user_id integer,
-    app_user_type text,
-    app_ip_address inet,
-    action_tstamp_tx timestamp with time zone,
-    action_tstamp_stm timestamp with time zone,
-    action_tstamp_clk timestamp with time zone,
-    transaction_id bigint,
-    application_name text,
-    client_addr inet,
-    client_port integer,
-    client_query text,
-    action text,
-    row_id bigint,
-    row_data public.hstore,
-    changed_fields public.hstore,
-    statement_only boolean,
-    CONSTRAINT logged_actions_action_check CHECK ((action = ANY (ARRAY['I'::text, 'D'::text, 'U'::text, 'T'::text, 'A'::text]))),
-    CONSTRAINT logged_actions_traveler_requests_table_name_check CHECK ((table_name = 'traveler_requests'::text))
-)
-INHERITS (auditing.logged_actions);
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.event_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.event_id IS 'Unique identifier for each auditable event';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.schema_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.schema_name IS 'Database schema audited table for this event is in';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.table_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.table_name IS 'Non-schema-qualified table name of table event occured in';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.full_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.full_name IS 'schema-qualified table name of table event occured in';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.relid; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.relid IS 'Table OID. Changes with drop/create. Get with ''tablename''::regclass';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.session_user_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.session_user_name IS 'Login / session user whose statement caused the audited event';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.app_user_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.app_user_id IS 'Application-provided polymorphic user id';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.app_user_type; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.app_user_type IS 'Application-provided polymorphic user type';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.app_ip_address; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.app_ip_address IS 'Application-provided ip address of user whose statement caused the audited event';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.action_tstamp_tx; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.action_tstamp_tx IS 'Transaction start timestamp for tx in which audited event occurred';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.action_tstamp_stm; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.action_tstamp_stm IS 'Statement start timestamp for tx in which audited event occurred';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.action_tstamp_clk; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.action_tstamp_clk IS 'Wall clock time at which audited event''s trigger call occurred';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.transaction_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.transaction_id IS 'Identifier of transaction that made the change. May wrap, but unique paired with action_tstamp_tx.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.application_name; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.application_name IS 'Application name set when this audit event occurred. Can be changed in-session by client.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.client_addr; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.client_addr IS 'IP address of client that issued query. Null for unix domain socket.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.client_port; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.client_port IS 'Remote peer IP port address of client that issued query. Undefined for unix socket.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.client_query; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.client_query IS 'Top-level query that caused this auditable event. May be more than one statement.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.action; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.action IS 'Action type; I = insert, D = delete, U = update, T = truncate, A = archive';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.row_id; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.row_id IS 'Record primary_key. Null for statement-level trigger. Prefers NEW.id if exists';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.row_data; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.row_data IS 'Record value. Null for statement-level trigger. For INSERT this is the new tuple. For DELETE and UPDATE it is the old tuple.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.changed_fields; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.changed_fields IS 'New values of fields changed by UPDATE. Null except for row-level UPDATE events.';
-
-
---
--- Name: COLUMN logged_actions_traveler_requests.statement_only; Type: COMMENT; Schema: auditing; Owner: -
---
-
-COMMENT ON COLUMN auditing.logged_actions_traveler_requests.statement_only IS '''t'' if audit event is from an FOR EACH STATEMENT trigger, ''f'' for FOR EACH ROW';
 
 
 --
@@ -14424,6 +14043,38 @@ WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2');
 
 
 --
+-- Name: user_interest_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_interest_histories (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    interest_id bigint NOT NULL,
+    changed_by_id bigint,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: user_interest_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_interest_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_interest_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_interest_histories_id_seq OWNED BY public.user_interest_histories.id;
+
+
+--
 -- Name: user_marathon_registrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15648,358 +15299,6 @@ INHERITS (public.user_uniform_orders);
 
 
 --
--- Name: competing_teams; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.competing_teams (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT competing_teams_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.competing_teams);
-
-
---
--- Name: competing_teams_travelers; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.competing_teams_travelers (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT competing_teams_travelers_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.competing_teams_travelers);
-
-
---
--- Name: flight_legs; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.flight_legs (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT flight_legs_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.flight_legs);
-
-
---
--- Name: flight_schedules; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.flight_schedules (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT flight_schedules_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.flight_schedules);
-
-
---
--- Name: flight_tickets; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.flight_tickets (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT flight_tickets_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.flight_tickets);
-
-
---
--- Name: mailings; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.mailings (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT mailings_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.mailings);
-
-
---
--- Name: meeting_registrations; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.meeting_registrations (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT meeting_registrations_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.meeting_registrations);
-
-
---
--- Name: meeting_video_views; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.meeting_video_views (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT meeting_video_views_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.meeting_video_views);
-
-
---
--- Name: payment_items; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.payment_items (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT payment_items_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.payment_items);
-
-
---
--- Name: payment_join_terms; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.payment_join_terms (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT payment_join_terms_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.payment_join_terms);
-
-
---
--- Name: payment_remittances; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.payment_remittances (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT payment_remittances_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.payment_remittances);
-
-
---
--- Name: payments; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.payments (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT payments_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.payments);
-
-
---
--- Name: sent_mails; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.sent_mails (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT sent_mails_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.sent_mails);
-
-
---
--- Name: staff_assignment_visits; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.staff_assignment_visits (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT staff_assignment_visits_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.staff_assignment_visits);
-
-
---
--- Name: staff_assignments; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.staff_assignments (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT staff_assignments_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.staff_assignments);
-
-
---
--- Name: student_lists; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.student_lists (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT student_lists_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.student_lists);
-
-
---
--- Name: teams; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.teams (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT teams_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.teams);
-
-
---
--- Name: traveler_buses; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_buses (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_buses_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_buses);
-
-
---
--- Name: traveler_buses_travelers; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_buses_travelers (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_buses_travelers_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_buses_travelers);
-
-
---
--- Name: traveler_credits; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_credits (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_credits_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_credits);
-
-
---
--- Name: traveler_debits; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_debits (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_debits_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_debits);
-
-
---
--- Name: traveler_offers; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_offers (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_offers_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_offers);
-
-
---
--- Name: traveler_requests; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_requests (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_requests_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_requests);
-
-
---
--- Name: traveler_rooms; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.traveler_rooms (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT traveler_rooms_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.traveler_rooms);
-
-
---
--- Name: travelers; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.travelers (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT travelers_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.travelers);
-
-
---
--- Name: user_event_registrations; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_event_registrations (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_event_registrations_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_event_registrations);
-
-
---
--- Name: user_marathon_registrations; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_marathon_registrations (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_marathon_registrations_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_marathon_registrations);
-
-
---
--- Name: user_messages; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_messages (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_messages_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_messages);
-
-
---
--- Name: user_overrides; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_overrides (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_overrides_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_overrides);
-
-
---
--- Name: user_transfer_expectations; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_transfer_expectations (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_transfer_expectations_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_transfer_expectations);
-
-
---
--- Name: user_travel_preparations; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_travel_preparations (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_travel_preparations_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_travel_preparations);
-
-
---
--- Name: user_uniform_orders; Type: TABLE; Schema: year_2021; Owner: -
---
-
-CREATE TABLE year_2021.user_uniform_orders (
-    operating_year integer DEFAULT 2021,
-    CONSTRAINT user_uniform_orders_operating_year_check CHECK ((operating_year = 2021))
-)
-INHERITS (public.user_uniform_orders);
-
-
---
 -- Name: logged_actions event_id; Type: DEFAULT; Schema: auditing; Owner: -
 --
 
@@ -16487,6 +15786,13 @@ ALTER TABLE ONLY public.user_ambassadors ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.user_event_registrations ALTER COLUMN id SET DEFAULT nextval('public.user_event_registrations_id_seq'::regclass);
+
+
+--
+-- Name: user_interest_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_interest_histories ALTER COLUMN id SET DEFAULT nextval('public.user_interest_histories_id_seq'::regclass);
 
 
 --
@@ -19451,1441 +18757,6 @@ ALTER TABLE ONLY year_2020.user_uniform_orders ALTER COLUMN updated_at SET DEFAU
 
 
 --
--- Name: competing_teams id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams ALTER COLUMN id SET DEFAULT nextval('public.competing_teams_id_seq'::regclass);
-
-
---
--- Name: competing_teams created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: competing_teams updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: competing_teams_travelers id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams_travelers ALTER COLUMN id SET DEFAULT nextval('public.competing_teams_travelers_id_seq'::regclass);
-
-
---
--- Name: flight_legs id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs ALTER COLUMN id SET DEFAULT nextval('public.flight_legs_id_seq'::regclass);
-
-
---
--- Name: flight_legs overnight; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs ALTER COLUMN overnight SET DEFAULT false;
-
-
---
--- Name: flight_legs is_subsidiary; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs ALTER COLUMN is_subsidiary SET DEFAULT false;
-
-
---
--- Name: flight_legs created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: flight_legs updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: flight_schedules id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules ALTER COLUMN id SET DEFAULT nextval('public.flight_schedules_id_seq'::regclass);
-
-
---
--- Name: flight_schedules seats_reserved; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules ALTER COLUMN seats_reserved SET DEFAULT 0;
-
-
---
--- Name: flight_schedules names_assigned; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules ALTER COLUMN names_assigned SET DEFAULT 0;
-
-
---
--- Name: flight_schedules created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: flight_schedules updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: flight_tickets id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets ALTER COLUMN id SET DEFAULT nextval('public.flight_tickets_id_seq'::regclass);
-
-
---
--- Name: flight_tickets ticketed; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets ALTER COLUMN ticketed SET DEFAULT false;
-
-
---
--- Name: flight_tickets required; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets ALTER COLUMN required SET DEFAULT false;
-
-
---
--- Name: flight_tickets is_checked_in; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets ALTER COLUMN is_checked_in SET DEFAULT false;
-
-
---
--- Name: flight_tickets created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: flight_tickets updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: mailings id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN id SET DEFAULT nextval('public.mailings_id_seq'::regclass);
-
-
---
--- Name: mailings explicit; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN explicit SET DEFAULT false;
-
-
---
--- Name: mailings printed; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN printed SET DEFAULT false;
-
-
---
--- Name: mailings is_home; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN is_home SET DEFAULT false;
-
-
---
--- Name: mailings is_foreign; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN is_foreign SET DEFAULT false;
-
-
---
--- Name: mailings auto; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN auto SET DEFAULT false;
-
-
---
--- Name: mailings failed; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN failed SET DEFAULT false;
-
-
---
--- Name: mailings country; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN country SET DEFAULT 'USA'::text;
-
-
---
--- Name: mailings created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: mailings updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: meeting_registrations id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations ALTER COLUMN id SET DEFAULT nextval('public.meeting_registrations_id_seq'::regclass);
-
-
---
--- Name: meeting_registrations attended; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations ALTER COLUMN attended SET DEFAULT false;
-
-
---
--- Name: meeting_registrations duration; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations ALTER COLUMN duration SET DEFAULT '00:00:00'::interval;
-
-
---
--- Name: meeting_registrations created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: meeting_registrations updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: meeting_video_views id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN id SET DEFAULT nextval('public.meeting_video_views_id_seq'::regclass);
-
-
---
--- Name: meeting_video_views watched; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN watched SET DEFAULT false;
-
-
---
--- Name: meeting_video_views duration; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN duration SET DEFAULT '00:00:00'::interval;
-
-
---
--- Name: meeting_video_views questions; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN questions SET DEFAULT '{}'::text[];
-
-
---
--- Name: meeting_video_views gave_offer; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN gave_offer SET DEFAULT false;
-
-
---
--- Name: meeting_video_views created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: meeting_video_views updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: payment_items id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN id SET DEFAULT nextval('public.payment_items_id_seq'::regclass);
-
-
---
--- Name: payment_items amount; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN amount SET DEFAULT 0;
-
-
---
--- Name: payment_items price; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN price SET DEFAULT 0;
-
-
---
--- Name: payment_items quantity; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN quantity SET DEFAULT 1;
-
-
---
--- Name: payment_items name; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN name SET DEFAULT 'Account Payment'::text;
-
-
---
--- Name: payment_items created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: payment_items updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: payment_join_terms id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_join_terms ALTER COLUMN id SET DEFAULT nextval('public.payment_join_terms_id_seq'::regclass);
-
-
---
--- Name: payment_join_terms created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_join_terms ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: payment_join_terms updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_join_terms ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: payment_remittances id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_remittances ALTER COLUMN id SET DEFAULT nextval('public.payment_remittances_id_seq'::regclass);
-
-
---
--- Name: payment_remittances recorded; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_remittances ALTER COLUMN recorded SET DEFAULT false;
-
-
---
--- Name: payment_remittances reconciled; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_remittances ALTER COLUMN reconciled SET DEFAULT false;
-
-
---
--- Name: payment_remittances created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_remittances ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: payment_remittances updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_remittances ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: payments id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN id SET DEFAULT nextval('public.payments_id_seq'::regclass);
-
-
---
--- Name: payments gateway_type; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN gateway_type SET DEFAULT 'braintree'::text;
-
-
---
--- Name: payments successful; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN successful SET DEFAULT false;
-
-
---
--- Name: payments category; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN category SET DEFAULT 'account'::text;
-
-
---
--- Name: payments remit_number; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN remit_number SET DEFAULT ((now())::date || '-CC'::text);
-
-
---
--- Name: payments billing; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN billing SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: payments processor; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN processor SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: payments settlement; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN settlement SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: payments gateway; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN gateway SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: payments risk; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN risk SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: payments anonymous; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN anonymous SET DEFAULT false;
-
-
---
--- Name: payments created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: payments updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: sent_mails id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.sent_mails ALTER COLUMN id SET DEFAULT nextval('public.sent_mails_id_seq'::regclass);
-
-
---
--- Name: sent_mails created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.sent_mails ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: staff_assignment_visits id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignment_visits ALTER COLUMN id SET DEFAULT nextval('public.staff_assignment_visits_id_seq'::regclass);
-
-
---
--- Name: staff_assignment_visits created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignment_visits ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: staff_assignment_visits updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignment_visits ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: staff_assignments id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN id SET DEFAULT nextval('public.staff_assignments_id_seq'::regclass);
-
-
---
--- Name: staff_assignments reason; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN reason SET DEFAULT 'Follow Up'::text;
-
-
---
--- Name: staff_assignments completed; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN completed SET DEFAULT false;
-
-
---
--- Name: staff_assignments unneeded; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN unneeded SET DEFAULT false;
-
-
---
--- Name: staff_assignments reviewed; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN reviewed SET DEFAULT false;
-
-
---
--- Name: staff_assignments locked; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN locked SET DEFAULT false;
-
-
---
--- Name: staff_assignments created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: staff_assignments updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: student_lists id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.student_lists ALTER COLUMN id SET DEFAULT nextval('public.student_lists_id_seq'::regclass);
-
-
---
--- Name: teams id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_id_seq'::regclass);
-
-
---
--- Name: teams created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: teams updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: traveler_buses id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses ALTER COLUMN id SET DEFAULT nextval('public.traveler_buses_id_seq'::regclass);
-
-
---
--- Name: traveler_buses capacity; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses ALTER COLUMN capacity SET DEFAULT 0;
-
-
---
--- Name: traveler_buses created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: traveler_buses updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: traveler_credits id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_credits ALTER COLUMN id SET DEFAULT nextval('public.traveler_credits_id_seq'::regclass);
-
-
---
--- Name: traveler_credits created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_credits ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: traveler_credits updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_credits ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: traveler_debits id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits ALTER COLUMN id SET DEFAULT nextval('public.traveler_debits_id_seq'::regclass);
-
-
---
--- Name: traveler_debits created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: traveler_debits updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: traveler_offers id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers ALTER COLUMN id SET DEFAULT nextval('public.traveler_offers_id_seq'::regclass);
-
-
---
--- Name: traveler_offers rules; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers ALTER COLUMN rules SET DEFAULT '{}'::text[];
-
-
---
--- Name: traveler_offers created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: traveler_offers updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: traveler_requests id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_requests ALTER COLUMN id SET DEFAULT nextval('public.traveler_requests_id_seq'::regclass);
-
-
---
--- Name: traveler_requests created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_requests ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: traveler_requests updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_requests ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: traveler_rooms id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_rooms ALTER COLUMN id SET DEFAULT nextval('public.traveler_rooms_id_seq'::regclass);
-
-
---
--- Name: traveler_rooms created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_rooms ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: traveler_rooms updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_rooms ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: travelers id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN id SET DEFAULT nextval('public.travelers_id_seq'::regclass);
-
-
---
--- Name: travelers has_ground_transportation; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN has_ground_transportation SET DEFAULT true;
-
-
---
--- Name: travelers has_lodging; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN has_lodging SET DEFAULT true;
-
-
---
--- Name: travelers has_gbr; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN has_gbr SET DEFAULT false;
-
-
---
--- Name: travelers own_flights; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN own_flights SET DEFAULT false;
-
-
---
--- Name: travelers created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: travelers updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_event_registrations id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN id SET DEFAULT nextval('public.user_event_registrations_id_seq'::regclass);
-
-
---
--- Name: user_event_registrations event_100_m; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_100_m SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_100_m_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_100_m_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_200_m; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_200_m SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_200_m_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_200_m_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_400_m; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_400_m SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_400_m_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_400_m_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_800_m; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_800_m SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_800_m_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_800_m_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_1500_m; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_1500_m SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_1500_m_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_1500_m_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_3000_m; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_3000_m SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_3000_m_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_3000_m_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_90_m_hurdles; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_90_m_hurdles SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_90_m_hurdles_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_90_m_hurdles_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_100_m_hurdles; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_100_m_hurdles SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_100_m_hurdles_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_100_m_hurdles_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_110_m_hurdles; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_110_m_hurdles SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_110_m_hurdles_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_110_m_hurdles_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_200_m_hurdles; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_200_m_hurdles SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_200_m_hurdles_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_200_m_hurdles_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_300_m_hurdles; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_300_m_hurdles SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_300_m_hurdles_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_300_m_hurdles_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_400_m_hurdles; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_400_m_hurdles SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_400_m_hurdles_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_400_m_hurdles_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_2000_m_steeple; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_2000_m_steeple SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_2000_m_steeple_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_2000_m_steeple_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_long_jump; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_long_jump SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_long_jump_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_long_jump_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_triple_jump; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_triple_jump SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_triple_jump_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_triple_jump_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_high_jump; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_high_jump SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_high_jump_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_high_jump_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_pole_vault; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_pole_vault SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_pole_vault_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_pole_vault_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_shot_put; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_shot_put SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_shot_put_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_shot_put_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_discus; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_discus SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_discus_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_discus_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_javelin; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_javelin SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_javelin_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_javelin_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_hammer; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_hammer SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_hammer_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_hammer_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_3000_m_walk; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_3000_m_walk SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_3000_m_walk_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_3000_m_walk_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations event_5000_m_walk; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_5000_m_walk SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_event_registrations event_5000_m_walk_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN event_5000_m_walk_count SET DEFAULT 0;
-
-
---
--- Name: user_event_registrations created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_event_registrations updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_marathon_registrations id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_marathon_registrations ALTER COLUMN id SET DEFAULT nextval('public.user_marathon_registrations_id_seq'::regclass);
-
-
---
--- Name: user_marathon_registrations email; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_marathon_registrations ALTER COLUMN email SET DEFAULT 'gcm-registrations@downundersports.com'::text;
-
-
---
--- Name: user_marathon_registrations created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_marathon_registrations ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_marathon_registrations updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_marathon_registrations ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_messages id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages ALTER COLUMN id SET DEFAULT nextval('public.user_messages_id_seq1'::regclass);
-
-
---
--- Name: user_messages reason; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages ALTER COLUMN reason SET DEFAULT 'other'::text;
-
-
---
--- Name: user_messages reviewed; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages ALTER COLUMN reviewed SET DEFAULT false;
-
-
---
--- Name: user_messages created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_messages updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_overrides id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_overrides ALTER COLUMN id SET DEFAULT nextval('public.user_overrides_id_seq'::regclass);
-
-
---
--- Name: user_overrides created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_overrides ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_overrides updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_overrides ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_transfer_expectations id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations ALTER COLUMN id SET DEFAULT nextval('public.user_transfer_expectations_id_seq'::regclass);
-
-
---
--- Name: user_transfer_expectations can_transfer; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations ALTER COLUMN can_transfer SET DEFAULT 'U'::public.three_state;
-
-
---
--- Name: user_transfer_expectations can_compete; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations ALTER COLUMN can_compete SET DEFAULT 'U'::public.three_state;
-
-
---
--- Name: user_transfer_expectations offer; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations ALTER COLUMN offer SET DEFAULT '"{}"'::jsonb;
-
-
---
--- Name: user_transfer_expectations created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_transfer_expectations updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_travel_preparations id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN id SET DEFAULT nextval('public.user_travel_preparations_id_seq1'::regclass);
-
-
---
--- Name: user_travel_preparations applications; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN applications SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations calls; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN calls SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations confirmations; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN confirmations SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations deadlines; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN deadlines SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations emails; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN emails SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations followups; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN followups SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations items_received; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN items_received SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_travel_preparations extra_eta_processing; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN extra_eta_processing SET DEFAULT false;
-
-
---
--- Name: user_travel_preparations has_multiple_citizenships; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN has_multiple_citizenships SET DEFAULT 'U'::public.three_state;
-
-
---
--- Name: user_travel_preparations citizenships_array; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN citizenships_array SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_travel_preparations has_aliases; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN has_aliases SET DEFAULT 'U'::public.three_state;
-
-
---
--- Name: user_travel_preparations aliases_array; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN aliases_array SET DEFAULT '{}'::character varying[];
-
-
---
--- Name: user_travel_preparations has_convictions; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN has_convictions SET DEFAULT 'U'::public.three_state;
-
-
---
--- Name: user_travel_preparations convictions_array; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN convictions_array SET DEFAULT '{}'::text[];
-
-
---
--- Name: user_travel_preparations created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_travel_preparations updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
--- Name: user_uniform_orders id; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN id SET DEFAULT nextval('public.user_uniform_orders_id_seq'::regclass);
-
-
---
--- Name: user_uniform_orders is_reorder; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN is_reorder SET DEFAULT false;
-
-
---
--- Name: user_uniform_orders jersey_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN jersey_count SET DEFAULT 1;
-
-
---
--- Name: user_uniform_orders shorts_count; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN shorts_count SET DEFAULT 1;
-
-
---
--- Name: user_uniform_orders shipping; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN shipping SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: user_uniform_orders created_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN created_at SET DEFAULT now();
-
-
---
--- Name: user_uniform_orders updated_at; Type: DEFAULT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders ALTER COLUMN updated_at SET DEFAULT now();
-
-
---
 -- Name: logged_actions_active_storage_attachments logged_actions_active_storage_attachments_pkey; Type: CONSTRAINT; Schema: auditing; Owner: -
 --
 
@@ -21051,14 +18922,6 @@ ALTER TABLE ONLY auditing.logged_actions_officials
 
 ALTER TABLE ONLY auditing.logged_actions_payment_items
     ADD CONSTRAINT logged_actions_payment_items_pkey PRIMARY KEY (event_id);
-
-
---
--- Name: logged_actions_payment_join_terms logged_actions_payment_join_terms_pkey; Type: CONSTRAINT; Schema: auditing; Owner: -
---
-
-ALTER TABLE ONLY auditing.logged_actions_payment_join_terms
-    ADD CONSTRAINT logged_actions_payment_join_terms_pkey PRIMARY KEY (event_id);
 
 
 --
@@ -21243,14 +19106,6 @@ ALTER TABLE ONLY auditing.logged_actions_traveler_hotels
 
 ALTER TABLE ONLY auditing.logged_actions_traveler_offers
     ADD CONSTRAINT logged_actions_traveler_offers_pkey PRIMARY KEY (event_id);
-
-
---
--- Name: logged_actions_traveler_requests logged_actions_traveler_requests_pkey; Type: CONSTRAINT; Schema: auditing; Owner: -
---
-
-ALTER TABLE ONLY auditing.logged_actions_traveler_requests
-    ADD CONSTRAINT logged_actions_traveler_requests_pkey PRIMARY KEY (event_id);
 
 
 --
@@ -21918,6 +19773,14 @@ ALTER TABLE ONLY public.user_event_registrations
 
 
 --
+-- Name: user_interest_histories user_interest_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_interest_histories
+    ADD CONSTRAINT user_interest_histories_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_marathon_registrations user_marathon_registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -22531,254 +20394,6 @@ ALTER TABLE ONLY year_2020.user_travel_preparations
 
 ALTER TABLE ONLY year_2020.user_uniform_orders
     ADD CONSTRAINT year_2020_user_uniform_orders_pkey PRIMARY KEY (id);
-
-
---
--- Name: competing_teams year_2021_competing_teams_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams
-    ADD CONSTRAINT year_2021_competing_teams_pkey PRIMARY KEY (id);
-
-
---
--- Name: competing_teams_travelers year_2021_competing_teams_travelers_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams_travelers
-    ADD CONSTRAINT year_2021_competing_teams_travelers_pkey PRIMARY KEY (id);
-
-
---
--- Name: flight_legs year_2021_flight_legs_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs
-    ADD CONSTRAINT year_2021_flight_legs_pkey PRIMARY KEY (id);
-
-
---
--- Name: flight_schedules year_2021_flight_schedules_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules
-    ADD CONSTRAINT year_2021_flight_schedules_pkey PRIMARY KEY (id);
-
-
---
--- Name: flight_tickets year_2021_flight_tickets_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets
-    ADD CONSTRAINT year_2021_flight_tickets_pkey PRIMARY KEY (id);
-
-
---
--- Name: mailings year_2021_mailings_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings
-    ADD CONSTRAINT year_2021_mailings_pkey PRIMARY KEY (id);
-
-
---
--- Name: meeting_registrations year_2021_meeting_registrations_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations
-    ADD CONSTRAINT year_2021_meeting_registrations_pkey PRIMARY KEY (id);
-
-
---
--- Name: meeting_video_views year_2021_meeting_video_views_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views
-    ADD CONSTRAINT year_2021_meeting_video_views_pkey PRIMARY KEY (id);
-
-
---
--- Name: payment_items year_2021_payment_items_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items
-    ADD CONSTRAINT year_2021_payment_items_pkey PRIMARY KEY (id);
-
-
---
--- Name: payment_join_terms year_2021_payment_join_terms_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_join_terms
-    ADD CONSTRAINT year_2021_payment_join_terms_pkey PRIMARY KEY (id);
-
-
---
--- Name: payment_remittances year_2021_payment_remittances_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_remittances
-    ADD CONSTRAINT year_2021_payment_remittances_pkey PRIMARY KEY (id);
-
-
---
--- Name: payments year_2021_payments_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments
-    ADD CONSTRAINT year_2021_payments_pkey PRIMARY KEY (id);
-
-
---
--- Name: sent_mails year_2021_sent_mails_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.sent_mails
-    ADD CONSTRAINT year_2021_sent_mails_pkey PRIMARY KEY (id);
-
-
---
--- Name: staff_assignment_visits year_2021_staff_assignment_visits_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignment_visits
-    ADD CONSTRAINT year_2021_staff_assignment_visits_pkey PRIMARY KEY (id);
-
-
---
--- Name: staff_assignments year_2021_staff_assignments_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments
-    ADD CONSTRAINT year_2021_staff_assignments_pkey PRIMARY KEY (id);
-
-
---
--- Name: student_lists year_2021_student_lists_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.student_lists
-    ADD CONSTRAINT year_2021_student_lists_pkey PRIMARY KEY (id);
-
-
---
--- Name: teams year_2021_teams_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams
-    ADD CONSTRAINT year_2021_teams_pkey PRIMARY KEY (id);
-
-
---
--- Name: traveler_buses year_2021_traveler_buses_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses
-    ADD CONSTRAINT year_2021_traveler_buses_pkey PRIMARY KEY (id);
-
-
---
--- Name: traveler_credits year_2021_traveler_credits_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_credits
-    ADD CONSTRAINT year_2021_traveler_credits_pkey PRIMARY KEY (id);
-
-
---
--- Name: traveler_debits year_2021_traveler_debits_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits
-    ADD CONSTRAINT year_2021_traveler_debits_pkey PRIMARY KEY (id);
-
-
---
--- Name: traveler_offers year_2021_traveler_offers_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers
-    ADD CONSTRAINT year_2021_traveler_offers_pkey PRIMARY KEY (id);
-
-
---
--- Name: traveler_requests year_2021_traveler_requests_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_requests
-    ADD CONSTRAINT year_2021_traveler_requests_pkey PRIMARY KEY (id);
-
-
---
--- Name: traveler_rooms year_2021_traveler_rooms_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_rooms
-    ADD CONSTRAINT year_2021_traveler_rooms_pkey PRIMARY KEY (id);
-
-
---
--- Name: travelers year_2021_travelers_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers
-    ADD CONSTRAINT year_2021_travelers_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_event_registrations year_2021_user_event_registrations_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations
-    ADD CONSTRAINT year_2021_user_event_registrations_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_marathon_registrations year_2021_user_marathon_registrations_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_marathon_registrations
-    ADD CONSTRAINT year_2021_user_marathon_registrations_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_messages year_2021_user_messages_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages
-    ADD CONSTRAINT year_2021_user_messages_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_overrides year_2021_user_overrides_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_overrides
-    ADD CONSTRAINT year_2021_user_overrides_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_transfer_expectations year_2021_user_transfer_expectations_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations
-    ADD CONSTRAINT year_2021_user_transfer_expectations_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_travel_preparations year_2021_user_travel_preparations_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations
-    ADD CONSTRAINT year_2021_user_travel_preparations_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_uniform_orders year_2021_user_uniform_orders_pkey; Type: CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders
-    ADD CONSTRAINT year_2021_user_uniform_orders_pkey PRIMARY KEY (id);
 
 
 --
@@ -23682,48 +21297,6 @@ CREATE INDEX logged_actions_payment_items_row_id_idx ON auditing.logged_actions_
 --
 
 CREATE INDEX logged_actions_payment_items_table_name_idx ON auditing.logged_actions_payment_items USING btree (table_name);
-
-
---
--- Name: logged_actions_payment_join_terms_action_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_payment_join_terms_action_idx ON auditing.logged_actions_payment_join_terms USING btree (action);
-
-
---
--- Name: logged_actions_payment_join_terms_action_tstamp_stm_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_payment_join_terms_action_tstamp_stm_idx ON auditing.logged_actions_payment_join_terms USING btree (action_tstamp_stm);
-
-
---
--- Name: logged_actions_payment_join_terms_full_name_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_payment_join_terms_full_name_idx ON auditing.logged_actions_payment_join_terms USING btree (full_name);
-
-
---
--- Name: logged_actions_payment_join_terms_relid_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_payment_join_terms_relid_idx ON auditing.logged_actions_payment_join_terms USING btree (relid);
-
-
---
--- Name: logged_actions_payment_join_terms_row_id_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_payment_join_terms_row_id_idx ON auditing.logged_actions_payment_join_terms USING btree (row_id);
-
-
---
--- Name: logged_actions_payment_join_terms_table_name_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_payment_join_terms_table_name_idx ON auditing.logged_actions_payment_join_terms USING btree (table_name);
 
 
 --
@@ -24669,48 +22242,6 @@ CREATE INDEX logged_actions_traveler_offers_row_id_idx ON auditing.logged_action
 --
 
 CREATE INDEX logged_actions_traveler_offers_table_name_idx ON auditing.logged_actions_traveler_offers USING btree (table_name);
-
-
---
--- Name: logged_actions_traveler_requests_action_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_traveler_requests_action_idx ON auditing.logged_actions_traveler_requests USING btree (action);
-
-
---
--- Name: logged_actions_traveler_requests_action_tstamp_stm_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_traveler_requests_action_tstamp_stm_idx ON auditing.logged_actions_traveler_requests USING btree (action_tstamp_stm);
-
-
---
--- Name: logged_actions_traveler_requests_full_name_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_traveler_requests_full_name_idx ON auditing.logged_actions_traveler_requests USING btree (full_name);
-
-
---
--- Name: logged_actions_traveler_requests_relid_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_traveler_requests_relid_idx ON auditing.logged_actions_traveler_requests USING btree (relid);
-
-
---
--- Name: logged_actions_traveler_requests_row_id_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_traveler_requests_row_id_idx ON auditing.logged_actions_traveler_requests USING btree (row_id);
-
-
---
--- Name: logged_actions_traveler_requests_table_name_idx; Type: INDEX; Schema: auditing; Owner: -
---
-
-CREATE INDEX logged_actions_traveler_requests_table_name_idx ON auditing.logged_actions_traveler_requests USING btree (table_name);
 
 
 --
@@ -26429,6 +23960,34 @@ CREATE UNIQUE INDEX index_user_forwarded_ids_on_original_id ON public.user_forwa
 
 
 --
+-- Name: index_user_interest_histories_on_changed_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_interest_histories_on_changed_by_id ON public.user_interest_histories USING btree (changed_by_id);
+
+
+--
+-- Name: index_user_interest_histories_on_interest_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_interest_histories_on_interest_id ON public.user_interest_histories USING btree (interest_id);
+
+
+--
+-- Name: index_user_interest_histories_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_interest_histories_on_user_id ON public.user_interest_histories USING btree (user_id);
+
+
+--
+-- Name: index_user_interest_histories_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_interest_histories_on_user_id_and_created_at ON public.user_interest_histories USING btree (user_id, created_at DESC);
+
+
+--
 -- Name: index_user_marathon_registrations_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -28060,692 +25619,6 @@ CREATE INDEX index_user_uniform_orders_on_user_id ON year_2020.user_uniform_orde
 
 
 --
--- Name: expected_difficulty_and_status_index; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX expected_difficulty_and_status_index ON year_2021.user_transfer_expectations USING btree (difficulty, status);
-
-
---
--- Name: expected_status_and_difficulty_index; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX expected_status_and_difficulty_index ON year_2021.user_transfer_expectations USING btree (status, difficulty);
-
-
---
--- Name: expected_transfer_and_compete_index; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX expected_transfer_and_compete_index ON year_2021.user_transfer_expectations USING btree (can_transfer, can_compete);
-
-
---
--- Name: index_competing_teams_on_letter_and_sport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_competing_teams_on_letter_and_sport_id ON year_2021.competing_teams USING btree (letter, sport_id);
-
-
---
--- Name: index_competing_teams_on_name_and_sport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_competing_teams_on_name_and_sport_id ON year_2021.competing_teams USING btree (name, sport_id);
-
-
---
--- Name: index_competing_teams_on_sport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_competing_teams_on_sport_id ON year_2021.competing_teams USING btree (sport_id);
-
-
---
--- Name: index_competing_teams_travelers_on_competing_team_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_competing_teams_travelers_on_competing_team_id ON year_2021.competing_teams_travelers USING btree (competing_team_id);
-
-
---
--- Name: index_competing_teams_travelers_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_competing_teams_travelers_on_traveler_id ON year_2021.competing_teams_travelers USING btree (traveler_id);
-
-
---
--- Name: index_flight_legs_on_arriving_airport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_legs_on_arriving_airport_id ON year_2021.flight_legs USING btree (arriving_airport_id);
-
-
---
--- Name: index_flight_legs_on_departing_airport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_legs_on_departing_airport_id ON year_2021.flight_legs USING btree (departing_airport_id);
-
-
---
--- Name: index_flight_legs_on_schedule_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_legs_on_schedule_id ON year_2021.flight_legs USING btree (schedule_id);
-
-
---
--- Name: index_flight_schedules_on_parent_schedule_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_schedules_on_parent_schedule_id ON year_2021.flight_schedules USING btree (parent_schedule_id);
-
-
---
--- Name: index_flight_schedules_on_pnr; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_flight_schedules_on_pnr ON year_2021.flight_schedules USING btree (pnr);
-
-
---
--- Name: index_flight_schedules_on_route_summary; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_schedules_on_route_summary ON year_2021.flight_schedules USING btree (route_summary);
-
-
---
--- Name: index_flight_schedules_on_verified_by_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_schedules_on_verified_by_id ON year_2021.flight_schedules USING btree (verified_by_id);
-
-
---
--- Name: index_flight_tickets_on_schedule_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_tickets_on_schedule_id ON year_2021.flight_tickets USING btree (schedule_id);
-
-
---
--- Name: index_flight_tickets_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_flight_tickets_on_traveler_id ON year_2021.flight_tickets USING btree (traveler_id);
-
-
---
--- Name: index_mailings_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_mailings_on_user_id ON year_2021.mailings USING btree (user_id);
-
-
---
--- Name: index_meeting_registrations_on_athlete_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_meeting_registrations_on_athlete_id ON year_2021.meeting_registrations USING btree (athlete_id);
-
-
---
--- Name: index_meeting_registrations_on_meeting_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_meeting_registrations_on_meeting_id ON year_2021.meeting_registrations USING btree (meeting_id);
-
-
---
--- Name: index_meeting_registrations_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_meeting_registrations_on_user_id ON year_2021.meeting_registrations USING btree (user_id);
-
-
---
--- Name: index_meeting_video_views_on_athlete_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_meeting_video_views_on_athlete_id ON year_2021.meeting_video_views USING btree (athlete_id);
-
-
---
--- Name: index_meeting_video_views_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_meeting_video_views_on_user_id ON year_2021.meeting_video_views USING btree (user_id);
-
-
---
--- Name: index_meeting_video_views_on_video_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_meeting_video_views_on_video_id ON year_2021.meeting_video_views USING btree (video_id);
-
-
---
--- Name: index_payment_items_on_payment_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payment_items_on_payment_id ON year_2021.payment_items USING btree (payment_id);
-
-
---
--- Name: index_payment_items_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payment_items_on_traveler_id ON year_2021.payment_items USING btree (traveler_id);
-
-
---
--- Name: index_payment_join_terms_on_payment_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payment_join_terms_on_payment_id ON year_2021.payment_join_terms USING btree (payment_id);
-
-
---
--- Name: index_payment_remittances_on_reconciled; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payment_remittances_on_reconciled ON year_2021.payment_remittances USING btree (reconciled);
-
-
---
--- Name: index_payment_remittances_on_recorded; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payment_remittances_on_recorded ON year_2021.payment_remittances USING btree (recorded);
-
-
---
--- Name: index_payment_remittances_on_remit_number; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_payment_remittances_on_remit_number ON year_2021.payment_remittances USING btree (remit_number);
-
-
---
--- Name: index_payments_on_billing; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_billing ON year_2021.payments USING gin (billing);
-
-
---
--- Name: index_payments_on_category; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_category ON year_2021.payments USING hash (category);
-
-
---
--- Name: index_payments_on_category_and_successful; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_category_and_successful ON year_2021.payments USING btree (category, successful);
-
-
---
--- Name: index_payments_on_gateway_type; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_gateway_type ON year_2021.payments USING hash (gateway_type);
-
-
---
--- Name: index_payments_on_shirt_order_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_shirt_order_id ON year_2021.payments USING btree (shirt_order_id);
-
-
---
--- Name: index_payments_on_successful_and_category; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_successful_and_category ON year_2021.payments USING btree (successful, category);
-
-
---
--- Name: index_payments_on_transaction_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_transaction_id ON year_2021.payments USING hash (transaction_id);
-
-
---
--- Name: index_payments_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_payments_on_user_id ON year_2021.payments USING btree (user_id);
-
-
---
--- Name: index_staff_assignment_visits_on_assignment_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_staff_assignment_visits_on_assignment_id ON year_2021.staff_assignment_visits USING btree (assignment_id);
-
-
---
--- Name: index_staff_assignments_on_assigned_by_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_staff_assignments_on_assigned_by_id ON year_2021.staff_assignments USING btree (assigned_by_id);
-
-
---
--- Name: index_staff_assignments_on_assigned_to_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_staff_assignments_on_assigned_to_id ON year_2021.staff_assignments USING btree (assigned_to_id);
-
-
---
--- Name: index_staff_assignments_on_reason; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_staff_assignments_on_reason ON year_2021.staff_assignments USING btree (reason);
-
-
---
--- Name: index_staff_assignments_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_staff_assignments_on_user_id ON year_2021.staff_assignments USING btree (user_id);
-
-
---
--- Name: index_student_lists_on_sent; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_student_lists_on_sent ON year_2021.student_lists USING btree (sent);
-
-
---
--- Name: index_teams_on_competing_team_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_teams_on_competing_team_id ON year_2021.teams USING btree (competing_team_id);
-
-
---
--- Name: index_teams_on_sport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_teams_on_sport_id ON year_2021.teams USING btree (sport_id);
-
-
---
--- Name: index_teams_on_state_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_teams_on_state_id ON year_2021.teams USING btree (state_id);
-
-
---
--- Name: index_traveler_buses_on_color; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_buses_on_color ON year_2021.traveler_buses USING btree (color);
-
-
---
--- Name: index_traveler_buses_on_hotel_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_buses_on_hotel_id ON year_2021.traveler_buses USING btree (hotel_id);
-
-
---
--- Name: index_traveler_buses_on_name; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_buses_on_name ON year_2021.traveler_buses USING btree (name);
-
-
---
--- Name: index_traveler_buses_on_sport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_buses_on_sport_id ON year_2021.traveler_buses USING btree (sport_id);
-
-
---
--- Name: index_traveler_buses_on_sport_id_and_color_and_name; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_traveler_buses_on_sport_id_and_color_and_name ON year_2021.traveler_buses USING btree (sport_id, color, name);
-
-
---
--- Name: index_traveler_buses_travelers_on_bus_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_buses_travelers_on_bus_id ON year_2021.traveler_buses_travelers USING btree (bus_id);
-
-
---
--- Name: index_traveler_buses_travelers_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_buses_travelers_on_traveler_id ON year_2021.traveler_buses_travelers USING btree (traveler_id);
-
-
---
--- Name: index_traveler_buses_travelers_on_traveler_id_and_bus_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_traveler_buses_travelers_on_traveler_id_and_bus_id ON year_2021.traveler_buses_travelers USING btree (traveler_id, bus_id);
-
-
---
--- Name: index_traveler_credits_on_amount; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_credits_on_amount ON year_2021.traveler_credits USING btree (amount);
-
-
---
--- Name: index_traveler_credits_on_assigner_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_credits_on_assigner_id ON year_2021.traveler_credits USING btree (assigner_id);
-
-
---
--- Name: index_traveler_credits_on_name; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_credits_on_name ON year_2021.traveler_credits USING gin (name);
-
-
---
--- Name: index_traveler_credits_on_name_and_amount; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_credits_on_name_and_amount ON year_2021.traveler_credits USING btree (name, amount);
-
-
---
--- Name: index_traveler_credits_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_credits_on_traveler_id ON year_2021.traveler_credits USING btree (traveler_id);
-
-
---
--- Name: index_traveler_debits_on_amount; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_debits_on_amount ON year_2021.traveler_debits USING btree (amount);
-
-
---
--- Name: index_traveler_debits_on_assigner_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_debits_on_assigner_id ON year_2021.traveler_debits USING btree (assigner_id);
-
-
---
--- Name: index_traveler_debits_on_base_debit_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_debits_on_base_debit_id ON year_2021.traveler_debits USING btree (base_debit_id);
-
-
---
--- Name: index_traveler_debits_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_debits_on_traveler_id ON year_2021.traveler_debits USING btree (traveler_id);
-
-
---
--- Name: index_traveler_offers_on_amount; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_offers_on_amount ON year_2021.traveler_offers USING btree (amount);
-
-
---
--- Name: index_traveler_offers_on_assigner_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_offers_on_assigner_id ON year_2021.traveler_offers USING btree (assigner_id);
-
-
---
--- Name: index_traveler_offers_on_maximum; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_offers_on_maximum ON year_2021.traveler_offers USING btree (maximum);
-
-
---
--- Name: index_traveler_offers_on_minimum; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_offers_on_minimum ON year_2021.traveler_offers USING btree (minimum);
-
-
---
--- Name: index_traveler_offers_on_rules_and_amount; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_offers_on_rules_and_amount ON year_2021.traveler_offers USING btree ((rules[1]) text_pattern_ops, amount);
-
-
---
--- Name: index_traveler_offers_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_offers_on_user_id ON year_2021.traveler_offers USING btree (user_id);
-
-
---
--- Name: index_traveler_requests_on_category; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_requests_on_category ON year_2021.traveler_requests USING btree (category);
-
-
---
--- Name: index_traveler_requests_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_requests_on_traveler_id ON year_2021.traveler_requests USING btree (traveler_id);
-
-
---
--- Name: index_traveler_requests_on_traveler_id_and_category; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_requests_on_traveler_id_and_category ON year_2021.traveler_requests USING btree (traveler_id, category);
-
-
---
--- Name: index_traveler_rooms_on_check_in_date; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_rooms_on_check_in_date ON year_2021.traveler_rooms USING btree (check_in_date);
-
-
---
--- Name: index_traveler_rooms_on_check_out_date; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_rooms_on_check_out_date ON year_2021.traveler_rooms USING btree (check_out_date);
-
-
---
--- Name: index_traveler_rooms_on_hotel_dates; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_traveler_rooms_on_hotel_dates ON year_2021.traveler_rooms USING btree (traveler_id, hotel_id, check_in_date, check_out_date);
-
-
---
--- Name: index_traveler_rooms_on_hotel_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_rooms_on_hotel_id ON year_2021.traveler_rooms USING btree (hotel_id);
-
-
---
--- Name: index_traveler_rooms_on_traveler_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_traveler_rooms_on_traveler_id ON year_2021.traveler_rooms USING btree (traveler_id);
-
-
---
--- Name: index_travelers_on_balance; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_travelers_on_balance ON year_2021.travelers USING btree (balance);
-
-
---
--- Name: index_travelers_on_cancel_date; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_travelers_on_cancel_date ON year_2021.travelers USING btree (cancel_date);
-
-
---
--- Name: index_travelers_on_departing_date; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_travelers_on_departing_date ON year_2021.travelers USING btree (departing_date);
-
-
---
--- Name: index_travelers_on_team_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_travelers_on_team_id ON year_2021.travelers USING btree (team_id);
-
-
---
--- Name: index_travelers_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE UNIQUE INDEX index_travelers_on_user_id ON year_2021.travelers USING btree (user_id);
-
-
---
--- Name: index_user_event_registrations_on_submitter_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_event_registrations_on_submitter_id ON year_2021.user_event_registrations USING btree (submitter_id);
-
-
---
--- Name: index_user_event_registrations_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_event_registrations_on_user_id ON year_2021.user_event_registrations USING btree (user_id);
-
-
---
--- Name: index_user_marathon_registrations_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_marathon_registrations_on_user_id ON year_2021.user_marathon_registrations USING btree (user_id);
-
-
---
--- Name: index_user_messages_on_category; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_messages_on_category ON year_2021.user_messages USING btree (category);
-
-
---
--- Name: index_user_messages_on_reason; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_messages_on_reason ON year_2021.user_messages USING btree (reason);
-
-
---
--- Name: index_user_messages_on_reviewed; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_messages_on_reviewed ON year_2021.user_messages USING btree (reviewed);
-
-
---
--- Name: index_user_messages_on_staff_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_messages_on_staff_id ON year_2021.user_messages USING btree (staff_id);
-
-
---
--- Name: index_user_messages_on_type; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_messages_on_type ON year_2021.user_messages USING btree (type);
-
-
---
--- Name: index_user_messages_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_messages_on_user_id ON year_2021.user_messages USING btree (user_id);
-
-
---
--- Name: index_user_overrides_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_overrides_on_user_id ON year_2021.user_overrides USING btree (user_id);
-
-
---
--- Name: index_user_transfer_expectations_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_transfer_expectations_on_user_id ON year_2021.user_transfer_expectations USING btree (user_id);
-
-
---
--- Name: index_user_travel_preparations_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_travel_preparations_on_user_id ON year_2021.user_travel_preparations USING btree (user_id);
-
-
---
--- Name: index_user_uniform_orders_on_sport_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_uniform_orders_on_sport_id ON year_2021.user_uniform_orders USING btree (sport_id);
-
-
---
--- Name: index_user_uniform_orders_on_submitter_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_uniform_orders_on_submitter_id ON year_2021.user_uniform_orders USING btree (submitter_id);
-
-
---
--- Name: index_user_uniform_orders_on_user_id; Type: INDEX; Schema: year_2021; Owner: -
---
-
-CREATE INDEX index_user_uniform_orders_on_user_id ON year_2021.user_uniform_orders USING btree (user_id);
-
-
---
 -- Name: logged_actions_view logged_actions_partition_by_table; Type: TRIGGER; Schema: auditing; Owner: -
 --
 
@@ -30181,459 +27054,11 @@ CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2020.user_uniform_orders
 
 
 --
--- Name: competing_teams audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.competing_teams FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: competing_teams_travelers audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.competing_teams_travelers FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: flight_legs audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.flight_legs FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: flight_schedules audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.flight_schedules FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: flight_tickets audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.flight_tickets FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: mailings audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.mailings FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: meeting_registrations audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.meeting_registrations FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: meeting_video_views audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.meeting_video_views FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: payment_items audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.payment_items FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: payment_join_terms audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.payment_join_terms FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: payment_remittances audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.payment_remittances FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: payments audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.payments FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: sent_mails audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.sent_mails FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: staff_assignment_visits audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.staff_assignment_visits FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: staff_assignments audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.staff_assignments FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: student_lists audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.student_lists FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: teams audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.teams FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: traveler_buses audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_buses FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: traveler_buses_travelers audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_buses_travelers FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'null', '{updated_at}');
-
-
---
--- Name: traveler_credits audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_credits FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: traveler_debits audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_debits FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: traveler_offers audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_offers FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: traveler_requests audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_requests FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: traveler_rooms audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.traveler_rooms FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: travelers audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.travelers FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_event_registrations audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_event_registrations FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_marathon_registrations audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_marathon_registrations FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_messages audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_messages FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_overrides audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_overrides FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_transfer_expectations audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_transfer_expectations FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_travel_preparations audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_travel_preparations FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: user_uniform_orders audit_trigger_row; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_row AFTER INSERT OR DELETE OR UPDATE ON year_2021.user_uniform_orders FOR EACH ROW EXECUTE FUNCTION auditing.if_modified_func('true', 'id', '{updated_at}');
-
-
---
--- Name: competing_teams audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.competing_teams FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: competing_teams_travelers audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.competing_teams_travelers FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: flight_legs audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.flight_legs FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: flight_schedules audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.flight_schedules FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: flight_tickets audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.flight_tickets FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: mailings audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.mailings FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: meeting_registrations audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.meeting_registrations FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: meeting_video_views audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.meeting_video_views FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: payment_items audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.payment_items FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: payment_join_terms audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.payment_join_terms FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: payment_remittances audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.payment_remittances FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: payments audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.payments FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: sent_mails audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.sent_mails FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: staff_assignment_visits audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.staff_assignment_visits FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: staff_assignments audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.staff_assignments FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: student_lists audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.student_lists FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: teams audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.teams FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_buses audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_buses FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_buses_travelers audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_buses_travelers FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_credits audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_credits FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_debits audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_debits FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_offers audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_offers FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_requests audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_requests FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: traveler_rooms audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.traveler_rooms FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: travelers audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.travelers FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_event_registrations audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_event_registrations FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_marathon_registrations audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_marathon_registrations FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_messages audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_messages FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_overrides audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_overrides FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_transfer_expectations audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_transfer_expectations FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_travel_preparations audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_travel_preparations FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
--- Name: user_uniform_orders audit_trigger_stm; Type: TRIGGER; Schema: year_2021; Owner: -
---
-
-CREATE TRIGGER audit_trigger_stm AFTER TRUNCATE ON year_2021.user_uniform_orders FOR EACH STATEMENT EXECUTE FUNCTION auditing.if_modified_func('true');
-
-
---
 -- Name: coaches fk_rails_019fa40eae; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.coaches
-    ADD CONSTRAINT fk_rails_019fa40eae FOREIGN KEY (head_coach_id) REFERENCES public.coaches(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_019fa40eae FOREIGN KEY (head_coach_id) REFERENCES public.coaches(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30641,7 +27066,7 @@ ALTER TABLE ONLY public.coaches
 --
 
 ALTER TABLE ONLY public.privacy_policies
-    ADD CONSTRAINT fk_rails_0366c8ca8b FOREIGN KEY (edited_by_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_0366c8ca8b FOREIGN KEY (edited_by_id) REFERENCES public.users(id);
 
 
 --
@@ -30649,7 +27074,7 @@ ALTER TABLE ONLY public.privacy_policies
 --
 
 ALTER TABLE ONLY public.invite_rules
-    ADD CONSTRAINT fk_rails_07eaf2e6ea FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_07eaf2e6ea FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30657,7 +27082,7 @@ ALTER TABLE ONLY public.invite_rules
 --
 
 ALTER TABLE ONLY public.user_ambassadors
-    ADD CONSTRAINT fk_rails_0c84f5af7f FOREIGN KEY (ambassador_user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_0c84f5af7f FOREIGN KEY (ambassador_user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30665,7 +27090,7 @@ ALTER TABLE ONLY public.user_ambassadors
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT fk_rails_0ce9d27871 FOREIGN KEY (interest_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_0ce9d27871 FOREIGN KEY (interest_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30673,7 +27098,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.event_results
-    ADD CONSTRAINT fk_rails_0d48300f79 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_0d48300f79 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE;
 
 
 --
@@ -30681,7 +27106,7 @@ ALTER TABLE ONLY public.event_results
 --
 
 ALTER TABLE ONLY public.officials
-    ADD CONSTRAINT fk_rails_1227a28f94 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_1227a28f94 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE;
 
 
 --
@@ -30689,7 +27114,7 @@ ALTER TABLE ONLY public.officials
 --
 
 ALTER TABLE ONLY public.user_refund_requests
-    ADD CONSTRAINT fk_rails_181b075f63 FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_181b075f63 FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE;
 
 
 --
@@ -30697,7 +27122,15 @@ ALTER TABLE ONLY public.user_refund_requests
 --
 
 ALTER TABLE ONLY public.user_passports
-    ADD CONSTRAINT fk_rails_1822b1957d FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_1822b1957d FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE;
+
+
+--
+-- Name: user_interest_histories fk_rails_19304c5bb4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_interest_histories
+    ADD CONSTRAINT fk_rails_19304c5bb4 FOREIGN KEY (interest_id) REFERENCES public.interests(id);
 
 
 --
@@ -30705,7 +27138,7 @@ ALTER TABLE ONLY public.user_passports
 --
 
 ALTER TABLE ONLY public.participants
-    ADD CONSTRAINT fk_rails_1c31d76900 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_1c31d76900 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30713,7 +27146,7 @@ ALTER TABLE ONLY public.participants
 --
 
 ALTER TABLE ONLY public.meetings
-    ADD CONSTRAINT fk_rails_1c7f0a9b0d FOREIGN KEY (host_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_1c7f0a9b0d FOREIGN KEY (host_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30721,7 +27154,7 @@ ALTER TABLE ONLY public.meetings
 --
 
 ALTER TABLE ONLY public.participants
-    ADD CONSTRAINT fk_rails_23820ffbd6 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_23820ffbd6 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE;
 
 
 --
@@ -30729,7 +27162,7 @@ ALTER TABLE ONLY public.participants
 --
 
 ALTER TABLE ONLY public.import_athletes
-    ADD CONSTRAINT fk_rails_2d79db181b FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_2d79db181b FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE;
 
 
 --
@@ -30737,7 +27170,7 @@ ALTER TABLE ONLY public.import_athletes
 --
 
 ALTER TABLE ONLY public.addresses
-    ADD CONSTRAINT fk_rails_2d87b6c11e FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_2d87b6c11e FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE;
 
 
 --
@@ -30745,7 +27178,7 @@ ALTER TABLE ONLY public.addresses
 --
 
 ALTER TABLE ONLY public.athletes_sports
-    ADD CONSTRAINT fk_rails_30d2f7a221 FOREIGN KEY (athlete_id) REFERENCES public.athletes(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_30d2f7a221 FOREIGN KEY (athlete_id) REFERENCES public.athletes(id) DEFERRABLE;
 
 
 --
@@ -30753,7 +27186,7 @@ ALTER TABLE ONLY public.athletes_sports
 --
 
 ALTER TABLE ONLY public.payment_terms
-    ADD CONSTRAINT fk_rails_3388f6240c FOREIGN KEY (edited_by_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_3388f6240c FOREIGN KEY (edited_by_id) REFERENCES public.users(id);
 
 
 --
@@ -30761,7 +27194,7 @@ ALTER TABLE ONLY public.payment_terms
 --
 
 ALTER TABLE ONLY public.coaches
-    ADD CONSTRAINT fk_rails_33a19e40b7 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_33a19e40b7 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30769,7 +27202,7 @@ ALTER TABLE ONLY public.coaches
 --
 
 ALTER TABLE ONLY public.athletes
-    ADD CONSTRAINT fk_rails_3438c8a31d FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_3438c8a31d FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE;
 
 
 --
@@ -30777,7 +27210,15 @@ ALTER TABLE ONLY public.athletes
 --
 
 ALTER TABLE ONLY public.traveler_hotels
-    ADD CONSTRAINT fk_rails_34dc95bb44 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_34dc95bb44 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE;
+
+
+--
+-- Name: user_interest_histories fk_rails_38024aa7f0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_interest_histories
+    ADD CONSTRAINT fk_rails_38024aa7f0 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -30785,7 +27226,7 @@ ALTER TABLE ONLY public.traveler_hotels
 --
 
 ALTER TABLE ONLY public.event_result_static_files
-    ADD CONSTRAINT fk_rails_39ef65e684 FOREIGN KEY (event_result_id) REFERENCES public.event_results(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_39ef65e684 FOREIGN KEY (event_result_id) REFERENCES public.event_results(id) DEFERRABLE;
 
 
 --
@@ -30793,7 +27234,7 @@ ALTER TABLE ONLY public.event_result_static_files
 --
 
 ALTER TABLE ONLY public.meetings
-    ADD CONSTRAINT fk_rails_3dc501a5b5 FOREIGN KEY (tech_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_3dc501a5b5 FOREIGN KEY (tech_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30801,7 +27242,7 @@ ALTER TABLE ONLY public.meetings
 --
 
 ALTER TABLE ONLY public.flight_airports
-    ADD CONSTRAINT fk_rails_4c4c8ae552 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_4c4c8ae552 FOREIGN KEY (address_id) REFERENCES public.addresses(id);
 
 
 --
@@ -30809,7 +27250,7 @@ ALTER TABLE ONLY public.flight_airports
 --
 
 ALTER TABLE ONLY public.user_ambassadors
-    ADD CONSTRAINT fk_rails_58cbf1db3a FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_58cbf1db3a FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30817,7 +27258,7 @@ ALTER TABLE ONLY public.user_ambassadors
 --
 
 ALTER TABLE ONLY public.fundraising_idea_images
-    ADD CONSTRAINT fk_rails_6cc1cc062a FOREIGN KEY (fundraising_idea_id) REFERENCES public.fundraising_ideas(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_6cc1cc062a FOREIGN KEY (fundraising_idea_id) REFERENCES public.fundraising_ideas(id);
 
 
 --
@@ -30825,7 +27266,7 @@ ALTER TABLE ONLY public.fundraising_idea_images
 --
 
 ALTER TABLE ONLY public.shirt_order_shipments
-    ADD CONSTRAINT fk_rails_74abb24728 FOREIGN KEY (shirt_order_id) REFERENCES public.shirt_orders(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_74abb24728 FOREIGN KEY (shirt_order_id) REFERENCES public.shirt_orders(id) DEFERRABLE;
 
 
 --
@@ -30833,7 +27274,7 @@ ALTER TABLE ONLY public.shirt_order_shipments
 --
 
 ALTER TABLE ONLY public.staff_clocks
-    ADD CONSTRAINT fk_rails_7a26fea858 FOREIGN KEY (staff_id) REFERENCES public.staffs(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_7a26fea858 FOREIGN KEY (staff_id) REFERENCES public.staffs(id);
 
 
 --
@@ -30841,7 +27282,7 @@ ALTER TABLE ONLY public.staff_clocks
 --
 
 ALTER TABLE ONLY public.traveler_requests
-    ADD CONSTRAINT fk_rails_7b6e6f380e FOREIGN KEY (traveler_id) REFERENCES public.travelers(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_7b6e6f380e FOREIGN KEY (traveler_id) REFERENCES public.travelers(id);
 
 
 --
@@ -30849,7 +27290,15 @@ ALTER TABLE ONLY public.traveler_requests
 --
 
 ALTER TABLE ONLY public.address_variants
-    ADD CONSTRAINT fk_rails_800442053d FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_800442053d FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE;
+
+
+--
+-- Name: user_interest_histories fk_rails_812086240c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_interest_histories
+    ADD CONSTRAINT fk_rails_812086240c FOREIGN KEY (changed_by_id) REFERENCES public.users(id);
 
 
 --
@@ -30857,7 +27306,7 @@ ALTER TABLE ONLY public.address_variants
 --
 
 ALTER TABLE ONLY public.athletes_sports
-    ADD CONSTRAINT fk_rails_889569fb78 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_889569fb78 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE;
 
 
 --
@@ -30865,7 +27314,7 @@ ALTER TABLE ONLY public.athletes_sports
 --
 
 ALTER TABLE ONLY public.invite_rules
-    ADD CONSTRAINT fk_rails_89b7ef551c FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_89b7ef551c FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE;
 
 
 --
@@ -30873,7 +27322,7 @@ ALTER TABLE ONLY public.invite_rules
 --
 
 ALTER TABLE ONLY public.import_athletes
-    ADD CONSTRAINT fk_rails_8e8d068bd5 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_8e8d068bd5 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE;
 
 
 --
@@ -30881,7 +27330,7 @@ ALTER TABLE ONLY public.import_athletes
 --
 
 ALTER TABLE ONLY public.user_relations
-    ADD CONSTRAINT fk_rails_8f78fb613a FOREIGN KEY (related_user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_8f78fb613a FOREIGN KEY (related_user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30889,7 +27338,7 @@ ALTER TABLE ONLY public.user_relations
 --
 
 ALTER TABLE ONLY public.user_passports
-    ADD CONSTRAINT fk_rails_901b67c184 FOREIGN KEY (second_checker_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_901b67c184 FOREIGN KEY (second_checker_id) REFERENCES public.users(id) DEFERRABLE;
 
 
 --
@@ -30897,7 +27346,7 @@ ALTER TABLE ONLY public.user_passports
 --
 
 ALTER TABLE ONLY public.officials
-    ADD CONSTRAINT fk_rails_95a091a415 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_95a091a415 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE;
 
 
 --
@@ -30905,7 +27354,7 @@ ALTER TABLE ONLY public.officials
 --
 
 ALTER TABLE ONLY public.user_passports
-    ADD CONSTRAINT fk_rails_9a89b97d88 FOREIGN KEY (checker_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_9a89b97d88 FOREIGN KEY (checker_id) REFERENCES public.users(id) DEFERRABLE;
 
 
 --
@@ -30913,7 +27362,7 @@ ALTER TABLE ONLY public.user_passports
 --
 
 ALTER TABLE ONLY public.sport_events
-    ADD CONSTRAINT fk_rails_9dfac7872d FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_9dfac7872d FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30921,7 +27370,7 @@ ALTER TABLE ONLY public.sport_events
 --
 
 ALTER TABLE ONLY public.athletes
-    ADD CONSTRAINT fk_rails_a2031fad05 FOREIGN KEY (source_id) REFERENCES public.sources(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_a2031fad05 FOREIGN KEY (source_id) REFERENCES public.sources(id) DEFERRABLE;
 
 
 --
@@ -30929,7 +27378,7 @@ ALTER TABLE ONLY public.athletes
 --
 
 ALTER TABLE ONLY public.import_matches
-    ADD CONSTRAINT fk_rails_a28b01aa32 FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_a28b01aa32 FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE;
 
 
 --
@@ -30937,7 +27386,7 @@ ALTER TABLE ONLY public.import_matches
 --
 
 ALTER TABLE ONLY public.thank_you_ticket_terms
-    ADD CONSTRAINT fk_rails_a37157355b FOREIGN KEY (edited_by_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_a37157355b FOREIGN KEY (edited_by_id) REFERENCES public.users(id);
 
 
 --
@@ -30945,7 +27394,7 @@ ALTER TABLE ONLY public.thank_you_ticket_terms
 --
 
 ALTER TABLE ONLY public.addresses
-    ADD CONSTRAINT fk_rails_a58360fa5b FOREIGN KEY (student_list_id) REFERENCES public.student_lists(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_a58360fa5b FOREIGN KEY (student_list_id) REFERENCES public.student_lists(id) DEFERRABLE;
 
 
 --
@@ -30953,7 +27402,7 @@ ALTER TABLE ONLY public.addresses
 --
 
 ALTER TABLE ONLY public.sport_infos
-    ADD CONSTRAINT fk_rails_b024300b1c FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_b024300b1c FOREIGN KEY (sport_id) REFERENCES public.sports(id);
 
 
 --
@@ -30961,7 +27410,7 @@ ALTER TABLE ONLY public.sport_infos
 --
 
 ALTER TABLE ONLY public.coaches
-    ADD CONSTRAINT fk_rails_b63bfa1c6e FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_b63bfa1c6e FOREIGN KEY (school_id) REFERENCES public.schools(id) DEFERRABLE;
 
 
 --
@@ -30969,7 +27418,7 @@ ALTER TABLE ONLY public.coaches
 --
 
 ALTER TABLE ONLY public.athletes
-    ADD CONSTRAINT fk_rails_b6b4420e7e FOREIGN KEY (competing_team_id) REFERENCES public.competing_teams(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_b6b4420e7e FOREIGN KEY (competing_team_id) REFERENCES public.competing_teams(id) DEFERRABLE;
 
 
 --
@@ -30977,7 +27426,7 @@ ALTER TABLE ONLY public.athletes
 --
 
 ALTER TABLE ONLY public.athletes
-    ADD CONSTRAINT fk_rails_d3974226ab FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_d3974226ab FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -30985,7 +27434,7 @@ ALTER TABLE ONLY public.athletes
 --
 
 ALTER TABLE ONLY public.coaches
-    ADD CONSTRAINT fk_rails_d52e094e32 FOREIGN KEY (competing_team_id) REFERENCES public.competing_teams(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_d52e094e32 FOREIGN KEY (competing_team_id) REFERENCES public.competing_teams(id) DEFERRABLE;
 
 
 --
@@ -30993,7 +27442,7 @@ ALTER TABLE ONLY public.coaches
 --
 
 ALTER TABLE ONLY public.shirt_order_items
-    ADD CONSTRAINT fk_rails_d6e798a6bd FOREIGN KEY (shirt_order_id) REFERENCES public.shirt_orders(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_d6e798a6bd FOREIGN KEY (shirt_order_id) REFERENCES public.shirt_orders(id) DEFERRABLE;
 
 
 --
@@ -31001,7 +27450,7 @@ ALTER TABLE ONLY public.shirt_order_items
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT fk_rails_eb2fc738e4 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_eb2fc738e4 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE;
 
 
 --
@@ -31009,7 +27458,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.import_athletes
-    ADD CONSTRAINT fk_rails_f2eb8014a8 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_f2eb8014a8 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -31017,7 +27466,7 @@ ALTER TABLE ONLY public.import_athletes
 --
 
 ALTER TABLE ONLY public.import_matches
-    ADD CONSTRAINT fk_rails_f66807d7e0 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_f66807d7e0 FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE;
 
 
 --
@@ -31025,7 +27474,7 @@ ALTER TABLE ONLY public.import_matches
 --
 
 ALTER TABLE ONLY public.chat_room_messages
-    ADD CONSTRAINT fk_rails_f7178a54ac FOREIGN KEY (chat_room_id) REFERENCES public.chat_rooms(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_f7178a54ac FOREIGN KEY (chat_room_id) REFERENCES public.chat_rooms(id);
 
 
 --
@@ -31033,7 +27482,7 @@ ALTER TABLE ONLY public.chat_room_messages
 --
 
 ALTER TABLE ONLY public.athletes
-    ADD CONSTRAINT fk_rails_f87477c7b8 FOREIGN KEY (referring_coach_id) REFERENCES public.coaches(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_f87477c7b8 FOREIGN KEY (referring_coach_id) REFERENCES public.coaches(id) ON DELETE RESTRICT DEFERRABLE;
 
 
 --
@@ -31041,7 +27490,7 @@ ALTER TABLE ONLY public.athletes
 --
 
 ALTER TABLE ONLY public.schools
-    ADD CONSTRAINT fk_rails_f92e4f2669 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_f92e4f2669 FOREIGN KEY (address_id) REFERENCES public.addresses(id) DEFERRABLE;
 
 
 --
@@ -31049,7 +27498,7 @@ ALTER TABLE ONLY public.schools
 --
 
 ALTER TABLE ONLY public.chat_room_messages
-    ADD CONSTRAINT fk_rails_ff6a8c6282 FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT fk_rails_ff6a8c6282 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -31981,462 +28430,6 @@ ALTER TABLE ONLY year_2020.user_messages
 
 
 --
--- Name: traveler_offers fk_rails_024f8088b6; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers
-    ADD CONSTRAINT fk_rails_024f8088b6 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_schedules fk_rails_04d283f755; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules
-    ADD CONSTRAINT fk_rails_04d283f755 FOREIGN KEY (parent_schedule_id) REFERENCES year_2021.flight_schedules(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_requests fk_rails_0930e9f608; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_requests
-    ADD CONSTRAINT fk_rails_0930e9f608 FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) DEFERRABLE;
-
-
---
--- Name: traveler_buses fk_rails_0f3b179851; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses
-    ADD CONSTRAINT fk_rails_0f3b179851 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_debits fk_rails_15368d4c08; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits
-    ADD CONSTRAINT fk_rails_15368d4c08 FOREIGN KEY (assigner_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_marathon_registrations fk_rails_1d6e1f9c7e; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_marathon_registrations
-    ADD CONSTRAINT fk_rails_1d6e1f9c7e FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: competing_teams_travelers fk_rails_1facac9243; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams_travelers
-    ADD CONSTRAINT fk_rails_1facac9243 FOREIGN KEY (competing_team_id) REFERENCES year_2021.competing_teams(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: meeting_video_views fk_rails_29d9f8b721; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views
-    ADD CONSTRAINT fk_rails_29d9f8b721 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_transfer_expectations fk_rails_2bb8dc60ec; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_transfer_expectations
-    ADD CONSTRAINT fk_rails_2bb8dc60ec FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE;
-
-
---
--- Name: competing_teams fk_rails_2c5a6fc781; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams
-    ADD CONSTRAINT fk_rails_2c5a6fc781 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: staff_assignments fk_rails_2e3b73b997; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments
-    ADD CONSTRAINT fk_rails_2e3b73b997 FOREIGN KEY (assigned_to_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: staff_assignment_visits fk_rails_3403f4290a; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignment_visits
-    ADD CONSTRAINT fk_rails_3403f4290a FOREIGN KEY (assignment_id) REFERENCES year_2021.staff_assignments(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_messages fk_rails_355ee668f8; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages
-    ADD CONSTRAINT fk_rails_355ee668f8 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_credits fk_rails_383796da7c; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_credits
-    ADD CONSTRAINT fk_rails_383796da7c FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_event_registrations fk_rails_38d8f0ad37; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations
-    ADD CONSTRAINT fk_rails_38d8f0ad37 FOREIGN KEY (submitter_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: meeting_registrations fk_rails_3a830d7762; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations
-    ADD CONSTRAINT fk_rails_3a830d7762 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: travelers fk_rails_493fa0f244; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers
-    ADD CONSTRAINT fk_rails_493fa0f244 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_uniform_orders fk_rails_4c053060f6; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders
-    ADD CONSTRAINT fk_rails_4c053060f6 FOREIGN KEY (sport_id) REFERENCES public.sports(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: payments fk_rails_5258bf4b59; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments
-    ADD CONSTRAINT fk_rails_5258bf4b59 FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: staff_assignments fk_rails_61929ede89; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments
-    ADD CONSTRAINT fk_rails_61929ede89 FOREIGN KEY (assigned_by_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: payment_items fk_rails_63fe4ec25f; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items
-    ADD CONSTRAINT fk_rails_63fe4ec25f FOREIGN KEY (payment_id) REFERENCES year_2021.payments(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: meeting_video_views fk_rails_6a7e6d0671; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views
-    ADD CONSTRAINT fk_rails_6a7e6d0671 FOREIGN KEY (video_id) REFERENCES public.meeting_videos(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: teams fk_rails_6cf2565019; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams
-    ADD CONSTRAINT fk_rails_6cf2565019 FOREIGN KEY (sport_id) REFERENCES public.sports(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: teams fk_rails_74782ded7b; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams
-    ADD CONSTRAINT fk_rails_74782ded7b FOREIGN KEY (competing_team_id) REFERENCES year_2021.competing_teams(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_uniform_orders fk_rails_75ed645a5c; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders
-    ADD CONSTRAINT fk_rails_75ed645a5c FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: mailings fk_rails_81f7f1664f; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.mailings
-    ADD CONSTRAINT fk_rails_81f7f1664f FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: payments fk_rails_876b9f92f5; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payments
-    ADD CONSTRAINT fk_rails_876b9f92f5 FOREIGN KEY (shirt_order_id) REFERENCES public.shirt_orders(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_schedules fk_rails_880b3f60f1; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_schedules
-    ADD CONSTRAINT fk_rails_880b3f60f1 FOREIGN KEY (verified_by_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_tickets fk_rails_88fee19fcc; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets
-    ADD CONSTRAINT fk_rails_88fee19fcc FOREIGN KEY (schedule_id) REFERENCES year_2021.flight_schedules(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_buses fk_rails_898e38689a; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses
-    ADD CONSTRAINT fk_rails_898e38689a FOREIGN KEY (hotel_id) REFERENCES public.traveler_hotels(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_debits fk_rails_9148fe00a1; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits
-    ADD CONSTRAINT fk_rails_9148fe00a1 FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_credits fk_rails_94842c211e; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_credits
-    ADD CONSTRAINT fk_rails_94842c211e FOREIGN KEY (assigner_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: competing_teams_travelers fk_rails_9be1ca05cc; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.competing_teams_travelers
-    ADD CONSTRAINT fk_rails_9be1ca05cc FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_rooms fk_rails_9d33beb77a; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_rooms
-    ADD CONSTRAINT fk_rails_9d33beb77a FOREIGN KEY (hotel_id) REFERENCES public.traveler_hotels(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_debits fk_rails_9d65ef348b; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_debits
-    ADD CONSTRAINT fk_rails_9d65ef348b FOREIGN KEY (base_debit_id) REFERENCES public.traveler_base_debits(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: meeting_video_views fk_rails_a9eb980a67; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_video_views
-    ADD CONSTRAINT fk_rails_a9eb980a67 FOREIGN KEY (athlete_id) REFERENCES public.athletes(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_event_registrations fk_rails_a9f48eadac; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_event_registrations
-    ADD CONSTRAINT fk_rails_a9f48eadac FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_offers fk_rails_ae703806c0; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_offers
-    ADD CONSTRAINT fk_rails_ae703806c0 FOREIGN KEY (assigner_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: teams fk_rails_be3d04883e; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.teams
-    ADD CONSTRAINT fk_rails_be3d04883e FOREIGN KEY (state_id) REFERENCES public.states(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: payment_join_terms fk_rails_c4e2e11cc1; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_join_terms
-    ADD CONSTRAINT fk_rails_c4e2e11cc1 FOREIGN KEY (payment_id) REFERENCES year_2021.payments(id) DEFERRABLE;
-
-
---
--- Name: traveler_buses_travelers fk_rails_c9ff8eecf3; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses_travelers
-    ADD CONSTRAINT fk_rails_c9ff8eecf3 FOREIGN KEY (bus_id) REFERENCES year_2021.traveler_buses(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: payment_items fk_rails_ccef4ba293; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_items
-    ADD CONSTRAINT fk_rails_ccef4ba293 FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_uniform_orders fk_rails_df3019c7c0; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_uniform_orders
-    ADD CONSTRAINT fk_rails_df3019c7c0 FOREIGN KEY (submitter_id) REFERENCES public.users(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_messages fk_rails_e2509325e7; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_messages
-    ADD CONSTRAINT fk_rails_e2509325e7 FOREIGN KEY (staff_id) REFERENCES public.staffs(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_legs fk_rails_e347a1560f; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs
-    ADD CONSTRAINT fk_rails_e347a1560f FOREIGN KEY (departing_airport_id) REFERENCES public.flight_airports(id) ON DELETE RESTRICT;
-
-
---
--- Name: traveler_buses_travelers fk_rails_e55d201656; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_buses_travelers
-    ADD CONSTRAINT fk_rails_e55d201656 FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_travel_preparations fk_rails_e88562a5c1; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_travel_preparations
-    ADD CONSTRAINT fk_rails_e88562a5c1 FOREIGN KEY (user_id) REFERENCES public.users(id) DEFERRABLE;
-
-
---
--- Name: meeting_registrations fk_rails_e9681a0ed7; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations
-    ADD CONSTRAINT fk_rails_e9681a0ed7 FOREIGN KEY (athlete_id) REFERENCES public.athletes(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: travelers fk_rails_e99d67d7c2; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.travelers
-    ADD CONSTRAINT fk_rails_e99d67d7c2 FOREIGN KEY (team_id) REFERENCES year_2021.teams(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: traveler_rooms fk_rails_ee34619aef; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.traveler_rooms
-    ADD CONSTRAINT fk_rails_ee34619aef FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_tickets fk_rails_f4127515c0; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_tickets
-    ADD CONSTRAINT fk_rails_f4127515c0 FOREIGN KEY (traveler_id) REFERENCES year_2021.travelers(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: staff_assignments fk_rails_f55e66f6af; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.staff_assignments
-    ADD CONSTRAINT fk_rails_f55e66f6af FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_legs fk_rails_f85a09a578; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs
-    ADD CONSTRAINT fk_rails_f85a09a578 FOREIGN KEY (schedule_id) REFERENCES year_2021.flight_schedules(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: user_overrides fk_rails_f9228f3930; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.user_overrides
-    ADD CONSTRAINT fk_rails_f9228f3930 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: flight_legs fk_rails_fb33348155; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.flight_legs
-    ADD CONSTRAINT fk_rails_fb33348155 FOREIGN KEY (arriving_airport_id) REFERENCES public.flight_airports(id) ON DELETE RESTRICT;
-
-
---
--- Name: meeting_registrations fk_rails_fb80a42e63; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.meeting_registrations
-    ADD CONSTRAINT fk_rails_fb80a42e63 FOREIGN KEY (meeting_id) REFERENCES public.meetings(id) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: payment_join_terms fk_rails_fda00c90b3; Type: FK CONSTRAINT; Schema: year_2021; Owner: -
---
-
-ALTER TABLE ONLY year_2021.payment_join_terms
-    ADD CONSTRAINT fk_rails_fda00c90b3 FOREIGN KEY (terms_id) REFERENCES public.payment_terms(id) DEFERRABLE;
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -32570,7 +28563,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200407141011'),
 ('20200511221632'),
 ('20200511222029'),
-('20200531122439'),
-('20200531130000');
+('20200531122420');
 
 

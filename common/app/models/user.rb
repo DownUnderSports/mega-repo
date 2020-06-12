@@ -93,6 +93,7 @@ class User < ApplicationRecord
   has_many :submitted_event_registrations, class_name: "User::EventRegistration", foreign_key: :submitter_id, inverse_of: :submitter
   has_one :marathon_registration, dependent: :destroy
   has_many :refund_requests, class_name: 'User::RefundRequest'
+  has_many :interest_histories, class_name: 'User::InterestHistory', dependent: :destroy
 
   has_many :submitted_audits,
     class_name: 'BetterRecord::LoggedAction',
@@ -380,9 +381,11 @@ class User < ApplicationRecord
   # == Callbacks ============================================================
   before_validation :set_responded_at
   before_save :format_fields
-  after_commit :dus_id_check, on: %i[ create ]
-  after_commit :run_checks, on: %i[ update ]
+  after_commit :dus_id_check,             on: %i[ create ]
+  after_commit :run_checks,               on: %i[ update ]
   after_commit :refresh_assignments_view, on: [ :update ]
+  after_commit :add_interest_history,     on: %i[ create update ],
+                                          if: :saved_change_to_interest_id?
 
   # == Boolean Class Methods ================================================
 
@@ -1623,6 +1626,16 @@ class User < ApplicationRecord
   end
 
   private
+    def add_interest_history
+      self.
+        interest_histories.
+        create(
+          interest_id: self.interest_id,
+          changed_by: BetterRecord::Current.user || auto_worker
+        )
+      true
+    end
+
     def after_avatar_attachment_commit(attached, direction)
       method = "#{direction}_sponsor_photo"
       if StaffMailer.respond_to? method

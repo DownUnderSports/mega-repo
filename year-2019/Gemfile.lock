@@ -111,7 +111,7 @@ GEM
       multi_json (~> 1)
       statsd-ruby (~> 1.1)
     benchmark-ips (2.7.2)
-    better_record (0.24.4)
+    better_record (0.25.1)
       csv (~> 3.0, >= 3.1.2)
       jwe (~> 0.3, >= 0.3.1)
       jwt (~> 2.1, >= 2.1.0)
@@ -432,7 +432,7 @@ DEPENDENCIES
   axlsx!
   axlsx_rails (= 0.5.2)
   barnes (~> 0.0.7)
-  better_record (~> 0.24, >= 0.24.4)
+  better_record (~> 0.25, >= 0.25.1)
   bootsnap (>= 1.1.0)
   braintree (~> 2.90, >= 2.90.0)
   brakeman

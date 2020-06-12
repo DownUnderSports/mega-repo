@@ -8,4 +8,5 @@ function bundle_dir() {
 }
 bundle_dir www "$@"
 bundle_dir admin "$@"
-# bundle_dir year-2019 "$@"
+bundle_dir year-2019 "$@"
+bundle_dir year-2020 "$@"

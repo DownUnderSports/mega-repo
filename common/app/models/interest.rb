@@ -10,6 +10,7 @@ class Interest < ApplicationRecord
 
   # == Relationships ========================================================
   has_many :users
+  has_many :user_histories, class_name: "User::InterestHistory"
 
   # == Validations ==========================================================
   validates :level, presence: true,
