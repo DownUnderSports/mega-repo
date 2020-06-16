@@ -23,6 +23,23 @@
       </tr>
     </thead>
     <tbody>
+      <% if user.traveler.credits.transfer.exists? %>
+        <% user.traveler.credits.transfer.order(amount: :desc).each do |credit| %>
+          <tr  style="background: #EEEEEE;">
+            <td>
+              <%= credit.name %>
+            </td>
+            <td colspan="3" style="overflow: hidden; text-overflow: ellipsis">
+              Rollover Credit<% if credit.description.present? %>:
+              <%= credit.description.split("\n").join(", ") %>
+              <% end %>
+            </td>
+            <td nowrap class="text-right" style="background: #E0E0E0;">
+              <%= credit.amount.to_s(true) %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
       <% user.traveler.items.order(:created_at).each do |item| %>
         <% payment = item.payment %>
         <tr style="page-break-inside:avoid !important;">
@@ -60,7 +77,7 @@
           Total Payments:
         </th>
         <th class="text-right" style="background-color: #5ceb89!important; white-space: nowrap">
-          <%= (@total_payments ||= StoreAsInt.money(user.traveler.items.sum(:amount))).to_s(true) %>
+          <%= ((@total_payments ||= StoreAsInt.money(user.traveler.items.sum(:amount))) + (@total_transferred ||= user.traveler.total_transfer_credits)).to_s(true) %>
         </th>
       </tr>
     </tbody>

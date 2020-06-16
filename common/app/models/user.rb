@@ -1648,7 +1648,7 @@ class User < ApplicationRecord
 
     def athlete_payment_description
       fundraising = fundraising_array.map(&:first).join(", ").presence&.+(" and ")
-      "#{fundraising}I have been invited to the Down Under Sports Tournaments hosted on the Gold Coast of Australia, as an ambassador of #{fundraising ? 'our' : 'my' } community and #{fundraising ? '' : 'our '}country.#{ team && " #{fundraising ? 'We' : 'I'} will be representing #{team.state.full} on the #{team.sport.full.downcase} team in the 2020 #{team.sport.info.tournament}." } Your sponsorship will be a very important part of fundraising for #{fundraising ? 'us and our' : 'me and my'} team. Please help #{fundraising ? 'us' : 'me'} achieve this once in a lifetime opportunity by contributing."
+      "#{fundraising}I have been invited to the Down Under Sports Tournaments hosted on the Gold Coast of Australia, as an ambassador of #{fundraising ? 'our' : 'my' } community and #{fundraising ? '' : 'our '}country.#{ team && " #{fundraising ? 'We' : 'I'} will be representing #{team.state.full} on the #{team.sport.full.downcase} team in the 2021 #{team.sport.info.tournament}." } Your sponsorship will be a very important part of fundraising for #{fundraising ? 'us and our' : 'me and my'} team. Please help #{fundraising ? 'us' : 'me'} achieve this once in a lifetime opportunity by contributing."
     end
 
     def cache_related_keys

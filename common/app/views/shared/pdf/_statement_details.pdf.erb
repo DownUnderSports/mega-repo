@@ -77,7 +77,7 @@
       </tr>
     </tbody>
     <% end %>
-    <% user.traveler.credits.order(amount: :desc).each do |credit| %>
+    <% user.traveler.credits.main.order(amount: :desc).each do |credit| %>
     <tbody style="page-break-inside:avoid !important;">
       <tr>
         <td colspan="2">
@@ -103,7 +103,7 @@
           Total Charges:
         </th>
         <th class="text-right" style="background-color: #ffc107!important;">
-          <%= ((@total_debits ||= StoreAsInt.money(user.traveler.debits.sum(:amount))) - (@total_credits ||= StoreAsInt.money(user.traveler.credits.sum(:amount)))).to_s(true) %>
+          <%= ((@total_debits ||= StoreAsInt.money(user.traveler.debits.sum(:amount))) - (@total_credits ||= user.traveler.total_main_credits)).to_s(true) %>
         </th>
       </tr>
     </tbody>
@@ -111,6 +111,18 @@
 </section>
 
 <%= render partial: 'shared/pdf/payment_details', locals: {user: user, time: time} %>
+
+<%-
+  @balance ||= (
+    (@total_debits ||= user.traveler.total_debits) \
+    - (
+        (@total_credits ||= user.traveler.total_main_credits) \
+        + (@total_transferred = user.traveler.total_transfer_credits) \
+        + (@total_payments ||= user.traveler.total_payments)
+      )
+  ).
+  to_s(true)
+-%>
 
 <section style="page-break-inside:avoid !important;">
   <header>
@@ -161,6 +173,18 @@
             </th>
           </tr>
         </tbody>
+        <% if @total_transferred&.>(0) %>
+        <tbody style="border:none!important">
+          <tr>
+            <th class="pr-3" colspan="2" style="background: #EEEEEE!important;">
+              Total Rollover Credits:
+            </th>
+            <th class="pr-3 text-right" style="background: #E0E0E0!important;">
+              <%= @total_transferred.to_s(true) %>
+            </th>
+          </tr>
+        </tbody>
+        <% end %>
         <tbody style="border:none!important">
           <tr>
             <th class="pr-3" colspan="2" style="background-color: #c3e6cb!important;">
@@ -177,7 +201,7 @@
               Current Balance:
             </th>
             <th class="pr-3 text-right" style="background-color: #ff8692!important;">
-              <%= (@total_debits - (@total_credits + @total_payments)).to_s(true) %>
+              <%= @balance %>
             </th>
           </tr>
         </tbody>

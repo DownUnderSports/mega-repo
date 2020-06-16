@@ -13,20 +13,31 @@
   <row>
     <columns>
       <p>
-        G'day!
+        Our office will continue to have limited hours this summer, but you are
+        welcome to email us or leave a message; we will respond as we are able
+        to and aim to resume normal operations this fall.
       </p>
       <p>
-        Please see our June newsletter attached to read about one of our
-        favorite highlights of visiting Australia.
+        We understand that the current climate is not favorable for fundraising
+        efforts and will therefore wait to send your 2021 fundraising materials
+        until a more appropriate time.
       </p>
       <p>
-        We hope you are safe and healthy during these uncertain times and wish
-        you the best.
+        We hope that you and your loved ones are staying safe and healthy
+        through these unprecedented times.
       </p>
       <p>
-        Cheers,
+        Sincerely,
       </p>
       <%= render partial: 'shared/email_footer', locals: { skip_hours: :limited } %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p>
+        <strong>PS:</strong> Check out the attached newsletter for a fun way to
+        learn a little more about Australia!
+      </p>
     </columns>
   </row>
 </container>

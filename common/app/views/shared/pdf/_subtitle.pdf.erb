@@ -6,7 +6,19 @@
         Current Balance:
       </td>
       <td class="p-0" style="border: none" nowrap>
-        <span class="bg-success text-white px-1"><%= ((@total_debits ||= StoreAsInt.money(user.traveler.debits.sum(:amount))) - ((@total_credits = StoreAsInt.money(user.traveler.credits.sum(:amount))) + (@total_payments ||= StoreAsInt.money(user.traveler.items.sum(:amount))))).to_s(true) %></span>
+        <span class="bg-success text-white px-1">
+          <%=
+            (
+              (@total_debits ||= user.traveler.total_debits) \
+              - (
+                  (@total_credits ||= user.traveler.total_main_credits) \
+                  + (@total_transferred = user.traveler.total_transfer_credits) \
+                  + (@total_payments ||= user.traveler.total_payments)
+                )
+            ).
+            to_s(true)
+          %>
+        </span>
       </td>
     </tr>
     <% end %>

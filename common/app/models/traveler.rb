@@ -40,7 +40,15 @@ class Traveler < ApplicationRecord
     end
   end
 
-  has_many :credits, inverse_of: :traveler, dependent: :destroy
+  has_many :credits, inverse_of: :traveler, dependent: :destroy do
+    def main
+      where.not(id: transfer.select(:id))
+    end
+
+    def transfer
+      where("name like '20__ Transfer'")
+    end
+  end
 
   has_many :debits, inverse_of: :traveler, dependent: :destroy
   has_many :base_debits, through: :debits, source: :base_debit
@@ -518,11 +526,11 @@ class Traveler < ApplicationRecord
   end
 
   def total_main_credits
-    total_credits - total_transfer_credits
+    StoreAsInt.money credits.main.sum(:amount)
   end
 
   def total_transfer_credits
-    StoreAsInt.money credits.where("name like '20__ Transfer'").sum(:amount)
+    StoreAsInt.money credits.transfer.sum(:amount)
   end
 
   def total_charges
