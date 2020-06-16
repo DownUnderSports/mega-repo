@@ -82,13 +82,17 @@ class Site extends Component {
             <div className="ribbon-wrapper">
               <h3 className="ribbon">
                 <strong className="ribbon-inner">
-                  Thank You For Your Patience
+                  Summer Availability
                 </strong>
               </h3>
             </div>
             <hr className="d-block w-100"/>
             <p className="text-dark">
-              Our office will continue to have limited availability this month while our communities address COVID-19. If you are unable to reach us, please leave a message or send us an email and we will get back to you as soon as we are able. We appreciate your understanding.
+              Please be aware that our office will have very limited hours this
+              summer as our communities grapple with the unprecedented events of
+              2020. You are welcome to email or leave us a message. We will
+              respond as we are able to and aim to resume normal operations this
+              fall. Thank you for your patience.  
             </p>
           </div>
         </div>
