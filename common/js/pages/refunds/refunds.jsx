@@ -3,10 +3,6 @@ import pixelTracker from 'common/js/helpers/pixel-tracker'
 import RefundTerms from 'common/js/components/terms/refunds'
 import './refunds.css'
 
-const termProps = {
-  className: ''
-}
-
 export default class RefundsPage extends PureComponent {
   componentDidMount() {
     pixelTracker('track', 'PageView')
@@ -16,7 +12,6 @@ export default class RefundsPage extends PureComponent {
     return (
       <RefundTerms
         className='my-5 bg-light border rounded p-3'
-        termProps={termProps}
       />
     )
   }

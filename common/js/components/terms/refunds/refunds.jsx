@@ -3,7 +3,6 @@ import { Link } from 'react-component-templates/components';
 import { DisplayOrLoading } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import marked from 'marked'
-import './refunds.css'
 
 export default class Refunds extends Component {
   state = { body: '', parsed: '' }
@@ -53,10 +52,17 @@ export default class Refunds extends Component {
               <JellyBox className="authenticated-jelly-box" />
             }
           >
-            <div className="Terms" {...termProps} dangerouslySetInnerHTML={{ __html: this.state.parsed }} />
+            <div className="Terms Subterms" {...termProps} dangerouslySetInnerHTML={{ __html: this.state.parsed }} />
           </DisplayOrLoading>
         </section>
-        <Link key="full-link" to='/terms' className='float-right d-print-none'>
+        <p key="notice" className="d-print-none">
+          <i>
+            **The terms detailed above are a subsection of the Down Under Sports
+            Terms &amp; Conditions made directly accessible for your convenience.
+          </i>
+          <br/>
+        </p>
+        <Link key="full-link" to='/terms#cancellations-and-refunds' className='btn btn-block btn-info d-print-none'>
           Click Here to view the full Down Under Sports Terms &amp; Conditions
         </Link>
         <div className='clearfix'></div>
