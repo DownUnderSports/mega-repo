@@ -9,6 +9,17 @@ class Staff < ApplicationRecord
   # == Extensions ===========================================================
 
   # == Relationships ========================================================
+  has_many :messages, class_name: 'User::Message', inverse_of: :staff, dependent: :destroy do
+    def done_today
+      done_on(Time.zone.now.midnight)
+    end
+
+    def done_on(start_time, end_time = nil)
+      where(arel_table[:created_at].gteq(start_time)).
+      where(arel_table[:created_at].lteq(end_time || start_time.end_of_day))
+    end
+  end
+
   has_many :notes, class_name: 'User::Note', inverse_of: :staff, dependent: :destroy
   has_many :histories, class_name: 'User::History', inverse_of: :staff, dependent: :destroy
   has_many :contact_logs, class_name: 'User::ContactLog', inverse_of: :staff, dependent: :destroy

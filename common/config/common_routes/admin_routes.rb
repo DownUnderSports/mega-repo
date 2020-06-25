@@ -133,6 +133,8 @@ module AdminRoutes
         end
 
         namespace :assignments do
+          resources :recaps
+
           resources :responds do
             collection do
               post :reassign, defaults: { format: :json }

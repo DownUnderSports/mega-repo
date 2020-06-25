@@ -94,12 +94,23 @@ class User < ApplicationRecord
   has_one :marathon_registration, dependent: :destroy
   has_many :refund_requests, class_name: 'User::RefundRequest'
   has_many :interest_histories, class_name: 'User::InterestHistory', dependent: :destroy
+  has_many :recaps, class_name: 'User::Recap', inverse_of: :user, dependent: :destroy
+
 
   has_many :submitted_audits,
     class_name: 'BetterRecord::LoggedAction',
     foreign_key: :app_user_id,
     foreign_type: :app_user_type,
-    as: :submitted_audits
+    as: :submitted_audits do
+      def done_today
+        done_on(Time.zone.now.midnight)
+      end
+
+      def done_on(start_time, end_time = nil)
+        where(arel_table[:action_tstamp_tx].gteq(start_time)).
+        where(arel_table[:action_tstamp_tx].lteq(end_time || start_time.end_of_day))
+      end
+    end
 
   has_many :forwarded_dus_ids,
     inverse_of:  :user,
@@ -788,6 +799,10 @@ class User < ApplicationRecord
   # def insurance_proofs
   #   __send__ :"insurance_proofs_#{current_year}"
   # end
+
+  def last_recap
+    recaps.order(created_at: :desc).limit(1).first
+  end
 
   def send_cancellation_email(email = nil, now = false)
     self.contact_histories.create(message: 'Sent Cancellation Confirmation', category: :email, reason: :other, reviewed: true, staff_id: auto_worker.category_id)

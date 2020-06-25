@@ -14292,6 +14292,42 @@ ALTER SEQUENCE public.user_passports_id_seq OWNED BY public.user_passports.id;
 
 
 --
+-- Name: user_recaps; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_recaps (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    log text,
+    total_audits integer DEFAULT 0,
+    users_modified integer DEFAULT 0,
+    notes_made integer DEFAULT 0,
+    package_modifications integer DEFAULT 0,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: user_recaps_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_recaps_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_recaps_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_recaps_id_seq OWNED BY public.user_recaps.id;
+
+
+--
 -- Name: user_refund_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15835,6 +15871,13 @@ ALTER TABLE ONLY public.user_passport_authorities ALTER COLUMN id SET DEFAULT ne
 --
 
 ALTER TABLE ONLY public.user_passports ALTER COLUMN id SET DEFAULT nextval('public.user_passports_id_seq'::regclass);
+
+
+--
+-- Name: user_recaps id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_recaps ALTER COLUMN id SET DEFAULT nextval('public.user_recaps_id_seq'::regclass);
 
 
 --
@@ -19826,6 +19869,14 @@ ALTER TABLE ONLY public.user_passport_authorities
 
 ALTER TABLE ONLY public.user_passports
     ADD CONSTRAINT user_passports_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_recaps user_recaps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_recaps
+    ADD CONSTRAINT user_recaps_pkey PRIMARY KEY (id);
 
 
 --
@@ -24079,6 +24130,13 @@ CREATE INDEX index_user_passports_on_user_id ON public.user_passports USING btre
 
 
 --
+-- Name: index_user_recaps_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_recaps_on_user_id ON public.user_recaps USING btree (user_id);
+
+
+--
 -- Name: index_user_refund_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -27422,6 +27480,14 @@ ALTER TABLE ONLY public.athletes
 
 
 --
+-- Name: user_recaps fk_rails_c71d6899fe; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_recaps
+    ADD CONSTRAINT fk_rails_c71d6899fe FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: athletes fk_rails_d3974226ab; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -28563,6 +28629,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200407141011'),
 ('20200511221632'),
 ('20200511222029'),
-('20200531122420');
+('20200531122420'),
+('20200624195350');
 
 

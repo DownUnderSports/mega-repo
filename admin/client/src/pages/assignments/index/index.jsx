@@ -8,8 +8,9 @@ import './index.css'
 const RespondsPage = lazy(() => import(/* webpackChunkName: "assignments-responds-page", webpackPrefetch: true */ 'pages/assignments/responds'))
 const TravelersPage = lazy(() => import(/* webpackChunkName: "assignments-travelers-page", webpackPrefetch: true */ 'pages/assignments/travelers'))
 const CleanupPage = lazy(() => import(/* webpackChunkName: "assignments-cleanup-page", webpackPrefetch: true */ 'pages/assignments/cleanup'))
+const RecapsPage = lazy(() => import(/* webpackChunkName: "assignments-recaps-page", webpackPrefetch: true */ 'pages/assignments/recaps'))
 
-const pages = [ 'responds', 'travelers', 'cleanup' ]
+const pages = [ 'responds', 'travelers', 'cleanup', 'recaps' ]
 
 export default class AssignmentsPage extends Component {
   respondsPage = (props) => (
@@ -31,6 +32,14 @@ export default class AssignmentsPage extends Component {
   cleanupPage = (props) => (
     <CleanupPage
       key="cleanup"
+      {...this.props}
+      {...props}
+    />
+  )
+
+  recapsPage = (props) => (
+    <RecapsPage
+      key="recaps"
       {...this.props}
       {...props}
     />
