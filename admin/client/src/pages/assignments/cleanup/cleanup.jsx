@@ -10,7 +10,7 @@ import InvitableAthleteForm from 'forms/invitable-athlete-form'
 export default class AssignmentsCleanupPage extends Component {
   static contextType = CurrentUser.Context
 
-  version = '0.0.2'
+  version = '0.0.3'
 
   state = {
     selectedId: null,

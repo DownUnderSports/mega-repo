@@ -71,9 +71,7 @@ class CleanupChannel < ApplicationCable::Channel
 
     def gen_sample_ids(sport = nil)
       q = AthletesSport.
-        transfer_nil.
-        order(Arel.sql('RANDOM()')).
-        limit(100)
+        transfer_nil
 
       if sport.present?
         sport =
@@ -84,7 +82,18 @@ class CleanupChannel < ApplicationCable::Channel
         q = q.where(sport_id: sport)
       end
 
-      q.pluck(:id)
+      undergrads =
+        Athlete.
+          where(Athlete.arel_table[:grad].gt(2020)).
+          select(:id)
+
+      uq = q.where(athlete_id: undergrads)
+      q = uq if uq.count(1) > 0
+
+      q.
+        order(Arel.sql('RANDOM()')).
+        limit(100).
+        pluck(:id)
     end
 
     def allowed_stats
