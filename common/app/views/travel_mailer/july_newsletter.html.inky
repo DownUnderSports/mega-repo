@@ -1,0 +1,46 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">July Newsletter</h3>
+    </columns>
+  </row>
+</container>
+<container class="body-border full">
+  <spacer size="32"></spacer>
+</container>
+<container>
+  <row>
+    <columns
+      class="with-img-and-center-message"
+      background="<%= image_url "usa_flag.png" %>"
+    >
+      <p class="message text-center">
+        <strong>
+          Happy 4<sup>th</sup> of July from Down Under Sports!
+        </strong>
+      </p>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p>
+        Our office is still continuing our limited summer hours, but you are
+        always welcome to email us or leave a message. We hope that you and your
+        loved ones are continuing to stay safe and healthy.
+      </p>
+      <p>
+        Sincerely,
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :limited } %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p>
+        <strong>PS:</strong> Check out the attached newsletter for a fun game to
+        play on July 4<sup>th</sup> and to learn a little more about Australia!
+      </p>
+    </columns>
+  </row>
+</container>

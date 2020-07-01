@@ -530,6 +530,26 @@ img {
   }
 }
 
+.with-img-and-center-message {
+  padding: 20px !important;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  .message {
+    background: #f3f3f3 !important;
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+    text-align: center;
+    &.white {
+      background: #ffffff !important;
+    }
+    &.full-width {
+      width: 100%
+    }
+  }
+}
+
 .mt {
   margin-top: 1rem;
 }
