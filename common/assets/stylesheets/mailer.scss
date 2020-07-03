@@ -530,22 +530,25 @@ img {
   }
 }
 
-.with-img-and-center-message {
-  padding: 20px !important;
-  background-position: center;
-  background-size: cover;
+.with-image-background {
+  padding: 20% !important;
+  background-position: top;
+  background-size: contain;
   background-repeat: no-repeat;
   .message {
-    background: #f3f3f3 !important;
-    width: 50%;
+    font-size: 20px;
+    background: #3c3b6e !important;
+    color: #ffffff !important;
+    width: 100%;
     margin: auto;
     padding: 10px;
     text-align: center;
+    border-radius: 5px;
+    box-shadow: #ffffff 0 0 5px 5px;
     &.white {
       background: #ffffff !important;
-    }
-    &.full-width {
-      width: 100%
+      color: #3c3b6e !important;
+      box-shadow: #3c3b6e 0 0 5px 5px;
     }
   }
 }

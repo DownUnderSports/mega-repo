@@ -1,3 +1,5 @@
+<% provide :outer_class, "white-mail" %>
+
 <container class="header">
   <row>
     <columns>
@@ -11,15 +13,8 @@
 </container>
 <container>
   <row>
-    <columns
-      class="with-img-and-center-message"
-      background="<%= image_url "usa_flag.png" %>"
-    >
-      <p class="message text-center">
-        <strong>
-          Happy 4<sup>th</sup> of July from Down Under Sports!
-        </strong>
-      </p>
+    <columns>
+      <%= image_tag "happy_4th_of_july.png", class: 'full', alt: "Happy 4th of July from Down Under Sports!" %>
     </columns>
   </row>
   <row>

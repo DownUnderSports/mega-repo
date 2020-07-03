@@ -101,7 +101,7 @@ module CommonConfigs
       host: config.route_info[:domain]
     }
 
-    config.action_mailer.asset_host = "https://downundersports.com"
+    config.action_mailer.asset_host = "https://www.downundersports.com"
   end
 
   def self.set_middlewares(config, raven_url = nil)
