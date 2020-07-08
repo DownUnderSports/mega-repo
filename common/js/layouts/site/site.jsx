@@ -92,7 +92,7 @@ class Site extends Component {
               summer as our communities grapple with the unprecedented events of
               2020. You are welcome to email or leave us a message. We will
               respond as we are able to and aim to resume normal operations this
-              fall. Thank you for your patience.  
+              fall. Thank you for your patience.
             </p>
           </div>
         </div>

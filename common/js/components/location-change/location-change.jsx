@@ -53,15 +53,18 @@ export default class LocationChange extends Component {
 
         this.scroll(this.hash)
       } else {
-        const top = push
-          ? (
-              (
-                document.getElementById('site-carousel')
-                || document.getElementById('site-header-content')
-                || {}
-              ).offsetHeight || 0
-            )
-          : 0
+        let top = 0
+        if(push) {
+          let el = document.getElementById('site-header-content')
+
+          if(el) top = el.offsetTop || 0
+          else {
+            el = document.getElementById('site-carousel')
+                || document.getElementById('site-banner-video')
+
+            if(el) top = el.offsetHeight + el.offsetTop
+          }
+        }
 
         // if((window.scrollY || 0) > 0) {
           supportsNativeSmoothScroll ? window.scrollTo({ top, left: 0, behavior: 'smooth' }) : window.scrollTo(0, 0)

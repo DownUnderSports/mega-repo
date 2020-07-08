@@ -1,6 +1,8 @@
 .youtubeWrapper
   position: relative;
   padding-bottom: 66%;
+  &.keep-aspect
+    padding-bottom: 56.25% !important;
   .random-background-image
     display: none
 
@@ -50,6 +52,8 @@
       &::after
         top: 0 !important
         bottom: 0 !important
+        left: -1px !important
+        right: -1px !important
 
     &.rounded-bottom
       &::after
@@ -104,3 +108,5 @@
     left: 0
     width: 100%
     height: 100%
+    border-width: 0
+    border-color: transparent

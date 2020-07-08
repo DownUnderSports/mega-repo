@@ -1,0 +1,6 @@
+{
+  "name": "ResponseVideo",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./response-video.jsx"
+}
