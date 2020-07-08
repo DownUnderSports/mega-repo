@@ -39,6 +39,7 @@ module Admin
 
             user = User[params[:id]]
 
+            return render json: no_user unless user
             return render json: no_recaps unless user.recaps.size > 0
 
             last_modified = user.recaps.try(:maximum, :updated_at)
@@ -51,6 +52,7 @@ module Admin
       end
 
       def new
+        return render json: no_user unless current_user
         return render json: {
           recap: use_last_recap? ? current_user.last_recap : current_user.recaps.new
         }
@@ -84,6 +86,8 @@ module Admin
         def use_last_recap?
           !!current_user.last_recap&.
                          created_at&.>=(Time.zone.now.midnight)
+        rescue
+          false
         end
 
         def find_recap_params
@@ -95,7 +99,9 @@ module Admin
         end
 
         def is_allowed?
-          !!current_user&.staff&.recaps
+          !!current_user.staff.recaps
+        rescue
+          false
         end
 
         def not_allowed
@@ -107,6 +113,12 @@ module Admin
         def no_recaps
           {
             errors: [ "No recaps submitted" ]
+          }
+        end
+
+        def no_user
+          {
+            errors: [ "User not found" ]
           }
         end
     end
