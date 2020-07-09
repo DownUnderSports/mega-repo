@@ -7,7 +7,7 @@ import { ConnectionSpeed, Menu } from 'react-component-templates/contexts';
 import { debounce, Objected } from 'react-component-templates/helpers';
 
 import { HeaderLinks, HeaderLogo } from './components'
-import ResponseVideo from 'common/js/components/response-video'
+// import ResponseVideo from 'common/js/components/response-video'
 
 import checkVersion from 'common/js/helpers/check-version'
 import RouteParser from 'common/js/helpers/route-parser'
@@ -364,29 +364,30 @@ class Header extends Component {
             </svg>
           </a>
         </div>
-        <div id="site-banner" className="banner-video">
-          <div className="outer-wrapper">
-            <div className="outer-content">
-              <div className="message">
-                <div className="ribbon-wrapper">
-                  <h3 className="ribbon">
-                    <strong className="ribbon-inner">
-                      A message from Down Under Sports
-                    </strong>
-                  </h3>
+        {/*
+          <div id="site-banner" className="banner-video">
+            <div className="outer-wrapper">
+              <div className="outer-content">
+                <div className="message">
+                  <div className="ribbon-wrapper">
+                    <h3 className="ribbon">
+                      <strong className="ribbon-inner">
+                        A message from Down Under Sports
+                      </strong>
+                    </h3>
+                  </div>
                 </div>
-              </div>
-              <div className="video-container">
-                <ResponseVideo
-                  displayClass="alt-background paused-background keep-aspect fullscreen-background"
-                />
+                <div className="video-container">
+                  <ResponseVideo
+                    displayClass="alt-background paused-background keep-aspect fullscreen-background"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        */}
         {
           !!imageSrc
-          && false
           && (
             <div
               className={`carousel ${headerClassName}`}

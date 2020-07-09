@@ -8,6 +8,7 @@
         #{current_meta_data[:twitter]}
         <meta name="current-app-name" content="#{ ENV['CURRENT_APP_NAME'] || 'development' }">
         <meta name="current-app-origin" content="#{ @header_hash && @header_hash[:Origin] }">
+        <meta name="facebook-domain-verification" content="geh34i656i2wxrzktny9g27alehr19" />
         <title>
           #{ (yield :title).presence || current_meta_data[:title].presence || (defined?(title) && title).presence || 'Down Under Sports' }
         </title>
