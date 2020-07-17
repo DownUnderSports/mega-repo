@@ -20,16 +20,16 @@ else
       orders.
         where.
         not(submitted_to_shop_at: nil).
-        count(1),
+        count(:all),
       orders.
         where(user_id: Traveler.active.select(:user_id)).
         where(submitted_to_shop_at: nil).
-        count(1),
+        count(:all),
       orders.
         where.
         not(user_id: Traveler.active.select(:user_id)).
         where(submitted_to_shop_at: nil).
-        count(1)
+        count(:all)
     ]
   end
 end

@@ -88,7 +88,7 @@ class CleanupChannel < ApplicationCable::Channel
           select(:id)
 
       uq = q.where(athlete_id: undergrads)
-      q = uq if uq.count(1) > 0
+      q = uq if uq.count(:all) > 0
 
       q.
         order(Arel.sql('RANDOM()')).

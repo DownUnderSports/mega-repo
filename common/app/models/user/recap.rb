@@ -89,7 +89,7 @@ class User < ApplicationRecord
           self.user&.
             submitted_audits&.
             done_on(recap_midnight).
-            count(1)
+            count(:all)
       end
 
       def set_users_modified

@@ -30,8 +30,8 @@ School.
       school.address.city,
       school.address.state.abbr,
       school.address.zip,
-      school.athletes.where_exists(:user, id: User::Message.where("message LIKE '2019 Interest Level:%'").where.not(message: '2019 Interest Level: Unknown').select(:user_id)).count(1),
-      school.athletes.where_exists(:user, id: User::Message.where(message: '2019 Traveler').select(:user_id)).count(1),
+      school.athletes.where_exists(:user, id: User::Message.where("message LIKE '2019 Interest Level:%'").where.not(message: '2019 Interest Level: Unknown').select(:user_id)).count(:all),
+      school.athletes.where_exists(:user, id: User::Message.where(message: '2019 Traveler').select(:user_id)).count(:all),
       "https://admin.downundersports.com/admin/schools/#{school.pid}"
     ]
   end

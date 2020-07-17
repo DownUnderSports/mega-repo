@@ -32,13 +32,13 @@
               New Responds
             </th>
             <td>
-              <%= counter.athletes.count(1) %>
+              <%= counter.athletes.count(:all) %>
             </td>
             <td>
-              <%= counter.non_athletes.count(1) %>
+              <%= counter.non_athletes.count(:all) %>
             </td>
             <td>
-              <%= counter.count(1) %>
+              <%= counter.count(:all) %>
             </td>
           </tr>
           <tr>
@@ -46,13 +46,13 @@
               Total Responds
             </th>
             <td>
-              <%= responds.athletes.count(1) %>
+              <%= responds.athletes.count(:all) %>
             </td>
             <td>
-              <%= responds.non_athletes.count(1) %>
+              <%= responds.non_athletes.count(:all) %>
             </td>
             <td>
-              <%= responds.count(1) %>
+              <%= responds.count(:all) %>
             </td>
           </tr>
           <tr>
@@ -68,13 +68,13 @@
               New Watched Video
             </th>
             <td>
-              <%= watched_counter.athletes.count(1) %>
+              <%= watched_counter.athletes.count(:all) %>
             </td>
             <td>
-              <%= watched_counter.non_athletes.count(1) %>
+              <%= watched_counter.non_athletes.count(:all) %>
             </td>
             <td>
-              <%= watched_counter.count(1) %>
+              <%= watched_counter.count(:all) %>
             </td>
           </tr>
           <tr>
@@ -83,13 +83,13 @@
               New Started Video
             </th>
             <td>
-              <%= started_counter.athletes.count(1) %>
+              <%= started_counter.athletes.count(:all) %>
             </td>
             <td>
-              <%= started_counter.non_athletes.count(1) %>
+              <%= started_counter.non_athletes.count(:all) %>
             </td>
             <td>
-              <%= started_counter.count(1) %>
+              <%= started_counter.count(:all) %>
             </td>
           </tr>
           <tr>
@@ -98,13 +98,13 @@
               Total Watched Video
             </th>
             <td>
-              <%= watched_counter.athletes.count(1) %>
+              <%= watched_counter.athletes.count(:all) %>
             </td>
             <td>
-              <%= watched_counter.non_athletes.count(1) %>
+              <%= watched_counter.non_athletes.count(:all) %>
             </td>
             <td>
-              <%= watched_counter.count(1) %>
+              <%= watched_counter.count(:all) %>
             </td>
           </tr>
           <tr>
@@ -113,13 +113,13 @@
               Total Started Video
             </th>
             <td>
-              <%= started_counter.athletes.count(1) %>
+              <%= started_counter.athletes.count(:all) %>
             </td>
             <td>
-              <%= started_counter.non_athletes.count(1) %>
+              <%= started_counter.non_athletes.count(:all) %>
             </td>
             <td>
-              <%= started_counter.count(1) %>
+              <%= started_counter.count(:all) %>
             </td>
           </tr>
         </tbody>

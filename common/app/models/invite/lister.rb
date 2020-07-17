@@ -32,7 +32,7 @@ module Invite
         where_not_exists(:messages, message: '2019 Traveler')
 
       ct = i = 0
-      count = query.count(1)
+      count = query.count(:all)
       first_invite_date = Mailing.invites.order(:sent).take&.sent || Date.today
       quiet_failure = Boolean.parse(params[:quiet_failure])
 
