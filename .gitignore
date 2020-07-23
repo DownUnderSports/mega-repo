@@ -28,3 +28,4 @@
 **/*.key
 !**/.keep
 */.git
+pry_history.log

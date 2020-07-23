@@ -5,6 +5,12 @@ class ReportMailer < ImportantMailer
     end
   end
 
+  def cleanup_stats
+    mail to: ['gayle@downundersports.com', 'sara@downundersports.com', 'sampson@downundersports.com'], subject: "Weekly Cleanup Stats: #{Time.zone.now.to_s(:long)}"  do |format|
+      format.text
+    end
+  end
+
   private
     def open_tempfile(ext: '.csv', tempdir: nil)
       require 'tempfile'

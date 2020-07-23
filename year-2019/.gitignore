@@ -81,3 +81,5 @@ call_graph*
 /pids/*
 !/pids/.keep
 /**/node_modules/**/.keep
+# Ignore master key for decrypting credentials and more.
+/config/master.key

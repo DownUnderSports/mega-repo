@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 RAILS_V="$(ruby -v)"
 if [[ ! RAILS_V =~ "2.6.6" ]]
 then
@@ -6,7 +7,6 @@ then
   source /usr/share/chruby/chruby.sh && chruby ruby-2.6.6
 fi
 
-echo "proxying to www/bin/$1 ${@:2}"
 pushd www
-bin/$1 "${@:2}"
+bin/rails c
 popd

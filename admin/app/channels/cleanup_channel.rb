@@ -1,7 +1,7 @@
 class CleanupChannel < ApplicationCable::Channel
   # == Constants ============================================================
   CHANNEL_NAME = "cleanup_channel"
-  ADMIN_IDS = %w[ SAMPSN SARALO GAYLEO KARENJ ].freeze
+  ADMIN_IDS = %w[ SAMPSN SARALO GAYLEO ].freeze
 
   # == Attributes ===========================================================
 
@@ -25,17 +25,28 @@ class CleanupChannel < ApplicationCable::Channel
         user_id: current_user&.id,
         action: 'samples',
         sample_ids: gen_sample_ids(data['sport']),
-        stats: allowed_stats
+        admin: is_admin?
       }
     )
   end
 
   def can_view_stats(*)
-    ActionCable.server.broadcast(CHANNEL_NAME, { user_id: current_user&.id, action: 'stats', stats: allowed_stats })
+    ActionCable.server.broadcast(CHANNEL_NAME, { action: 'stats', stats: loaded_stats || [] })
+  end
+
+  def is_admin(*)
+    ActionCable.server.broadcast(CHANNEL_NAME, { user_id: current_user&.id, action: 'admin', admin: is_admin? })
   end
 
   def get_stats(data)
-    ActionCable.server.broadcast(CHANNEL_NAME, { user_id: current_user&.id, action: 'stats', stats: gen_stats })
+    if stats = recent_stats
+      ActionCable.server.broadcast(CHANNEL_NAME, { action: 'stats', stats: recent_stats })
+    else
+      if stats = gen_stats.presence
+        Rails.redis.set(:cleanup_stats, { stats: stats, last_generated: Time.zone.now.as_json }.to_json)
+      end
+      ActionCable.server.broadcast(CHANNEL_NAME, { action: 'stats', stats: stats })
+    end
   end
 
   def available(data)
@@ -52,6 +63,21 @@ class CleanupChannel < ApplicationCable::Channel
     )
   end
 
+  def send_stats_email(*)
+    if is_admin?
+      ReportMailer.cleanup_stats.deliver_later
+    end
+
+    ActionCable.server.broadcast(
+      CHANNEL_NAME,
+      {
+        user_id: current_user&.id,
+        action: 'stats_email',
+        sent: is_admin?
+      }
+    )
+  end
+
   def unavailable(data)
     ActionCable.server.broadcast(
       CHANNEL_NAME,
@@ -64,6 +90,10 @@ class CleanupChannel < ApplicationCable::Channel
   end
 
   private
+    def last_refresh
+      Rails.redis.get(:cleanup_stats_last_generated)
+    end
+
     def current_time_in_ms(data)
       data['time'].presence&.to_i ||
       (Time.zone.now.to_f * 1000)
@@ -96,21 +126,43 @@ class CleanupChannel < ApplicationCable::Channel
         pluck(:id)
     end
 
-    def allowed_stats
-      return nil unless current_user&.dus_id&.dus_id_format&.in?(ADMIN_IDS)
-      []
+    def is_admin?
+      current_user&.dus_id&.dus_id_format&.in?(ADMIN_IDS)
+    end
+
+    def loaded_stats
+      redis_stats&.[]("stats")
+    end
+
+    def recent_stats
+      (stats = redis_stats) &&
+      (Time.zone.parse(stats["last_generated"]) > 10.minutes.ago) &&
+      stats["stats"]
+    rescue
+      puts $!.message
+      puts $!.backtrace
+      nil
+    end
+
+    def redis_stats
+      if (stats = Rails.redis.get(:cleanup_stats)).present?
+        stats = JSON.parse(stats)
+      end
+      stats.presence
+    rescue
+      puts $!.message
+      puts $!.backtrace
+      nil
     end
 
     def gen_stats
-      allowed_stats && (
-        [
-          [ "Total", AthletesSport.transfer_nil.size ],
-        ] +
-          AthletesSport.
-            transfer_nil.
-            uniq_column_values(:sport_id).
-            size.
-            map {|k, v| [ Sport.find(k).abbr_gender, v ]}
-      )
+      [
+        [ "Total", AthletesSport.transfer_nil.size ],
+      ] +
+        AthletesSport.
+          transfer_nil.
+          uniq_column_values(:sport_id).
+          size.
+          map {|k, v| [ Sport.find(k).abbr_gender, v ]}
     end
 end

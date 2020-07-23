@@ -1,27 +1,32 @@
 og_print = Pry.config.print
+Pry.config.history_file = "#{__dir__}/log/pry_history.log"
+(Pry.config.history.file = "#{__dir__}/log/pry_history.log") rescue nil
 
 Pry.config.print = proc do |output, value, *args|
   begin
     if (ActiveRecord::Base === value) ||
       (ActiveRecord::Relation === value)
       is_relation = ActiveRecord::Relation === value
-      base = (is_relation ? value.limit(1).first : value)
+      base = (is_relation ? nil : value)
       i = 0
       idx = {'   #' => ->(*args) { "   #{i += 1}" }}
-      keys = [
-        idx, *(
-          (
-            base ? (
-              (
-                (base.class.first).present? &&
-                (base.class.first.attributes.keys - base.attributes.keys).present?
-              ) ?
-              base.attributes.keys :
-              (base.class.respond_to?(:default_print) ? base.class.default_print : base.class.column_names)
-            ) : (value.klass.respond_to?(:default_print) ? value.klass.default_print : value.klass.column_names)
+      keys =
+        [
+          idx,
+          *(
+            catch(:attribute_names) do
+              unless base
+                throw :attribute_names, value.select_values.map(&:to_s) if value.respond_to?(:select_values) && value.select_values.present?
+                throw :attribute_names, value.klass.default_print if value.klass.respond_to?(:default_print)
+                throw :attribute_names, value.klass.column_names
+              end
+              throw :attribute_names, base.attribute_names if (base.class.attribute_names - base.attribute_names).present?
+              throw :attribute_names, base.class.default_print if base.class.respond_to?(:default_print)
+              throw :attribute_names, base.attribute_names
+            end
           )
-        )
-      ]
+        ]
+
       puts "\n"
       if is_relation
         sz = 0
@@ -41,6 +46,8 @@ Pry.config.print = proc do |output, value, *args|
       og_print.call output, value, *args
     end
   rescue
+    puts $!.message
+    puts $!.backtrace
     og_print.call output, value, *args
   end
 end

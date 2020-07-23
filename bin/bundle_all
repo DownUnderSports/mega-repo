@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+RAILS_V="$(ruby -v)"
+if [[ ! RAILS_V =~ "2.6.6" ]]
+then
+  echo "setting ruby version to 2.6.6"
+  source /usr/share/chruby/chruby.sh && chruby ruby-2.6.6
+fi
+
 function bundle_dir() {
   DIRECTORY=$1
   shift

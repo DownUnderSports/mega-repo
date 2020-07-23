@@ -50,7 +50,7 @@ class ApplicationMailer < ActionMailer::Base
 
     params[:to] = production_email('no-email-available@downundersports.com') unless has_email
 
-    if use_account
+    if use_account &&= Rails.application.credentials.dig(:mailer, use_account, :from).presence
       # params[:delivery_method_options] = {
       #   :address        => 'smtp.gmail.com',
       #   :port           => '587',
@@ -61,8 +61,7 @@ class ApplicationMailer < ActionMailer::Base
       #   :enable_starttls_auto => true
       # }
 
-      params[:from] = Rails.application.credentials.dig(:mailer, use_account, :from).presence ||
-        "Down Under Sports <#{params[:delivery_method_options][:user_name]}>"
+      params[:from] = use_account
     end
 
     m = super(
