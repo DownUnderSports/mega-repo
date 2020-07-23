@@ -6,7 +6,9 @@ class ReportMailer < ImportantMailer
   end
 
   def cleanup_stats
-    mail to: ['gayle@downundersports.com', 'sara@downundersports.com', 'sampson@downundersports.com'], subject: "Weekly Cleanup Stats: #{Time.zone.now.to_s(:long)}"  do |format|
+    email = params[:dus_id] && (User[params[:dus_id]])&.email
+    email ||= ['gayle@downundersports.com', 'sara@downundersports.com', 'sampson@downundersports.com']
+    mail to: email, subject: "Weekly Cleanup Stats: #{Time.zone.now.to_s(:long)}"  do |format|
       format.text
     end
   end

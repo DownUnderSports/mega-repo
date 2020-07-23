@@ -65,7 +65,7 @@ class CleanupChannel < ApplicationCable::Channel
 
   def send_stats_email(*)
     if is_admin?
-      ReportMailer.cleanup_stats.deliver_later
+      ReportMailer.with(dus_id: current_user&.dus_id).cleanup_stats.deliver_later
     end
 
     ActionCable.server.broadcast(

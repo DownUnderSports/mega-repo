@@ -25,6 +25,8 @@ class CleanupCounts
       <<~TEXT
         -- #{stat["name"]} --
             Total Count: #{stat["count"] || 0}
+            Since Midnight: #{stat[Date.today.to_s] || 0}
+            Since Yesterday: #{stat[Date.yesterday.to_s] || 0}
             Since #{monday.inspect}: #{stat[monday.to_s] || 0}
             Since #{last_monday.inspect}: #{stat[last_monday.to_s] || 0}
             Since #{two_mondays_ago.inspect}: #{stat[two_mondays_ago.to_s] || 0}
@@ -137,12 +139,14 @@ class CleanupCounts
         value[:count] = actions.count(:all)
         return value unless value[:count] > 0
         [
+          Date.today,
+          Date.yesterday,
           monday,
           last_monday,
           two_mondays_ago
         ].each do |date|
           blocker_car.call
-          value[date.to_s] = actions.
+          value[date.to_s] ||= actions.
               where(table[:action_tstamp_tx].gteq(date.in_time_zone)).
               count(:all)
         end
