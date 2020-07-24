@@ -137,7 +137,7 @@ class CleanupCounts
       def get_timed_counts(actions, value)
         blocker_car.call
         value[:count] = actions.count(:all)
-        return value unless value[:count] > 0
+        return value.as_json unless value[:count] > 0
         [
           Date.today,
           Date.yesterday,
