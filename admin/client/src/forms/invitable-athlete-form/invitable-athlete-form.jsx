@@ -174,7 +174,7 @@ export default class InvitableAthleteForm extends Component {
       <DisplayOrLoading
         display={display}
         loadingElement={
-          <JellyBox />
+          <JellyBox className="page-loader" />
         }
       >
         <CardSection

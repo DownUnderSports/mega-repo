@@ -88,7 +88,7 @@ export default class RecapSummary extends Component {
               rows="8"
               className="form-control"
               value={recap.log || ''}
-              readonly
+              readOnly
             />
           </div>
         </div>

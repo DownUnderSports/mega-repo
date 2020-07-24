@@ -154,7 +154,7 @@ export default class AssignmentsRespondsPage extends Component {
     }
   }
 
-  renderButtons = ({getParams, getRecordCount, reload}) => (
+  renderButtons = ({getParams, getRecordCount, reload, location}) => (
     <div key="renderedButtonsWrapper" className="row mb-3">
       <div key="csvDownloadWrapper" className="col-auto">
         <FileDownload key="unassignedCsvDownload" path={`${assignmentsUrl}.csv`}>
@@ -170,10 +170,10 @@ export default class AssignmentsRespondsPage extends Component {
       </div>
       <div key="renderedButtonsSeparator" className="border border-dark mb-3" style={{minHeight: '38px'}}></div>
       <div key="assignmentFormWrapper" className="col">
-        <AssignmentsUploadForm key="assignmentUploadForm" url={assignmentsUrl} reload={reload} />
+        <AssignmentsUploadForm prefix={`${location}-`} key="assignmentUploadForm" url={assignmentsUrl} reload={reload} />
       </div>
       <div key="reassignmentFormWrapper" className="col">
-        <AssignmentsReassignForm key="reassignmentForm" url={`${assignmentsUrl}/reassign`} getRecordCount={getRecordCount} getParams={getParams} reload={reload} />
+        <AssignmentsReassignForm prefix={`${location}-`} key="reassignmentForm" url={`${assignmentsUrl}/reassign`} getRecordCount={getRecordCount} getParams={getParams} reload={reload} />
       </div>
     </div>
 

@@ -3,7 +3,6 @@ import Component from 'common/js/components/component'
 import { Route, Switch } from 'react-router-dom';
 import { Link } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
-import './index.css'
 
 const RespondsPage = lazy(() => import(/* webpackChunkName: "assignments-responds-page", webpackPrefetch: true */ 'pages/assignments/responds'))
 const TravelersPage = lazy(() => import(/* webpackChunkName: "assignments-travelers-page", webpackPrefetch: true */ 'pages/assignments/travelers'))
@@ -56,9 +55,9 @@ export default class AssignmentsPage extends Component {
       <section className="Assignments row">
         <header className="col-12 text-center">
           <h3>Assignments</h3>
-          <nav className="nav sports-nav nav-tabs justify-content-end">
-            <input type="checkbox" id="assignments-page-nav-trigger" className="page-nav-trigger" />
-            <label htmlFor="page-nav-trigger" className="nav-item nav-link d-md-none">
+          <nav className="nav nav-tabs justify-content-end">
+            <input type="checkbox" id="assignments-page-nav-trigger" className="nav-trigger" />
+            <label htmlFor="assignments-page-nav-trigger" className="nav-trigger nav-item nav-link d-md-none">
               <span><span></span></span>
               Sub Pages
             </label>

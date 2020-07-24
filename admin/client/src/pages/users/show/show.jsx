@@ -222,7 +222,7 @@ export default class UsersShowPage extends Component {
         }
         <section className='user-pages-wrapper sub-page-wrapper' id='user-pages-wrapper'>
           <header>
-            <nav className="nav sports-nav nav-tabs justify-content-end">
+            <nav className="nav nav-tabs justify-content-end">
               <input type="checkbox" id="user-page-nav-trigger" className="nav-trigger" />
               <label htmlFor="user-page-nav-trigger" className='nav-trigger nav-item nav-link d-md-none'>
                 <span><span></span></span>

@@ -9,7 +9,6 @@ const recapsUrl = '/admin/assignments/recaps'
 
 export default class AssignmentsRecapsPage extends Component {
   state = {
-    user_id: null,
     users: null,
     recap: null,
     recaps: null,
@@ -155,7 +154,6 @@ export default class AssignmentsRecapsPage extends Component {
 
   render() {
     const {
-      user_id,
       users,
       recap,
       recaps,
@@ -281,6 +279,7 @@ export default class AssignmentsRecapsPage extends Component {
                     ({id, last_recap = {}}) =>
                       <Suspense
                         fallback={<div className="col-12">Loading...</div>}
+                        key={id}
                       >
                         <RecapSummary id={id} recap={last_recap} />
                       </Suspense>

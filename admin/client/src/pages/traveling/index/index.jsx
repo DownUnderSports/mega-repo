@@ -23,7 +23,7 @@ export default class TravelingIndexPage extends Component {
         <div className="col-12 text-center">
           <section className='sub-page-wrapper' id='traveling-pages-wrapper'>
             <header>
-              <nav className="nav sports-nav nav-tabs justify-content-end">
+              <nav className="nav nav-tabs justify-content-end">
                 <input type="checkbox" id="traveling-page-nav-trigger" className="nav-trigger" />
                 <label htmlFor="traveling-page-nav-trigger" className="nav-trigger nav-item nav-link d-md-none">
                   <span><span></span></span>

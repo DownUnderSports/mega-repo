@@ -21,6 +21,7 @@ export default class Buttons extends Component {
               getParams: this.parent.createParams,
               getRecordCount: this.getTotal,
               reload: this.parent.getRecords,
+              location: this.props.location
             }) : this.parent.props.children}
           </div>
           <FilterHistory parent={this.parent} />

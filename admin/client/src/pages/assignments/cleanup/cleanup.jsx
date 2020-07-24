@@ -398,7 +398,7 @@ export default class AssignmentsCleanupPage extends Component {
                           display={!this.toggle}
                           message="UPDATING STATS..."
                           loadingElement={
-                            <JellyBox />
+                            <JellyBox className="page-loader" />
                           }
                         >
                           <table className="table m-0">

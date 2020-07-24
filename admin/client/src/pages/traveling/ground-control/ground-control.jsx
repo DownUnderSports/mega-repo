@@ -19,7 +19,7 @@ export default class TravelingGroundControlPage extends Component {
         <div className="col-12 text-center">
           <section className='sub-page-wrapper' id='traveling-pages-wrapper'>
             <header>
-              <nav className="nav sports-nav nav-tabs justify-content-end m-0">
+              <nav className="nav nav-tabs justify-content-end m-0">
                 <input type="checkbox" id="ground-control-page-nav-trigger" className="nav-trigger" />
                 <label htmlFor="ground-control-page-nav-trigger" className="nav-trigger nav-item nav-link d-md-none">
                   <span><span></span></span>

@@ -38,7 +38,7 @@ namespace :heroku do
         Rake::Task[task_name].invoke
       end
     end
-
+  ensure
     ViewTracker.delete_all
   end
 

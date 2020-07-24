@@ -109,6 +109,7 @@ class LookupTable extends AsyncComponent {
           <Buttons
             parent={this}
             renderButtons={this.props.renderButtons}
+            location="top"
           />
           <div className="col-12">
             <div className="row">
@@ -206,6 +207,7 @@ class LookupTable extends AsyncComponent {
           <Buttons
             parent={this}
             renderButtons={this.props.renderButtons}
+            location="bottom"
           />
         </div>
       </div>

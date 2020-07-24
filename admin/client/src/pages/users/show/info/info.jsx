@@ -193,7 +193,7 @@ export default class UsersShowInfoPage extends Component {
     return (
       <section key={id} className='user-info-wrapper'>
         <header>
-          <nav className="nav sports-nav nav-tabs">
+          <nav className="nav nav-tabs">
             <input type="checkbox" id="user-info-nav-trigger" className="nav-trigger" />
             <label htmlFor="user-info-nav-trigger" className="nav-item nav-link d-md-none">
               <span><span></span></span>
