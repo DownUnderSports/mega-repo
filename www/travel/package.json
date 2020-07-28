@@ -19,7 +19,7 @@
     "react": "^16.8.6",
     "react-app-polyfill": ">=0.2.2",
     "react-actioncable-provider": "^2.0.0",
-    "react-component-templates": "^6.2.1",
+    "react-component-templates": "^7.0.6",
     "react-dom": "^16.8.6",
     "react-map-gl": "^5.0.3",
     "react-router-dom": "^5.0.1",

@@ -8629,10 +8629,10 @@ react-big-calendar@^0.19.1:
     uncontrollable "^4.0.0"
     warning "^2.0.0"
 
-react-component-templates@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/react-component-templates/-/react-component-templates-6.2.1.tgz#f32dedf7e0e11a4888a4e98a2c9d43c8f38c6d89"
-  integrity sha512-IDyj+TalBdMFcvdhJQWDwN5qVq8Khh58M/nD8Vye3izdj2Qz12OH76tsXaIXLkV29g/+UVYArxDqV0g8aprw2w==
+react-component-templates@^7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/react-component-templates/-/react-component-templates-7.0.6.tgz#1d06b9aa7fbabea639be4f472ce30c8fd9d7c198"
+  integrity sha512-aK3anjOAFm96C4aGRjhUv3K6fqfcmkm/IPI0zghz9N/JdOqwdkFOZZYgbcwBb1US3/cjA/A9PIBbxkf2bsipUg==
 
 react-dev-utils@^9.0.1:
   version "9.0.1"

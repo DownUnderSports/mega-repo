@@ -261,7 +261,7 @@ export default class PaymentForm extends Component {
                                   valueKey: 'value',
                                   viewProps: {
                                     className: 'form-control',
-                                    autoComplete: 'off',
+                                    autoComplete: 'team state',
                                     required: false,
                                   },
                                 },
@@ -276,7 +276,7 @@ export default class PaymentForm extends Component {
                                   valueKey: 'value',
                                   viewProps: {
                                     className: 'form-control',
-                                    autoComplete: 'off',
+                                    autoComplete: 'team sport',
                                     required: false,
                                   },
                                 },
@@ -380,7 +380,7 @@ export default class PaymentForm extends Component {
                           type: 'text',
                           value: this.state.form.payment.billing.name || '',
                           onChange: true,
-                          autoComplete: 'cc-name',
+                          autoComplete: 'billing cc-name',
                           required: true
                         },
                         {
@@ -395,7 +395,7 @@ export default class PaymentForm extends Component {
                           usePhoneFormat: true,
                           onChange: true,
                           required: true,
-                          autoComplete: 'tel',
+                          autoComplete: 'billing tel',
                         },
                         {
                           field: 'TextField',
@@ -404,6 +404,7 @@ export default class PaymentForm extends Component {
                           label: 'Email*',
                           placeholder: '(your@email.com)',
                           name: `payment.billing.email`,
+                          autoComplete: 'billing email',
                           type: 'email',
                           value: this.state.form.payment.billing.email,
                           onChange: true,
