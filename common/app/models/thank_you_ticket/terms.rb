@@ -4,7 +4,7 @@
 require_dependency 'payment'
 
 # ThankYouTicket::Terms description
-module ThankYouTicket
+class ThankYouTicket < ApplicationRecord
   class Terms < ApplicationRecord
     # == Constants ============================================================
 

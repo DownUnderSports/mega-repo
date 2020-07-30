@@ -1,0 +1,51 @@
+.ThankYouTicketGeneratorPage iframe {
+  height: 8.25in;
+  width: 11in;
+}
+html, html * {
+  box-sizing: border-box!important;
+}
+
+@media print {
+  @page {
+    size: 11in 8.5in;
+    margin: 0.125in;
+    orientation: landscape;
+  }
+  html, body {
+    margin: 0!important;
+    padding: 0!important;
+  }
+  .container {
+    max-width: 11in!important;
+    margin: 0!important;
+    margin-left: auto!important;
+    margin-right: auto!important;
+    padding: 0!important;
+  }
+  .container * {
+    margin: 0!important;
+    padding: 0!important;
+  }
+  .ThankYouTicketGeneratorPage {
+    margin: 0!important;
+    border: none!important;
+  }
+  .ThankYouTicketGeneratorPage header {
+    font-size: 0!important;
+    height: 0!important;
+    border: none!important;
+    overflow: hidden!important;
+  }
+
+
+  .ThankYouTicketGeneratorPage .list-group-item,
+  .ThankYouTicketGeneratorPage .list-group-item .row,
+  .ThankYouTicketGeneratorPage .list-group-item .btn {
+    font-size: 0!important;
+    padding: 0!important;
+    margin: 0!important;
+    border: none!important;
+    overflow: hidden!important;
+  }
+}

@@ -95,6 +95,7 @@ class User < ApplicationRecord
   has_many :refund_requests, class_name: 'User::RefundRequest'
   has_many :interest_histories, class_name: 'User::InterestHistory', dependent: :destroy
   has_many :recaps, class_name: 'User::Recap', inverse_of: :user, dependent: :destroy
+  has_many :thank_you_tickets, inverse_of: :user, dependent: :nullify
 
 
   has_many :submitted_audits,

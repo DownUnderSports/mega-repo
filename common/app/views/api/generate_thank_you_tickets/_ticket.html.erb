@@ -1,0 +1,20 @@
+<div class="ticket">
+  <div class="image-wrapper">
+    <div class="message">
+      <h1 class="text-center">
+        Thank You For Your Support
+      </h1>
+      <div class="underline"></div>
+      <p>
+        Scan the QR code on this ticket, or visit the URL below for a free
+        entry into the Down Under Sports Travel Giveaways!
+      </p>
+    </div>
+    <%= image_tag ticket.qr_code_path %>
+  </div>
+  <p>
+    ID: <%= ticket.uuid %> <br>
+    https://downundersports.com/redeem-ticket
+  </p>
+  <div></div>
+</div>

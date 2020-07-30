@@ -94,17 +94,29 @@
     },
     "thank-you-tickets": {
       "title": "Down Under Sports: Thank You Ticket Rules",
-      "path": "admin/thank-you-tickets",
-      "canonical": "/admin/thank-you-tickets",
+      "path": "thank-you-tickets",
+      "canonical": "/thank-you-tickets",
       "image": "dus-logo.png",
       "index": true
     },
     "thank_you_tickets": {
       "title": "Down Under Sports: Thank You Ticket Rules",
-      "path": "admin/thank_you_tickets",
-      "canonical": "/admin/thank_you_tickets",
+      "path": "thank_you_tickets",
+      "canonical": "/thank_you_tickets",
       "image": "dus-logo.png",
       "index": true
+    },
+    "thank-you-ticket-generator": {
+      "title": "Thank You Ticket Generator",
+      "path": "thank-you-ticket-generator",
+      "canonical": "/thank-you-ticket-generator",
+      "description": "Generate Thank You Tickets",
+      "image": "dus-logo.png",
+      "index": true
+    },
+    "thank_you_ticket_generator": {
+      "alias": true,
+      "to": "thank-you-ticket-generator"
     },
     "infokit": {
       "title": "Down Under Sports: More Info",

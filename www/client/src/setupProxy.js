@@ -4,7 +4,7 @@ const fs = require('fs');
 const paths = require('react-scripts/config/paths');
 const main_port = +(process.env.PORT || 3000)
 const pxy_port = main_port + 100
-const domain = `localhost:${pxy_port}`
+const domain = `lvh.me:${pxy_port}`
 const target = `http://${domain}/`
 
 const mayProxy = (pathname) => {
@@ -17,13 +17,14 @@ const mayProxy = (pathname) => {
 }
 
 const context = (pathname, req) => {
-  return req.method !== 'GET' ||
-  (
-    mayProxy(pathname)
-    && req.headers.accept
-    && (req.headers.accept.indexOf('text/html') === -1)
-    // && !(/\*\/\*/.test(req.headers.accept))
-  )
+  return req.method !== 'GET'
+         || /^\/api\//.test(pathname)
+         || /^\/statement\/[a-z0-9]{64}/.test(pathname)
+         || (
+              mayProxy(pathname)
+              && req.headers.accept
+              && (req.headers.accept.indexOf('text/html') === -1)
+            )
 }
 
 const getPathName = (req) =>

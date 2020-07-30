@@ -37,7 +37,11 @@ module API
 
     private
       def lookup_user
-        @found_user = User.visible.get(params[:id])
+        if Boolean.parse(params[:by_hash])
+          @found_user = User.find_by_dus_id_hash(params[:id])
+        else
+          @found_user = User.visible.get(params[:id])
+        end
       end
   end
 end

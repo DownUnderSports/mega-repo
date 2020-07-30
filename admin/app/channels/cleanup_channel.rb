@@ -39,12 +39,12 @@ class CleanupChannel < ApplicationCable::Channel
   end
 
   def get_stats(data)
-    if stats = recent_stats
-      ActionCable.server.broadcast(CHANNEL_NAME, { action: 'stats', stats: recent_stats })
-    else
-      if stats = gen_stats.presence
-        Rails.redis.set(:cleanup_stats, { stats: stats, last_generated: Time.zone.now.as_json }.to_json)
-      end
+    if stats = loaded_stats(true)
+      ActionCable.server.broadcast(CHANNEL_NAME, { action: 'stats', stats: stats })
+    end
+    unless stats && stats_are_recent?
+      stats = gen_stats
+      Rails.redis.set(:cleanup_stats, { stats: stats, last_generated: Time.zone.now.as_json }.to_json)
       ActionCable.server.broadcast(CHANNEL_NAME, { action: 'stats', stats: stats })
     end
   end
@@ -90,8 +90,11 @@ class CleanupChannel < ApplicationCable::Channel
   end
 
   private
-    def last_refresh
-      Rails.redis.get(:cleanup_stats_last_generated)
+    def last_refresh(reload = false)
+      (stats = redis_values) &&
+      Time.zone.parse(stats["last_generated"])
+    rescue
+      nil
     end
 
     def current_time_in_ms(data)
@@ -130,32 +133,31 @@ class CleanupChannel < ApplicationCable::Channel
       current_user&.dus_id&.dus_id_format&.in?(ADMIN_IDS)
     end
 
-    def loaded_stats
-      redis_stats&.[]("stats")
+    def loaded_stats(reload = false)
+      redis_values(reload)&.[]("stats")&.presence
     end
 
-    def recent_stats
-      (stats = redis_stats) &&
-      (Time.zone.parse(stats["last_generated"]) > 10.minutes.ago) &&
-      stats["stats"]
+    def stats_are_recent?(reload = false)
+      !!(time = last_refresh(reload)) &&
+      (time > 10.minutes.ago) &&
+      !!loaded_stats
     rescue
-      puts $!.message
-      puts $!.backtrace
-      nil
+      false
     end
 
-    def redis_stats
+    def redis_values(reload = false)
+      return @redis_values.dup if !reload && defined?(@redis_values) && @redis_values.present?
       if (stats = Rails.redis.get(:cleanup_stats)).present?
-        stats = JSON.parse(stats)
+        @redis_values = JSON.parse(stats).presence
       end
-      stats.presence
+      @redis_values.dup
     rescue
-      puts $!.message
-      puts $!.backtrace
-      nil
+      @redis_values = nil
     end
 
     def gen_stats
+      @redis_values = nil
+
       [
         [ "Total", AthletesSport.transfer_nil.size ],
       ] +

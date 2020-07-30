@@ -108,6 +108,20 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
 -- Name: difficulty_level; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -815,6 +829,53 @@ CREATE FUNCTION public.user_changed() RETURNS trigger
 
 
 --
+-- Name: uuid_generate_v6(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.uuid_generate_v6() RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    RETURN uuid_v1_to_v6(uuid_generate_v1());
+END; $$;
+
+
+--
+-- Name: uuid_generate_v6mc(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.uuid_generate_v6mc() RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    RETURN uuid_v1_to_v6(uuid_generate_v1mc());
+END; $$;
+
+
+--
+-- Name: uuid_v1_to_v6(uuid); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.uuid_v1_to_v6(v1 uuid) RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    v6 text;
+BEGIN
+    SELECT substring(v1::text from 16 for 3) ||
+            substring(v1::text from 10 for 4) ||
+            substring(v1::text from 1 for 5)  ||
+            '6' || substring(v1::text from 6 for 3) ||
+            substring(v1::text from 20)
+
+            INTO v6;
+
+    RETURN v6::uuid;
+
+END; $$;
+
+
+--
 -- Name: valid_email_trigger(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -848,6 +909,53 @@ CREATE FUNCTION public.validate_email(email text) RETURNS text
         RETURN email;
       END;
       $$;
+
+
+--
+-- Name: uuid_generate_v6(); Type: FUNCTION; Schema: year_2020; Owner: -
+--
+
+CREATE FUNCTION year_2020.uuid_generate_v6() RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    RETURN uuid_v1_to_v6(uuid_generate_v1());
+END; $$;
+
+
+--
+-- Name: uuid_generate_v6mc(); Type: FUNCTION; Schema: year_2020; Owner: -
+--
+
+CREATE FUNCTION year_2020.uuid_generate_v6mc() RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    RETURN uuid_v1_to_v6(uuid_generate_v1mc());
+END; $$;
+
+
+--
+-- Name: uuid_v1_to_v6(uuid); Type: FUNCTION; Schema: year_2020; Owner: -
+--
+
+CREATE FUNCTION year_2020.uuid_v1_to_v6(v1 uuid) RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    v6 text;
+BEGIN
+    SELECT substring(v1::text from 16 for 3) ||
+            substring(v1::text from 10 for 4) ||
+            substring(v1::text from 1 for 5)  ||
+            '6' || substring(v1::text from 6 for 3) ||
+            substring(v1::text from 20)
+
+            INTO v6;
+
+    RETURN v6::uuid;
+
+END; $$;
 
 
 SET default_tablespace = '';
@@ -11743,7 +11851,7 @@ ALTER SEQUENCE public.chat_room_messages_id_seq OWNED BY public.chat_room_messag
 --
 
 CREATE TABLE public.chat_rooms (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT public.uuid_generate_v6() NOT NULL,
     name text,
     email text,
     phone text,
@@ -15170,6 +15278,42 @@ INHERITS (public.teams);
 
 
 --
+-- Name: thank_you_tickets; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.thank_you_tickets (
+    id bigint NOT NULL,
+    user_id bigint,
+    uuid uuid DEFAULT year_2020.uuid_generate_v6() NOT NULL,
+    name text,
+    email text,
+    phone text,
+    mailing_address text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: thank_you_tickets_id_seq; Type: SEQUENCE; Schema: year_2020; Owner: -
+--
+
+CREATE SEQUENCE year_2020.thank_you_tickets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: thank_you_tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: year_2020; Owner: -
+--
+
+ALTER SEQUENCE year_2020.thank_you_tickets_id_seq OWNED BY year_2020.thank_you_tickets.id;
+
+
+--
 -- Name: traveler_buses; Type: TABLE; Schema: year_2020; Owner: -
 --
 
@@ -17974,6 +18118,13 @@ ALTER TABLE ONLY year_2020.teams ALTER COLUMN updated_at SET DEFAULT now();
 
 
 --
+-- Name: thank_you_tickets id; Type: DEFAULT; Schema: year_2020; Owner: -
+--
+
+ALTER TABLE ONLY year_2020.thank_you_tickets ALTER COLUMN id SET DEFAULT nextval('year_2020.thank_you_tickets_id_seq'::regclass);
+
+
+--
 -- Name: traveler_buses id; Type: DEFAULT; Schema: year_2020; Owner: -
 --
 
@@ -20197,6 +20348,14 @@ ALTER TABLE ONLY year_2019.user_travel_preparations
 
 ALTER TABLE ONLY year_2019.user_uniform_orders
     ADD CONSTRAINT year_2019_user_uniform_orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: thank_you_tickets thank_you_tickets_pkey; Type: CONSTRAINT; Schema: year_2020; Owner: -
+--
+
+ALTER TABLE ONLY year_2020.thank_you_tickets
+    ADD CONSTRAINT thank_you_tickets_pkey PRIMARY KEY (id);
 
 
 --
@@ -25320,6 +25479,20 @@ CREATE INDEX index_teams_on_state_id ON year_2020.teams USING btree (state_id);
 
 
 --
+-- Name: index_thank_you_tickets_on_user_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX index_thank_you_tickets_on_user_id ON year_2020.thank_you_tickets USING btree (user_id);
+
+
+--
+-- Name: index_thank_you_tickets_on_uuid; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX index_thank_you_tickets_on_uuid ON year_2020.thank_you_tickets USING btree (uuid);
+
+
+--
 -- Name: index_traveler_buses_on_color; Type: INDEX; Schema: year_2020; Owner: -
 --
 
@@ -28352,6 +28525,14 @@ ALTER TABLE ONLY year_2020.meeting_video_views
 
 
 --
+-- Name: thank_you_tickets fk_rails_c283235798; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
+--
+
+ALTER TABLE ONLY year_2020.thank_you_tickets
+    ADD CONSTRAINT fk_rails_c283235798 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: staff_assignments fk_rails_c51868b6cc; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
 --
 
@@ -28499,7 +28680,7 @@ ALTER TABLE ONLY year_2020.user_messages
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO public,public;
+SET search_path TO year_2020,public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20180518042050'),
@@ -28630,6 +28811,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200511221632'),
 ('20200511222029'),
 ('20200531122420'),
-('20200624195350');
+('20200624195350'),
+('20200728181612'),
+('20200728181613');
 
 

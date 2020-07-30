@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   post '/rails/active_storage/direct_uploads/passport/:id'               => 'api/direct_uploads#passport'
   post '/rails/active_storage/direct_uploads'                            => 'application#user_not_authorized'
 
+
   get 'statement/:dus_id_hash', to: 'statements#show', defaults: {format: :pdf}, constraints: ->(request) do
     request.params[:dus_id_hash].size == 64
   end

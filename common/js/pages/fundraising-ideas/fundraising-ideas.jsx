@@ -156,7 +156,7 @@ export default class FundraisingIdeasPage extends Component {
     )
 
   render() {
-    const { ideas = [], errors } = this.state
+    const { ideas = [] } = this.state
     return (
       <div className="fundraising-idea-page">
         <h3 className="text-center">

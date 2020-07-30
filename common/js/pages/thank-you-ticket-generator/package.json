@@ -1,0 +1,5 @@
+{
+  "name": "ThankYouTicketGeneratorPage",
+  "private": true,
+  "main": "./thank-you-ticket-generator.jsx"
+}

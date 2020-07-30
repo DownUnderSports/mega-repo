@@ -50,7 +50,15 @@ module APIRoutes
         resources :terms, only: %i[ index show ]
         resources :thank_you_tickets, only: %i[ index show ]
         resources :thank_you_tickets, only: %i[ index show ], path: 'thank-you-tickets'
-
+        generator_opts = {
+          only: %i[ show create ],
+          defaults: {format: :html},
+          constraints: ->(request) do
+            request.params[:id].size == 64
+          end
+        }
+        resources :generate_thank_you_tickets, **generator_opts
+        resources :generate_thank_you_tickets, **generator_opts, path: 'generate-thank-you-tickets'
 
         resources :infokits, only: %i[ new create ] do
           member do

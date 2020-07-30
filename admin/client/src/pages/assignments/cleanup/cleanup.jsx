@@ -16,10 +16,10 @@ export default class AssignmentsCleanupPage extends Component {
     selectedId: null,
     checkingId: null,
     grabBag: [],
-    stats: null,
+    stats: [],
     error: null,
     available: false,
-    toggle: false,
+    loading: false,
     showStats: false,
     admin: false,
     sendingEmail: false,
@@ -71,8 +71,8 @@ export default class AssignmentsCleanupPage extends Component {
     return Array.isArray(this.state.stats) && this.state.stats
   }
 
-  get toggle() {
-    return this.state.toggle
+  get loading() {
+    return this.state.loading
   }
 
   get wrongVersion() {
@@ -222,7 +222,7 @@ export default class AssignmentsCleanupPage extends Component {
   _setStats = (data) =>
     data
     && 'stats' in data
-    && this.setState({ stats: data['stats'], toggle: false })
+    && this.setState({ stats: data['stats'], loading: false })
 
   _selectId = () => {
     if(!this.state.grabBag.length) return this._newGrabBag()
@@ -243,8 +243,13 @@ export default class AssignmentsCleanupPage extends Component {
 
   _newGrabBag = () => this.channel.perform('get_samples', { sport: this.sport })
 
-  _toggleOff = () => {
-    this.setState({ toggle: true })
+  _setLoading = () => {
+    this.setState({ loading: true })
+    return true
+  }
+
+  _setDoneLoading = () => {
+    this.setState({ loading: false })
     return true
   }
 
@@ -260,7 +265,14 @@ export default class AssignmentsCleanupPage extends Component {
     })
   }
 
-  pullStats = () => this.channel && this._toggleOff() && this.channel.perform('get_stats')
+  pullStats = () => {
+    this._setLoading()
+    if(this.channel) {
+      this.channel.perform('get_stats')
+      this._showStats()
+    }
+    else this._setDoneLoading()
+  }
   _sendStatsEmail = () => this.channel && this._startSending() && this.channel.perform('send_stats_email')
 
   onSuccess = (transferability) => {
@@ -296,6 +308,7 @@ export default class AssignmentsCleanupPage extends Component {
     }
   }
 
+  _showStats = () => this.setState({ showStats: true })
   toggleStats = () => this.setState({ showStats: !this.state.showStats })
 
   componentDidMount() {
@@ -395,7 +408,7 @@ export default class AssignmentsCleanupPage extends Component {
                     {
                       this.state.showStats ? (
                         <DisplayOrLoading
-                          display={!this.toggle}
+                          display={!this.loading}
                           message="UPDATING STATS..."
                           loadingElement={
                             <JellyBox className="page-loader" />
@@ -443,7 +456,7 @@ export default class AssignmentsCleanupPage extends Component {
                           <tbody>
                             <tr>
                               <th className="text-center">
-                                (Expand to View)
+                                (Expand or Refresh to View)
                               </th>
                             </tr>
                           </tbody>

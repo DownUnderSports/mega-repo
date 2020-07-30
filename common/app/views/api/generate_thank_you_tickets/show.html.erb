@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= (yield :title).presence || (defined?(title) && title).presence || "Statement List - #{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}" %></title>
+    <meta charset='utf-8' />
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("tickets.css"), media: 'all' -%>
+  </head>
+  <body class="container">
+    <% @tickets.each do |ticket| %>
+    <%= render partial: "api/generate_thank_you_tickets/ticket", locals: { ticket: ticket } %>
+    <% end %>
+    <!-- <#% if @for_print %>
+    <script type="text/javascript">
+      (function() {
+        var afterPrint = window.close;
+
+        if (window.matchMedia) {
+          var mediaQueryList = window.matchMedia('print');
+          mediaQueryList.addListener(function(mql) {
+            if (!mql.matches) afterPrint();
+          });
+        }
+
+        window.onafterprint = afterPrint;
+
+        print()
+      })()
+    </script>
+    <#% end %> -->
+  </body>
+</html>
