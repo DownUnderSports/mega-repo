@@ -248,7 +248,6 @@ export default class ThankYouTicketGeneratorPage extends Component {
       const fetchUrl = `/api/generate_thank_you_tickets?id=${this.idHash}`
 
       try {
-        await fetch(fetchUrl, { method: "POST" })
         const result =  await fetch(fetchUrl, {
                 method: 'POST',
                 headers: {

@@ -10,7 +10,7 @@
         entry into the Down Under Sports Travel Giveaways!
       </p>
     </div>
-    <%= image_tag ticket.qr_code_path %>
+    <%= image_tag ticket.qr_code_url(request.base_url) %>
   </div>
   <p>
     ID: <%= ticket.uuid %> <br>

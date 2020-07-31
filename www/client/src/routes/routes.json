@@ -82,6 +82,24 @@
       "canonical": "/terms",
       "image": "dus-logo.png"
     },
+    "redeem-ticket": {
+      "title": "Down Under Sports: Redeem Thank You Ticket",
+      "path": "redeem-ticket",
+      "canonical": "/redeem-ticket",
+      "image": "dus-logo.png"
+    },
+    "redeem-tickets": {
+      "alias": true,
+      "to": "redeem-ticket"
+    },
+    "redeem_ticket": {
+      "alias": true,
+      "to": "redeem-ticket"
+    },
+    "redeem_tickets": {
+      "alias": true,
+      "to": "redeem-ticket"
+    },
     "refunds": {
       "title": "Down Under Sports: Refund Policy",
       "path": "refunds",

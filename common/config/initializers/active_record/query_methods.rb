@@ -152,8 +152,11 @@ module ActiveRecord
             query = query.spawn.where!("digest(#{hash_column[1]}, 'sha256') = ?", hashed)
           elsif formatter = QueryFormatter::QUERY_FORMATTERS[k]
             opts[k] = opts[k].is_a?(Array) ? opts[k].map!(&formatter) : formatter.call(opts[k])
-          elsif k == :uuid
-            opts[:id] = opts.delete(k)
+          elsif k.to_s == "uuid"
+            begin
+              opts[:id] = opts.delete(k) unless query.klass.columns_hash.has_key?(k.to_s)
+            rescue
+            end
           end
         end
 

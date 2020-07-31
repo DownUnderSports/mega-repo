@@ -24,6 +24,7 @@ const ParticipantsPage = lazy(() => import(/* webpackChunkName: "participants-pa
 const PassportPage = lazy(() => import(/* webpackChunkName: "client-passport-page" */ 'common/js/pages/passport'))
 const PaymentPage = lazy(() => import(/* webpackChunkName: "payment-page", webpackPrefetch: true */ 'common/js/pages/payment'))
 const PrivacyPage = lazy(() => import(/* webpackChunkName: "privacy-page" */ 'common/js/pages/privacy'))
+const RedeemTicketPage = lazy(() => import(/* webpackChunkName: "redeem-ticket-page" */ 'common/js/pages/redeem-ticket'))
 const ReceiptPage = lazy(() => import(/* webpackChunkName: "receipt-page" */ 'common/js/pages/receipt'))
 const RefundsPage = lazy(() => import(/* webpackChunkName: "refunds-page" */ 'common/js/pages/refunds'))
 const SportsPage = lazy(() => import(/* webpackChunkName: "sports-page" */ 'common/js/pages/sports'))
@@ -82,6 +83,22 @@ const routes = [
   {
     path: '/thank-you-ticket-generator/:userId?',
     component: ThankYouTicketGeneratorPage,
+  },
+  {
+    path: '/redeem-ticket/:ticketId?',
+    component: RedeemTicketPage
+  },
+  {
+    path: '/redeem-tickets/:ticketId?',
+    component: RedeemTicketPage
+  },
+  {
+    path: '/redeem_ticket/:ticketId?',
+    component: RedeemTicketPage
+  },
+  {
+    path: '/redeem_tickets/:ticketId?',
+    component: RedeemTicketPage
   },
   {
     path: '/refunds',

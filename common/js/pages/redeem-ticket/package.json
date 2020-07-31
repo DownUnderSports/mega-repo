@@ -1,0 +1,5 @@
+{
+  "name": "RedeemTicketPage",
+  "private": true,
+  "main": "./redeem-ticket.jsx"
+}

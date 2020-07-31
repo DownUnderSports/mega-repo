@@ -20,7 +20,7 @@ module API
         count.times do
           tickets << ThankYouTicket.create!(user_id: u.id)
         end
-        return render json: { tickets: tickets.as_json }
+        return render json: { tickets: tickets.as_json(host: request.base_url) }
       end
     rescue
       return render json: { errors: [ $!.message ] }, status: 500

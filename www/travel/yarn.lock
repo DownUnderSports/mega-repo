@@ -8382,10 +8382,10 @@ react-app-polyfill@>=0.2.2, react-app-polyfill@^1.0.1:
     regenerator-runtime "0.13.2"
     whatwg-fetch "3.0.0"
 
-react-component-templates@^7.0.6:
-  version "7.0.6"
-  resolved "https://registry.yarnpkg.com/react-component-templates/-/react-component-templates-7.0.6.tgz#1d06b9aa7fbabea639be4f472ce30c8fd9d7c198"
-  integrity sha512-aK3anjOAFm96C4aGRjhUv3K6fqfcmkm/IPI0zghz9N/JdOqwdkFOZZYgbcwBb1US3/cjA/A9PIBbxkf2bsipUg==
+react-component-templates@^7.0.9:
+  version "7.0.9"
+  resolved "https://registry.yarnpkg.com/react-component-templates/-/react-component-templates-7.0.9.tgz#b5f83bd59f97565c4619b070896d46ea6945bdc1"
+  integrity sha512-VtgPPQ2HlFK2ftxmv1C8DVCDAk+WQ2VsIut1xgEBFJSCqSZl4Khbdgxo6KzbfkU1JgHrxSww67EBHAYMEEouGw==
 
 react-dev-utils@^9.0.1:
   version "9.0.1"

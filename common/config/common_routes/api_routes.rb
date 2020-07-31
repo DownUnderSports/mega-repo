@@ -59,6 +59,7 @@ module APIRoutes
         }
         resources :generate_thank_you_tickets, **generator_opts
         resources :generate_thank_you_tickets, **generator_opts, path: 'generate-thank-you-tickets'
+        resources :redeem_tickets, only: %i[ show update ]
 
         resources :infokits, only: %i[ new create ] do
           member do

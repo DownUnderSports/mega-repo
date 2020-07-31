@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <title><%= (yield :title).presence || (defined?(title) && title).presence || "Statement List - #{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}" %></title>
+    <title>thank_you_tickets</title>
     <meta charset='utf-8' />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:wght@300&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag wicked_pdf_asset_base64("tickets.css"), media: 'all' -%>
   </head>
   <body class="container">
