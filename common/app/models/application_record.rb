@@ -166,7 +166,7 @@ class ApplicationRecord < BetterRecord::Base
   end
 
   def self.active_year
-    @@active_year ||= (Date.today.year + ((Date.today.month < 8) ? 0 : 1))
+    @@active_year ||= (Date.today.year + ((Date.today.month < 9) ? 0 : 1))
   end
 
   def self.is_active_year?

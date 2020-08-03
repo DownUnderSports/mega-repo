@@ -18,6 +18,7 @@ module Admin
         status: status || 'Not Submitted',
         under_age: (u.passport&.birth_date || u.birth_date || Date.today) > 18.years.ago,
         link: status \
+          && (is_active_year? || nil) \
           && url_for(u.signed_terms.attached? ? u.signed_terms : u.user_signed_terms)
       }
     end
