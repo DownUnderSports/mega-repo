@@ -6,6 +6,7 @@ class CleanupCounts
     KARENJ
     MSBLIF
     HZXJZL
+    PZZGNZ
   ]
 
   ACTIONS =
