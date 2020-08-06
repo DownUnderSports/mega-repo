@@ -32,6 +32,7 @@ module AdminRoutes
 
           resources :clocks, only: [ :index, :show, :create, :edit, :update, :destroy ]
 
+          # resources :authentication, only: [ :index ]
           resources :authentication, defaults: { format: :json }, only: [ :index ]
           match 'authentication' => 'authentication#preflight', via: :options
 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <title>
+      Down Under Sports Authentication
+    </title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/heroku-pages/favicon.ico">
+    <%= stylesheet_link_tag "authentication", media: "all" %>
+  </head>
+  <body>
+    <div class="spacer"></div>
+    <div class="message">
+      <img src="https://downundersports-2019-production.s3-us-west-1.amazonaws.com/heroku-pages/dus-logo.png" alt="Down Under Sports">
+      <div class="message__title"> Authorizing, Please Wait </div>
+      <p class="message__subtitle">This window will close itself shortly</p>
+      <div class="la-ball-running-dots">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <div class="contact">
+      <p>Ph: <a href="tel:+14357534732">435-753-4732</a></p>
+      <p>Email: <a href="mailto:mail@downundersports.com">mail@downundersports.com</a></p>
+    </div>
+    <script>
+      run = async () => {
+        const target = window.opener || window.parent,
+              targetOrigin = "<% escape_javascript(params[:target_origin].presence) %>"
+        window.addEventListener("message", (ev) => {
+          if(!targetOrigin) return false
+          if(ev.origin === targetOrigin) {
+            console.info(ev)
+          }
+        })
+        try {
+          const result = await fetch(location.href, {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8"
+            }
+          }),
+          json = await result.json()
+          console.log(json)
+          if(target) target.postMessage(json, targetOrigin || "*")
+        } catch(err) {
+          console.error(err)
+          if(target) target.postMessage({}, targetOrigin || "*")
+        }
+      }
+      window.onload = run
+    </script>
+  </body>
+</html>

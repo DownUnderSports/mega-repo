@@ -26,7 +26,7 @@
     "react-activestorage-provider": "^0.8.0",
     "react-app-polyfill": "^0.2.2",
     "react-big-calendar": "^0.19.1",
-    "react-component-templates": "^7.0.9",
+    "react-component-templates": "^7.0.11",
     "react-dom": "^16.8.6",
     "react-json-view": "^1.19.1",
     "react-player": "^1.7.1",
