@@ -1,0 +1,38 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">Travel Update</h3>
+    </columns>
+  </row>
+</container>
+<container class="body-border full">
+  <spacer size="32"></spacer>
+</container>
+<container>
+  <row>
+    <columns>
+      <p>
+        The Australian borders remain closed due to COVID-19 and are currently
+        not scheduled to reopen to foreign travelers until 2021. We hoped to
+        return to normal operations next month; unfortunately, our office hours
+        will likely have to remain limited for the remainder of the year while
+        the world is eagerly awaiting a vaccine. We apologize about the lack of
+        customer service; however, this will allow us to minimize our expenses
+        until it is safe to continue our regular business operations.
+      </p>
+      <p>
+        Our office hours will continue to fluctuate as we follow local, state,
+        and federal health recommendations and ordinances. Please feel free to
+        email or text us and we will respond as quickly as possible.
+      </p>
+      <p>
+        Sincerely,
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :limited } %>
+      <a class="text-center" href="https://www.youtube.com/embed/TV-W7bj9eu4?autoplay=1&mute=0&rel=0">
+        <%= image_tag "august-newsletter-video-cover.png", class: 'full', alt: "View Our Update Video!" %>
+      </a>
+    </columns>
+  </row>
+</container>
