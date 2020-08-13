@@ -212,7 +212,7 @@ export default class ThankYouTicketGeneratorPage extends Component {
         <>
           <div key="help-text" className="list-group-item">
             Use the buttons below to generate Thank You Tickets.
-            Each generated Thank You Ticket is valid for <i><u>one</u></i> entry.
+            Each generated Thank You Ticket is valid for <i><u>one</u></i> entry into the <Link to="/travel-giveaways" target="_terms">Down Under Sports Travel Giveaways</Link>.
           </div>
           <div key="buttons" className="list-group-item">
             <div className="row">
@@ -282,32 +282,43 @@ export default class ThankYouTicketGeneratorPage extends Component {
 
   render() {
     return (
-      <CardSection
-        className="ThankYouTicketGeneratorPage my-4"
-        label={<div>
-          Generate Thank You Tickets
-        </div>}
-        contentProps={{className: 'list-group'}}
-      >
-        {
-          !!this.state.tickets
-            ? this.showTickets()
-            : (
-              this.state.allowed
-                ? this.renderAllowed()
-                : (
-                  <div className="list-group-item">
-                    Please contact a Down Under Sports representative for your generator link.
-                    <ul>
-                      <li>Email: <a href="mailto:mail@downundersports.com">mail@downundersports.com</a></li>
-                      <li>Phone: <a href="tel:435-753-4732">435-753-4732</a></li>
-                      <li>Text: <a href="sms:435-753-4732">435-753-4732</a></li>
-                    </ul>
-                  </div>
-                )
-            )
-        }
-      </CardSection>
+      <>
+        <CardSection
+          key="main-section"
+          className="ThankYouTicketGeneratorPage my-4"
+          label={<div>
+            Generate Thank You Tickets
+          </div>}
+          contentProps={{className: 'list-group'}}
+        >
+          {
+            !!this.state.tickets
+              ? this.showTickets()
+              : (
+                this.state.allowed
+                  ? this.renderAllowed()
+                  : (
+                    <div className="list-group-item">
+                      Please contact a Down Under Sports representative for your generator link.
+                      <ul>
+                        <li>Email: <a href="mailto:mail@downundersports.com">mail@downundersports.com</a></li>
+                        <li>Phone: <a href="tel:435-753-4732">435-753-4732</a></li>
+                        <li>Text: <a href="sms:435-753-4732">435-753-4732</a></li>
+                      </ul>
+                    </div>
+                  )
+              )
+          }
+        </CardSection>
+        <Link
+          key="terms-link"
+          to="/travel-giveaways"
+          target="_terms"
+          className="d-block my-3 text-center"
+        >
+          Click Here to view the Down Under Sports Travel Giveaway Rules
+        </Link>
+      </>
     );
   }
 }

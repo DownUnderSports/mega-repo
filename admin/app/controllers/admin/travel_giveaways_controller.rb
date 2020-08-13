@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Admin
-  class ThankYouTicketsController < ::Admin::ApplicationController
+  class TravelGiveawaysController < ::Admin::ApplicationController
     # == Modules ============================================================
 
     # == Class Methods ======================================================

@@ -152,21 +152,25 @@
       "image": "dus-logo.png",
       "index": true
     },
-    "thank-you-tickets": {
-      "title": "Thank You Ticket Rules",
-      "path": "admin/thank-you-tickets",
-      "canonical": "/admin/thank-you-tickets",
-      "description": "Down Under Sports: Edit Thank You Ticket Terms",
+    "travel-giveaways": {
+      "title": "Travel Giveaway Rules",
+      "path": "admin/travel-giveaways",
+      "canonical": "/admin/travel-giveaways",
+      "description": "Down Under Sports: Edit Travel Giveaways Terms",
       "image": "dus-logo.png",
       "index": true
     },
+    "travel_giveaways": {
+      "alias": true,
+      "to": "travel-giveaways"
+    },
+    "thank-you-tickets": {
+      "alias": true,
+      "to": "travel-giveaways"
+    },
     "thank_you_tickets": {
-      "title": "Thank You Ticket Rules",
-      "path": "admin/thank_you_tickets",
-      "canonical": "/admin/thank_you_tickets",
-      "description": "Down Under Sports: Edit Thank You Ticket Terms",
-      "image": "dus-logo.png",
-      "index": true
+      "alias": true,
+      "to": "travel-giveaways"
     },
     "fourOhFour": {
       "title": "Page Not Found",

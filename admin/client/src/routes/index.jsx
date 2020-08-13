@@ -15,7 +15,7 @@ const CalendarPage = lazy(() => import('pages/calendar'))
 const EncryptedFileTestPage = lazy(() => import('pages/encrypted-file-test'))
 const TermsPage = lazy(() => import('pages/terms'))
 const PrivacyPage = lazy(() => import('pages/privacy'))
-const ThankYouTicketTermsPage = lazy(() => import('pages/thank-you-tickets'))
+const TravelGiveawaysTermsPage = lazy(() => import('pages/travel-giveaways'))
 const QrCodesPage = lazy(() => import('common/js/pages/qr-codes'))
 
 const routes = [
@@ -84,12 +84,20 @@ const routes = [
     component: PrivacyPage
   },
   {
+    path: '/admin/travel_giveaways',
+    component: TravelGiveawaysTermsPage,
+  },
+  {
+    path: '/admin/travel-giveaways',
+    component: TravelGiveawaysTermsPage,
+  },
+  {
     path: '/admin/thank_you_tickets',
-    component: ThankYouTicketTermsPage,
+    component: TravelGiveawaysTermsPage,
   },
   {
     path: '/admin/thank-you-tickets',
-    component: ThankYouTicketTermsPage,
+    component: TravelGiveawaysTermsPage,
   },
   {
     path: '/admin/calendar',
@@ -125,12 +133,20 @@ const routes = [
     component: TermsPage,
   },
   {
+    path: '/travel_giveaways',
+    component: TravelGiveawaysTermsPage,
+  },
+  {
+    path: '/travel-giveaways',
+    component: TravelGiveawaysTermsPage,
+  },
+  {
     path: '/thank_you_tickets',
-    component: ThankYouTicketTermsPage,
+    component: TravelGiveawaysTermsPage,
   },
   {
     path: '/thank-you-tickets',
-    component: ThankYouTicketTermsPage,
+    component: TravelGiveawaysTermsPage,
   },
   {
     path: '/traveling',

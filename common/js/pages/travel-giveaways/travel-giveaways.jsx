@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
-import ThankYouTicketTerms from 'common/js/components/terms/thank-you-tickets'
+import ThankYouTicketTerms from 'common/js/components/terms/travel-giveaways'
 import pixelTracker from 'common/js/helpers/pixel-tracker'
-import './thank-you-tickets.css'
+import './travel-giveaways.css'
 
 export default class TermsPage extends PureComponent {
   componentDidMount() {

@@ -29,7 +29,7 @@ const ReceiptPage = lazy(() => import(/* webpackChunkName: "receipt-page" */ 'co
 const RefundsPage = lazy(() => import(/* webpackChunkName: "refunds-page" */ 'common/js/pages/refunds'))
 const SportsPage = lazy(() => import(/* webpackChunkName: "sports-page" */ 'common/js/pages/sports'))
 const TermsPage = lazy(() => import(/* webpackChunkName: "terms-page" */ 'common/js/pages/terms'))
-const ThankYouTicketTermsPage = lazy(() => import(/* webpackChunkName: "thank-you-ticket-terms-page" */ 'common/js/pages/thank-you-tickets'))
+const TravelGiveawaysTermsPage = lazy(() => import(/* webpackChunkName: "travel-giveaway-terms-page" */ 'common/js/pages/travel-giveaways'))
 const ThankYouTicketGeneratorPage = lazy(() => import(/* webpackChunkName: "thank-you-ticket-generator-page" */ 'common/js/pages/thank-you-ticket-generator'))
 const TravelInfoPage = lazy(() => import(/* webpackChunkName: "travel-info-page" */ 'common/js/pages/travel-info'))
 const UniformOrderPage = lazy(() => import(/* webpackChunkName: "uniform-order-page" */ 'common/js/pages/uniform-order'))
@@ -69,12 +69,20 @@ const routes = [
     component: TermsPage
   },
   {
+    path: '/travel_giveaways',
+    component: TravelGiveawaysTermsPage,
+  },
+  {
+    path: '/travel-giveaways',
+    component: TravelGiveawaysTermsPage,
+  },
+  {
     path: '/thank_you_tickets',
-    component: ThankYouTicketTermsPage,
+    component: TravelGiveawaysTermsPage,
   },
   {
     path: '/thank-you-tickets',
-    component: ThankYouTicketTermsPage,
+    component: TravelGiveawaysTermsPage,
   },
   {
     path: '/thank_you_ticket_generator/:userId?',

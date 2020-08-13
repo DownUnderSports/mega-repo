@@ -1,0 +1,6 @@
+{
+  "name": "TravelGiveaways",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./travel-giveaways.jsx"
+}

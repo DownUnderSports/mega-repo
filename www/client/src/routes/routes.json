@@ -110,19 +110,24 @@
       "alias": true,
       "to": "refunds"
     },
-    "thank-you-tickets": {
-      "title": "Down Under Sports: Thank You Ticket Rules",
-      "path": "thank-you-tickets",
-      "canonical": "/thank-you-tickets",
+    "travel-giveaways": {
+      "title": "Down Under Sports: Travel Giveaway Rules",
+      "path": "travel-giveaways",
+      "canonical": "/travel-giveaways",
       "image": "dus-logo.png",
       "index": true
     },
+    "travel_giveaways": {
+      "alias": true,
+      "to": "travel-giveaways"
+    },
+    "thank-you-tickets": {
+      "alias": true,
+      "to": "travel-giveaways"
+    },
     "thank_you_tickets": {
-      "title": "Down Under Sports: Thank You Ticket Rules",
-      "path": "thank_you_tickets",
-      "canonical": "/thank_you_tickets",
-      "image": "dus-logo.png",
-      "index": true
+      "alias": true,
+      "to": "travel-giveaways"
     },
     "thank-you-ticket-generator": {
       "title": "Thank You Ticket Generator",

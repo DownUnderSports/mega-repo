@@ -35,8 +35,8 @@ export default class Footer extends PureComponent {
       children: [ 'Travelex Insurance' ],
     },
     {
-      to: '/thank-you-tickets',
-      children: [ 'Thank You Ticket Rules' ],
+      to: '/travel-giveaways',
+      children: [ 'Travel Giveaway Rules' ],
     },
     {
       to: '/open-tryouts',

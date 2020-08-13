@@ -1,0 +1,5 @@
+{
+  "name": "TravelGiveawaysPage",
+  "private": true,
+  "main": "./travel-giveaways.jsx"
+}

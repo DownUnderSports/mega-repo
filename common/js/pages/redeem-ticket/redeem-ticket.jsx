@@ -462,7 +462,7 @@ export default class RedeemTicketPage extends Component {
         </CardSection>
         <Link
           key="terms-link"
-          to="/thank-you-tickets"
+          to="/travel-giveaways"
           target="_terms"
           className="d-block my-3 text-center"
         >

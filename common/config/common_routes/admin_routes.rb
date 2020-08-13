@@ -238,8 +238,10 @@ module AdminRoutes
 
         resource  :privacy_policy, only: %i[ show create ]
         resources :terms, only: %i[ index create ]
-        resources :thank_you_tickets, only: %i[ index create ]
-        resources :thank_you_tickets, only: %i[ index create ], path: 'thank-you-tickets'
+        resources :travel_giveaways, only: %i[ index create ]
+        resources :travel_giveaways, only: %i[ index create ], path: 'travel-giveaways'
+        resources :travel_giveaways, only: %i[ index create ], path: 'thank_you_tickets'
+        resources :travel_giveaways, only: %i[ index create ], path: 'thank-you-tickets'
         resources :payments, only: :index
 
         resources :users do
