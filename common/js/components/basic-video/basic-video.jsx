@@ -6,7 +6,8 @@ const dVidConfig = {
   playerVars: {
     modestbranding: 1,
     start: 0,
-    domain: window.location.origin,
+    // domain: window.location.origin,
+    origin: window.location.origin,
     enablejsapi: 1,
     autoplay: 1
   },
