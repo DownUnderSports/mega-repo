@@ -387,7 +387,7 @@ module Invite
 
     def instruction_line
       if ok_invite?
-        "If you are as excited as we are about this opportunity, request and information guide at downundersports.com/#{dus_id} (your DUS ID is #{dus_id}). You can also call/text us at 435-753-4732."
+        "If you are as excited as we are about this opportunity, request an information guide at downundersports.com/#{dus_id} (your DUS ID is #{dus_id}). You can also call/text us at 435-753-4732."
       else
         "If you would like to try out for the team, complete the open tryout form at downundersports.com/open-tryouts"
       end

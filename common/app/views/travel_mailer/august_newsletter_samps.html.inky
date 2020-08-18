@@ -1,0 +1,49 @@
+<container class="header">
+  <row>
+    <columns>
+      <spacer size="16"></spacer>
+      <h3 class="text-center">August Newsletter</h3>
+    </columns>
+  </row>
+</container>
+<container class="body-border full">
+  <spacer size="32"></spacer>
+</container>
+<container>
+  <row>
+    <columns>
+      <p>
+        G'day!
+      </p>
+      <p>
+        Australia is forecasting opening its borders to tourism in early 2021,
+        which is very good news for our travelers and the international
+        community as we anticipate a COVID-19 vaccine. When it is safe to resume
+        normal operations and we have confirmation that US travelers will be
+        allowed entry into other countries, we will send out more detailed
+        information on the 2021 tours.
+      </p>
+      <p>
+        Our office hours will continue to fluctuate in the immediate future as
+        we follow local, state, and federal health recommendations and
+        ordinances. Please feel free to email or text us and we will respond as
+        quickly as possible.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
+      <a class="text-center" href="https://www.youtube.com/embed/TV-W7bj9eu4?autoplay=1&mute=0&rel=0">
+        <%= image_tag "august-newsletter-video-cover.png", class: 'full', alt: "View Our Update Video!" %>
+      </a>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <p>
+        <strong>PS:</strong> Check out the attached newsletter for a chance to
+        learn a little more about Australia!
+      </p>
+    </columns>
+  </row>
+</container>

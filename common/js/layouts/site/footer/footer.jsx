@@ -11,8 +11,8 @@ import insurancePDF from 'common/assets/pdfs/insurance.pdf'
 const dateToLocalTime = (d) => d.toLocaleTimeString('en-us',{timeZoneName:'short'}).replace(/:0+/g, '').replace(/[A-Z]+$/, '($&)')
 
 /* MDT LIMITED */
-const startTime    = new Date('2019-08-31T20:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),
-      endTime  = dateToLocalTime(new Date('2019-08-31T22:00:00Z'))
+// const startTime    = new Date('2019-08-31T20:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),
+//       endTime  = dateToLocalTime(new Date('2019-08-31T22:00:00Z'))
 
 export default class Footer extends PureComponent {
   links = [
@@ -77,7 +77,10 @@ export default class Footer extends PureComponent {
                       Tuesday - Thursday
                     </th>
                     <td>
+                      {/*
                       {startTime} - {endTime}
+                      */}
+                      Varied
                     </td>
                   </tr>
                   <tr>

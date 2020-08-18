@@ -63,7 +63,7 @@
       <p>
         Sincerely,
       </p>
-      <%= render partial: 'shared/email_footer', locals: { skip_hours: :limited } %>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
       <a class="text-center" href="https://www.youtube.com/embed/TV-W7bj9eu4?autoplay=1&mute=0&rel=0">
         <%= image_tag "august-newsletter-video-cover.png", class: 'full', alt: "View Our Update Video!" %>
       </a>
