@@ -595,7 +595,7 @@ export default class PaymentForm extends Component {
                                 this.allowNext()
                                   ? {
                                       field: 'CreditCardField',
-                                      wrapperClass: `${/*breakPoint*/ 'col'} form-group ${(captcha || this.state.form.payment.card_number_validated) ? 'was-validated' : ''}`,
+                                      wrapperClass: `${/*breakPoint*/ 'col-md'} form-group ${(captcha || this.state.form.payment.card_number_validated) ? 'was-validated' : ''}`,
                                       onChange: false,
                                       onCardChange: (val) => {
                                         this.onChange(false, 'payment.card_number', val)
