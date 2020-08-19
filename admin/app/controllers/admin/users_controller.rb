@@ -387,6 +387,18 @@ module Admin
       return render json: { sent: email }, status: 200
     end
 
+    def reminder_cancel
+      CoronaMailer.
+        with(
+          user_id: @found_user.id,
+          email: params[:email].presence
+        ).
+        cancel_reminder.
+        deliver_later
+
+      return render json: { sent: params[:email].presence }, status: 200
+    end
+
     def selected_cancel
       CoronaMailer.
         with(

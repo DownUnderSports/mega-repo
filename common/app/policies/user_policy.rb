@@ -102,6 +102,10 @@ class UserPolicy < ApplicationPolicy
     fence_emails?
   end
 
+  def reminder_cancel?
+    corona_emails?
+  end
+
   def selected_cancel?
     corona_emails?
   end

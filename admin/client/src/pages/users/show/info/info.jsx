@@ -148,6 +148,8 @@ export default class UsersShowInfoPage extends Component {
   }
 
   sendOnTheFence = (ev) => this.sendCoronaEmail(ev, 'on_the_fence', '"On the Fence"')
+  sendReminderCancel = (ev) =>
+    this.sendCoronaEmail(ev, 'reminder_cancel', 'Cancelation Options (Reminder)')
   sendSelectedCancel = (ev) =>
     this.sendCoronaEmail(ev, 'selected_cancel', 'Cancelation Options (Preselected)')
   sendUnselectedCancel = (ev) =>
@@ -262,6 +264,9 @@ export default class UsersShowInfoPage extends Component {
                           </button>
                           <button className="btn btn-block btn-warning form-group" onClick={this.sendSelectedCancel}>
                             Send &ldquo;Preselected&rdquo; Cancel Email
+                          </button>
+                          <button className="btn btn-block btn-warning form-group" onClick={this.sendReminderCancel}>
+                            Send &ldquo;Reminder&rdquo; Cancel Email
                           </button>
                           <div className="row">
                             <div className="col">

@@ -9,15 +9,26 @@ class CoronaMailer < ImportantMailer
     send_selection_email("Unselected Account Option")
   end
 
+  def cancel_reminder
+    send_selection_email("Account Option Selection Reminder")
+  end
+
   private
-    def send_selection_email(message)
+    def send_selection_email(message, subject = "Account Options")
       @user = User[params[:user_id]]
 
       email =
-        params[:email].presence ||
+        (
+          case params[:email]
+          when String
+            params[:email].presence&.split(";")
+          when Array
+            params[:email].map(&:to_s)
+          end
+        )&.map(&:strip)&.select(&:present?)&.presence ||
         @user.athlete_and_parent_emails.presence
 
-      m = mail skip_filter: true, to: email, subject: "Account Options"
+      m = mail skip_filter: true, to: email, subject: subject
 
       if m && email.present?
         m.after_send do
