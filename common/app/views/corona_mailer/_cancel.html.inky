@@ -26,15 +26,6 @@
       <p>
         G&apos;day!
       </p>
-      <%- unless content_for?(:skip_apology) -%>
-      <p>
-        We apologize about the interruption in customer service as we are
-        following state and national COVID-19 guidelines. We will still have
-        limited availability as we start to bring staff back and get everyone
-        caught up, while staying safe and continuing to follow health and safety
-        guidelines.
-      </p>
-      <%- end -%>
       <%= yield :selection_message %>
       <ol class="spaced-list extra-padding ">
         <li>
@@ -65,10 +56,6 @@
       <p>
         We appreciate your patience and understanding as we address each of our
         travelers during these unprecedented times.
-        <%- unless content_for?(:skip_apology) -%>
-        If other options become
-        available, we will continue to provide you updates and information.
-        <%- end -%>
       </p>
       <p>
         Please respond by August 31st, 2020.

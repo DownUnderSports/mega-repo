@@ -4,14 +4,6 @@ Account Options For <%= @user.print_names %> (<%= @user.dus_id %>)
 
 
 G'day!
-<%- unless content_for?(:skip_apology) -%>
-
-We apologize about the interruption in customer service as we are following
-state and national COVID-19 guidelines. We will still have limited availability
-for at least the first half of May as we start to bring staff back and get
-everyone caught up, while staying safe and continuing to follow health and
-safety guidelines.
-<%- end -%>
 
 <%= yield :selection_message -%>
 
@@ -35,8 +27,7 @@ safety guidelines.
        cancellation.
 
 We appreciate your patience and understanding as we address each of our
-travelers during these unprecedented times.<% unless content_for?(:skip_apology) %> If other options become available,
-we will continue to provide you updates and information.<% end %>
+travelers during these unprecedented times.
 
 Please respond by August 31st, 2020.
 

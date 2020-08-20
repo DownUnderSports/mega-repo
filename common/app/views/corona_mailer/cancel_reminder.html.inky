@@ -1,4 +1,3 @@
-<%- provide :skip_apology, true -%>
 <%- content_for :selection_message do %>
 <p>
   You had previously informed us that you will not be traveling to Australia for

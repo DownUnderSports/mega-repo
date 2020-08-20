@@ -10,7 +10,7 @@ gem 'authorizenet', '~> 1.9', '>= 1.9.5'
 gem "aws-sdk-s3", '>= 1.30.1', require: false
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'better_record', '~> 0.25', '>= 0.25.1'
+gem 'better_record', '~> 0.25', '>= 0.25.2'
 gem 'csv_rb', '~> 5.2.3', '>= 5.2.3.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -74,6 +74,7 @@ gem 'table_print'
 gem 'wkhtmltopdf-heroku'
 
 group :development, :test do
+  gem 'tiny_fake_redis'
   gem 'brakeman'
   gem 'bullet'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

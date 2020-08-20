@@ -111,7 +111,7 @@ GEM
       multi_json (~> 1)
       statsd-ruby (~> 1.1)
     benchmark-ips (2.7.2)
-    better_record (0.25.1)
+    better_record (0.25.2)
       csv (~> 3.0, >= 3.1.2)
       jwe (~> 0.3, >= 0.3.1)
       jwt (~> 2.1, >= 2.1.0)
@@ -408,6 +408,8 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    tiny_fake_redis (0.1.0)
+      zeitwerk (~> 2, >= 2.2.2)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
     uber (0.1.0)
@@ -421,6 +423,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
     wkhtmltopdf-heroku (2.12.5.0)
+    zeitwerk (2.4.0)
 
 PLATFORMS
   ruby
@@ -432,7 +435,7 @@ DEPENDENCIES
   axlsx!
   axlsx_rails (= 0.5.2)
   barnes (~> 0.0.7)
-  better_record (~> 0.25, >= 0.25.1)
+  better_record (~> 0.25, >= 0.25.2)
   bootsnap (>= 1.1.0)
   braintree (~> 2.90, >= 2.90.0)
   brakeman
@@ -477,6 +480,7 @@ DEPENDENCIES
   stackprof
   store_as_int (>= 0.0.19)
   table_print
+  tiny_fake_redis
   uglifier
   visual_call_graph
   where_exists!
