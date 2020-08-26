@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react'
-import ThankYouTicketTerms from 'common/js/components/terms/travel-giveaways'
+import TravelGiveawayTerms from 'common/js/components/terms/travel-giveaways'
 import pixelTracker from 'common/js/helpers/pixel-tracker'
 import './travel-giveaways.css'
 
-export default class TermsPage extends PureComponent {
+export default class TravelGiveawaysTermsPage extends PureComponent {
   componentDidMount() {
     try {
       pixelTracker('track', 'PageView')
@@ -37,8 +37,9 @@ export default class TermsPage extends PureComponent {
 
   render() {
     return (
-      <ThankYouTicketTerms
+      <TravelGiveawayTerms
         className='my-5 bg-light border rounded p-3'
+        year="2021"
       />
     )
   }

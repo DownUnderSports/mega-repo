@@ -3,6 +3,8 @@ import { DisplayOrLoading } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import marked from 'marked'
 
+const currentYear = 2021
+
 export default class ThankYouTicketTerms extends Component {
   state = { body: '', parsed: '' }
 
@@ -11,7 +13,7 @@ export default class ThankYouTicketTerms extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    if(prevState.body !== this.state.body) this.setState({ parsed: marked(this.state.body || 'An Error Occured, Please Contact Our Office') })
+    if(prevState.body !== this.state.body) this.setState({ parsed: marked(this.state.body || 'An Error Occured, Please Contact Our Office').replace(/%YEAR%/g, this.props.year || currentYear) })
   }
 
   getTerms = async () => {
@@ -32,12 +34,15 @@ export default class ThankYouTicketTerms extends Component {
   }
 
   render(){
-    const { className = '', headerProps = {}, termProps = {}, ...props} = this.props
+    const { className = '', headerProps = {}, termProps = {}, year, ...props} = this.props
     return (
       <section className={`terms-section ${className}`} {...props}>
         <header className='form-group' {...headerProps}>
           <h3 className='text-center'>
-            Official Rules: Down Under Sports Travel Giveaways <br/>
+            International Sports Specialists, Inc. <br/>
+            D.B.A. Down Under Sports (&ldquo;DUS&rdquo;) <br/>
+            <br/>
+            Official Rules: {year || currentYear} Travel Giveaways <br/>
             - No Purchase Necessary -
           </h3>
         </header>

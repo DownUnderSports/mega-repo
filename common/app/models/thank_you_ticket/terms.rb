@@ -29,6 +29,10 @@ class ThankYouTicket < ApplicationRecord
       order(:id).last || new
     end
 
+    def subbed_specials(year: current_year)
+      body.gsub("%YEAR%", year || current_year)
+    end
+
     # == Boolean Methods ======================================================
 
     # == Instance Methods =====================================================

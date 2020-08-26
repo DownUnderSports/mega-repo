@@ -110,6 +110,31 @@ export default class TravelGiveawaysTermsPage extends Component {
         </h3>
         <div className="clearfix"></div>
       </header>
+      <h5>
+        Special Substitution Values:
+      </h5>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              Value
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              %YEAR%
+            </td>
+            <td>
+              Program year for the shown terms
+            </td>
+          </tr>
+        </tbody>
+      </table>
       { this.renderErrors() }
       <div className="row form-group">
         <div className="col">
