@@ -63,6 +63,10 @@ class AuthStatusWrapper {
     this.broadcast()
   }
 
+  subscribeAndCall = (cb) => {
+    this.subscribe(cb)
+    cb(this.getStatus())
+  }
   subscribe = (cb) => (callbacks.indexOf(cb) === -1) ? callbacks.push(cb) : cb
 
   unsubscribe = (cb) => {
@@ -151,7 +155,7 @@ class AuthStatusWrapper {
                   }
                 }),
                 json = await result.json()
-          this.authenticationProven = deviceId
+          this.authenticationProven = deviceId || (process.env.NODE_ENV === "development")
           this.token = json.token
           await this._getCookies()
         } catch(e) {
@@ -181,17 +185,20 @@ class AuthStatusWrapper {
     // this.getFromCookie()
   )
 
-  getFromStorage = () => {
-    try {
-      this.token = localStorage.getItem(this.authTokenName) || false;
-    } catch (e) {
-      this.token = false
-      this.setPermissions()
-    }
-    return this.token;
-  }
+  // getFromStorage = () => {
+  //   this.authenticationProven = false
+  //
+  //   try {
+  //     this.token = localStorage.getItem(this.authTokenName) || false;
+  //   } catch (e) {
+  //     this.token = false
+  //     this.setPermissions()
+  //   }
+  //   return this.token;
+  // }
 
   getFromSessionStorage = () => {
+    this.authenticationProven = false
     try {
       this.token = sessionStorage.getItem(this.authTokenName) || false;
     } catch (e) {
@@ -240,6 +247,8 @@ class AuthStatusWrapper {
 
       const data = JSON.parse(event.newValue) || {};
 
+      this.authenticationProven = false
+
       this.token = data[this.authTokenName]
     }
 
@@ -247,14 +256,19 @@ class AuthStatusWrapper {
   }
 
   reauthenticate = async () => {
-    this.token = false
     await (
       this._reauthenticate = this._reauthenticate || (new Promise(async (r,j) => {
+        this.token = false
+        this.authenticationProven = false
+
         try {
           await this.sendToServer()
           await this._getCookies()
           r(this._reauthenticate = null)
         } catch(err) {
+          this.token = false
+          this.authenticationProven = false
+          this._reauthenticate = null
           j(err)
         }
       }))

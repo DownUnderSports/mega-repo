@@ -304,12 +304,21 @@ export default class ReduxChatRoomsProvider extends Component {
     this.setState({ error: err.message || err.toString() })
   }
 
-  _getChannel = () => {
-    if(!!AuthStatus.token) {
-      this.channel = this.channel || ChatRoomsChannel.openChannel(this._onMessageReceived)
-      this.setState({ available: true })
-    } else {
-      if(this.state.available) this.setState({ available: false })
+  _getChannel = async ({ token }) => {
+    try {
+      if(token) {
+        if(!AuthStatus.authenticationProven) {
+          ChatRoomsChannel.disconnect()
+          return AuthStatus.reauthenticate()
+        }
+        this.channel = this.channel || ChatRoomsChannel.openChannel(this._onMessageReceived)
+        this.setState({ available: true })
+      } else {
+        if(this.available) this.setState({ available: false })
+      }
+    } catch(err) {
+      console.error(err)
+      if(this.available) this.setState({ available: false })
     }
   }
 
@@ -321,10 +330,7 @@ export default class ReduxChatRoomsProvider extends Component {
     this.channel && this.channel.perform('availability', { open: !this.state.open })
   }
 
-  _openChannel = () => {
-    AuthStatus.subscribe(this._getChannel)
-    this._getChannel()
-  }
+  _openChannel = () => AuthStatus.subscribeAndCall(this._getChannel)
 
   _disablePermanentListener = () =>
     this.hasPermanentListener = false

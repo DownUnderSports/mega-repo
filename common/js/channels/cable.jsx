@@ -18,7 +18,12 @@ export default class Cable {
   }
 
   static get consumer() {
-    return cable = cable || ActionCable.createConsumer(WS_ROOT)
+    try {
+      return cable = cable || ActionCable.createConsumer(WS_ROOT)
+    } catch(err) {
+      console.error(err)
+      throw err
+    }
   }
 
   static reconnect() {

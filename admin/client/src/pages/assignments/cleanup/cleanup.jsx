@@ -138,16 +138,23 @@ export default class AssignmentsCleanupPage extends Component {
     this.setState({ error: err.message || err.toString() })
   }
 
-  _getChannel = async () => {
-    if(!!AuthStatus.token) {
-      if(!AuthStatus.authenticationProven) {
-        CleanupChannel.disconnect()
-        await AuthStatus.reauthenticate()
+  _getChannel = async ({ token }) => {
+    console.log(token)
+    try {
+      if(!!token) {
+        if(!AuthStatus.authenticationProven) {
+          console.log(AuthStatus.authenticationProven)
+          CleanupChannel.disconnect()
+          return AuthStatus.reauthenticate()
+        }
+        await this._loadCurrentUser()
+        this.channel = this.channel || CleanupChannel.openChannel(this._onMessageReceived)
+        this.setState({ available: true })
+      } else {
+        if(this.available) this.setState({ available: false })
       }
-      await this._loadCurrentUser()
-      this.channel = this.channel || CleanupChannel.openChannel(this._onMessageReceived)
-      this.setState({ available: true })
-    } else {
+    } catch(err) {
+      console.error(err)
       if(this.available) this.setState({ available: false })
     }
   }
@@ -233,10 +240,7 @@ export default class AssignmentsCleanupPage extends Component {
     this.setState({ selectedId, selectedTime }, this._checkId)
   }
 
-  _openChannel = () => {
-    AuthStatus.subscribe(this._getChannel)
-    this._getChannel()
-  }
+  _openChannel = () => AuthStatus.subscribeAndCall(this._getChannel)
 
   _checkCanViewStats = () => this.channel.perform('can_view_stats', {})
   _checkAdmin = () => this.channel.perform('is_admin', {})

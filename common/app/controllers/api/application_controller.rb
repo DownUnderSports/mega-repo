@@ -35,24 +35,48 @@ module API
 
       def set_current_user_cookies(user_to_set = nil)
         if user_to_set ||= BetterRecord::Current.user
-          result = (cookies.encrypted[:current_user_id] = {
-            value: user_to_set.id,
-            expires: Time.now + 24.hours,
-            secure: Rails.env.production?,
-            domain: cookie_domain,
-            tld_length: 2
-          })
+          result = (
+            cookies.encrypted[:current_user_id] = {
+              value: user_to_set.id,
+              expires: Time.now + 24.hours,
+              secure: Rails.env.production?,
+              domain: cookie_domain,
+              tld_length: 2
+            }.merge!(Rails.env.production? ? { same_site: :lax } : {})
+          )
+
           cookies[:plain_id] = {
             value: user_to_set.id,
             expires: Time.now + 24.hours,
             secure: Rails.env.production?,
             domain: cookie_domain,
             tld_length: 2
-          }
+          }.merge!(Rails.env.production? ? { same_site: :none } : {})
+
+          if Rails.env.production?
+            cookies.encrypted[:current_user_id_legacy] = {
+              value: user_to_set.id,
+              expires: Time.now + 24.hours,
+              secure: Rails.env.production?,
+              domain: cookie_domain,
+              tld_length: 2
+            }
+
+            cookies[:plain_id_legacy] = {
+              value: user_to_set.id,
+              expires: Time.now + 24.hours,
+              secure: Rails.env.production?,
+              domain: cookie_domain,
+              tld_length: 2
+            }
+          end
+
           result
         else
           cookies.delete :current_user_id, domain: cookie_domain, tld_length: 2
+          cookies.delete :current_user_id_legacy, domain: cookie_domain, tld_length: 2
           cookies.delete :plain_id, domain: cookie_domain, tld_length: 2
+          cookies.delete :plain_id_legacy, domain: cookie_domain, tld_length: 2
           nil
         end
       end

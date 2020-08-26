@@ -1,7 +1,7 @@
 <%- current_meta_data = meta_data -%>
 <%=
   File.read(html_path).
-    sub(/<head>/, <<-HTML.gsub(/\s*\n\s+/, ' ')
+    sub(/<head>/, <<~HTML.gsub(/\s*\n\s+/, ' ')
       <head>
         #{current_meta_data[:ograph]}
         #{current_meta_data[:gschema]}
@@ -13,7 +13,7 @@
         </title>
       HTML
     ).
-    sub(/<body.*?>/, <<-HTML.gsub(/\s*\n\s+/, ' ')
+    sub(/<body.*?>/, <<~HTML.gsub(/\s*\n\s+/, ' ')
       <body>
         <input type="hidden" id="app-version" value="#{ DownUnderSports::VERSION }"/>
         <input type="hidden" id="device-id" value="#{ @requesting_device_id }" />

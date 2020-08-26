@@ -8,7 +8,7 @@ import insurancePDF from 'common/assets/pdfs/insurance.pdf'
 // import bbbFront from 'common/assets/images/bbb/bbb-front.png'
 // import bbbBack from 'common/assets/images/bbb/bbb-back.png'
 
-const dateToLocalTime = (d) => d.toLocaleTimeString('en-us',{timeZoneName:'short'}).replace(/:0+/g, '').replace(/[A-Z]+$/, '($&)')
+// const dateToLocalTime = (d) => d.toLocaleTimeString('en-us',{timeZoneName:'short'}).replace(/:0+/g, '').replace(/[A-Z]+$/, '($&)')
 
 /* MDT LIMITED */
 // const startTime    = new Date('2019-08-31T20:00:00Z').toLocaleTimeString().replace(/:0+/g, ''),

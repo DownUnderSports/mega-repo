@@ -54,6 +54,7 @@ module Travel
           BetterRecord::Current.user ||= \
             User[
               cookies.encrypted[:current_user_id].presence \
+              || cookies.encrypted[:current_user_id_legacy].presence \
               || params[:user_id].presence \
               || params[:id].presence
             ] \

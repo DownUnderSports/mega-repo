@@ -8,8 +8,12 @@ class RingCentral {
     try {
       this.activated = true
       const rcs = document.createElement("script")
+      // if(process.env.NODE_ENV === "development") {
+      //   rcs.src = "https://ringcentral.github.io/ringcentral-embeddable/adapter.js?clientId=9FE0ZQ1GQySQs9YeE1_4_Q&appServer=https://platform.devtest.ringcentral.com";
+      // } else {
+      rcs.src = "https://ringcentral.github.io/ringcentral-embeddable/adapter.js?clientId=qv01G46hTfK4V3ygrrt3ug";
+      // }
 
-      rcs.src = "https://ringcentral.github.io/ringcentral-embeddable/adapter.js";
       this.setDocumentObserver()
       document.body.appendChild(rcs);
     } catch(err) {
@@ -121,7 +125,7 @@ class RingCentral {
       case "rc-active-call-notify":
         const { telephonyStatus, direction, from = {} } = data.call || {},
               isInboundCall = (telephonyStatus === "CallConnected") && (direction === "Inbound")
-        if(isInboundCall) {
+        if(isInboundCall && (process.env.NODE_ENV !== "development")) {
           const number = from.phoneNumber.replace(/^\+1/, ''),
                 windowName = `_inbound_call_${number}`
           if(number.length < 10) return false
