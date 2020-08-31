@@ -46,6 +46,15 @@ class TravelMailer < ImportantMailer
     mail to: params[:email].presence, subject: "August Update"
   end
 
+  def august_cancel_newsletter
+    # attachments["august-newsletter.pdf"] = {
+    #   mime_type: 'application/pdf',
+    #   content: File.read(get_full_path_to_asset('august_2020_newsletter.pdf'))
+    # }
+
+    mail to: params[:email].presence, subject: params[:subject].present? ? "August Update (#{params[:subject]})" : "August Update", include_gayle: true
+  end
+
   def april_deadline_approaching
     @user = User.get(params[:user_id])
     email = @user.athlete_and_parent_emails.presence || [ 'mail@downundersports.com' ]

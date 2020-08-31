@@ -31,9 +31,11 @@ class ApplicationMailer < ActionMailer::Base
     end
   end
 
-  def mail(email: nil, skip_filter: false, **params)
+  def mail(email: nil, skip_filter: false, include_gayle: false, **params)
     headers['List-Unsubscribe'] = '<mailto:unsubscribe@downundersports.com>'
     params.reverse_merge!(apply_defaults({}).slice(:use_account))
+
+    @include_gayle = Boolean.parse(include_gayle)
 
     use_account = params.delete(:use_account).presence
     mail_name = params.delete(:mail_name).presence || caller_locations(1,1)[0].label
@@ -64,6 +66,8 @@ class ApplicationMailer < ActionMailer::Base
       params[:from] = use_account
     end
 
+    params[:reply_to] = "sampson@downundersports.com" if @include_gayle && Rails.env.development?
+
     m = super(
       **params
     ) do |format|
@@ -91,7 +95,8 @@ class ApplicationMailer < ActionMailer::Base
 
   def production_email(email = nil)
     if Rails.env.development?
-      result = 'sampson@downundersports.com'
+      result = %w[ sampson@downundersports.com ]
+      result << "gayle@downundersports.com" if @include_gayle && email_has_gayle(email)
     elsif block_given?
       result = yield
     else
@@ -116,5 +121,11 @@ class ApplicationMailer < ActionMailer::Base
       # include ApplicationHelper
     end
     av
+  end
+
+  def email_has_gayle(email = nil)
+    !!email && (
+      [ email ].flatten.any? {|e| e.to_s.split(";").include? "gayle@downundersports.com" }
+    )
   end
 end
