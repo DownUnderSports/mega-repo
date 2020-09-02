@@ -79,21 +79,43 @@ parse_row = ->(row) do
       end
 
       if !school && row[:school_street].present?
-        sch_addr = Address.find_or_initialize_by(
-          street: row[:school_street],
-          street_2: row[:school_street_2],
-          city: row[:school_city],
-          state: State.find_by_value(row[:school_state_abbr]),
-          zip: row[:school_zip]
-        )
-
-        unless sch_addr.id
-          sch_addr = sch_addr.find_variant_by_value&.address || sch_addr
-          unless sch_addr.id
-            sch_addr.save!
-            Address::ValidateBatchJob.perform_now
-            sch_addr = sch_addr.find_variant_by_value&.reload&.address
+        sch_addr = nil
+        set_sch_address = ->() {
+          unless sch_addr&.id
+            sch_addr = sch_addr&.find_variant_by_value&.address || Address.find_or_initialize_by(
+              street: row[:school_street],
+              street_2: row[:school_street_2],
+              city: row[:school_city],
+              state: State.find_by_value(row[:school_state_abbr]),
+              zip: row[:school_zip]
+            )
+            if (row[:school_name].to_s.upcase == "HOME SCHOOL PLACEHOLDER") && (row[:school_city].to_s.upcase == "FAKE")
+              sch_addr.verified = true
+              sch_addr.rejected = true
+              sch_addr.keep_verified = true
+            end
           end
+        }
+
+        2.times { sleep(rand * 5); set_sch_address.call }
+        retries = 0
+        begin
+          unless sch_addr.id
+            if Address.no_processing
+              sch_addr.save!
+            else
+              Address.process_batches
+              sch_addr.batch_processing = true
+              sch_addr.save!
+              Address.process_batches
+              sch_addr = sch_addr.find_variant_by_value&.reload&.address
+            end
+          end
+        rescue
+          raise if (retries += 1) > 3
+          sleep(rand * 5);
+          set_sch_address.call
+          retry
         end
 
         og_pid = pid = row[:school_pid].to_s.sub(/0+/, '').presence&.pid_format

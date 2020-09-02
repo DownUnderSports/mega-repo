@@ -262,6 +262,7 @@ module AdminRoutes
             post :selected_cancel
             post :unselected_cancel
             post :reminder_cancel
+            post :cancel_info
             delete :cancel
             get :main_address
             get :travel_teams, defaults: { format: :pdf }

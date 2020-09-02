@@ -277,8 +277,14 @@ class Address < ApplicationRecord
     Boolean.parse (Rails.redis.decr 'address:batching')
   end
 
+  def self.no_processing
+    true
+  end
+
 
   def self.process_batches
+    return false if no_processing
+
     not_ready = Boolean.parse(Rails.redis.get('address:ready')) rescue false
     return if not_ready
 
@@ -637,6 +643,7 @@ class Address < ApplicationRecord
     end
 
     def skip_verification
+      self.class.no_processing
       batch_processing ||
       is_foreign? ||
       self.verified ||

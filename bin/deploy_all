@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  system! "#{APP_ROOT}/bin/deploy www admin#{ARGV[0] == "f" ? '' : " year-2019 year-2020"}"
+rescue Interrupt
+  puts "\n== Cancelled Deployment =="
+end

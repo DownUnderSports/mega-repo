@@ -119,11 +119,15 @@ class School < ApplicationRecord
       retries = 0
       begin
         unless sch_addr.id
-          Address::ValidateBatchJob.perform_now
-          sch_addr.batch_processing = true
-          sch_addr.save!
-          Address::ValidateBatchJob.perform_now
-          sch_addr = sch_addr.find_variant_by_value&.reload&.address
+          if Address.no_processing
+            sch_addr.save!
+          else
+            Address.process_batches
+            sch_addr.batch_processing = true
+            sch_addr.save!
+            Address.process_batches
+            sch_addr = sch_addr.find_variant_by_value&.reload&.address
+          end
         end
       rescue
         raise if (retries += 1) > 3

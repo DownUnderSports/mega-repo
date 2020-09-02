@@ -388,36 +388,24 @@ module Admin
     end
 
     def reminder_cancel
-      CoronaMailer.
-        with(
-          user_id: @found_user.id,
-          email: params[:email].presence
-        ).
-        cancel_reminder.
-        deliver_later
-
-      return render json: { sent: params[:email].presence }, status: 200
+      return cancel_info
     end
 
     def selected_cancel
-      CoronaMailer.
-        with(
-          user_id: @found_user.id,
-          email: params[:email].presence
-        ).
-        cancel_selected.
-        deliver_later
-
-      return render json: { sent: params[:email].presence }, status: 200
+      return cancel_info
     end
 
     def unselected_cancel
+      return cancel_info
+    end
+
+    def cancel_info
       CoronaMailer.
         with(
           user_id: @found_user.id,
           email: params[:email].presence
         ).
-        cancel_unselected.
+        cancel_info.
         deliver_later
 
       return render json: { sent: params[:email].presence }, status: 200

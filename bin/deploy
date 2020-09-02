@@ -299,14 +299,26 @@ function deploy() {
 }
 
 if [ -z "$JENKINS_HOME" ]; then
+  i=0
+  mapping=""
   for profile do
     if echo $profile|grep -v '^test.*$' >/dev/null; then
-      echo
-      echo "         YOU ARE DEPLOYING '$profile' INTO PRODUCTION, YOU CAN PRESS CTRL+C NOW IF YOU WISH TO STOP!!!!"
-      echo
-      read
+      ((i+=1))
+      if [[ $i -gt 1 ]]; then
+        if [[ $# -gt 2 ]]; then mapping+=", "; else mapping+=" "; fi
+        if [[ $i -eq $# ]]; then mapping+="and "; fi
+      fi
+      mapping+="'$profile'"
     fi
   done
+
+
+  if [ -z "$mapping" ]; then exit 0; fi
+
+  echo
+  echo "         YOU ARE DEPLOYING $mapping INTO PRODUCTION, YOU CAN PRESS CTRL+C NOW IF YOU WISH TO STOP!!!!"
+  echo
+  read
 
   prepare
 fi
@@ -315,6 +327,7 @@ echo
 echo "==================== Deploying the code to Heroku =================="
 echo
 
+# bash implicitly loops positional args
 for profile do
   TMPTARGET=$(echo $profile | tr -s /)
   TMPTARGET=${TMPTARGET%/}

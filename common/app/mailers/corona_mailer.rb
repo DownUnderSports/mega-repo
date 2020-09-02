@@ -1,20 +1,29 @@
 class CoronaMailer < ImportantMailer
   # default use_account: :travel
 
-  def cancel_selected
-    send_selection_email("Preselected Account Option")
+  # def cancel_selected
+  #   send_selection_email("Preselected Account Option")
+  # end
+  #
+  # def cancel_unselected
+  #   send_selection_email("Unselected Account Option")
+  # end
+  #
+  # def cancel_reminder
+  #   send_selection_email("Account Option Selection Reminder")
+  # end
+
+  def cancel_info
+    send_email_with_history "Cancel Information (Account Options)"
   end
 
-  def cancel_unselected
-    send_selection_email("Unselected Account Option")
-  end
-
-  def cancel_reminder
-    send_selection_email("Account Option Selection Reminder")
+  def fundraising_info
+    send_email_with_history "Corona Fundraising Information (T-Shirts)",
+                            "Fundraising Status"
   end
 
   private
-    def send_selection_email(message, subject = "Account Options")
+    def send_email_with_history(message, subject = "Account Options")
       @user = User[params[:user_id]]
 
       email =

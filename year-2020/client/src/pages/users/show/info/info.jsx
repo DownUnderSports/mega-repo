@@ -148,12 +148,14 @@ export default class UsersShowInfoPage extends Component {
   }
 
   sendOnTheFence = (ev) => this.sendCoronaEmail(ev, 'on_the_fence', '"On the Fence"')
-  sendReminderCancel = (ev) =>
-    this.sendCoronaEmail(ev, 'reminder_cancel', 'Cancelation Options (Reminder)')
-  sendSelectedCancel = (ev) =>
-    this.sendCoronaEmail(ev, 'selected_cancel', 'Cancelation Options (Preselected)')
-  sendUnselectedCancel = (ev) =>
-    this.sendCoronaEmail(ev, 'unselected_cancel', 'Cancelation Options (Unselected)')
+  // sendReminderCancel = (ev) =>
+  //   this.sendCoronaEmail(ev, 'reminder_cancel', 'Cancelation Options (Reminder)')
+  // sendSelectedCancel = (ev) =>
+  //   this.sendCoronaEmail(ev, 'selected_cancel', 'Cancelation Options (Preselected)')
+  // sendUnselectedCancel = (ev) =>
+  //   this.sendCoronaEmail(ev, 'unselected_cancel', 'Cancelation Options (Unselected)')
+  sendCancelInfo = (ev) =>
+    this.sendCoronaEmail(ev, 'cancel_info', 'Cancel Information (Account Options)')
 
   componentWillUnmount() {
     this._unmounted = true
@@ -195,7 +197,7 @@ export default class UsersShowInfoPage extends Component {
     return (
       <section key={id} className='user-info-wrapper'>
         <header>
-          <nav className="nav sports-nav nav-tabs">
+          <nav className="nav nav-tabs">
             <input type="checkbox" id="user-info-nav-trigger" className="nav-trigger" />
             <label htmlFor="user-info-nav-trigger" className="nav-item nav-link d-md-none">
               <span><span></span></span>
@@ -259,14 +261,19 @@ export default class UsersShowInfoPage extends Component {
                               </button>
                             )
                           }
-                          <button className="btn btn-block btn-warning form-group" onClick={this.sendUnselectedCancel}>
-                            Send &ldquo;Unselected&rdquo; Cancel Email
-                          </button>
-                          <button className="btn btn-block btn-warning form-group" onClick={this.sendSelectedCancel}>
-                            Send &ldquo;Preselected&rdquo; Cancel Email
-                          </button>
-                          <button className="btn btn-block btn-warning form-group" onClick={this.sendReminderCancel}>
-                            Send &ldquo;Reminder&rdquo; Cancel Email
+                          {/*
+                            <button className="btn btn-block btn-warning form-group" onClick={this.sendUnselectedCancel}>
+                              Send &ldquo;Unselected&rdquo; Cancel Email
+                            </button>
+                            <button className="btn btn-block btn-warning form-group" onClick={this.sendSelectedCancel}>
+                              Send &ldquo;Preselected&rdquo; Cancel Email
+                            </button>
+                            <button className="btn btn-block btn-warning form-group" onClick={this.sendReminderCancel}>
+                              Send &ldquo;Reminder&rdquo; Cancel Email
+                            </button>
+                          */}
+                          <button className="btn btn-block btn-warning form-group" onClick={this.sendCancelInfo}>
+                            Send Cancel Information Email
                           </button>
                           <div className="row">
                             <div className="col">
