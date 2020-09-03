@@ -5,6 +5,7 @@ class ApplicationMailer < ActionMailer::Base
   prepend_view_path Rails.root.join('vendor', 'common', 'app', 'views')
 
   helper ViewAndControllerMethods
+  helper EmailHelper
 
   # after_action do
   #   sleep 8 unless Boolean.parse(@async)
@@ -20,15 +21,6 @@ class ApplicationMailer < ActionMailer::Base
     emails = [emails].flatten.map {|email| email.to_s.split(';').map {|e| e.strip.downcase}}
     emails = emails.flatten.uniq.select(&:present?)
     emails - Unsubscriber.where(category: 'E', value: emails, all: all).pluck(:value)
-  end
-
-  def get_full_path_to_asset(filename)
-    manifest_file = Rails.application.assets_manifest.assets[filename]
-    if manifest_file
-      File.join(Rails.application.assets_manifest.directory, manifest_file)
-    else
-      Rails.application.assets&.[](filename)&.filename
-    end
   end
 
   def mail(email: nil, skip_filter: false, include_gayle: false, **params)

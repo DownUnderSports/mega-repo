@@ -78,6 +78,7 @@ prepare() {
 function deploy() {
 
   export TARGET=$1
+  export CLEAR_CACHE=$2
 
   TMPVENDOR="$TMPDIR/$TARGET/vendor"
   TMPCOMMON="$TMPVENDOR/common"
@@ -233,6 +234,11 @@ function deploy() {
       fi
     else
       H_OR_G="heroku"
+      if [[ $CLEAR_CACHE ]]; then
+        echo "Clearing build cache for $REPO_NAME heroku app repo..."
+        echo
+        heroku repo:purge_cache -a "$REPO_NAME"
+      fi
       echo "Pulling from $REPO_NAME heroku app repo..."
       echo
       if [ ! -d $1 ] || [ -d $1/.git ]; then
@@ -298,21 +304,27 @@ function deploy() {
   heroku logs -a $REPO_NAME -n100
 }
 
-if [ -z "$JENKINS_HOME" ]; then
-  i=0
-  mapping=""
-  for profile do
+i=0
+mapping=""
+folders=()
+clear_cache=false
+for profile do
+  if [[ "$profile" == "--clear" ]]; then
+    clear_cache=true
+  else
     if echo $profile|grep -v '^test.*$' >/dev/null; then
       ((i+=1))
+      folders+=("$profile")
       if [[ $i -gt 1 ]]; then
         if [[ $# -gt 2 ]]; then mapping+=", "; else mapping+=" "; fi
         if [[ $i -eq $# ]]; then mapping+="and "; fi
       fi
       mapping+="'$profile'"
     fi
-  done
+  fi
+done
 
-
+if [ -z "$JENKINS_HOME" ]; then
   if [ -z "$mapping" ]; then exit 0; fi
 
   echo
@@ -328,10 +340,10 @@ echo "==================== Deploying the code to Heroku =================="
 echo
 
 # bash implicitly loops positional args
-for profile do
+for profile in "${folders[@]}"; do
   TMPTARGET=$(echo $profile | tr -s /)
   TMPTARGET=${TMPTARGET%/}
-  deploy $TMPTARGET 2>&1 | sed -re 's!(.*)!\['$TMPTARGET'\] \1!g'  &
+  deploy $TMPTARGET $clear_cache 2>&1 | sed -re 's!(.*)!\['$TMPTARGET'\] \1!g'  &
 done
 
 wait

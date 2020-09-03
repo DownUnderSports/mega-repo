@@ -18,7 +18,7 @@
   </row>
 </container>
 <container class="body-border">
-  <rows>
+  <row>
     <columns>
       <spacer size="16"></spacer>
       <p>
@@ -105,5 +105,5 @@
       </p>
       <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
     </columns>
-  </rows>
+  </row>
 </container>

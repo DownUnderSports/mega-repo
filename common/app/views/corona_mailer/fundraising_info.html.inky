@@ -15,7 +15,7 @@
   </row>
 </container>
 <container class="body-border">
-  <rows>
+  <row>
     <columns>
       <spacer size="16"></spacer>
       <p>
@@ -38,37 +38,105 @@
         However, we know that it is also important to have as much time to
         fundraise as possible in order to make your trip a reality. As such,
         Down Under Sports is offering our time-tested t-shirt fundraiser to you
-        now. Down Under Sports will collect and fulfill all submitted orders on
-        a weekly basis; orders will be shipped out each Wednesday.
+        now. We will collect and fulfill all submitted orders on a weekly basis;
+        orders will be shipped out each Wednesday.
       </p>
       <p>
         We encourage you to use this fundraiser as a way to help local
         charities of your choosing or to continue your fundraising for next
         summer. If your are fundraising for your trip, we ask that you do not
         submit funds into your account at this point in time. Please set aside
-        any profit earned from you t-shirt sales in cashiers checks or money
+        any profits earned from t-shirt sales using cashier's checks or money
         orders which you can submit at a later date.
       </p>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <div class="white-background pad blue-modal">
+        <h4 class="text-center">
+          SELLING T-SHIRTS
+        </h4>
+        <p>
+          The price of each shirt depends on the quantity that you purchase. We
+          suggest reselling each t-shirt for $20-$25 (or more!).
+        </p>
+        <%= link_to "https://www.youtube.com/watch?v=j3slSu2GjOs", class: 'btn btn-block btn-1' do %>
+          Click here to watch a video with more detailed instructions
+        <% end %>
+        <spacer size="32"></spacer>
+        <h4 class="text-center">
+          PRICE BREAKDOWN
+        </h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th># of Shirts</th>
+              <th>Cost Per Shirt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                1 - 9
+              </td>
+              <td>
+                $15
+              </td>
+            </tr>
+            <tr>
+              <td>
+                10 - 19
+              </td>
+              <td>
+                $10
+              </td>
+            </tr>
+            <tr>
+              <td>
+                20+
+              </td>
+              <td>
+                $7.50
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <spacer size="32"></spacer>
+        <h4 class="text-center">
+          EXTRA INCENTIVES!
+        </h4>
+        <ul>
+          <li>
+            Sell 20 t-shirts by October 31<sup>st</sup> to receive a free
+            drawstring bag &amp; and a free beach towel!<span class="text-danger">**</span>
+          </li>
+          <li>
+            Sell an additional 20 t-shirts by November 31<sup>st</sup> to
+            receive a free duffel bag!<span class="text-danger">**</span>
+          </li>
+        </ul>
+        <div class="text-right">
+          <small>
+            <i class="text-danger">
+              **While supplies last.
+            </i>
+          </small>
+        </div>
+      </div>
+    </columns>
+  </row>
+  <row>
+    <columns>
       <p>
-        For you to legally participate in these fundraising activities, and to
-        protect your NCAA eligibility, it is important that you do not deposit
-        any funds raised into a personal account.
-      </p>
-      <h1 class="text-center">
-        **T-SHIRT FUNDRAISING INFORMATION FLYER OR PARAGRAPH(S) HERE**
-      </h1>
-      <p>
-        We extend our deepest apologies for the time it will take to deal with
-        these unprecedented situations we find ourselves in. We wish you and
-        your families all the best during these difficult times. Our office
-        hours will still vary for the immediate future, and we also apologize
-        again for the interruption in customer service; if you need to reach us
-        please don't hesitate to send us an email or leave us a message.
+        We wish you and your families all the best during these difficult times.
+        If you need to reach us please don't hesitate to send us an email or
+        leave us a message.
       </p>
       <p>
         With Gratitude,
       </p>
       <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
     </columns>
-  </rows>
+  </row>
 </container>

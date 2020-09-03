@@ -15,7 +15,7 @@
   </row>
 </container>
 <container class="body-border">
-  <rows>
+  <row>
     <columns small="12" large="12">
       <spacer size="16"></spacer>
       <p>
@@ -28,13 +28,11 @@
         &mdash; Down Under Sports
       </p>
     </columns>
-  </rows>
-</container>
-<container>
-  <rows>
+  </row>
+  <row>
     <columns small="12" large="12">
       <spacer size="16"></spacer>
-      <%= image_tag "transfer-confirmed-banner.png", class: 'full', alt: "We look forward to seeing you in 2021!" %>
+      <%= email_image_tag "transfer-confirmed-banner.png", class: 'full', alt: "We look forward to seeing you in 2021!" %>
     </columns>
-  </rows>
+  </row>
 </container>

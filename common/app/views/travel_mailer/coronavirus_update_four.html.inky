@@ -7,7 +7,7 @@
   </row>
 </container>
 <container class="body-border">
-  <rows>
+  <row>
     <columns>
       <spacer size="16"></spacer>
       <p>
@@ -23,5 +23,5 @@
         &mdash; Down Under Sports
       </p>
     </columns>
-  </rows>
+  </row>
 </container>

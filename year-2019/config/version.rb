@@ -1,4 +1,4 @@
 module DownUnderSports
   # `git log -1 --date=short --format="%ad-%H"|sed 's/-/./g'`.strip
-  VERSION = '2020.09.02.34c7307ca0bf62ea65eda36ef0d680017d48975f'
+  VERSION = '2020.09.03.90e5aa1ca381ce41b54ca2218e33168958f76468'
 end
