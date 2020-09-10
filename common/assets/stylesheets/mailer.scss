@@ -427,6 +427,19 @@ table.table {
       text-align: right;
     }
   }
+  &.quick-columns {
+    > tbody {
+      > tr {
+        > td {
+          padding: 0 !important;
+          border-top: none !important;
+          &:first-child {
+            width: 60%;
+          }
+        }
+      }
+    }
+  }
 }
 
 hr, .hr {

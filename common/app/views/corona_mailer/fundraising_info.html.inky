@@ -23,48 +23,70 @@
       </p>
       <p>
         Thank you for your continued support of the Down Under Sports program.
-        We are diligently working to make sure that everything you need for the
-        2021 tours is prepped and ready to go.
       </p>
       <p>
         We know many of our participants have questions and concerns with
-        regards to raising funds needed to pay for their trip next year given
-        the current state of affairs with the coronavirus and travel
-        restrictions. We feel it is best not to start directly fundraising until
-        we know that travel bans will be lifted and that our participants will
-        be allowed entry into Australia.
+        regards to their trip next year given the current state of affairs with
+        the coronavirus and travel restrictions. We share those concerns and
+        feel it is best not to start receiving donations directly for your trip
+        until we know that travel bans will be lifted and that US travelers will
+        be allowed entry into Australia next summer.
       </p>
       <p>
-        However, we know that it is also important to have as much time to
-        fundraise as possible in order to make your trip a reality. As such,
-        Down Under Sports is offering our time-tested t-shirt fundraiser to you
-        now. We will collect and fulfill all submitted orders on a weekly basis;
-        orders will be shipped out each Wednesday.
+        We are hopeful this will be confirmed by the end of the year and are
+        diligently working to make sure that everything you need for the 2021
+        program is prepped and ready to go. We know how important it is to have
+        as much time to fundraise as possible in order to make your trip a
+        reality; however, the only fundraiser that we feel comfortable allowing
+        at this time is t-shirt sales. We will fulfill all submitted orders on a
+        weekly basis and only collect the money for the cost of your t-shirt
+        order. This fundraiser not only helps our company while regular
+        operations are on hold, it can also be used as a way to help local
+        charities of your choosing.
       </p>
       <p>
-        We encourage you to use this fundraiser as a way to help local
-        charities of your choosing or to continue your fundraising for next
-        summer. If your are fundraising for your trip, we ask that you do not
-        submit funds into your account at this point in time. Please set aside
-        any profits earned from t-shirt sales using cashier's checks or money
-        orders which you can submit at a later date.
+        We wish you and your families all the best during these difficult times.
+        If you need to reach us please don't hesitate to send us an email or
+        leave us a message.
       </p>
+      <p>
+        With Gratitude,
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
     </columns>
   </row>
   <row>
     <columns>
       <div class="white-background pad blue-modal">
         <h4 class="text-center">
-          SELLING T-SHIRTS
+          SELLING IN SEPTEMBER
         </h4>
-        <p>
-          The price of each shirt depends on the quantity that you purchase. We
-          suggest reselling each t-shirt for $20-$25 (or more!).
-        </p>
-        <%= link_to "https://www.youtube.com/watch?v=j3slSu2GjOs", class: 'btn btn-block btn-1' do %>
-          Click here to watch a video with more detailed instructions
-        <% end %>
-        <spacer size="32"></spacer>
+
+        <table class="table quick-columns">
+          <tbody>
+            <tr>
+              <td>
+                <p>
+                  The price of each shirt depends on the quantity that you
+                  purchase. We suggest reselling each t-shirt for $25 (or more!).<span class="text-primary">*</span>
+                </p>
+                <p>
+                  Sell 10 or more t-shirts by September 30<sup>th</sup>, 2020 to
+                  receive a free drawstring backpack!<span class="text-danger">**</span>
+                </p>
+                <p>
+                  Remember to follow all fundraising rules in the
+                  <a href="https://www.downundersports.com/terms#important-fundraising-information">
+                    program terms and conditions.
+                  </a>
+                </p>
+              </td>
+              <td>
+                <%= email_image_tag "drawstring-bag.png", class: 'full', alt: "Sample Bag" %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <h4 class="text-center">
           PRICE BREAKDOWN
         </h4>
@@ -102,41 +124,22 @@
             </tr>
           </tbody>
         </table>
-        <spacer size="32"></spacer>
-        <h4 class="text-center">
-          EXTRA INCENTIVES!
-        </h4>
-        <ul>
-          <li>
-            Sell 20 t-shirts by October 31<sup>st</sup> to receive a free
-            drawstring bag &amp; and a free beach towel!<span class="text-danger">**</span>
-          </li>
-          <li>
-            Sell an additional 20 t-shirts by November 31<sup>st</sup> to
-            receive a free duffel bag!<span class="text-danger">**</span>
-          </li>
-        </ul>
         <div class="text-right">
           <small>
             <i class="text-danger">
-              **While supplies last.
+              **One incentive per participant; while supplies last.
+            </i>
+          </small>
+          <spacer size="12"></spacer>
+          <small>
+            <i class="text-primary">
+              *If you are fundraising for your trip, we ask that you set aside
+              any profits earned from t-shirt sales to submit at a later date
+              using cashier's checks or money orders.
             </i>
           </small>
         </div>
       </div>
-    </columns>
-  </row>
-  <row>
-    <columns>
-      <p>
-        We wish you and your families all the best during these difficult times.
-        If you need to reach us please don't hesitate to send us an email or
-        leave us a message.
-      </p>
-      <p>
-        With Gratitude,
-      </p>
-      <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
     </columns>
   </row>
 </container>

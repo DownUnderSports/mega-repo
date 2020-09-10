@@ -122,6 +122,10 @@ class UserPolicy < ApplicationPolicy
     corona_emails?
   end
 
+  def cancel_info?
+    corona_emails?
+  end
+
   private
     def fence_emails?
       user_is_staff? &&
