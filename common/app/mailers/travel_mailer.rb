@@ -122,7 +122,7 @@ class TravelMailer < ImportantMailer
 
     return false unless email.present?
 
-    mail skip_filter: true, to: email, subject: "Refund Information"
+    mail skip_filter: true, to: email, subject: "Refund Information", include_gayle: true
   end
 
   def refund_amount

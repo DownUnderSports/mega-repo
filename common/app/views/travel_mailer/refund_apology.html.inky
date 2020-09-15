@@ -11,7 +11,7 @@
 <container class="header">
   <row>
     <columns>
-      <%= image_tag image_url('silver-fern.png'), class: 'img-fluid', style: "max-height: 45px; float: right" %>
+      <%= email_image_tag 'silver-fern.png', class: 'img-fluid', style: "max-height: 45px; float: right" %>
       <h1 class="text-center">Our Apologies</h1>
     </columns>
   </row>
@@ -37,34 +37,34 @@
         certainly reinforced the importance of family, tradition, and community.
         Whether it be health-wise or economically, it is likely that you or
         someone you love has been directly affected by the pandemic or the
-        current political climate; our staff and families are no exception. We
-        extend our deepest apologies for the time it has taken to deal with
-        these unprecedented situations we find ourselves in and to find workable
-        solutions for our cancelled travelers. But the undeniable reality is
-        that nothing we could have done as a company could have prevented the
-        Australian government from ordering the border closed to foreign
-        travelers. The company cannot immediately refund cancelled travelers
-        because many of the costs associated with this program are incurred
-        prior to each year's travel. Our staff and vendors have already been
-        paid for their work in preparing for this year's tournaments.
+        current political climate; our staff and families are no exception. The
+        undeniable reality is that nothing we could have done as a company could
+        have prevented the Australian government from ordering the border closed
+        to foreign travelers. The company cannot immediately refund cancelled
+        travelers because many of the costs associated with this program are
+        incurred prior to each year's travel. Our staff and vendors have already
+        been paid for their work in preparing for this year's tournaments.
       </p>
       <p>
         Accordingly, Down Under Sports cannot refund monies to cancelled
-        travelers unless and until normal operations resume. We understand the
-        hardships that this is causing, and we are suffering alongside you, with
-        many of our staff and employees having been terminated or furloughed;
-        however, it is the only way we are able to pay our remaining employees
-        as well as provide this once-in-a-lifetime experience to our
-        participants next summer. This is a small, family-run sports travel
-        business that has been devastated by the very sudden and ongoing
-        lockdowns and travel restrictions. We are heart-broken at the
-        possibility of seeing George and Shelley's legacy so quickly destroyed
-        after their passing and due entirely to factors out of our control.
+        travelers unless and until normal operations resume. Since we have
+        postponed our 2020 tournaments, our operations are essentially on hold
+        until we can begin our regular recruiting which is unlikely to resume
+        until January 2021 at the earliest. We understand the hardships that
+        this causes, and we are suffering alongside you, with many of our staff
+        and employees having been terminated or furloughed. This is a small,
+        family-run sports travel business that has been devastated by the very
+        sudden and ongoing lockdowns and travel restrictions. We are
+        heart-broken at the possibility of seeing George and Shelley's legacy so
+        quickly destroyed after their passing and due entirely to factors out of
+        our control.
       </p>
       <p>
-        We wish you and your families all the best during these difficult times.
-        We hope that you will do the same for ours and allow us the time we need
-        to rebuild this amazing company and keep their dream alive.
+        We extend our deepest apologies for the time it will take to deal with
+        these unprecedented situations we find ourselves in. We wish you and
+        your families all the best during these difficult times. We hope that
+        you will do the same for ours and allow us the time we need to rebuild
+        this amazing company and keep our founders' dream alive.
       </p>
       <p>
         Sincerely,

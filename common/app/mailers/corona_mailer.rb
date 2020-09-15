@@ -22,6 +22,11 @@ class CoronaMailer < ImportantMailer
                             "Fundraising Status"
   end
 
+  def september_cancel_update
+    send_email_with_history "September Update (Cancels)",
+                            "September Update"
+  end
+
   private
     def send_email_with_history(message, subject = "Account Options")
       @user = User[params[:user_id]]
@@ -37,9 +42,9 @@ class CoronaMailer < ImportantMailer
         )&.map(&:strip)&.select(&:present?)&.presence ||
         @user.athlete_and_parent_emails.presence
 
-      m = mail skip_filter: true, to: email, subject: subject
+      m = mail skip_filter: true, to: email, subject: subject, include_gayle: true
 
-      if m && email.present?
+      if m && email.present? && !params[:premarked]
         m.after_send do
           @user.contact_histories.create(
             category: :email,

@@ -60,18 +60,17 @@
       </p>
       <p>
         We sent the options below to all of our 2020 travelers that could not
-        transfer to 2021. Please select from the options below so we can update
+        defer to 2021. Please select from the options below so we can update
         your account accordingly.
       </p>
       <ol class="spaced-list extra-padding ">
         <li>
           I would like to participate in the 2021 tournaments as an athlete,
           coach's assistant, supporter, or another role (depending on
-          eligibility). Please roll my account over for the 2021 program.
+          eligibility). Please roll my account over for the 2021 program.<span class="text-danger">*</span>
         </li>
         <li>
-          I would like to use the funds in my account as a travel credit. Please
-          send me a list of options available.
+          I would like to use the funds in my account as a travel credit.
         </li>
         <li>
           I would like to donate the funds in my account to go toward a 2021
@@ -104,6 +103,17 @@
         Sincerely,
       </p>
       <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <span class="text-danger">
+        *We know many of our participants have questions and concerns with
+        regards to their trip next year given the current state of affairs with
+        the coronavirus and travel restrictions. We share those concerns and
+        are closely monitoring the situation until we have more clarity on what
+        travel restrictions may be in place going into 2021.
+      </span>
     </columns>
   </row>
 </container>
