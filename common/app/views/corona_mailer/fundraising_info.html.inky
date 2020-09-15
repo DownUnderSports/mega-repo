@@ -5,12 +5,14 @@
       <h3 class="text-center">
         Fundraising In Our Current Climate
       </h3>
+      <% if @user %>
       <center>
         <menu class="text-center">
           <item>Name: <%= @user.print_names %></item>
           <item>DUS ID: <%= @user.dus_id %></item>
         </menu>
       </center>
+      <% end %>
     </columns>
   </row>
 </container>

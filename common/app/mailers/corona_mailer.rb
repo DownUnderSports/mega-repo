@@ -40,11 +40,11 @@ class CoronaMailer < ImportantMailer
             params[:email].map(&:to_s)
           end
         )&.map(&:strip)&.select(&:present?)&.presence ||
-        @user.athlete_and_parent_emails.presence
+        @user&.athlete_and_parent_emails.presence
 
       m = mail skip_filter: true, to: email, subject: subject, include_gayle: true
 
-      if m && email.present? && !params[:premarked]
+      if m && email.present? && @user
         m.after_send do
           @user.contact_histories.create(
             category: :email,
