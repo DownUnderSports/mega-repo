@@ -235,27 +235,6 @@ export default class InfokitForm extends Component {
         }
       >
         {
-          // this.state.successfullySubmitted ? (
-          //   <section>
-          //     <header>
-          //       <div className='row mb-3'>
-          //         <div className='col text-center alert alert-success'>
-          //           <h1 className=''>
-          //             Your Information Request Has Been Submitted!
-          //           </h1>
-          //           <p>
-          //             Your next step is to view our information video where we will cover pricing, fundraising opportunities, travel dates and available discounts.
-          //           </p>
-          //         </div>
-          //       </div>
-          //     </header>
-          //     <div className='row'>
-          //       <Link to={`/videos/i/${dusId}`} className='btn btn-block btn-primary' style={{fontSize: '1.15rem'}}>
-          //         Click here to continue to our information video.
-          //       </Link>
-          //     </div>
-          //   </section>
-          // )
           this.state.successfullySubmitted ? (
             <section>
               <header>
@@ -265,11 +244,16 @@ export default class InfokitForm extends Component {
                       Your Information Request Has Been Submitted!
                     </h1>
                     <p>
-                      You will receive an email at the provided address{this.state.form.guardian.emai ? 'es' : ''} shortly.
+                      Your next step is to view our information video where we will cover pricing, fundraising opportunities, travel dates and available discounts.
                     </p>
                   </div>
                 </div>
               </header>
+              <div className='row'>
+                <Link to={`/videos/i/${dusId}`} className='btn btn-block btn-primary' style={{fontSize: '1.15rem'}}>
+                  Click here to continue to our information video.
+                </Link>
+              </div>
             </section>
           ) : (
             <form
