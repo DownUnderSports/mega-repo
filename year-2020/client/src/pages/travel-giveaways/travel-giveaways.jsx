@@ -3,9 +3,9 @@ import { DisplayOrLoading, Link } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import SimpleMDE from 'simplemde'
 import 'simplemde/dist/simplemde.min.css'
-import './thank-you-tickets.css'
+import './travel-giveaways.css'
 
-export default class ThankYouTicketTermsPage extends Component {
+export default class TravelGiveawaysTermsPage extends Component {
   state = {
     loading: true,
     errors: null,
@@ -36,7 +36,7 @@ export default class ThankYouTicketTermsPage extends Component {
 
   getValues = async () => {
     try {
-      const result = await fetch('/admin/thank-you-tickets.json'),
+      const result = await fetch('/admin/travel-giveaways.json'),
             { terms = {} } = await result.json(),
             { body } = terms || {}
       await (
@@ -60,7 +60,7 @@ export default class ThankYouTicketTermsPage extends Component {
   submitChanges = async () => {
     try {
       await (new Promise(r => this.setState({ loading: true, errors: null }, r)))
-      await fetch('/admin/thank-you-tickets.json', {
+      await fetch('/admin/travel-giveaways.json', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json; charset=utf-8"
@@ -105,11 +105,36 @@ export default class ThankYouTicketTermsPage extends Component {
     return <section className="Terms">
       <header className="form-group">
         <h3>
-          Edit Thank You Ticket Rules
-          <Link to="https://www.downundersports.com/thank-you-tickets" className="btn btn-success float-right" target="_terms">View Live</Link>
+          Edit Travel Giveaway (Thank You Ticket) Rules
+          <Link to="https://www.downundersports.com/travel-giveaways" className="btn btn-success float-right" target="_terms">View Live</Link>
         </h3>
         <div className="clearfix"></div>
       </header>
+      <h5>
+        Special Substitution Values:
+      </h5>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              Value
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              %YEAR%
+            </td>
+            <td>
+              Program year for the shown terms
+            </td>
+          </tr>
+        </tbody>
+      </table>
       { this.renderErrors() }
       <div className="row form-group">
         <div className="col">

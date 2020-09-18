@@ -1,7 +1,7 @@
 import React          from 'react';
 import AsyncComponent from 'common/js/components/component/async'
 import ReactJsonView  from 'react-json-view'
-import { DisplayOrLoading, Link }       from 'react-component-templates/components';
+import { DisplayOrLoading, Link } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 
 const accountingRefundRequestsUrl = '/admin/accounting/refund_requests'

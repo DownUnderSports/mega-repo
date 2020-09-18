@@ -26,7 +26,7 @@ module Admin
 
           last_modified = relations.try(:maximum, %q(GREATEST(user_relations.updated_at, users.updated_at)))
 
-          if stale? relations, last_modified: last_modified 
+          if Boolean.parse(params[:force]) || stale?(relations, last_modified: last_modified)
             return render json: {
               relations: relations.map do |rel|
                   {

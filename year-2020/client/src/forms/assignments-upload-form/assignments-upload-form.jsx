@@ -3,6 +3,9 @@ import { DisplayOrLoading } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 
 export default class AssignmentsUploadForm extends Component {
+  get prefix() {
+    return String(this.props.prefix || "")
+  }
 
   constructor(props) {
     super(props)
@@ -73,14 +76,14 @@ export default class AssignmentsUploadForm extends Component {
               <div className="custom-file">
                 <input
                   type="file"
-                  id="upload-file"
+                  id={`${this.prefix}upload-file`}
                   name="upload[file]"
                   className="form-control-file"
                   placeholder='select sponsor photo'
                   onChange={this.setFile}
                   required={!this.state.file}
                 />
-                <label className="custom-file-label with-text" htmlFor="upload-file">
+                <label className="custom-file-label with-text" htmlFor={`${this.prefix}upload-file`}>
                   <span className="custom-file-text">
                     {
                       (this.state.file && this.state.file.name) || 'Select File (CSV: staff_dus_id, dus_id)'

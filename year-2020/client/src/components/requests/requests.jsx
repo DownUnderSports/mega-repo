@@ -3,6 +3,7 @@ import { DisplayOrLoading, CardSection } from 'react-component-templates/compone
 import { TextField } from 'react-component-templates/form-components';
 import { Objected } from 'react-component-templates/helpers';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
+import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 
 const baseUrl = '/admin/users'
 
@@ -23,7 +24,10 @@ export default class Requests extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if(prevProps.id !== this.props.id) await this.getRequests()
+    if(
+      (prevProps.id !== this.props.id)
+      || (prevProps.lastFetch !== this.props.lastFetch)
+    ) await this.getRequests()
   }
 
   capitalize(str) {
@@ -86,9 +90,11 @@ export default class Requests extends Component {
   }
 
   render() {
+    const { reloading = false } = this.state || {}
+
     return (
       <DisplayOrLoading
-        display={!this.state.reloading}
+        display={!reloading || this.state.allRequests.length}
         request='LOADING...'
         loadingElement={
           <JellyBox />
@@ -101,24 +107,36 @@ export default class Requests extends Component {
               <div className="col-auto"></div>
               <div className="col">Traveler Requests</div>
               <div className="col-auto">
-                <i className="material-icons clickable" onClick={this.forceGetRequests}>
-                  refresh
-                </i>
+                {
+                  !reloading && (
+                    <i className="material-icons clickable" onClick={this.forceGetRequests}>
+                      refresh
+                    </i>
+                  )
+                }
               </div>
             </div>
           }
           subLabel={
-            <div className='row'>
-              <div className='col text-center'>
-                <TextField
-                  name={`search[requests]`}
-                  onChange={(e) => this.filter(e.target.value)}
-                  className='form-control'
-                  autoComplete='off'
-                  skipExtras
-                />
-              </div>
-            </div>
+            reloading
+              ? (
+                  <div className="d-flex justify-content-center my-3">
+                    <RunningDots className="la-dark la-2x" />
+                  </div>
+                )
+              : (
+                  <div className='row'>
+                    <div className='col text-center'>
+                      <TextField
+                        name={`search[requests]`}
+                        onChange={(e) => this.filter(e.target.value)}
+                        className='form-control'
+                        autoComplete='off'
+                        skipExtras
+                      />
+                    </div>
+                  </div>
+                )
           }
           contentProps={{className: 'list-group'}}
         >

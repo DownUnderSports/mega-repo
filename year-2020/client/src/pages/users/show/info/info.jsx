@@ -208,7 +208,11 @@ export default class UsersShowInfoPage extends Component {
             </div>
             {
               relations && relations.map((rel, i) => (
-                <Link key={i} to={`/admin/users/${rel.related_user_id}`} className={`nav-item nav-link ${rel.traveling && 'border-success text-success'} ${rel.canceled && 'border-danger text-danger'}`}>
+                <Link
+                  key={rel.related_user_id}
+                  to={`/admin/users/${rel.related_user_id}`}
+                  className={`nav-item nav-link ${rel.traveling && 'border-success text-success'} ${rel.canceled && 'border-danger text-danger'}`}
+                >
                   {rel.first} {rel.last} - {rel.relationship} ({rel.category})
                 </Link>
               ))
@@ -417,11 +421,11 @@ export default class UsersShowInfoPage extends Component {
               )
             }
             { !!traveler && <Printing link={final_packet_base} /> }
-            { !!traveler && <Requests id={id} key={`requests-${lastFetch}`} /> }
-            <Notes id={id} key={`notes-${lastFetch}`} />
-            <ContactHistories id={id} key={`history-${lastFetch}`} />
-            <ContactAttempts id={id} key={`attempts-${lastFetch}`} />
-            <Mailings id={id} />
+            { !!traveler && <Requests id={id} key={`requests-${id}`} lastFetch={lastFetch} /> }
+            <Notes id={id} key={`notes-${id}`} lastFetch={lastFetch} />
+            <ContactHistories id={id} key={`history-${id}`} lastFetch={lastFetch} />
+            <ContactAttempts id={id} key={`attempts-${id}`} lastFetch={lastFetch} />
+            <Mailings id={id} key={`mailings-${id}`} lastFetch={lastFetch} />
             <CardSection
               id="sponsor_photo"
               className='mb-3 border border-info bg-info text-white scroll-margin'
@@ -684,7 +688,6 @@ export default class UsersShowInfoPage extends Component {
               <hr/>
               <hr/>
             </div>
-            <h2 className='text-center mb-3'>Related Users</h2>
             <UserRelations id={id} setRelations={this.setRelations}/>
           </div>
         </div>

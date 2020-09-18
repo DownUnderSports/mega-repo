@@ -32,6 +32,17 @@ class InfokitMailer < ApplicationMailer
     end
   end
 
+  def delayed_infokit
+    @user = User.get(params[:id])
+    m = mail cc: params[:emails].presence, subject: 'Program Information Not Yet Available'
+    if m
+      m.after_send do
+        @user.contact_histories.create(message: 'Sent Infokit Delayed Email', category: :email, staff_id: auto_worker.category_id)
+      end
+    end
+    m
+  end
+
   def send_infokit(athlete_id, email, dus_id, *args)
     @athlete = Athlete.find_or_retry_by(id: athlete_id).user
     @user = User.get(dus_id) || @athlete

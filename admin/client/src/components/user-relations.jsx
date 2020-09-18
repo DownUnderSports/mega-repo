@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DisplayOrLoading } from 'react-component-templates/components';
 import UserInfo from 'components/user-info'
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
+import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 
 
 const usersUrl = '/admin/users'
@@ -29,13 +30,15 @@ export default class UserRelations extends Component {
     if(this._fetchable) this._fetchable.abort()
   }
 
-  getRelations = async () => {
+  forceGetRelations = () => this.getRelations(true)
+
+  getRelations = async (force = false) => {
     if(this._unmounted) return false
     this.setState({reloading: true})
     try {
       this.abortFetch()
       if(!this.props.id) throw new Error('UserRelations: No User ID')
-      this._fetchable = fetch(`${usersUrl}/${this.props.id}/relations.json`, {timeout: 5000})
+      this._fetchable = fetch(`${usersUrl}/${this.props.id}/relations.json?force=${force ? 1 : 0}`, {timeout: 5000})
       const result = await this._fetchable,
             retrieved = await result.json()
 
@@ -70,36 +73,64 @@ export default class UserRelations extends Component {
     } = this.state || {}
 
     return (
-      <DisplayOrLoading
-        display={!reloading}
-        message='LOADING...'
-        loadingElement={
-          <JellyBox />
-        }
-      >
+      <>
+        <div key="title" className="row">
+          <div className="col-auto">
+          </div>
+          <div className="col">
+            <h2 className='text-center mb-3'>Related Users</h2>
+          </div>
+          <div className="col-auto">
+            {
+              !reloading && (
+                <div className="d-flex justify-content-center">
+                  <i className="ml-3 material-icons clickable" onClick={this.forceGetRelations}>
+                    refresh
+                  </i>
+                </div>
+              )
+            }
+          </div>
+        </div>
         {
-          relations ? (
-            relations.map((r, k) => (
-              <UserInfo
-                key={r.related_user_id || k}
-                header={this.capitalize(r.relationship || 'New Relation') + ' Info'}
-                id={r.related_user_id}
-                formId={r.id}
-                relationship={r.relationship}
-                showRelationship={r.showRelationship || r.relationship}
-                url={ `${usersUrl}/${this.props.id}/relations` }
-                onSuccess={() => this.getRelations()}
-                onCancel={ !r.id && (() => this.removeRelation(k))}
-              />
-            ))
-          ) : (
-            'No Relations'
+          !!reloading && !!relations.length && (
+            <div key="loading-dots" className="d-flex justify-content-center">
+              <RunningDots className="la-dark la-2x" />
+            </div>
           )
         }
-        <button className='mt-3 btn-block btn-primary' onClick={() => this.setState({relations: [...this.state.relations, {showRelationship: true}]})}>
-          Add Relation
-        </button>
-      </DisplayOrLoading>
+        <DisplayOrLoading
+          key="relations-list"
+          display={!reloading || (relations && relations.length)}
+          message='LOADING...'
+          loadingElement={
+            <JellyBox />
+          }
+        >
+          {
+            relations ? (
+              relations.map((r, k) => (
+                <UserInfo
+                  key={r.related_user_id || k}
+                  header={this.capitalize(r.relationship || 'New Relation') + ' Info'}
+                  id={r.related_user_id}
+                  formId={r.id}
+                  relationship={r.relationship}
+                  showRelationship={r.showRelationship || r.relationship}
+                  url={ `${usersUrl}/${this.props.id}/relations` }
+                  onSuccess={() => this.getRelations()}
+                  onCancel={ !r.id && (() => this.removeRelation(k))}
+                />
+              ))
+            ) : (
+              'No Relations'
+            )
+          }
+          <button className='mt-3 btn-block btn-primary' onClick={() => this.setState({relations: [...this.state.relations, {showRelationship: true}]})}>
+            Add Relation
+          </button>
+        </DisplayOrLoading>
+      </>
     );
   }
 }

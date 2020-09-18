@@ -1609,20 +1609,36 @@ class User < ApplicationRecord
             return invalid.call(parent.errors.full_messages.map {|err| "Guardian: #{err}"})
           end
         end
+        if active_year > 2020
+          mailings.create(
+            category: 'infokit',
+            address: address.presence || parent.address.presence,
+            is_home: true,
+            auto: true
+          ) unless has_infokit?
 
-        mailings.create(
-          category: 'infokit',
-          address: address.presence || parent.address.presence,
-          is_home: true,
-          auto: true
-        ) unless has_infokit?
+          [
+            self,
+            *related_users.where.not(email: nil).
+            where_not_exists(:contact_histories, message: 'Sent Infokit Email')
+          ].each do |u|
+            InfokitMailer.send_infokit(category_id, u.email, u.dus_id).deliver_later if u.email.present?
+          end
+        else
+          emails = [
+            self,
+            *related_users.where.not(email: nil).
+            where_not_exists(:contact_histories, message: 'Sent Infokit Email')
+          ].map do |u|
+            u.email
+          end.select(&:present?).uniq & athlete_and_parent_emails
 
-        [
-          self,
-          *related_users.where.not(email: nil).
-          where_not_exists(:contact_histories, message: 'Sent Infokit Email')
-        ].each do |u|
-          InfokitMailer.send_infokit(category_id, u.email, u.dus_id).deliver_later if u.email.present?
+          if emails.present?
+            InfokitMailer.
+              with(id: id, emails: emails).
+              delayed_infokit.
+              deliver_later
+          end
         end
 
         return true

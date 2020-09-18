@@ -44,6 +44,10 @@
 .btn.with-icon.large {
   font-size: 2rem;
 }
+.rounded-top-0 {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
 .material-icons {
   vertical-align: middle !important;
 }
@@ -112,6 +116,140 @@
 i.material-icons.input-group-text,
 .input-group-text i.material-icons {
   font-size: 1.5rem;
+}
+.nav.collapsable {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.nav.collapsable input.nav-trigger {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+.nav.collapsable .nav-link {
+  transition: all 0.25s ease-in-out;
+  text-decoration: none;
+  white-space: nowrap;
+  width: 100%;
+}
+.nav.collapsable .nav-link:hover {
+  font-size: 1.15em;
+}
+.nav.collapsable .nav-link.active {
+  position: relative;
+  font-weight: bold;
+}
+@media (min-width: 768px) {
+  .nav.collapsable {
+    display: flex !important;
+    flex-flow: row nowrap;
+  }
+  .nav.collapsable .nav-link {
+    margin-left: 0.25rem;
+  }
+}
+@media (max-width: 767px) {
+  .nav.collapsable {
+    border: none;
+    margin-left: 1rem;
+    margin-right: 4rem;
+    flex: 1 1 100%;
+  }
+  .nav.collapsable label.nav-trigger,
+  .nav.collapsable label[for=nav-trigger] {
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    right: 0;
+    top: 0;
+  }
+  .nav.collapsable label.nav-trigger > span,
+  .nav.collapsable label[for=nav-trigger] > span {
+    position: absolute;
+    display: inline-block;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+  }
+  .nav.collapsable label.nav-trigger > span span,
+  .nav.collapsable label[for=nav-trigger] > span span {
+    position: relative;
+    top: 0.85rem;
+  }
+  .nav.collapsable label.nav-trigger > span span,
+  .nav.collapsable label[for=nav-trigger] > span span,
+  .nav.collapsable label.nav-trigger > span span:before,
+  .nav.collapsable label[for=nav-trigger] > span span:before,
+  .nav.collapsable label.nav-trigger > span span:after,
+  .nav.collapsable label[for=nav-trigger] > span span:after {
+    width: 2rem;
+    height: 0.3rem;
+    background: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.7);
+    position: absolute;
+    display: block;
+    content: '';
+    transition: all 500ms ease-in-out;
+  }
+  .nav.collapsable label.nav-trigger > span span:before,
+  .nav.collapsable label[for=nav-trigger] > span span:before {
+    top: -0.5rem;
+  }
+  .nav.collapsable label.nav-trigger > span span:after,
+  .nav.collapsable label[for=nav-trigger] > span span:after {
+    bottom: -0.5rem;
+  }
+  .nav.collapsable .nav-link {
+    border-radius: unset;
+    opacity: 1;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    overflow: hidden;
+    position: relative;
+  }
+  .nav.collapsable .nav-link.active {
+    display: block !important;
+    max-height: 500px;
+    padding: 0.5em 1em !important;
+  }
+  .nav.collapsable .nav-link {
+    max-height: 0;
+    padding: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+  }
+  .nav.collapsable .nav-trigger:checked ~ .nav-link {
+    display: block;
+    max-height: 100%;
+    padding: 0.5em 1em;
+    border-width: 1px;
+  }
+  .nav.collapsable .nav-trigger:checked ~ .nav-link::last-of-type {
+    border: 0;
+  }
+  .nav.collapsable .nav-trigger:checked+label.nav-trigger span {
+    background-color: transparent;
+  }
+  .nav.collapsable .nav-trigger:checked+label.nav-trigger span:before,
+  .nav.collapsable .nav-trigger:checked+label.nav-trigger span:after {
+    background: rgba(251,97,97,0.8);
+    background: rgba(0,0,128,0.8);
+    top: 0;
+    box-shadow: 0 0 7px 1px #efefef;
+    width: 2rem;
+  }
+  .nav.collapsable .nav-trigger:checked+label.nav-trigger span:before {
+    transform: rotate(45deg);
+  }
+  .nav.collapsable .nav-trigger:checked+label.nav-trigger span:after {
+    transform: rotate(-45deg);
+  }
+}
+.scroll-margin {
+  scroll-margin-top: 100px;
 }
 :root {
   --main-color: #1a8fff;

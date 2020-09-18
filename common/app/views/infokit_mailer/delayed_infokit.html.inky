@@ -1,0 +1,38 @@
+<container class="header">
+  <row>
+    <columns>
+      <h3 class="text-center">
+        Thank you for your interest in Competing Down Under!
+      </h3>
+    </columns>
+  </row>
+</container>
+
+<container class="body-border">
+  <row>
+    <columns>
+      <spacer size="32"></spacer>
+      <p>
+        G'Day <%= @user.print_first_name_only %>!
+      </p>
+      <p>
+        Thank you for requesting information about the Down Under Sports
+        program! We are not yet ready to provide details on the 2021 tours in
+        Australia; however, we will be sure to send your information packet
+        when we have more clarity on what travel restrictions may be in place
+        going into 2021.
+      </p>
+      <p>
+        We sincerely appreciate your interest in our program and can't wait
+        until things have settled enough to move forward with our 2021 tours. We
+        wish you and your families all the best. If you need to reach us please
+        don't hesitate to send us an email or leave us a message.
+      </p>
+      <p>
+        Cheers!
+      </p>
+      <%= render partial: 'shared/email_footer', locals: { skip_hours: :variable } %>
+    </columns>
+  </row>
+  <spacer size="32"></spacer>
+</container>

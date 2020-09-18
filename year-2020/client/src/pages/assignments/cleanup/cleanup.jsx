@@ -10,16 +10,20 @@ import InvitableAthleteForm from 'forms/invitable-athlete-form'
 export default class AssignmentsCleanupPage extends Component {
   static contextType = CurrentUser.Context
 
-  version = '0.0.2'
+  version = '0.0.3'
 
   state = {
     selectedId: null,
     checkingId: null,
     grabBag: [],
-    stats: null,
+    stats: [],
     error: null,
     available: false,
-    toggle: false
+    loading: false,
+    showStats: false,
+    admin: false,
+    sendingEmail: false,
+    emailStatus: null,
   }
 
   get available() {
@@ -67,8 +71,8 @@ export default class AssignmentsCleanupPage extends Component {
     return Array.isArray(this.state.stats) && this.state.stats
   }
 
-  get toggle() {
-    return this.state.toggle
+  get loading() {
+    return this.state.loading
   }
 
   get wrongVersion() {
@@ -97,6 +101,12 @@ export default class AssignmentsCleanupPage extends Component {
               break;
             case 'stats':
               this._setStats(data)
+              break;
+            case 'admin':
+              this._setAdmin(data)
+              break;
+            case 'stats_email':
+              this._setStatsEmail(data)
               break;
             case 'availability':
               this._checkAvailability(data)
@@ -128,16 +138,23 @@ export default class AssignmentsCleanupPage extends Component {
     this.setState({ error: err.message || err.toString() })
   }
 
-  _getChannel = async () => {
-    if(!!AuthStatus.token) {
-      if(!AuthStatus.authenticationProven) {
-        CleanupChannel.disconnect()
-        await AuthStatus.reauthenticate()
+  _getChannel = async ({ token }) => {
+    console.log(token)
+    try {
+      if(!!token) {
+        if(!AuthStatus.authenticationProven) {
+          console.log(AuthStatus.authenticationProven)
+          CleanupChannel.disconnect()
+          return AuthStatus.reauthenticate()
+        }
+        await this._loadCurrentUser()
+        this.channel = this.channel || CleanupChannel.openChannel(this._onMessageReceived)
+        this.setState({ available: true })
+      } else {
+        if(this.available) this.setState({ available: false })
       }
-      await this._loadCurrentUser()
-      this.channel = this.channel || CleanupChannel.openChannel(this._onMessageReceived)
-      this.setState({ available: true })
-    } else {
+    } catch(err) {
+      console.error(err)
       if(this.available) this.setState({ available: false })
     }
   }
@@ -198,15 +215,21 @@ export default class AssignmentsCleanupPage extends Component {
 
   _setGrabBag = async (data) => {
     if(data['user_id'] === await this.currentUserIdAsync) {
-      this._setStats(data)
       this.setState({ grabBag: data['sample_ids'] || [] }, this._selectId)
+      this._setAdmin(data)
     }
   }
+
+  _setAdmin = async (data) =>
+    data
+    && 'admin' in data
+    && data['user_id'] === await this.currentUserIdAsync
+    && this.setState({ admin: !!data['admin'] })
 
   _setStats = (data) =>
     data
     && 'stats' in data
-    && this.setState({ stats: data['stats'], toggle: false })
+    && this.setState({ stats: data['stats'], loading: false })
 
   _selectId = () => {
     if(!this.state.grabBag.length) return this._newGrabBag()
@@ -217,21 +240,44 @@ export default class AssignmentsCleanupPage extends Component {
     this.setState({ selectedId, selectedTime }, this._checkId)
   }
 
-  _openChannel = () => {
-    AuthStatus.subscribe(this._getChannel)
-    this._getChannel()
-  }
+  _openChannel = () => AuthStatus.subscribeAndCall(this._getChannel)
 
   _checkCanViewStats = () => this.channel.perform('can_view_stats', {})
+  _checkAdmin = () => this.channel.perform('is_admin', {})
 
   _newGrabBag = () => this.channel.perform('get_samples', { sport: this.sport })
 
-  _toggleOff = () => {
-    this.setState({ toggle: true })
+  _setLoading = () => {
+    this.setState({ loading: true })
     return true
   }
 
-  pullStats = () => this.channel && this._toggleOff() && this.channel.perform('get_stats')
+  _setDoneLoading = () => {
+    this.setState({ loading: false })
+    return true
+  }
+
+  _startSending = () => {
+    if(this.state.sendingEmail) return false
+    this.setState({ sendingEmail: true })
+    return true
+  }
+
+  _setStatsEmail = (data) => {
+    this.setState({ sendingEmail: false, emailStatus: !!data['sent'] }, () => {
+      setTimeout(() => this.setState({ emailStatus: null }), 5000)
+    })
+  }
+
+  pullStats = () => {
+    this._setLoading()
+    if(this.channel) {
+      this.channel.perform('get_stats')
+      this._showStats()
+    }
+    else this._setDoneLoading()
+  }
+  _sendStatsEmail = () => this.channel && this._startSending() && this.channel.perform('send_stats_email')
 
   onSuccess = (transferability) => {
     if(transferability) this._removeId({ id: this.selectedId }, this._selectId)
@@ -249,6 +295,7 @@ export default class AssignmentsCleanupPage extends Component {
 
       this._setGrabBag({ sample_ids, user_id: await this.currentUserIdAsync })
       this._checkCanViewStats()
+      this._checkAdmin()
     } catch(err) {
       console.error(err)
       return this._newGrabBag()
@@ -264,6 +311,9 @@ export default class AssignmentsCleanupPage extends Component {
       console.error(err)
     }
   }
+
+  _showStats = () => this.setState({ showStats: true })
+  toggleStats = () => this.setState({ showStats: !this.state.showStats })
 
   componentDidMount() {
     this._openChannel()
@@ -292,10 +342,32 @@ export default class AssignmentsCleanupPage extends Component {
           <h3 className="text-center pb-3">
             Cleanup Invitations for 2021{this.sport && ` (${this.sport})`}
           </h3>
+          {
+            !!this.state.admin && (
+              <div className="row my-3">
+                <div className="col">
+                  {
+                    (this.state.emailStatus !== null) && (
+                      <p className={`text-right text-${this.state.emailStatus ? "success" : "danger"}`}>
+                        { this.state.emailStatus ? "Email Sent!" : "Not Allowed to Send" }
+                      </p>
+                    )
+                  }
+                </div>
+                <div className="col-auto">
+                  <button disabled={!!this.state.sendingEmail} onClick={this._sendStatsEmail} className="btn btn-danger clickable btn-info">
+                    Get Individual Stats
+                  </button>
+                </div>
+              </div>
+            )
+          }
           <div className="row pb-3">
-            <div className="col">
+            <div className="col my-3">
               <label htmlFor="change_sport">
-                Choose/Change Sport
+                <h5>
+                  Choose/Change Sport
+                </h5>
               </label>
               <select
                 className="form-control"
@@ -316,14 +388,19 @@ export default class AssignmentsCleanupPage extends Component {
                 <option value="VB">Volleyball</option>
               </select>
             </div>
-            <div className="col">
+            <div className="col-md">
               {
                 this.stats && (
-                  <div className="pt-3">
+                  <div className="my-3">
                     <h5>
                       <div className="row">
                         <div className="col">
                           Completion Stats
+                        </div>
+                        <div className="col-auto">
+                          <i className="ml-3 material-icons clickable" onClick={this.toggleStats}>
+                            {this.state.showStats ? "expand_less" : "expand_more"}
+                          </i>
                         </div>
                         <div className="col-auto">
                           <i className="ml-3 material-icons clickable" onClick={this.pullStats}>
@@ -332,50 +409,64 @@ export default class AssignmentsCleanupPage extends Component {
                         </div>
                       </div>
                     </h5>
-                    <DisplayOrLoading
-                      display={!this.toggle}
-                      message="UPDATING STATS..."
-                      loadingElement={
-                        <JellyBox />
-                      }
-                    >
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th>
-                              Sport
-                            </th>
-                            <th>
-                              Undecided
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            !this.stats.length && (
+                    {
+                      this.state.showStats ? (
+                        <DisplayOrLoading
+                          display={!this.loading}
+                          message="UPDATING STATS..."
+                          loadingElement={
+                            <JellyBox className="page-loader" />
+                          }
+                        >
+                          <table className="table m-0">
+                            <thead>
                               <tr>
-                                <th colSpan="2" className="text-center">
-                                  (Click Refresh to Load)
+                                <th>
+                                  Sport
+                                </th>
+                                <th>
+                                  Undecided
                                 </th>
                               </tr>
-                            )
-                          }
-                          {
-                            this.stats
-                              .map(([ sport, count ], i) => (
-                                <tr key={`${sport}.${i}`}>
-                                  <th>
-                                    { sport }
-                                  </th>
-                                  <td>
-                                    { Number(count || 0).toLocaleString() }
-                                  </td>
-                                </tr>
-                              ))
-                          }
-                        </tbody>
-                      </table>
-                    </DisplayOrLoading>
+                            </thead>
+                            <tbody>
+                              {
+                                !this.stats.length && (
+                                  <tr>
+                                    <th colSpan="2" className="text-center">
+                                      (Click Refresh Icon to Load)
+                                    </th>
+                                  </tr>
+                                )
+                              }
+                              {
+                                this.stats
+                                  .map(([ sport, count ], i) => (
+                                    <tr key={`${sport}.${i}`}>
+                                      <th>
+                                        { sport }
+                                      </th>
+                                      <td>
+                                        { Number(count || 0).toLocaleString() }
+                                      </td>
+                                    </tr>
+                                  ))
+                              }
+                            </tbody>
+                          </table>
+                        </DisplayOrLoading>
+                      ) : (
+                        <table className="table m-0">
+                          <tbody>
+                            <tr>
+                              <th className="text-center">
+                                (Expand or Refresh to View)
+                              </th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      )
+                    }
                   </div>
                 )
               }

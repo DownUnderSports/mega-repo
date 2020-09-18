@@ -44,8 +44,8 @@ module Admin
 
     # == Utilities ==========================================================
     def equal?
-      latest = Payment::Terms.latest
-      whitelisted_terms_params[:body] == latest.body
+      latest = ThankYouTicket::Terms.latest
+      whitelisted_terms_params[:body] == latest&.body
     end
 
     def whitelisted_terms_params

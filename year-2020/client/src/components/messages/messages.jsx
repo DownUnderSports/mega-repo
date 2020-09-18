@@ -4,6 +4,7 @@ import { TextField } from 'react-component-templates/form-components';
 import { Objected } from 'react-component-templates/helpers';
 import MessageInfo from './message-info'
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
+import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 
 import './messages.css'
 
@@ -27,7 +28,10 @@ export default class Messages extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if(prevProps.id !== this.props.id) await this.getMessages()
+    if(
+      (prevProps.id !== this.props.id)
+      || (prevProps.lastFetch !== this.props.lastFetch)
+    ) await this.getMessages()
   }
 
   category() {
@@ -56,7 +60,6 @@ export default class Messages extends Component {
         this._fetchable = fetch(`${baseUrl}/${this.props.id}/messages.json?type=${this.type()}&force=${force ? 1 : 0}`, {timeout: 5000})
         const result = await this._fetchable,
               retrieved = await result.json()
-
 
         if(this._isMounted) {
           this.setState({
@@ -118,9 +121,10 @@ export default class Messages extends Component {
   }
 
   render() {
+    const { reloading = false } = this.state || {}
     return (
       <DisplayOrLoading
-        display={!this.state.reloading}
+        display={!reloading || !!this.state.allMessages.length}
         message='LOADING...'
         loadingElement={
           <JellyBox />
@@ -133,24 +137,36 @@ export default class Messages extends Component {
               <div className="col-auto"></div>
               <div className="col">{ this.category() }</div>
               <div className="col-auto">
-                <i className="material-icons clickable" onClick={this.forceGetMessages}>
-                  refresh
-                </i>
+                {
+                  !reloading && (
+                    <i className="material-icons clickable" onClick={this.forceGetMessages}>
+                      refresh
+                    </i>
+                  )
+                }
               </div>
             </div>
           }
           subLabel={
-            <div className='row'>
-              <div className='col text-center'>
-                <TextField
-                  name={`search[${this.type() || Math.random()}]`}
-                  onChange={(e) => this.filter(e.target.value)}
-                  className='form-control'
-                  autoComplete='off'
-                  skipExtras
-                />
-              </div>
-            </div>
+            reloading
+              ? (
+                  <div className="d-flex justify-content-center my-3">
+                    <RunningDots className="la-dark la-2x" />
+                  </div>
+                )
+              : (
+                  <div className='row'>
+                    <div className='col text-center'>
+                      <TextField
+                        name={`search[${this.type() || Math.random()}]`}
+                        onChange={(e) => this.filter(e.target.value)}
+                        className='form-control'
+                        autoComplete='off'
+                        skipExtras
+                      />
+                    </div>
+                  </div>
+                )
           }
           contentProps={{className: 'list-group'}}
         >

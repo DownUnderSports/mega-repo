@@ -75,7 +75,7 @@ module Admin
         end
       else
         def allow_origin_value
-          request_origin =~ /downundersports.com$/ ?
+          request_origin =~ /^([^.]+\.)*downundersports.com$/ ?
             request_origin :
             'https://admin.downundersports.com'
         end

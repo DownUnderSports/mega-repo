@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { DisplayOrLoading, CardSection, Link } from 'react-component-templates/components';
 import UserForm from 'forms/user-form'
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
+import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 import dateFns from 'date-fns'
-
+import 'load-awesome-relative/css/ball-running-dots.css'
 
 export const usersUrl = '/admin/users/:id.json'
 
@@ -290,560 +291,583 @@ export default class UserInfo extends Component {
       showInterestHistory
     } = this.state || {}
 
-    const travel_preparation = travel_preparation_attributes || {}
+    const travel_preparation = travel_preparation_attributes || {},
+          keyId = this.props.formId || dus_id || 'new'
 
     return (
-      <DisplayOrLoading
-        display={!reloading}
-        message='LOADING...'
-        loadingElement={
-          <JellyBox />
-        }
-      >
-        {
-          showForm ? (
-            <UserForm
-              key={this.props.formId || dus_id || 'new'}
-              id={ this.props.formId || dus_id }
-              onSuccess={ this.props.onSuccess || (() => this.getUser()) }
-              onCancel={ this.props.onCancel || (() => this.setState({showForm: false}))}
-              url={ this.props.url || '' }
-              user={{
-                ...(this.state.user || {}),
-                relationship: this.props.relationship || '',
-              }}
-              showRelationship={!!(this.props.relationship || this.props.showRelationship)}
-            />
-          ) : (
-            <CardSection
-              className={`mb-3 ${!contactable && 'alert-danger'} ${traveler && !traveler.cancel_date && 'alert-success'}`}
-              label={
-                <div className="row">
-                  <div className="col-auto">
-                    <Link onClick={this.openUserForm} to={window.location.href}>Edit</Link>
-                  </div>
-                  <div className="col">
-                    <div className="d-flex justify-content-center">
-                      <span>{this.props.header || 'User Info'}</span>
-                      <i className="ml-3 material-icons clickable" onClick={this.forceGetUser}>
-                        refresh
-                      </i>
+      showForm
+        ? (
+            <DisplayOrLoading
+              key={`display-user-form-${keyId}`}
+              display={!reloading}
+              message='LOADING...'
+              loadingElement={
+                <JellyBox />
+              }
+            >
+              <UserForm
+                key={keyId}
+                id={ this.props.formId || dus_id }
+                onSuccess={ this.props.onSuccess || (() => this.getUser()) }
+                onCancel={ this.props.onCancel || (() => this.setState({showForm: false}))}
+                url={ this.props.url || '' }
+                user={{
+                  ...(this.state.user || {}),
+                  relationship: this.props.relationship || '',
+                }}
+                showRelationship={!!(this.props.relationship || this.props.showRelationship)}
+              />
+            </DisplayOrLoading>
+
+          )
+        : (
+            <DisplayOrLoading
+              key={`display-user-${keyId}-loader`}
+              display={!reloading || dus_id}
+              message='LOADING...'
+              loadingElement={
+                <JellyBox />
+              }
+            >
+              <CardSection
+                key={`display-user-${keyId}-card`}
+                className={`mb-3 ${!contactable && 'alert-danger'} ${traveler && !traveler.cancel_date && 'alert-success'}`}
+                label={
+                  <div className="row">
+                    <div className="col-auto">
+                      <Link onClick={this.openUserForm} to={window.location.href} disabled={!!reloading}>Edit</Link>
+                    </div>
+                    <div className="col">
+                      {
+                        reloading
+                          ? (
+                              <div className="d-flex justify-content-center">
+                                <RunningDots className="la-dark la-2x" />
+                              </div>
+                            )
+                          : (
+                              <div className="d-flex justify-content-center">
+                                <span>{this.props.header || 'User Info'}</span>
+                                <i className="ml-3 material-icons clickable" onClick={this.forceGetUser}>
+                                  refresh
+                                </i>
+                              </div>
+                            )
+                      }
+                    </div>
+                    <div className="col-auto">
+                      <Link to={`/admin/users/${dus_id}`}>{dus_id}</Link>
                     </div>
                   </div>
-                  <div className="col-auto">
-                    <Link to={`/admin/users/${dus_id}`}>{dus_id}</Link>
-                  </div>
-                </div>
-              }
-              contentProps={{className: 'list-group'}}
-            >
-              {
-                (avatar_attached || (traveler && ground_only)) && (
-                  <div className="list-group-item">
-                    <div className="row">
-                      <div className="col-md col-12">
+                }
+                contentProps={{className: 'list-group'}}
+              >
+                {
+                  (avatar_attached || (traveler && ground_only)) && (
+                    <div className="list-group-item">
+                      <div className="row">
+                        <div className="col-md col-12">
+                          {
+                            avatar_attached && (
+                              <Fragment>
+                                <Link to={avatar} target="_user_avatar">
+                                  View Sponsor Photo
+                                </Link>
+                                <hr className='d-md-none'/>
+                              </Fragment>
+                            )
+                          }
+                        </div>
                         {
-                          avatar_attached && (
-                            <Fragment>
-                              <Link to={avatar} target="_user_avatar">
-                                View Sponsor Photo
-                              </Link>
-                              <hr className='d-md-none'/>
-                            </Fragment>
+                          traveler && (
+                            <div className="col-md col-12 text-right">
+                              { ground_only && <strong className="text-danger">IS GROUND ONLY</strong> }
+                            </div>
                           )
                         }
                       </div>
-                      {
-                        traveler && (
-                          <div className="col-md col-12 text-right">
-                            { ground_only && <strong className="text-danger">IS GROUND ONLY</strong> }
-                          </div>
-                        )
-                      }
-                    </div>
-                  </div>
-                )
-              }
-              <div className="list-group-item">
-                <div className="row">
-                  <div className="col-md col-12">
-                    <strong>Full Name:</strong> { this.fullName }
-                    <hr className='d-md-none'/>
-                  </div>
-                  <div className="col-md col-12">
-                    <strong>Print Names:</strong> { this.printName }
-                  </div>
-                </div>
-              </div>
-              <div className="list-group-item">
-                <div className="row">
-                  <div className="col-md col-12">
-                    <strong className="no-wrap">Name Confirmed:</strong>
-                    <div className="no-wrap">
-                      {
-                        travel_preparation.name_confirmed_date
-                        ||  <button type="button" className='btn btn-warning' onClick={this.confirmName}>
-                              Confirm Legal Name
-                            </button>
-                      }
-                    </div>
-                    <hr className='d-md-none'/>
-                  </div>
-                  <div className="col-md col-12">
-                    <strong className="no-wrap">Print Name Confirmed:</strong>
-                    <div className="no-wrap">
-                      {
-                        travel_preparation.print_name_confirmed_date
-                        ||  <button type="button" className='btn btn-warning' onClick={this.confirmPrintName}>
-                              Confirm Printed Name
-                            </button>
-                      }
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="list-group-item">
-                <div className="row">
-                  <div className="col-md col-12">
-                    <strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a>
-                    <hr className='d-md-none'/>
-                  </div>
-                  <div className="col-md col-12">
-                    <strong>Phone:</strong> <a href={`tel:${this.phoneFormat(phone)}`}>{phone}</a>
-                    <hr className='d-md-none'/>
-                  </div>
-                  <div className="col-md col-12">
-                    <strong>Gender:</strong> {this.constructor.genders[gender] || 'Unknown'}
-                  </div>
-                </div>
-              </div>
-              <div className="list-group-item">
-                <div className="row">
-                  <div className="col">
-                    <strong>Address:</strong> {address}
-                  </div>
-                </div>
-              </div>
-              <div className="list-group-item">
-                <div className="row">
-                  <div className="col-md col-12">
-                    <strong className="no-wrap">Address Confirmed:</strong>&nbsp;
-                    {
-                      address
-                      &&  (address !== 'No Address')
-                      &&  <span className="no-wrap">
-                            {
-                              travel_preparation.address_confirmed_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.confirmAddress}>
-                                    Confirm Address
-                                  </button>
-                            }
-                          </span>
-                    }
-                  </div>
-                </div>
-              </div>
-                {
-                  showInterestHistory
-                    ? (
-                      <table className="table" onClick={this.toggleInterestHistories}>
-                        <thead>
-                          <tr>
-                            <th className="text-center" colSpan="3">
-                              Interest Level History
-                              <i className="material-icons float-right">
-                                arrow_drop_up
-                              </i>
-                            </th>
-                          </tr>
-                          <tr>
-                            <th>
-                              Level
-                            </th>
-                            <th>
-                              Set At
-                            </th>
-                            <th>
-                              Set By
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            Array.isArray(interest_histories) && interest_histories
-                              .map((history, idx) => {
-                                const date = dateFns.parse(history.changed_at)
-                                return <tr key={history.id}>
-                                  <td>
-                                    { history.interest_level } { !idx && "(Current)" }
-                                  </td>
-                                  <td>
-                                    <span
-                                      className="tooltip-nowrap tooltip-underline tooltip-right tooltip-legible pointer"
-                                      data-tooltip={dateFns.format(date, 'dddd, MMM Do, YYYY HH:mm:ss.SSS')}
-                                    >
-                                      { dateFns.format(date, 'MM/DD/YYYY h:mm A') }
-                                    </span>
-                                  </td>
-                                  <td>
-                                    { history.changed_by || "Unknown" }
-                                  </td>
-                                </tr>
-                              })
-                          }
-                        </tbody>
-                      </table>
-                    )
-                  : (
-                    <div className="list-group-item clickable" onClick={this.toggleInterestHistories}>
-                      <strong key="label">Interest:</strong> {interest_level}
-                      <i className="material-icons float-right">
-                        arrow_drop_down
-                      </i>
                     </div>
                   )
                 }
-              <div className="list-group-item">
-                <div className="row">
-                  {
-                    traveler ? (
-                      <Fragment>
-                        <div className="col-md col-12">
-                          <strong>Joined:</strong> {join_date}
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong>Active:</strong> {traveler.cancel_date ? 'NO' : 'YES'}
-                          <hr className='d-md-none'/>
-                        </div>
+                <div className="list-group-item">
+                  <div className="row">
+                    <div className="col-md col-12">
+                      <strong>Full Name:</strong> { this.fullName }
+                      <hr className='d-md-none'/>
+                    </div>
+                    <div className="col-md col-12">
+                      <strong>Print Names:</strong> { this.printName }
+                    </div>
+                  </div>
+                </div>
+                <div className="list-group-item">
+                  <div className="row">
+                    <div className="col-md col-12">
+                      <strong className="no-wrap">Name Confirmed:</strong>
+                      <div className="no-wrap">
                         {
-                          traveler.cancel_date ? (
-                            <div className="col-md col-12">
-                              <strong>Cancel Date:</strong> <br/>
-                              <span className="no-wrap">{ traveler.cancel_date }</span>
-                            </div>
-                          ) : (
-                            <div className="col-md col-12">
-                              <strong className="no-wrap">Cancel User:</strong><br/>
-                              <button type="button" className='btn btn-danger' onClick={this.cancelUser}>
-                                Cancel User
+                          travel_preparation.name_confirmed_date
+                          ||  <button type="button" className='btn btn-warning' onClick={this.confirmName}>
+                                Confirm Legal Name
                               </button>
-                            </div>
-                          )
                         }
-                      </Fragment>
-                    ) : ''
-                  }
+                      </div>
+                      <hr className='d-md-none'/>
+                    </div>
+                    <div className="col-md col-12">
+                      <strong className="no-wrap">Print Name Confirmed:</strong>
+                      <div className="no-wrap">
+                        {
+                          travel_preparation.print_name_confirmed_date
+                          ||  <button type="button" className='btn btn-warning' onClick={this.confirmPrintName}>
+                                Confirm Printed Name
+                              </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              {
-                traveler && (
-                  <>
-                    <div className="list-group-item">
-                      <div className="row">
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Joined Followup:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.joined_team_followup_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.joinedFollowup}>
-                                    Followed Up
-                                  </button>
-                            }
-                          </div>
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Airfare Followup:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.domestic_followup_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.domesticFollowup}>
-                                    Followed Up
-                                  </button>
-                            }
-                          </div>
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Insurance Followup:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.insurance_followup_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.insuranceFollowup}>
-                                    Followed Up
-                                  </button>
-                            }
-                          </div>
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Checklist Followup:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.checklist_followup_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.checklistFollowup}>
-                                    Followed Up
-                                  </button>
-                            }
-                          </div>
-                        </div>
-                      </div>
+                <div className="list-group-item">
+                  <div className="row">
+                    <div className="col-md col-12">
+                      <strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a>
+                      <hr className='d-md-none'/>
                     </div>
-                    <div className="list-group-item">
-                      <div className="row">
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Fr Pkt Rcvd:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.fundraising_packet_received_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.receivedFrPkt}>
-                                    Mark Date
-                                  </button>
-                            }
-                          </div>
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Trvl Pkt Rcvd:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.travel_packet_received_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.receivedTrvlPkt}>
-                                    Mark Date
-                                  </button>
-                            }
-                          </div>
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Applied for PP:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.applied_for_passport_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.appliedForPP}>
-                                    Mark Date
-                                  </button>
-                            }
-                          </div>
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong className="no-wrap">Applied for Own ETA:</strong>
-                          <div className="no-wrap">
-                            {
-                              travel_preparation.applied_for_eta_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.appliedForETA}>
-                                    Mark Date
-                                  </button>
-                            }
-                          </div>
-                        </div>
-                      </div>
+                    <div className="col-md col-12">
+                      <strong>Phone:</strong> <a href={`tel:${this.phoneFormat(phone)}`}>{phone}</a>
+                      <hr className='d-md-none'/>
                     </div>
-                    <div className="list-group-item">
-                      <div className="row">
-                        <div className="col-md col-12">
-                          <strong>Departing:</strong> {traveler.departing_dates}
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong>Returning:</strong> {traveler.returning_dates}
-                          <hr className='d-md-none'/>
-                        </div>
-                        <div className="col-md col-12">
-                          <strong>Non-Refundable:</strong> {this.nonRefundableAmount}
-                        </div>
-                      </div>
+                    <div className="col-md col-12">
+                      <strong>Gender:</strong> {this.constructor.genders[gender] || 'Unknown'}
                     </div>
-                    {
-                      !!Object.keys(travel_preparation.deadlines || {}).length
-                      && (
-                        <div className="list-group-item">
-                          <strong>Rollover Deadline:</strong> {
-                            travel_preparation.rollover_deadline
-                              ? dateFns.format(travel_preparation.rollover_deadline, 'MMMM Do')
-                              : 'N/A'
-                          }
-                        </div>
-                      )
-                    }
-                    <div className="list-group-item">
-                      <div className="row">
-                        <div className="col">
-                          <strong>PNRs</strong>: {
-                            pnrs.map(
-                              (pnr, i) =>
-                                <span key={pnr}>
-                                  { i > 0 && <span>, &nbsp;</span> }
-                                  <Link
-                                    key={pnr}
-                                    to={`${pnrUrl}/${pnr}`}
-                                  >
-                                    {pnr}
-                                  </Link>
-                                </span>
-                            )
-                          }
-                        </div>
-                      </div>
-                    </div>
-                    <div className="list-group-item">
-                      <div className="row">
-                        <div className="col">
-                          <strong>Buses</strong>: {
-                            buses.map(
-                              ({ id, color, text }, i) =>
-                                <span key={id}>
-                                  {i > 0 && <span>; &nbsp;</span>}
-                                  <Link
-                                    key={id}
-                                    to={`${busUrl}/${id}`}
-                                    className={`text-colored ${color}`}
-                                  >
-                                    { text }
-                                  </Link>
-                                </span>
-                            )
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  </>
-
-                )
-              }
-              {
-                !!((ambassador_emails || []).length) && (
-                  <div className="list-group-item">
-                    <strong><a href={`mailto:${ambassador_emails.join(';')}`}>Ambassador Emails</a>:</strong> {ambassador_emails.map(e => e && ( <a key={e} href={`mailto:${e}`}>{e}</a> ))}
                   </div>
-                )
-              }
-              {
-                !!((ambassador_phones || []).length) && (
-                  <div className="list-group-item">
-                    <strong>Ambassador Phones:</strong> {ambassador_phones.map(p => p && (<a key={p} href={`tel:${p}`}>{p}</a>))}
+                </div>
+                <div className="list-group-item">
+                  <div className="row">
+                    <div className="col">
+                      <strong>Address:</strong> {address}
+                    </div>
                   </div>
-                )
-              }
-              <div className="list-group-item">
-                <div className="row">
+                </div>
+                <div className="list-group-item">
+                  <div className="row">
+                    <div className="col-md col-12">
+                      <strong className="no-wrap">Address Confirmed:</strong>&nbsp;
+                      {
+                        address
+                        &&  (address !== 'No Address')
+                        &&  <span className="no-wrap">
+                              {
+                                travel_preparation.address_confirmed_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.confirmAddress}>
+                                      Confirm Address
+                                    </button>
+                              }
+                            </span>
+                      }
+                    </div>
+                  </div>
+                </div>
                   {
-                    (team || {}).name ? (
-                      <div className="col-md col-12">
-                        <strong>Team:</strong> {team.name}
-                        <hr className='d-md-none'/>
-                      </div>
-                    ) : ''
-                  }
-                  <div className="col-md col-12">
-                    <strong>Shirt Size:</strong> {shirt_size}
-                  </div>
-                </div>
-              </div>
-              <div className="list-group-item">
-                <div className="row">
-                  <div className="col-md col-12">
-                    <strong>Birth Date:</strong> {birth_date}
-                    <hr className='d-md-none'/>
-                  </div>
-                  <div className="col-md col-12">
-                    <strong className="no-wrap">DOB Confirmed:</strong>&nbsp;
-                    {
-                      !!birth_date
-                      &&  <span className="no-wrap">
+                    showInterestHistory
+                      ? (
+                        <table className="table" onClick={this.toggleInterestHistories}>
+                          <thead>
+                            <tr>
+                              <th className="text-center" colSpan="3">
+                                Interest Level History
+                                <i className="material-icons float-right">
+                                  arrow_drop_up
+                                </i>
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>
+                                Level
+                              </th>
+                              <th>
+                                Set At
+                              </th>
+                              <th>
+                                Set By
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
                             {
-                              travel_preparation.dob_confirmed_date
-                              ||  <button type="button" className='btn btn-warning' onClick={this.confirmDOB}>
-                                    Confirm DOB
-                                  </button>
+                              Array.isArray(interest_histories) && interest_histories
+                                .map((history, idx) => {
+                                  const date = dateFns.parse(history.changed_at)
+                                  return <tr key={history.id}>
+                                    <td>
+                                      { history.interest_level } { !idx && "(Current)" }
+                                    </td>
+                                    <td>
+                                      <span
+                                        className="tooltip-nowrap tooltip-underline tooltip-right tooltip-legible pointer"
+                                        data-tooltip={dateFns.format(date, 'dddd, MMM Do, YYYY HH:mm:ss.SSS')}
+                                      >
+                                        { dateFns.format(date, 'MM/DD/YYYY h:mm A') }
+                                      </span>
+                                    </td>
+                                    <td>
+                                      { history.changed_by || "Unknown" }
+                                    </td>
+                                  </tr>
+                                })
                             }
-                          </span>
+                          </tbody>
+                        </table>
+                      )
+                    : (
+                      <div className="list-group-item clickable" onClick={this.toggleInterestHistories}>
+                        <strong key="label">Interest:</strong> {interest_level}
+                        <i className="material-icons float-right">
+                          arrow_drop_down
+                        </i>
+                      </div>
+                    )
+                  }
+                <div className="list-group-item">
+                  <div className="row">
+                    {
+                      traveler ? (
+                        <Fragment>
+                          <div className="col-md col-12">
+                            <strong>Joined:</strong> {join_date}
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong>Active:</strong> {traveler.cancel_date ? 'NO' : 'YES'}
+                            <hr className='d-md-none'/>
+                          </div>
+                          {
+                            traveler.cancel_date ? (
+                              <div className="col-md col-12">
+                                <strong>Cancel Date:</strong> <br/>
+                                <span className="no-wrap">{ traveler.cancel_date }</span>
+                              </div>
+                            ) : (
+                              <div className="col-md col-12">
+                                <strong className="no-wrap">Cancel User:</strong><br/>
+                                <button type="button" className='btn btn-danger' onClick={this.cancelUser}>
+                                  Cancel User
+                                </button>
+                              </div>
+                            )
+                          }
+                        </Fragment>
+                      ) : ''
                     }
                   </div>
                 </div>
-              </div>
-              {
-                competing_team_list && (
-                  <div className="list-group-item">
-                    <strong>Competing Teams:</strong> { competing_team_list }
-                  </div>
-                )
-              }
+                {
+                  traveler && (
+                    <>
+                      <div className="list-group-item">
+                        <div className="row">
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Joined Followup:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.joined_team_followup_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.joinedFollowup}>
+                                      Followed Up
+                                    </button>
+                              }
+                            </div>
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Airfare Followup:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.domestic_followup_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.domesticFollowup}>
+                                      Followed Up
+                                    </button>
+                              }
+                            </div>
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Insurance Followup:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.insurance_followup_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.insuranceFollowup}>
+                                      Followed Up
+                                    </button>
+                              }
+                            </div>
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Checklist Followup:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.checklist_followup_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.checklistFollowup}>
+                                      Followed Up
+                                    </button>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="list-group-item">
+                        <div className="row">
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Fr Pkt Rcvd:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.fundraising_packet_received_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.receivedFrPkt}>
+                                      Mark Date
+                                    </button>
+                              }
+                            </div>
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Trvl Pkt Rcvd:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.travel_packet_received_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.receivedTrvlPkt}>
+                                      Mark Date
+                                    </button>
+                              }
+                            </div>
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Applied for PP:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.applied_for_passport_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.appliedForPP}>
+                                      Mark Date
+                                    </button>
+                              }
+                            </div>
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong className="no-wrap">Applied for Own ETA:</strong>
+                            <div className="no-wrap">
+                              {
+                                travel_preparation.applied_for_eta_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.appliedForETA}>
+                                      Mark Date
+                                    </button>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="list-group-item">
+                        <div className="row">
+                          <div className="col-md col-12">
+                            <strong>Departing:</strong> {traveler.departing_dates}
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong>Returning:</strong> {traveler.returning_dates}
+                            <hr className='d-md-none'/>
+                          </div>
+                          <div className="col-md col-12">
+                            <strong>Non-Refundable:</strong> {this.nonRefundableAmount}
+                          </div>
+                        </div>
+                      </div>
+                      {
+                        !!Object.keys(travel_preparation.deadlines || {}).length
+                        && (
+                          <div className="list-group-item">
+                            <strong>Rollover Deadline:</strong> {
+                              travel_preparation.rollover_deadline
+                                ? dateFns.format(travel_preparation.rollover_deadline, 'MMMM Do')
+                                : 'N/A'
+                            }
+                          </div>
+                        )
+                      }
+                      <div className="list-group-item">
+                        <div className="row">
+                          <div className="col">
+                            <strong>PNRs</strong>: {
+                              pnrs.map(
+                                (pnr, i) =>
+                                  <span key={pnr}>
+                                    { i > 0 && <span>, &nbsp;</span> }
+                                    <Link
+                                      key={pnr}
+                                      to={`${pnrUrl}/${pnr}`}
+                                    >
+                                      {pnr}
+                                    </Link>
+                                  </span>
+                              )
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <div className="list-group-item">
+                        <div className="row">
+                          <div className="col">
+                            <strong>Buses</strong>: {
+                              buses.map(
+                                ({ id, color, text }, i) =>
+                                  <span key={id}>
+                                    {i > 0 && <span>; &nbsp;</span>}
+                                    <Link
+                                      key={id}
+                                      to={`${busUrl}/${id}`}
+                                      className={`text-colored ${color}`}
+                                    >
+                                      { text }
+                                    </Link>
+                                  </span>
+                              )
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </>
 
-              {
-                athlete.school_name ? (
-                  <Fragment>
+                  )
+                }
+                {
+                  !!((ambassador_emails || []).length) && (
                     <div className="list-group-item">
-                      <strong>School:</strong> {athlete.school_name}
+                      <strong><a href={`mailto:${ambassador_emails.join(';')}`}>Ambassador Emails</a>:</strong> {ambassador_emails.map(e => e && ( <a key={e} href={`mailto:${e}`}>{e}</a> ))}
                     </div>
+                  )
+                }
+                {
+                  !!((ambassador_phones || []).length) && (
                     <div className="list-group-item">
-                      <strong>Grad:</strong> {athlete.year_grad}
+                      <strong>Ambassador Phones:</strong> {ambassador_phones.map(p => p && (<a key={p} href={`tel:${p}`}>{p}</a>))}
                     </div>
-                    <div className="list-group-item">
-                      <strong>Source:</strong> {athlete.source_name}
-                    </div>
-                    <div className="list-group-item">
-                      <strong>Sport:</strong> {athlete.sport_abbr}
-                    </div>
+                  )
+                }
+                <div className="list-group-item">
+                  <div className="row">
                     {
-                      athlete.main_event && (
-                        <div className="list-group-item">
-                          <strong>Main Event:</strong> {athlete.main_event} {`(${athlete.main_event_best})`}
+                      (team || {}).name ? (
+                        <div className="col-md col-12">
+                          <strong>Team:</strong> {team.name}
+                          <hr className='d-md-none'/>
                         </div>
-                      )
+                      ) : ''
                     }
-                    {
-                      athlete.stats && (
-                        <div className="list-group-item" onClick={() => this.setState({fullStats: !fullStats})}>
-                          <strong>Stats:</strong><br/>
-                          <pre style={(fullStats ? null : {maxWidth: '40vw', overflow: 'hidden'})}>{athlete.stats}</pre>
-                        </div>
-                      )
-                    }
-                  </Fragment>
-                ) : (
-                  coach.school_name ? (
+                    <div className="col-md col-12">
+                      <strong>Shirt Size:</strong> {shirt_size}
+                    </div>
+                  </div>
+                </div>
+                <div className="list-group-item">
+                  <div className="row">
+                    <div className="col-md col-12">
+                      <strong>Birth Date:</strong> {birth_date}
+                      <hr className='d-md-none'/>
+                    </div>
+                    <div className="col-md col-12">
+                      <strong className="no-wrap">DOB Confirmed:</strong>&nbsp;
+                      {
+                        !!birth_date
+                        &&  <span className="no-wrap">
+                              {
+                                travel_preparation.dob_confirmed_date
+                                ||  <button type="button" className='btn btn-warning' onClick={this.confirmDOB}>
+                                      Confirm DOB
+                                    </button>
+                              }
+                            </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+                {
+                  competing_team_list && (
+                    <div className="list-group-item">
+                      <strong>Competing Teams:</strong> { competing_team_list }
+                    </div>
+                  )
+                }
+
+                {
+                  athlete.school_name ? (
                     <Fragment>
                       <div className="list-group-item">
-                        <strong>School:</strong> {coach.school_name}
+                        <strong>School:</strong> {athlete.school_name}
                       </div>
                       <div className="list-group-item">
-                        <strong>Deposits:</strong> {coach.deposits}
+                        <strong>Grad:</strong> {athlete.year_grad}
                       </div>
                       <div className="list-group-item">
-                        <strong>Background Checked?:</strong> {coach.checked_background ? 'Yes' : 'No'}
+                        <strong>Source:</strong> {athlete.source_name}
                       </div>
+                      <div className="list-group-item">
+                        <strong>Sport:</strong> {athlete.sport_abbr}
+                      </div>
+                      {
+                        athlete.main_event && (
+                          <div className="list-group-item">
+                            <strong>Main Event:</strong> {athlete.main_event} {`(${athlete.main_event_best})`}
+                          </div>
+                        )
+                      }
+                      {
+                        athlete.stats && (
+                          <div className="list-group-item" onClick={() => this.setState({fullStats: !fullStats})}>
+                            <strong>Stats:</strong><br/>
+                            <pre style={(fullStats ? null : {maxWidth: '40vw', overflow: 'hidden'})}>{athlete.stats}</pre>
+                          </div>
+                        )
+                      }
                     </Fragment>
                   ) : (
-                    official.category ? (
+                    coach.school_name ? (
                       <Fragment>
                         <div className="list-group-item">
-                          <strong>Type of Official:</strong> {official.category}
+                          <strong>School:</strong> {coach.school_name}
+                        </div>
+                        <div className="list-group-item">
+                          <strong>Deposits:</strong> {coach.deposits}
+                        </div>
+                        <div className="list-group-item">
+                          <strong>Background Checked?:</strong> {coach.checked_background ? 'Yes' : 'No'}
                         </div>
                       </Fragment>
-                    ) : ''
+                    ) : (
+                      official.category ? (
+                        <Fragment>
+                          <div className="list-group-item">
+                            <strong>Type of Official:</strong> {official.category}
+                          </div>
+                        </Fragment>
+                      ) : ''
+                    )
                   )
-                )
-              }
-              {
-                dus_id && !staff_page ? (
-                  <div className='row'>
-                    <div className="col">
-                      <button className='btn-block btn-primary' onClick={this.requestInfokit}>
-                        {
-                          has_infokit ? 'Resend IK Email' : 'Send Infokit'
-                        }
-                      </button>
+                }
+                {
+                  dus_id && !staff_page ? (
+                    <div className='row'>
+                      <div className="col">
+                        <button className='btn-block btn-primary' onClick={this.requestInfokit}>
+                          {
+                            has_infokit ? 'Resend IK Email' : 'Send Infokit'
+                          }
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ) : ''
-              }
-            </CardSection>
+                  ) : ''
+                }
+              </CardSection>
+            </DisplayOrLoading>
           )
-        }
-      </DisplayOrLoading>
     );
   }
 }

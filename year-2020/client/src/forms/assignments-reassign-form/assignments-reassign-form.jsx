@@ -20,6 +20,10 @@ export default class AssignmentsReassignForm extends Component {
     return (this.context.staffUsersActions.find(this.state.staff_id) || {}).name
   }
 
+  get prefix() {
+    return String(this.props.prefix || "")
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -101,7 +105,7 @@ export default class AssignmentsReassignForm extends Component {
         >
           <div className="col-md col-lg-6">
             <StaffUserSelectField
-              id="reassign-staff-id"
+              id={`${this.prefix}reassign-staff-id`}
               name='reassign[staff_id]'
               value={this.state.staff_id}
               onChange={(n, val) => val && val.id && (this.state.staff_id !== val.id) && this.setState({staff_id: val.id})}

@@ -1,0 +1,5 @@
+{
+  "name": "AssignmentsRecapsPage",
+  "private": true,
+  "main": "./recaps.jsx"
+}

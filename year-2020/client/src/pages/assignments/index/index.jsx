@@ -3,13 +3,13 @@ import Component from 'common/js/components/component'
 import { Route, Switch } from 'react-router-dom';
 import { Link } from 'react-component-templates/components';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
-import './index.css'
 
 const RespondsPage = lazy(() => import(/* webpackChunkName: "assignments-responds-page", webpackPrefetch: true */ 'pages/assignments/responds'))
 const TravelersPage = lazy(() => import(/* webpackChunkName: "assignments-travelers-page", webpackPrefetch: true */ 'pages/assignments/travelers'))
 const CleanupPage = lazy(() => import(/* webpackChunkName: "assignments-cleanup-page", webpackPrefetch: true */ 'pages/assignments/cleanup'))
+const RecapsPage = lazy(() => import(/* webpackChunkName: "assignments-recaps-page", webpackPrefetch: true */ 'pages/assignments/recaps'))
 
-const pages = [ 'responds', 'travelers', 'cleanup' ]
+const pages = [ 'responds', 'travelers', 'cleanup', 'recaps' ]
 
 export default class AssignmentsPage extends Component {
   respondsPage = (props) => (
@@ -36,6 +36,14 @@ export default class AssignmentsPage extends Component {
     />
   )
 
+  recapsPage = (props) => (
+    <RecapsPage
+      key="recaps"
+      {...this.props}
+      {...props}
+    />
+  )
+
   active = (url, pathname, key = 'responds') =>
     new RegExp(`${url}${key === 'responds' ? `(/|/${key})?` : `/${key}`}/?(\\?.*)?$`).test(pathname) ? 'active' : ''
 
@@ -47,9 +55,9 @@ export default class AssignmentsPage extends Component {
       <section className="Assignments row">
         <header className="col-12 text-center">
           <h3>Assignments</h3>
-          <nav className="nav sports-nav nav-tabs justify-content-end">
-            <input type="checkbox" id="assignments-page-nav-trigger" className="page-nav-trigger" />
-            <label htmlFor="page-nav-trigger" className="nav-item nav-link d-md-none">
+          <nav className="nav nav-tabs justify-content-end">
+            <input type="checkbox" id="assignments-page-nav-trigger" className="nav-trigger" />
+            <label htmlFor="assignments-page-nav-trigger" className="nav-trigger nav-item nav-link d-md-none">
               <span><span></span></span>
               Sub Pages
             </label>

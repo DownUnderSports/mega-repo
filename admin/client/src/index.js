@@ -22,6 +22,7 @@
     await import(/* webpackChunkName: "index-css", webpackPreload: true */ './index.css')
     await import(/* webpackChunkName: "atom-loader", webpackPreload: true */ 'load-awesome-react-components/dist/ball/atom.css')
     await import(/* webpackChunkName: "jelly-box-loader", webpackPreload: true */ 'load-awesome-react-components/dist/square/jelly-box.css')
+    await import(/* webpackChunkName: "jelly-box-loader", webpackPreload: true */ 'load-awesome-react-components/dist/ball/running-dots.css')
     await import(/* webpackChunkName: "component-templates-css", webpackPreload: true */ 'react-component-templates/css/index.css')
     await import(/* webpackChunkName: "ring-central", webpackPreload: true */ 'common/js/helpers/ring-central')
 

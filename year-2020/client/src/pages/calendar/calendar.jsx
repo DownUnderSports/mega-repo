@@ -84,7 +84,7 @@ export default class CalendarPage extends Component {
             }
           >
             <div
-              class="col-12"
+              className="col-12"
               style={{ height: '90vh' }}
             >
               <iframe

@@ -3,6 +3,7 @@ import { DisplayOrLoading, CardSection } from 'react-component-templates/compone
 import { TextField } from 'react-component-templates/form-components';
 import { Objected } from 'react-component-templates/helpers';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
+import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 import MailingForm from 'forms/mailing-form'
 
 
@@ -26,7 +27,10 @@ export default class UserMailings extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if(prevProps.id !== this.props.id) await this.getMailings()
+    if(
+      (prevProps.id !== this.props.id)
+      || (prevProps.lastFetch !== this.props.lastFetch)
+    ) await this.getMailings()
   }
 
   abortFetch = () => {
@@ -34,7 +38,6 @@ export default class UserMailings extends Component {
   }
 
   filter = (val) => {
-
     this.setState({
       mailings: val ? this.state.allMailings.filter((m) => {
         for(let k in Objected.filterKeys(m, ['id', 'user_id'])) {
@@ -130,9 +133,11 @@ export default class UserMailings extends Component {
   onNewMailSuccess = () => this.setState({ openForm: false}, this.getMailings)
 
   render() {
+    const { reloading = false, openForm = false } = this.state || {}
+
     return (
       <DisplayOrLoading
-        display={!this.state.reloading}
+        display={!reloading || (!openForm && this.state.allMailings.length)}
         message='LOADING...'
         loadingElement={
           <JellyBox />
@@ -145,24 +150,36 @@ export default class UserMailings extends Component {
               <div className="col-auto"></div>
               <div className="col">Mailings</div>
               <div className="col-auto">
-                <i className="material-icons clickable" onClick={this.forceGetMailings}>
-                  refresh
-                </i>
+                {
+                  !reloading && (
+                    <i className="material-icons clickable" onClick={this.forceGetMailings}>
+                      refresh
+                    </i>
+                  )
+                }
               </div>
             </div>
           }
           subLabel={
-            <div className='row'>
-              <div className='col text-center'>
-                <TextField
-                  name='search'
-                  onChange={(e) => this.filter(e.target.value)}
-                  className='form-control'
-                  autoComplete='off'
-                  skipExtras
-                />
-              </div>
-            </div>
+            reloading
+              ? (
+                  <div className="d-flex justify-content-center my-3">
+                    <RunningDots className="la-dark la-2x" />
+                  </div>
+                )
+              : (
+                  <div className='row'>
+                    <div className='col text-center'>
+                      <TextField
+                        name={`search[mailings]`}
+                        onChange={(e) => this.filter(e.target.value)}
+                        className='form-control'
+                        autoComplete='off'
+                        skipExtras
+                      />
+                    </div>
+                  </div>
+                )
           }
           contentProps={{className: 'list-group'}}
         >
@@ -171,7 +188,7 @@ export default class UserMailings extends Component {
               <div key={k} className={`list-group-item p-0 ${k > 0 ? 'pt-2' : ''} border-0`}>
                   <div className="col-12 border-bottom">
                     {
-                      (this.state.openForm === id)
+                      (openForm === id)
                         ? <MailingForm onCancel={this.closeForm} onSuccess={this.onNewMailSuccess} userId={this.props.id} id={id} mailing={form_attributes} />
                         : (
                             <div className={`row ${(failed ? 'bg-danger' : 'bg-secondary')} text-light`}>
@@ -222,7 +239,7 @@ export default class UserMailings extends Component {
           }
           {
             !!this.state.canAdd && (
-              (this.state.openForm === "new")
+              (openForm === "new")
                 ? <MailingForm onCancel={this.closeForm} onSuccess={this.onNewMailSuccess} userId={this.props.id} />
                 : <button className="btn-block btn-primary mt-2" onClick={this.newMailing}>Add New Mailing</button>
             )

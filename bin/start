@@ -7,4 +7,6 @@ then
 fi
 echo "starting $1 servers"
 cd $1
-bin/$1-servers "${@:2}"
+TARGET_SERVER=$(echo $1 | tr -s /)
+TARGET_SERVER=${TARGET_SERVER%/}
+bin/$TARGET_SERVER-servers "${@:2}"
