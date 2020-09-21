@@ -142,8 +142,11 @@ export default class ReduxChatRoomsProvider extends Component {
   _indexCache = () =>
     this.setState(state => {
       const cache = {}
-      for (let i = 0; i < this.state.rooms.length; i++) {
-        cache[this.state.rooms[i].uuid] = i
+      // for (let i = 0; i < this.state.rooms.length; i++) {
+      //   cache[this.state.rooms[i].uuid] = i
+      // }
+      for (let i = 0; i < state.rooms.length; i++) {
+        cache[state.rooms[i].uuid] = i
       }
       return { cache }
     })

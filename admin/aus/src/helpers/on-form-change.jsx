@@ -1,14 +1,15 @@
 import { Objected } from 'react-component-templates/helpers';
 
 export default function onFormChange( context, k, v, valid, cb = (() => {}), validator = () => true) {
-  return context.setState((prevState) => {
-    prevState.changed = prevState.changed || Objected.getValue(prevState.form, k) !== v
+  return context.setState(state => {
+    const form = { ...(state.form || {}) },
+          changed = !!state.changed || (Objected.getValue(form, k) !== v)
 
-    Objected.setValue(prevState.form, k, (v === undefined ? null : v))
-    Objected.setValue(prevState.form, `${k}_valid`, valid)
-    Objected.setValue(prevState.form, `${k}_validated`, true)
+    Objected.setValue(form, k, (v === undefined ? null : v))
+    Objected.setValue(form, `${k}_valid`, valid)
+    Objected.setValue(form, `${k}_validated`, true)
 
-    return prevState
+    return { form, changed }
   }, cb)
 }
 

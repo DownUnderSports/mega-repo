@@ -70,19 +70,27 @@ export default class DirectPaymentForm extends Component {
         try {
           const valid = await userIsValid(formatted)
           if(formatted === dusIdFormat(Objected.getValue(this.state.form, k))) {
-            this.setState((prevState) => {
-              Objected.setValue(prevState.form, `${k}_valid`, !!valid)
-              Objected.setValue(prevState.form, `${k}_valid_name`, valid ? '' : 'Not Found')
-              return prevState
+            this.setState(state => {
+              if(formatted === dusIdFormat(Objected.getValue(state.form, k))) {
+                const form = { ...state.form }
+                Objected.setValue(form, `${k}_valid`, !!valid)
+                Objected.setValue(form, `${k}_valid_name`, valid ? '' : 'Not Found')
+                return { form }
+              } else {
+                return {}
+              }
             })
             if(valid) {
               const name = await getUserName(formatted)
               if(formatted === dusIdFormat(Objected.getValue(this.state.form, k))) {
-                this.setState((prevState) => {
-                  if(formatted === dusIdFormat(Objected.getValue(prevState.form, k))) {
-                    Objected.setValue(prevState.form, `${k}_valid_name`, name)
+                this.setState(state => {
+                  if(formatted === dusIdFormat(Objected.getValue(state.form, k))) {
+                    const form = { ...state.form }
+                    Objected.setValue(form, `${k}_valid_name`, name)
+                    return { form }
+                  } else {
+                    return {}
                   }
-                  return prevState
                 })
               }
             }
@@ -261,9 +269,11 @@ export default class DirectPaymentForm extends Component {
       e.stopPropagation()
     }
 
-    const form = Objected.deepClone(this.state.form)
-    form.payment.checks.splice(i, 1)
-    this.setState({form})
+    this.setState(state => {
+      const form = Objected.deepClone(state.form)
+      form.payment.checks.splice(i, 1)
+      return { form }
+    })
   }
 
   addSplit = (i) => {

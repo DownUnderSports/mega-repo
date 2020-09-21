@@ -128,9 +128,10 @@ export default class UserForm extends Component {
     e.stopPropagation(e)
     e.preventDefault(e)
 
-    this.setState((prevState) => {
-      prevState.form.dus_id = dusIdFormat(prevState.form.dus_id)
-      return prevState
+    this.setState(state => {
+      form = { ...prevState.form }
+      form.dus_id = dusIdFormat(form.dus_id)
+      return { form }
     }, async () => {
       try {
         const dusIdValid = await userIsValid(this.state.form.dus_id)

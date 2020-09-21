@@ -55,7 +55,7 @@ export default class CreditForm extends Component {
     const state = {
       errors: null,
       changed: false,
-      ogCredit: credit,
+      ogCredit: { ...credit },
       form: { credit },
       addDate: props.add_date
     }
@@ -66,12 +66,12 @@ export default class CreditForm extends Component {
   setValues = (ev) => {
     const { name, amount, description } = ev.currentTarget.dataset || {}
     name && this.setState(state => {
-      state.form = { ...(state.form || {}) }
-      state.form.credit = { ...(state.form.credit || {}) }
-      state.form.credit.name = name || ''
-      state.form.credit.amount = amount ? `${amount.replace(/,/g, '').replace(/\$/, '')}.00`.replace(/(\.\d+)\.\d+/, "$1") : '0.00'
-      state.form.credit.description = description || ''
-      return state
+      const form = { ...(state.form || {}) }
+      form.credit = { ...(form.credit || {}) }
+      form.credit.name = name || ''
+      form.credit.amount = amount ? `${amount.replace(/,/g, '').replace(/\$/, '')}.00`.replace(/(\.\d+)\.\d+/, "$1") : '0.00'
+      form.credit.description = description || ''
+      return { form }
     }, this.hideCategories)
   }
 
