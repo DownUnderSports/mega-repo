@@ -129,7 +129,7 @@ export default class UserForm extends Component {
     e.preventDefault(e)
 
     this.setState(state => {
-      form = { ...prevState.form }
+      const form = { ...state.form }
       form.dus_id = dusIdFormat(form.dus_id)
       return { form }
     }, async () => {

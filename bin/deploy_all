@@ -12,8 +12,16 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
+def clear_cache?
+  ARG_KEYS["--clear"] || ARG_KEYS["--clean"]
+end
+
+def main_only?
+  ARG_KEYS["--main"]
+end
+
 chdir APP_ROOT do
-  system! "#{APP_ROOT}/bin/deploy#{ARG_KEYS["--clear"] ? " --clear" : ''} www admin#{ARG_KEYS["--main"] ? '' : " year-2019 year-2020"}"
+  system! "#{APP_ROOT}/bin/deploy#{clear_cache? ? " --clear" : ''} www admin#{main_only? '' : " year-2019 year-2020"}"
 rescue Interrupt
   puts "\n== Cancelled Deployment =="
 end

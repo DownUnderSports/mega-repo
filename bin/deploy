@@ -234,7 +234,7 @@ function deploy() {
       fi
     else
       H_OR_G="heroku"
-      if [[ $CLEAR_CACHE ]]; then
+      if $CLEAR_CACHE; then
         echo "Clearing build cache for $REPO_NAME heroku app repo..."
         echo
         heroku repo:purge_cache -a "$REPO_NAME"
@@ -309,7 +309,7 @@ mapping=""
 folders=()
 clear_cache=false
 for profile do
-  if [[ "$profile" == "--clear" ]]; then
+  if [[ "$profile" == "--clear" ]] || [[ "$profile" == "--clean" ]]; then
     clear_cache=true
   else
     if echo $profile|grep -v '^test.*$' >/dev/null; then

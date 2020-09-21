@@ -53,7 +53,7 @@ export default class Messages extends Component {
 
   getMessages = async (force = false) => {
     if(this._isMounted){
-      this.setState({reloading: true})
+      this.setState({ reloading: true })
       try {
         this.abortFetch()
         if(!this.props.id) throw new Error(`Messages (${this.type()}): No User ID`)
@@ -120,6 +120,8 @@ export default class Messages extends Component {
     this.setState({messages: [...messages.slice(0, i), ...messages.slice(i + 1)]})
   }
 
+  onSuccess = () => this.getMessages()
+
   render() {
     const { reloading = false } = this.state || {}
     return (
@@ -174,8 +176,9 @@ export default class Messages extends Component {
             this.state.messages.map((m, k) => (
               <MessageInfo
                 key={k}
-                onSuccess={() => this.getMessages()}
-                onCancel={ !m.id && (() => this.removeMessage(k))}
+                onSuccess={this.onSuccess}
+                onCancel={() => !m.id && this.removeMessage(k)}
+                reloading={reloading}
                 {...m}
               />
             ))

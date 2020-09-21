@@ -53,6 +53,11 @@ class CleanupCounts
     private
       def collect_stats(force: false, dus_ids: nil)
         force ||= stale?
+        if force || !defined?(@maximums)
+          @maximums = {}
+        else
+          @maximums ||= {}
+        end
         dus_ids && (dus_ids.map! {|v| v.to_s.dus_id_format! })
         new_stats = []
         filter = gen_filter(force, dus_ids)
@@ -60,6 +65,7 @@ class CleanupCounts
           new_stats << load_stat(id, filter)
         end
         new_stats << load_stat("TOTAL", filter, total: true, actions: ACTIONS)
+        new_stats << get_max
 
         set_filter_date
 
@@ -139,6 +145,17 @@ class CleanupCounts
         blocker_car.call
         value[:count] = actions.count(:all)
         return value.as_json unless value[:count] > 0
+        unless value[:name] == "TOTAL"
+          max_object = @maximums[:count] ||= { count: 0 }
+
+          if max_object[:count] < value[:count]
+            max_object[:name] = value[:name]
+            max_object[:count] = value[:count]
+          elsif max_object[:count] == value[:count]
+            max_name = max_object[:name].to_s
+            max_object[:name] = "#{max_name.sub(/,? and /, ", ")}#{max_name =~ /\sand\s/ ? "," : ""} and #{value[:name]}"
+          end
+        end
         [
           Date.today,
           Date.yesterday,
@@ -147,9 +164,22 @@ class CleanupCounts
           two_mondays_ago
         ].each do |date|
           blocker_car.call
-          value[date.to_s] ||= actions.
+          key = date.to_s
+          value[key] ||= actions.
               where(table[:action_tstamp_tx].gteq(date.in_time_zone)).
               count(:all)
+
+          unless value[:name] == "TOTAL"
+            max_object = @maximums[key] ||= { count: 0 }
+
+            if max_object[:count] < value[key]
+              max_object[:name] = value[:name]
+              max_object[:count] = value[key]
+            elsif max_object[:count] == value[key]
+              max_name = max_object[:name].to_s
+              max_object[:name] = "#{max_name}#{max_name.sub(/,? and /, ", ")}#{max_name =~ /\sand\s/ ? "," : ""} and #{value[:name]}"
+            end
+          end
         end
         blocker_car.call
         value.as_json
@@ -173,6 +203,14 @@ class CleanupCounts
         was_filtered = @was_filtered
         @was_filtered = nil
         redis.set("cleanup_user_stats_last_fetched", Time.zone.now.utc.as_json) unless was_filtered
+      end
+
+      def get_max
+        return { name: "TOP PERFORMERS" }.as_json unless defined?(@maximums) && @maximums
+
+        Hash[ @maximums.map {|date, obj| [ date, obj[:name].split(/,(?! and )|,? and /).length > (DUS_IDS.length - 2) ? "No One" : obj[:name] ] } ].
+          merge(name: "TOP PERFORMERS").
+          as_json
       end
   end
 end

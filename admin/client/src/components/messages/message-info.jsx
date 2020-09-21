@@ -14,7 +14,17 @@ export default class MessageInfo extends Component {
   openMessageForm = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    this.setState({showForm: true})
+    this.setState({ showForm: true })
+  }
+
+  onSuccess = (e) => {
+    this.setState({ showForm: false })
+    this.props.onSuccess && this.props.onSuccess(e)
+  }
+
+  onCancel = (e) => {
+    this.setState({ showForm: false })
+    this.props.onCancel && this.props.onCancel(e)
   }
 
   render() {
@@ -34,13 +44,13 @@ export default class MessageInfo extends Component {
       <MessageForm
         id={ id }
         userId={ user_id }
-        onSuccess={ this.props.onSuccess || (() => this.setState({showForm: false})) }
-        onCancel={ this.props.onCancel || (() => this.setState({showForm: false}))}
+        onSuccess={ this.onSuccess }
+        onCancel={ this.onCancel }
         url={ this.props.url || '' }
         type={type}
         categories={categories}
         reasons={reasons}
-        message={{...this.props}}
+        message={{ ...this.props }}
       />
     ) : (
       <div className="list-group-item clickable p-0 pb-2" onClick={this.openMessageForm}>
