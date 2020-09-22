@@ -21,7 +21,7 @@ def main_only?
 end
 
 chdir APP_ROOT do
-  system! "#{APP_ROOT}/bin/deploy#{clear_cache? ? " --clear" : ''} www admin#{main_only? '' : " year-2019 year-2020"}"
+  system! "#{APP_ROOT}/bin/deploy#{clear_cache? ? " --clear" : ''} www admin#{main_only? ? '' : " year-2019 year-2020"}"
 rescue Interrupt
   puts "\n== Cancelled Deployment =="
 end

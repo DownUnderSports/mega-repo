@@ -39,4 +39,22 @@
       </div>
     </div>
   <% end %>
+  <% unless defined?(no_button) && no_button %>
+  <script type="text/javascript">
+    document.addEventListener("keydown", (ev) => {
+      const target = ev.currentTarget
+      if(ev.ctrlKey && ev.key === "Enter") {
+        if(ev.shiftKey) {
+          const section = document.getElementById("clocks_outer_wrapper")
+          if(!section) return false
+          const links = section.querySelectorAll("td.staff-clock-value > a")
+          links.length && links[links.length - 1].click()
+        } else {
+          const el = document.getElementById("add_clock_button")
+          el && el.click()
+        }
+      }
+    })
+  </script>
+  <% end %>
 </section>

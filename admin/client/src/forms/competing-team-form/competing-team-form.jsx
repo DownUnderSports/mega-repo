@@ -51,7 +51,7 @@ export default class CompetingTeamForm extends Component {
   }
 
   onFormKeyDown = (e) => {
-    if((e.keyCode === 13) && e.ctrlKey) this.onSubmit(e)
+    if(e.ctrlKey && (e.key === "Enter")) this.onSubmit(e)
   }
 
   onSubmit = (e) => {

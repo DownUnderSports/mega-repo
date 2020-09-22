@@ -30,7 +30,7 @@
     <% user.staff.clocks_since(since).each do |clock| %>
       <% if start %>
         <% total += (value = clock.created_at.to_f - start.to_f) %>
-          <td>
+          <td class="staff-clock-value">
             <% if @current_user&.dus_id == 'SAM-PSN' %>
               <%= link_to clock.created_at.strftime("%F (%a) - %r"), edit_admin_clock_path(clock) %>
             <% else %>
@@ -47,7 +47,7 @@
         <% start = nil %>
       <% else %>
         <tr>
-          <td>
+          <td class="staff-clock-value">
             <% start = clock.created_at %>
             <% if @current_user&.dus_id == 'SAM-PSN' %>
               <%= link_to start.strftime("%F (%a) - %r"), edit_admin_clock_path(clock) %>

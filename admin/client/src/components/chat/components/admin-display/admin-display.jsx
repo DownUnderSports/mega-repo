@@ -31,7 +31,7 @@ export default class AdminChatDisplay extends Component {
 
   _submitOnCtrlEnter = (ev) => {
     if(!ev) return false
-    else if(ev.ctrlKey && ((ev.key === "Enter") || (ev.which === 13))) {
+    else if(ev.ctrlKey && (ev.key === "Enter")) {
       this.submitMessage(ev)
       return true
     }
