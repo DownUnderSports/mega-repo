@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  Dir["#{APP_ROOT}/*/package.json"].each do |file|
+    dir = file.to_s.sub('/package.json', '')
+
+    if File.read(file).to_s =~ /"upgrade":/
+      system!("yarn --cwd #{dir} upgrade")
+    end
+  end
+end

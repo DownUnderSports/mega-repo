@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "bin/build_all",
-    "install": "bin/install_all"
+    "install": "bin/install_all",
+    "upgrade": "bin/upgrade_all"
   },
   "dependencies": {}
 }

@@ -11,6 +11,19 @@ import './messages.css'
 const baseUrl = '/admin/users'
 
 export default class Messages extends Component {
+  get lastMessage() {
+    if(this._lastMessage !== undefined) return this._lastMessage
+    try {
+      return this._lastMessage = (this.state.messages && this.state.messages[this.state.messages.length - 1])
+    } catch(e) {
+      return this._lastMessage = null
+    }
+  }
+
+  get lastMessageIsNew() {
+    if(this._lastMessageIsNew !== undefined) return this._lastMessageIsNew
+    return this._lastMessageIsNew = !!this.lastMessage && !this.lastMessage.id
+  }
 
   constructor(props) {
     super(props)
@@ -27,7 +40,15 @@ export default class Messages extends Component {
     this._isMounted = false
   }
 
-  async componentDidUpdate(prevProps) {
+  shouldComponentUpdate(_, nextState) {
+    if(this.state.messages !== nextState.messages) {
+      this._lastMessage = undefined
+      this._lastMessageIsNew = undefined
+    }
+    return true
+  }
+
+  async componentDidUpdate(prevProps, prevState) {
     if(
       (prevProps.id !== this.props.id)
       || (prevProps.lastFetch !== this.props.lastFetch)
@@ -97,19 +118,22 @@ export default class Messages extends Component {
   }
 
   newMessage = async () => {
-    this.setState({reloading: true})
+    if(this.state.fetchingNewMessage || this.lastMessageIsNew) return false
+    this.setState({ reloading: true, fetchingNewMessage: true })
     try {
       const result = await fetch(`${baseUrl}/${this.props.id || 0}/messages/new.json?type=${this.type()}`),
             retrieved = await result.json()
 
       this.setState({
         reloading: false,
+        fetchingNewMessage: false,
         messages: [...this.state.messages, retrieved],
       })
 
     } catch(e) {
       this.setState({
         reloading: false,
+        fetchingNewMessage: false,
         messages: [],
       })
     }
@@ -123,7 +147,8 @@ export default class Messages extends Component {
   onSuccess = () => this.getMessages()
 
   render() {
-    const { reloading = false } = this.state || {}
+    const { reloading = false, fetchingNewMessage = false } = this.state || {},
+          disableNewMessageButton = fetchingNewMessage || this.lastMessageIsNew
     return (
       <DisplayOrLoading
         display={!reloading || !!this.state.allMessages.length}
@@ -183,9 +208,22 @@ export default class Messages extends Component {
               />
             ))
           }
-          <button className='btn-block btn-primary' onClick={this.newMessage}>
-            Add {this.category()}
-          </button>
+          {
+            !!reloading && (
+              <div className="list-group-item">
+                <div className="d-flex justify-content-center my-3">
+                  <RunningDots className="la-dark la-2x" />
+                </div>
+              </div>
+            )
+          }
+          {
+            !disableNewMessageButton && (
+              <button className='btn-block btn-primary' onClick={this.newMessage}>
+                Add {this.category()}
+              </button>
+            )
+          }
         </CardSection>
       </DisplayOrLoading>
     )
