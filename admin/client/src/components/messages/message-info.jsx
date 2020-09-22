@@ -8,7 +8,7 @@ export default class MessageInfo extends Component {
   }
 
   capitalize(str) {
-    return str[0].toUpperCase() + str.slice(1)
+    return str ? str[0].toUpperCase() + str.slice(1) : null
   }
 
   openMessageForm = (e) => {
@@ -53,7 +53,7 @@ export default class MessageInfo extends Component {
         message={{ ...this.props }}
       />
     ) : (
-      <div className="list-group-item clickable p-0 pb-2" onClick={this.openMessageForm}>
+      !!id && <div className="list-group-item clickable p-0 pb-2" onClick={this.openMessageForm}>
         <div className="col-12 border-bottom">
           <div className='row bg-secondary text-light'>
             <div className='col-3 border-right'>{created_at}</div>
