@@ -41,6 +41,7 @@ module Admin
                     canceled: rel.related_user.traveler&.cancel_date.present?
                   }
                 end,
+              hasRelation: relations.size > 0,
               version: last_update
             }
           end

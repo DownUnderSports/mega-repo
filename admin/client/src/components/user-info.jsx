@@ -220,6 +220,9 @@ export default class UserInfo extends Component {
     }
   }
 
+  onSuccess = () => this.getUser()
+  onCancel = () => this.setState({ showForm: false })
+
   confirmAddress = ev => this.markTravelPrep(ev, 'address_confirmed_date', 'Address as Confirmed Correct')
   confirmDOB = ev => this.markTravelPrep(ev, 'dob_confirmed_date', 'Birth Date is Correct')
   confirmName = ev => this.markTravelPrep(ev, 'name_confirmed_date', 'FULL_NAME as their confirmed correct legal name')
@@ -308,8 +311,8 @@ export default class UserInfo extends Component {
               <UserForm
                 key={keyId}
                 id={ this.props.formId || dus_id }
-                onSuccess={ this.props.onSuccess || (() => this.getUser()) }
-                onCancel={ this.props.onCancel || (() => this.setState({showForm: false}))}
+                onSuccess={ this.props.onSuccess || this.onSuccess }
+                onCancel={ this.props.onCancel || this.onCancel }
                 url={ this.props.url || '' }
                 user={{
                   ...(this.state.user || {}),

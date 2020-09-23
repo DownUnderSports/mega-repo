@@ -7,10 +7,25 @@ import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 
 const usersUrl = '/admin/users'
 
+const capitalize = (str) => str[0].toUpperCase() + str.slice(1)
+
+const Relation = ({ relation, onSuccess, onCancel, url }) =>
+  <UserInfo
+    key={relation.id || "new-relation"}
+    header={capitalize(relation.relationship || 'New Relation') + ' Info'}
+    id={relation.related_user_id}
+    formId={relation.id}
+    relationship={relation.relationship}
+    showRelationship={relation.showRelationship || relation.relationship}
+    url={url}
+    onSuccess={onSuccess}
+    onCancel={ !relation.id && onCancel }
+  />
+
 export default class UserRelations extends Component {
   constructor(props) {
     super(props)
-    this.state = { relations: [], reloading: true }
+    this.state = { relations: [], hasRelation: false, reloading: true }
   }
 
   async componentDidMount(){
@@ -23,8 +38,28 @@ export default class UserRelations extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if(prevProps.id !== this.props.id) await this.getRelations()
+    if(prevProps.id !== this.props.id) return await this.getRelations()
+
+    const hasRelation = !!(this.state.relations && this.state.relations.length)
+    if(this.state.hasRelation !== hasRelation) this.setState({ hasRelation })
   }
+
+  get mapRelations() {
+    return (this.state.hasRelation && this.state.relations)
+      ? this.state.relations.map(this.renderRelation)
+      : 'No Relations'
+  }
+
+  onSuccess = () => this.getRelations()
+
+  renderRelation = (relation, i) =>
+    <Relation
+      key={relation.id || `new-rel-${i}`}
+      relation={relation}
+      onSuccess={this.onSuccess}
+      onCancel={() => this.removeRelation(i)}
+      url={`${usersUrl}/${this.props.id}/relations`}
+    />
 
   abortFetch = () => {
     if(this._fetchable) this._fetchable.abort()
@@ -57,9 +92,13 @@ export default class UserRelations extends Component {
     }
   }
 
-  capitalize(str) {
-    return str[0].toUpperCase() + str.slice(1)
-  }
+  addRelation = () =>
+    this.setState({
+      relations: [
+        ...this.state.relations,
+        { showRelationship: true }
+      ]
+    })
 
   removeRelation = (i) => {
     const {relations = []} = this.state
@@ -68,7 +107,7 @@ export default class UserRelations extends Component {
 
   render() {
     const {
-      relations = [],
+      hasRelation = false,
       reloading = false,
     } = this.state || {}
 
@@ -93,7 +132,7 @@ export default class UserRelations extends Component {
           </div>
         </div>
         {
-          !!reloading && !!relations.length && (
+          !!reloading && hasRelation && (
             <div key="loading-dots" className="d-flex justify-content-center">
               <RunningDots className="la-dark la-2x" />
             </div>
@@ -101,32 +140,14 @@ export default class UserRelations extends Component {
         }
         <DisplayOrLoading
           key="relations-list"
-          display={!reloading || (relations && relations.length)}
+          display={!reloading || hasRelation}
           message='LOADING...'
           loadingElement={
             <JellyBox />
           }
         >
-          {
-            relations ? (
-              relations.map((r, k) => (
-                <UserInfo
-                  key={r.related_user_id || k}
-                  header={this.capitalize(r.relationship || 'New Relation') + ' Info'}
-                  id={r.related_user_id}
-                  formId={r.id}
-                  relationship={r.relationship}
-                  showRelationship={r.showRelationship || r.relationship}
-                  url={ `${usersUrl}/${this.props.id}/relations` }
-                  onSuccess={() => this.getRelations()}
-                  onCancel={ !r.id && (() => this.removeRelation(k))}
-                />
-              ))
-            ) : (
-              'No Relations'
-            )
-          }
-          <button className='mt-3 btn-block btn-primary' onClick={() => this.setState({relations: [...this.state.relations, {showRelationship: true}]})}>
+          { this.mapRelations }
+          <button className='mt-3 btn-block btn-primary' onClick={this.addRelation}>
             Add Relation
           </button>
         </DisplayOrLoading>

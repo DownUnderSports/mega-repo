@@ -41,6 +41,13 @@ export default class AmbassadorForm extends Component {
     this.action = `/admin/users/${this.props.userId}/ambassadors/${this.props.id || ''}`
   }
 
+  shouldComponentUpdate(nextProps) {
+    if(nextProps.userId !== this.props.userId || nextProps.id !== this.props.id) {
+      this.action = `/admin/users/${this.props.userId}/ambassadors/${this.props.id || ''}`
+    }
+    return true
+  }
+
   onChange = (ev, k, formatter, cb = (() => {})) => {
     const v = ev ? (formatter ? this[formatter](ev.currentTarget.value) : ev.currentTarget.value) : formatter
     console.log(k)
@@ -66,6 +73,7 @@ export default class AmbassadorForm extends Component {
 
   handleSubmit = async (isDelete = false) => {
     isDelete = isDelete === "DELETE"
+    if(isDelete && !this.props.id) return this.onCancel()
     if(!isDelete && !this.state.changed) return this.props.onSuccess()
     try {
       let form = {}, method = "DELETE", phone
@@ -102,8 +110,10 @@ export default class AmbassadorForm extends Component {
   }
 
   onCancel = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     return this.props.onCancel && this.props.onCancel();
   }
 
@@ -180,17 +190,19 @@ export default class AmbassadorForm extends Component {
                     },
                     {
                       className: 'col mb-3',
-                      fields: [
-                        {
-                          field: 'button',
-                          className: 'btn btn-block btn-warning btn-lg',
-                          type: 'submit',
-                          onClick: this.onDelete,
-                          children: [
-                            'DELETE'
+                      fields: this.props.id
+                        ? [
+                            {
+                              field: 'button',
+                              className: 'btn btn-block btn-warning btn-lg',
+                              type: 'submit',
+                              onClick: this.onDelete,
+                              children: [
+                                'DELETE'
+                              ]
+                            }
                           ]
-                        }
-                      ]
+                        : []
                     },
                     {
                       className: 'col mb-3',

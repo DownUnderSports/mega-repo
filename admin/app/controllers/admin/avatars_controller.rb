@@ -31,13 +31,9 @@ module Admin
       return render json: { avatar: url_for(@found_user.reload.avatar.variant(resize: '500x500>')) }, status: 200
     rescue
       puts msg = $!.message
-      puts trace = $!.backtrace
-      begin
-        # p ActiveStorage::Blob.find_signed(params[:user][:avatar])&.purge
-      rescue
-      end
+      puts $!.backtrace
 
-      return not_authorized [ 'Failed to add Sponsor Photo', $!.message, *@found_user.errors.full_messages, *trace.first(10) ], 422
+      return not_authorized [ 'Failed to add Sponsor Photo', msg ], 422
     end
     # == Cleanup ============================================================
 

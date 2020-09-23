@@ -2,15 +2,39 @@ import React, { Component } from 'react';
 import { DisplayOrLoading } from 'react-component-templates/components';
 import AmbassadorForm from 'forms/ambassador-form'
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
-
+import RunningDots from 'load-awesome-react-components/dist/ball/running-dots'
 
 export const ambassadorsUrl = '/admin/users/:id/ambassadors/:ambassador_record_id.json'
 
+const Ambassador = ({ ambassador, openForm }) =>
+  <tr
+    className="clickable"
+    key={`ambassador_list.${ambassador.id}`}
+    data-id={ambassador.id}
+    onClick={ openForm }
+  >
+    <th>
+      { ambassador.category } ({ ambassador.relationship || 'none'})
+    </th>
+    <th>
+      { ambassador.dus_id }
+    </th>
+    <th>
+      { ambassador.first }
+    </th>
+    <th>
+      { ambassador.last }
+    </th>
+    <th>
+      { ambassador.types_array.some(type => type === "email") ? "Yes" : "No" }
+    </th>
+    <th>
+      { ambassador.types_array.some(type => type === "phone") ? "Yes" : "No" }
+    </th>
+  </tr>
+
 export default class AmbassadorInfo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { ambassadors: [], reloading: !!this.props.id, showForm: false, formIdx: 0 }
-  }
+  state = { ambassadors: [], reloading: false , showForm: false, formIdx: 0 }
 
   async componentDidMount(){
     if(this.props.id) await this.getRecords()
@@ -31,8 +55,11 @@ export default class AmbassadorInfo extends Component {
 
   getRecords = async (showForm = false) => {
     if(this._unmounted) return false
-    if(!this.props.id) return this.setState({showForm})
-    this.setState({reloading: true})
+
+    if(!this.props.id) return this.setState({ showForm })
+
+    this.setState({ reloading: true })
+
     try {
       this.abortFetch()
       if(!this.props.id) throw new Error('UserInfo: No User ID')
@@ -43,7 +70,7 @@ export default class AmbassadorInfo extends Component {
 
       this._unmounted || this.setState({
         reloading: false,
-        ambassadors: retrieved.ambassador_records,
+        ambassadors: retrieved.ambassador_records || [],
         showForm,
         formIdx
       })
@@ -51,7 +78,7 @@ export default class AmbassadorInfo extends Component {
       console.error(e)
       this._unmounted || this.setState({
         reloading: false,
-        user: {},
+        ambassadors: [],
       })
     }
   }
@@ -63,7 +90,14 @@ export default class AmbassadorInfo extends Component {
   }
 
   onSuccess = () => this.getRecords(false)
-  onCancel = () => this.setState({showForm: false})
+  onCancel = () => this.setState({ showForm: false })
+
+  showAmbassador = (ambassador, i) =>
+    <Ambassador
+      key={`ambassador-list.${ambassador.id || `new-${i}`}`}
+      ambassador={ambassador}
+      openForm={ this.openAmbassadorForm }
+    />
 
   render() {
     const {
@@ -74,7 +108,7 @@ export default class AmbassadorInfo extends Component {
 
     return (
       <DisplayOrLoading
-        display={!reloading}
+        display={!reloading || (!!ambassadors.length && !showForm)}
         message='LOADING...'
         loadingElement={
           <JellyBox />
@@ -93,6 +127,17 @@ export default class AmbassadorInfo extends Component {
           ) : (
             <table className="table m-0">
               <thead>
+                {
+                  !!reloading && (
+                    <tr>
+                      <th colSpan="6">
+                        <div className="d-flex justify-content-center my-3">
+                          <RunningDots className="la-dark la-2x" />
+                        </div>
+                      </th>
+                    </tr>
+                  )
+                }
                 <tr>
                   <th>
                     Relationship
@@ -115,44 +160,17 @@ export default class AmbassadorInfo extends Component {
                 </tr>
               </thead>
               <tbody>
-                {
-                  ambassadors.map(ambassador => (
-                    <tr
-                      className="clickable"
-                      key={`ambassador_list.${ambassador.id}`}
-                      data-id={ambassador.id}
-                      onClick={ this.openAmbassadorForm }
-                    >
-                      <th>
-                        { ambassador.category } ({ ambassador.relationship || 'none'})
-                      </th>
-                      <th>
-                        { ambassador.dus_id }
-                      </th>
-                      <th>
-                        { ambassador.first }
-                      </th>
-                      <th>
-                        { ambassador.last }
-                      </th>
-                      <th>
-                        { ambassador.types_array.some(type => type === "email") ? "Yes" : "No" }
-                      </th>
-                      <th>
-                        { ambassador.types_array.some(type => type === "phone") ? "Yes" : "No" }
-                      </th>
-                    </tr>
-                  ))
-                }
+                { ambassadors.map(this.showAmbassador) }
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="5">
+                  <td colSpan="6">
                     <button
                       type="button"
                       onClick={ this.openAmbassadorForm }
                       className="btn btn-block btn-primary"
                       data-id="new"
+                      disabled={reloading}
                     >
                       New
                     </button>

@@ -1,35 +1,36 @@
-import React, { Component } from 'react';
-import { CardSection, DisplayOrLoading, Link } from 'react-component-templates/components';
-import UserInfo from 'components/user-info'
-import UserRelations from 'components/user-relations'
-import AmbassadorInfo from 'components/ambassador-info'
-import MeetingRegistrations from 'components/meeting-registrations'
-import VideoViews from 'components/video-views'
-import ContactAttempts from 'components/user-contact-attempts'
-import ContactHistories from 'components/user-contact-history'
-import Notes from 'components/user-notes'
-import Requests from 'components/requests'
-import Mailings from 'components/user-mailings'
-import Printing from 'components/user-printing'
-import PaymentForm from 'common/js/forms/payment-form'
+import React, { Component } from "react";
+import { CardSection, DisplayOrLoading, Link } from "react-component-templates/components"
+import Avatar from "components/user-avatar"
+import AmbassadorInfo from "components/ambassador-info"
+import BenefitsUploadForm from "forms/benefits-upload-form"
+import CheckPaymentForm from "forms/check-payment-form"
+import ContactAttempts from "components/user-contact-attempts"
+import ContactHistories from "components/user-contact-history"
+import FlightsUploadForm from "forms/flights-upload-form"
+import FundraisingPacketUploadForm from "forms/fundraising-packet-upload-form"
+import IncentiveDeadlinesUploadForm from "forms/incentive-deadlines-upload-form"
+import InsuranceUploadForm from "forms/insurance-upload-form"
+import LegalUploadForm from "forms/legal-upload-form"
+import Mailings from "components/user-mailings"
+import MeetingRegistrations from "components/meeting-registrations"
+import Notes from "components/user-notes"
+import PassportForm from "forms/passport-form"
+import PaymentForm from "common/js/forms/payment-form"
+import Printing from "components/user-printing"
+import Requests from "components/requests"
+import TransferExpectationForm from "forms/transfer-expectation-form"
+import UserInfo from "components/user-info"
+import UserRelations from "components/user-relations"
+import VideoViews from "components/video-views"
 // import PaymentLookupForm from 'common/js/forms/payment-lookup-form'
-import TransferExpectationForm from 'forms/transfer-expectation-form'
-import CheckPaymentForm from 'forms/check-payment-form'
-import PassportForm from 'forms/passport-form'
-import BenefitsUploadForm from 'forms/benefits-upload-form'
-import LegalUploadForm from 'forms/legal-upload-form'
-import InsuranceUploadForm from 'forms/insurance-upload-form'
-import FlightsUploadForm from 'forms/flights-upload-form'
-import IncentiveDeadlinesUploadForm from 'forms/incentive-deadlines-upload-form'
-import FundraisingPacketUploadForm from 'forms/fundraising-packet-upload-form'
-import ActiveStorageProvider from 'react-activestorage-provider'
-import AuthStatus from 'common/js/helpers/auth-status'
+
+const listGroupClass = { className: 'list-group' }
 
 export default class UsersShowInfoPage extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { receiptUrl: false, relations: [], sponsorPhoto: false, sponsorPhotoErrors: [], sponsorPhotoLoading: false, resetting: false, overrideEmailAddress: '', sendingCoronaEmail: false }
+    this.state = { receiptUrl: false, relations: [], resetting: false, overrideEmailAddress: '', sendingCoronaEmail: false }
   }
 
   get hash() {
@@ -53,6 +54,7 @@ export default class UsersShowInfoPage extends Component {
     if(!this.scrolled && (this.hash === hash)) {
       if(document.querySelector(hash)){
         this.scrolled = true
+        this.scrollCount = 0
         this.locationScroller = setTimeout(() => this.scrollToElement(hash), 100)
       } else {
         if(this.scrollCount < 1800) this.locationScroller = setTimeout(() => this.scrollToLocationHash(hash), 100)
@@ -90,15 +92,6 @@ export default class UsersShowInfoPage extends Component {
       receiptUrl: `https://www.downundersports.com/payments/${id}`
     })
     return true
-  }
-
-  onSponsorPhotoError = async (err) => {
-    if(this._unmounted) return false
-    try {
-      this.setState({sponsorPhotoLoading: false, sponsorPhotoErrors: [err.request, ...((await err.response.json()).errors || [])]})
-    } catch(_) {
-      this.setState({sponsorPhotoLoading: false, sponsorPhotoErrors: [err.toString()]})
-    }
   }
 
   newPayment = () => this.setState({receiptUrl: false, showCheckEntry: false, showLookup: false, showPmt: true})
@@ -156,6 +149,16 @@ export default class UsersShowInfoPage extends Component {
   //   this.sendCoronaEmail(ev, 'unselected_cancel', 'Cancelation Options (Unselected)')
   sendCancelInfo = (ev) =>
     this.sendCoronaEmail(ev, 'cancel_info', 'Cancel Information (Account Options)')
+
+  onAvatarAttached = (avatar) =>
+    this.afterFetch({
+      skipTime: true,
+      user: {
+        ...this.props.user,
+        avatar,
+        avatar_attached: true
+      }
+    })
 
   componentWillUnmount() {
     this._unmounted = true
@@ -237,7 +240,7 @@ export default class UsersShowInfoPage extends Component {
                 <CardSection
                   className='mb-3 bg-warning'
                   label='2021 Transfer Info'
-                  contentProps={{className: 'list-group'}}
+                  contentProps={listGroupClass}
                 >
                   <div className="list-group-item">
                     <TransferExpectationForm
@@ -318,7 +321,7 @@ export default class UsersShowInfoPage extends Component {
                 <CardSection
                   className='mb-3'
                   label='Take A Payment'
-                  contentProps={{className: 'list-group'}}
+                  contentProps={listGroupClass}
                 >
                   {
                     /*this.state.showLookup ? (
@@ -426,139 +429,14 @@ export default class UsersShowInfoPage extends Component {
             <ContactHistories id={id} key={`history-${id}`} lastFetch={lastFetch} />
             <ContactAttempts id={id} key={`attempts-${id}`} lastFetch={lastFetch} />
             <Mailings id={id} key={`mailings-${id}`} lastFetch={lastFetch} />
-            <CardSection
-              id="sponsor_photo"
-              className='mb-3 border border-info bg-info text-white scroll-margin'
-              label='Sponsor Photo'
-              contentProps={{className: 'list-group'}}
-            >
-              {
-                avatar_attached && (
-                  <div className="list-group-item text-center">
-                    <DisplayOrLoading display={!this.state.sponsorPhotoLoading}>
-                      <img src={avatar} className='img-fluid rounded' alt="avatar"/>
-                    </DisplayOrLoading>
-                  </div>
-                )
-              }
-              <div className="list-group-item">
-                <DisplayOrLoading
-                  display={!this.state.resetting}
-                >
-                  <ActiveStorageProvider
-                    endpoint={{
-                      path: `/admin/users/${id}/avatar`,
-                      model: 'User',
-                      attribute: 'avatar',
-                      method: 'PUT'
-                    }}
-                    onError={this.onSponsorPhotoError}
-                    headers={{
-                      ...AuthStatus.headerHash,
-                      'X-CSRF-Token': '',
-                      'Content-Type': 'application/json;charset=UTF-8',
-                    }}
-                    onSubmit={
-                      e => this.setState({
-                        sponsorPhoto: false,
-                        sponsorPhotoErrors: [],
-                        sponsorPhotoLoading: false,
-                      }, () => this.afterFetch({skipTime: true, user: {...this.props.user, avatar: e.avatar, avatar_attached: true}}))
-                    }
-                    render={({ handleUpload, uploads, ready }) => {
-                      return (
-                        <div className="row">
-                          <div className="col form-group">
-                            <div className="input-group">
-                              <div className="input-group-prepend">
-                                <i className="input-group-text material-icons">image</i>
-                              </div>
-                              <div className="custom-file">
-                                <input
-                                  type="file"
-                                  id="sponsor-photo-input"
-                                  name="sponsor-photo-input"
-                                  className="form-control-file"
-                                  placeholder='select sponsor photo'
-                                  onChange={(e) => this.setState({sponsorPhoto: e.currentTarget.files})}
-                                  disabled={!ready}
-                                />
-                                <label className="custom-file-label" htmlFor="sponsor-photo-input">
-                                  {
-                                    (
-                                      this.state.sponsorPhoto && this.state.sponsorPhoto.length
-                                    ) ? this.state.sponsorPhoto[0].name : 'Choose file...'
-                                  }
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className='col-2 form-group'>
-                            <button
-                              className='btn btn-block btn-primary'
-                              disabled={!ready || !this.state.sponsorPhoto || !this.state.sponsorPhoto.length}
-                              onClick={e => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                this.setState({sponsorPhotoLoading: true})
-                                handleUpload(this.state.sponsorPhoto).catch(this.onSponsorPhotoError)
-                              }}
-                            >
-                              Submit
-                            </button>
-                          </div>
-                          <div className="col-12">
-                            {
-                              (this.state.sponsorPhotoErrors || []).map((err, i) => (
-                                <div className='row' key={i}>
-                                  <div className="col-12 text-danger">
-                                    <p>
-                                     {err}
-                                    </p>
-                                  </div>
-                                </div>
-                              ))
-                            }
-                            {uploads.map(upload => {
-                              switch (upload.state) {
-                                case 'waiting':
-                                  return <p key={upload.id}>Waiting to upload {upload.file.name}</p>
-                                case 'uploading':
-                                  return (
-                                    <p key={upload.id}>
-                                      Uploading {upload.file.name}: {upload.progress}%
-                                    </p>
-                                  )
-                                case 'error':
-                                  return (
-                                    <p key={upload.id}>
-                                      Error uploading {upload.file.name}: {upload.error}
-                                      <button
-                                        className='btn btn-block mt-3 btn-warning'
-                                        onClick={() => {
-                                          this.setState({sponsorPhoto: null, resetting: true}, () => {
-                                            setTimeout(this.setState({resetting: false}))
-                                          })
-                                        }}
-                                      >
-                                        Reset Form
-                                      </button>
-                                    </p>
-                                  )
-                                case 'finished':
-                                  return <p key={upload.id}>Finished uploading {upload.file.name}</p>
-                                default:
-                                  return <p key={upload.id}>An Unknown Error Occured</p>
-                              }
-                            })}
-                          </div>
-                        </div>
-                      )
-                    }}
-                  />
-                </DisplayOrLoading>
-              </div>
-            </CardSection>
+            <Avatar
+              key={`avatar-${id}`}
+              id={id}
+              avatar_attached={avatar_attached}
+              avatar={avatar}
+              lastFetch={lastFetch}
+              onAttach={this.onAvatarAttached}
+            />
           </div>
           <div className="col-lg">
             <UserInfo
@@ -569,92 +447,60 @@ export default class UsersShowInfoPage extends Component {
             <CardSection
               className='mb-3'
               label='Ambassadors'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <AmbassadorInfo key={`ambassadors.${dus_id}`} id={id} />
-              </DisplayOrLoading>
+              <AmbassadorInfo key={`ambassadors.${dus_id}`} id={id} />
             </CardSection>
             <CardSection
               className='mb-3'
               label='Incentive Deadlines'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <IncentiveDeadlinesUploadForm key={`incentives.${dus_id}`} dus_id={dus_id} />
-              </DisplayOrLoading>
+              <IncentiveDeadlinesUploadForm key={`incentives.${dus_id}`} dus_id={dus_id} />
             </CardSection>
             <CardSection
               className='mb-3'
               label='Fundraising Packet'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <FundraisingPacketUploadForm key={`fundraising.${dus_id}`} dus_id={dus_id} />
-              </DisplayOrLoading>
+              <FundraisingPacketUploadForm key={`fundraising.${dus_id}`} dus_id={dus_id} />
             </CardSection>
             <CardSection
               className='mb-3'
               label='Passport'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
               <div className="list-group-item">
-                <DisplayOrLoading
-                  display={!this.state.resetting}
-                >
-                  <PassportForm key={`passport.${dus_id}`} dusId={dus_id} dividerClassName="col-xl" />
-                </DisplayOrLoading>
+                <PassportForm key={`passport.${dus_id}`} dusId={dus_id} dividerClassName="col-xl" />
               </div>
             </CardSection>
             <CardSection
               className='mb-3'
               label='Legal Form'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <LegalUploadForm key={`legal.${dus_id}`} dus_id={dus_id} />
-              </DisplayOrLoading>
+              <LegalUploadForm key={`legal.${dus_id}`} dus_id={dus_id} />
             </CardSection>
             <CardSection
               className='mb-3'
               label='Assignment of Benefits'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <BenefitsUploadForm key={`legal.${dus_id}`} dus_id={dus_id} />
-              </DisplayOrLoading>
+              <BenefitsUploadForm key={`legal.${dus_id}`} dus_id={dus_id} />
             </CardSection>
             <CardSection
               className='mb-3'
               label='Proof(s) of Insurance'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <InsuranceUploadForm key={`insurance.${dus_id}`} dus_id={dus_id} />
-              </DisplayOrLoading>
+              <InsuranceUploadForm key={`insurance.${dus_id}`} dus_id={dus_id} />
             </CardSection>
             <CardSection
               className='mb-3'
               label='Proof(s) of Own Flights'
-              contentProps={{className: 'list-group'}}
+              contentProps={listGroupClass}
             >
-              <DisplayOrLoading
-                display={!this.state.resetting}
-              >
-                <FlightsUploadForm key={`flights.${dus_id}`} dus_id={dus_id} />
-              </DisplayOrLoading>
+              <FlightsUploadForm key={`flights.${dus_id}`} dus_id={dus_id} />
             </CardSection>
             {
               !staff_page && (
@@ -662,7 +508,7 @@ export default class UsersShowInfoPage extends Component {
                   <CardSection
                     className='mb-3'
                     label='Meetings'
-                    contentProps={{className: 'list-group'}}
+                    contentProps={listGroupClass}
                   >
                     <MeetingRegistrations
                       id={id}
@@ -672,7 +518,7 @@ export default class UsersShowInfoPage extends Component {
                   <CardSection
                     className='mb-3'
                     label='Videos'
-                    contentProps={{className: 'list-group'}}
+                    contentProps={listGroupClass}
                   >
                     <VideoViews
                       id={id}
