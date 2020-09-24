@@ -45,7 +45,7 @@ class HomePage extends Component {
               </p>
               <p>
                 Over the years we have helped tens of thousands of high school
-                athletes showcase their talents on the international stage.
+                athletes showcase their talents on the international stage. {/*
                 We have many great reviews from athletes and their parents
                 who have traveled with us. You can check out our reviews on&nbsp;
                 <Link
@@ -72,6 +72,7 @@ class HomePage extends Component {
                   Better Business Bureau
                 </Link>
                 , where we have an A+ rating!
+                */}
               </p>
               {/*
                 <p>

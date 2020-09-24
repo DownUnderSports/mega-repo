@@ -16,18 +16,18 @@ import insurancePDF from 'common/assets/pdfs/insurance.pdf'
 
 export default class Footer extends PureComponent {
   links = [
-    {
-      to: 'https://www.facebook.com/DownUnderSports',
-      target: '_blank',
-      rel: 'noopener noreferrer',
-      children: [ 'Facebook' ],
-    },
-    {
-      to: "https://www.bbb.org/us/ut/north-logan/profile/athletic-organizations/down-under-sports-1166-2001870/#sealclick",
-      target: '_blank',
-      rel: 'noopener noreferrer',
-      children: [ 'Better Business Bureau' ],
-    },
+    // {
+    //   to: 'https://www.facebook.com/DownUnderSports',
+    //   target: '_blank',
+    //   rel: 'noopener noreferrer',
+    //   children: [ 'Facebook' ],
+    // },
+    // {
+    //   to: "https://www.bbb.org/us/ut/north-logan/profile/athletic-organizations/down-under-sports-1166-2001870/#sealclick",
+    //   target: '_blank',
+    //   rel: 'noopener noreferrer',
+    //   children: [ 'Better Business Bureau' ],
+    // },
     {
       to: insurancePDF,
       target: '_insurance',
