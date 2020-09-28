@@ -28,7 +28,7 @@ class User < ApplicationRecord
 
     # == Class Methods ========================================================
     def self.default_reason(user = nil)
-      if user.traveler
+      if user&.traveler
         'other'
       elsif user&.video_views&.watched&.exists?
         'post-meeting'

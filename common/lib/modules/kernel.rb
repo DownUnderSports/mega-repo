@@ -36,33 +36,40 @@ module Kernel
     def fetch_from_legacy_data(path)
       result = {}
 
-      begin
-        require 'net/https'
-        fetcher = Net::HTTP.new('staff.downundersports.com', '443')
-        fetcher.use_ssl = true,
-        fetcher.verify_mode = OpenSSL::SSL::VERIFY_NONE,
-        fetcher.read_timeout = 120
-        cert = get_server_staff_cert
-        if cert.present?
-          fetcher.cert = OpenSSL::X509::Certificate.new( cert )
-          fetcher.key = OpenSSL::PKey::RSA.new( cert, nil )
-        end
 
-        fetcher.start do |https|
-          request = Net::HTTP::Get.new(path)
-          if block_given?
-            result = yield(https, request)
-          else
-            response = https.request(request)
-            response.value
-            result = JSON.parse(response.body)
-          end
-        end
-      rescue
-        puts $!.message
-        puts $!.backtrace
-        result = {}
-      end
+      ##
+      # legacy server shut down
+      ##
+      #
+      # begin
+      #   require 'net/https'
+      #   fetcher = Net::HTTP.new('staff.downundersports.com', '443')
+      #   fetcher.use_ssl = true,
+      #   fetcher.verify_mode = OpenSSL::SSL::VERIFY_NONE,
+      #   fetcher.read_timeout = 120
+      #   cert = get_server_staff_cert
+      #   if cert.present?
+      #     fetcher.cert = OpenSSL::X509::Certificate.new( cert )
+      #     fetcher.key = OpenSSL::PKey::RSA.new( cert, nil )
+      #   end
+      #
+      #   fetcher.start do |https|
+      #     request = Net::HTTP::Get.new(path)
+      #     if block_given?
+      #       result = yield(https, request)
+      #     else
+      #       response = https.request(request)
+      #       response.value
+      #       result = JSON.parse(response.body)
+      #     end
+      #   end
+      # rescue
+      #   puts $!.message
+      #   puts $!.backtrace
+      #   result = {}
+      # end
+      #
+      ##
 
       result
     end

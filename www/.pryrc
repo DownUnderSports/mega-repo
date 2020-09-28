@@ -1,5 +1,5 @@
 og_print = Pry.config.print
-Pry.config.history_file = "#{__dir__}/log/pry_history.log"
+# Pry.config.history_file = "#{__dir__}/log/pry_history.log"
 (Pry.config.history.file = "#{__dir__}/log/pry_history.log") rescue nil
 
 Pry.config.print = proc do |output, value, *args|
