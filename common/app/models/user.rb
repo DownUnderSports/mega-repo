@@ -709,6 +709,10 @@ class User < ApplicationRecord
     missing_event_registrations.blank?
   end
 
+  def has_direct_guardian?
+    guardians.exists?
+  end
+
   def is_athlete?
     category_type.present? && !!(category_type =~ /athlete/i)
   end
@@ -924,7 +928,7 @@ class User < ApplicationRecord
       (self.is_athlete? || self.under_age?) ? [
         *ambassador_email_array,
         *(
-          guardian ?
+          has_direct_guardian? ?
           guardians.where.not(email: nil).map(&:email) :
           backup_guardians.where.not(email: nil).map(&:email)
         ),
@@ -937,7 +941,7 @@ class User < ApplicationRecord
       (self.is_athlete? || self.under_age?) ? [
         *ambassador_phone_array,
         *(
-          guardian ?
+          has_direct_guardian? ?
           guardians.where.not(phone: nil).map(&:phone) :
           backup_guardians.where.not(phone: nil).map(&:phone)
         ),
