@@ -82,17 +82,19 @@ class Site extends Component {
             <div className="ribbon-wrapper">
               <h3 className="ribbon">
                 <strong className="ribbon-inner">
-                  Summer Availability
+                  Staff Availability
                 </strong>
               </h3>
             </div>
             <hr className="d-block w-100"/>
             <p className="text-dark">
-              Please be aware that our office will have very limited hours this
-              summer as our communities grapple with the unprecedented events of
-              2020. You are welcome to email or leave us a message. We will
-              respond as we are able to and aim to resume normal operations this
-              fall. Thank you for your patience.
+              Please be aware that our office will have very limited hours while
+              our communities grapple with the unprecedented events of 2020. You
+              are welcome to email or leave us a message. We will respond as we
+              are able to and aim to resume normal operations early next year.
+            </p>
+            <p className="text-dark">
+              Thank you for your patience.
             </p>
           </div>
         </div>
