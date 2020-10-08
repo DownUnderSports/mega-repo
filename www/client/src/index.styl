@@ -142,6 +142,54 @@ body
     @media (min-width: 1250px)
       padding: 0 1rem
 
+  .mni-membership
+    text-align: center
+    font-weight: bold !important
+    width: 100%
+    max-width: 1140px
+    padding: 0 15px
+    &#mni-membership-bottom
+      display: none
+
+    a
+      display: block
+      width: 100%
+
+    *
+      text-align: center
+      font-weight: bold !important
+      max-width: 100%
+
+    @media (min-width: 768px)
+    // @media (min-width: 1440px)
+      &#mni-membership-top
+        display: none
+      &#mni-membership-bottom
+        position: sticky
+        bottom: 5rem
+        padding: 0 15px
+        display: flex
+        flex-flow row
+        justify-content: flex-end
+        margin-bottom: 1rem
+        margin-left: auto
+        margin-right: auto
+        z-index: 999
+
+        .mn-widget-member-header
+          display: none
+
+        .mn-widget-member
+          max-width: 150px
+          width: 100%
+          position: relative
+          background: #fff
+          padding: .125rem
+
+    @media (min-width: 1250px)
+      max-width: calc(100vw);
+      padding: 0 1rem;
+
   .chat-wrapper
     position: sticky;
     bottom: 1rem;

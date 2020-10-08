@@ -6,10 +6,30 @@ import ErrorBoundary from 'common/js/components/error-boundary';
 import Header from 'common/js/layouts/site/header';
 import Footer from 'common/js/layouts/site/footer';
 import ChatRedux from 'common/js/components/chat'
+import staySafe from 'common/assets/images/stay-safe-stay-open-small.png'
 // import SiteSeal from 'common/js/components/site-seal'
 import './site.css';
 
 const scrollEvents = ['scroll', 'touchmove']
+
+function MNIWidget() {
+  return <a
+    className="mn-widget-member btn"
+    href="https://business.stayopenutah.com/list/member/4833"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <h3 className="mn-widget-member-header">
+      Proud Member Of
+    </h3>
+    <img
+      src={staySafe}
+      alt="Stay Safe to Stay Open"
+      title="Stay Safe to Stay Open"
+      className="mn-widget-member-logo"
+    />
+  </a>
+}
 
 class Site extends Component {
   static propTypes = {
@@ -86,7 +106,7 @@ class Site extends Component {
                 </strong>
               </h3>
             </div>
-            <hr className="d-block w-100"/>
+            <hr className="d-block w-100 border-0"/>
             <p className="text-dark">
               Please be aware that our office will have very limited hours while
               our communities grapple with the unprecedented events of 2020. You
@@ -96,6 +116,10 @@ class Site extends Component {
             <p className="text-dark">
               Thank you for your patience.
             </p>
+            <hr className="d-block w-100 styled d-md-none"/>
+            <div id="mni-membership-top" className="mni-membership">
+              <MNIWidget />
+            </div>
           </div>
         </div>
         <ErrorBoundary key="content-boundary">
@@ -109,6 +133,9 @@ class Site extends Component {
           <SiteSeal className="main-site-seal" key="site-seal" />
         </ErrorBoundary>
         */}
+        <div id="mni-membership-bottom" className="mni-membership">
+          <MNIWidget />
+        </div>
         <ErrorBoundary key="chat-boundary">
           <ChatRedux key="chat-component" />
         </ErrorBoundary>
