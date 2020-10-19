@@ -407,7 +407,7 @@ export default class CheckPaymentForm extends Component {
         <form
           action={this.action}
           method='post'
-          className='payment-form mb-3'
+          className='check-payment-form mb-3'
           onSubmit={this.onSubmit}
           autoComplete="off"
         >

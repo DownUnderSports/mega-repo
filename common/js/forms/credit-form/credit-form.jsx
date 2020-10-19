@@ -184,7 +184,7 @@ export default class CreditForm extends Component {
         <form
           action={url}
           method='post'
-          className='payment-form mb-3'
+          className='credit-form mb-3'
           onSubmit={this.onSubmit}
           autoComplete="off"
         >

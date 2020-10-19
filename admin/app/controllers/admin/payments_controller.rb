@@ -31,7 +31,15 @@ module Admin
     end
 
     def create
-      return render(create_payment(skip_auto_split: true))
+      return render(
+        json: {
+          status: 'failed',
+          message: 'Payment Not Allowed',
+          errors: [ 'Payment Form Disabled Until Further Notice' ]
+        },
+        status: 422
+      )
+      # return render(create_payment(skip_auto_split: true))
     rescue
       puts $!.message
       puts $!.backtrace

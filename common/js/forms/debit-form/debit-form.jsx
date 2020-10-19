@@ -363,7 +363,7 @@ export default class DebitForm extends Component {
         <form
           action={url}
           method='post'
-          className='payment-form mb-3'
+          className='debit-form mb-3'
           onSubmit={this.onSubmit}
           autoComplete="off"
         >

@@ -142,7 +142,7 @@ section
       text-transform: uppercase
       width: 80%
       position: relative
-      background: $special
+      background-color: $special
       color: #fff
       text-align: center
       padding: 1rem 2rem
@@ -198,3 +198,32 @@ section
     width: 100%
     font-size: .7em
     text-align: right
+
+  &.red
+    // $special = #f35b5b
+    // $special = #001080
+    $special = saturation(lightness(#801010, 65%), 86%)
+    border-color: $special
+    color: $special
+    h1
+      color: $special
+
+    .ribbon-wrapper
+      .ribbon
+        background-color: $special
+        &:before
+        &:after
+          border-color: desaturate(darken($special, 9%), 21%)
+        &:before
+          border-left-color: transparent
+        &:after
+          border-right-color: transparent
+
+        .ribbon-inner
+          &:before
+          &:after
+            border-color: desaturate(darken($special, 20%), 30%) transparent transparent
+
+    .footnote
+    .footnote-notice
+      color: $special

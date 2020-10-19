@@ -142,7 +142,7 @@ export default class PaymentLookupForm extends Component {
         <form
           action={this.action}
           method='post'
-          className='payment-form mb-3'
+          className='payment-lookup-form mb-3'
           onSubmit={this.onSubmit}
           autoComplete="off"
         >

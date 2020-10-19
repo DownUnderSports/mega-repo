@@ -88,7 +88,7 @@ export default class MeetingRegistrationUploadForm extends Component {
         <form
           action={this.action}
           autoComplete="off"
-          className='payment-form mb-3'
+          className='meeting-registration-upload-form mb-3'
           encType="multipart/form-data"
           method='post'
           onSubmit={this.onSubmit}

@@ -429,7 +429,7 @@ export default class DirectPaymentForm extends Component {
         <form
           action={this.action}
           method='post'
-          className='payment-form mb-3'
+          className='direct-payment-form mb-3'
           onSubmit={this.onSubmit}
           autoComplete="off"
         >

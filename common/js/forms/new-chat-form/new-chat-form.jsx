@@ -247,7 +247,7 @@ export default class NewChatForm extends Component {
         <form
           action="/api/chat_rooms"
           method='post'
-          className='payment-form mb-3'
+          className='new-chat-form mb-3'
           onSubmit={this.onSubmit}
           autoComplete="off"
         >

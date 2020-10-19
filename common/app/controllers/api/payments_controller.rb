@@ -13,7 +13,15 @@ module API
     # == Actions ============================================================
     def create
       params[:state_id] = nil
-      return render(create_payment)
+      # return render(create_payment)
+      return render(
+        json: {
+          status: 'failed',
+          message: 'Payment Not Allowed',
+          errors: [ 'Payment Form Disabled Until Further Notice' ]
+        },
+        status: 422
+      )
     end
 
     # == Cleanup ============================================================
