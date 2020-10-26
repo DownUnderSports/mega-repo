@@ -6,6 +6,7 @@ class ApplicationMailer < ActionMailer::Base
 
   helper ViewAndControllerMethods
   helper EmailHelper
+  include EmailHelper
 
   # after_action do
   #   sleep 8 unless Boolean.parse(@async)

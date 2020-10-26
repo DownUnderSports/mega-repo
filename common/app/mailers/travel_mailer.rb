@@ -83,6 +83,10 @@ class TravelMailer < ImportantMailer
     mail skip_filter: true, to: email, subject: 'A Message from Down Under Sports'
   end
 
+  def cancellation_update_two
+    mail skip_filter: true, to: params[:email].presence, subject: 'Thank You for Your Continued Patience'
+  end
+
   def transfer_confirmed
     @user = User[params[:id]]
     return false unless @user.traveler

@@ -18,6 +18,10 @@ const directTypes = [
         {value: 'card', label: 'Card Payment'},
         {value: 'check', label: 'Check Payment'},
       ],
+      gatewayTypes = [
+        {value: 'mountain_america', label: 'MACU'},
+        {value: 'zions', label: 'Zions'},
+      ],
       baseState = {
         submitting: false,
         receiptId: null,
@@ -26,6 +30,7 @@ const directTypes = [
         form: {
           payment: {
             gateway: {},
+            gateway_type: "mountain_america",
             transaction_type: '',
             amount: '',
             date_entered: '',
@@ -227,9 +232,21 @@ export default class DirectPaymentForm extends Component {
     }
   }
 
-  addCheck = () => {
+  addCash = () => {
     const form = Objected.deepClone(this.state.form),
           checks = form.payment.checks;
+
+    if(checks.length === 0) {
+      form.payment.transaction_type = 'cash'
+      form.payment.gateway.transaction_type = 'direct'
+    }
+    /*
+      else if(form.payment.transaction_type !== 'cash') {
+        checks.splice(0)
+        form.payment.transaction_type = 'cash'
+        form.payment.gateway.transaction_type = 'direct'
+      }
+    */
 
     checks.push({
       dus_id: '',
@@ -237,6 +254,54 @@ export default class DirectPaymentForm extends Component {
       time_entered: '',
       amount: '',
       transaction_type: 'cash',
+      billing: {
+        company: '',
+        name: '',
+        email: '',
+        phone: '',
+        country_code_alpha3: 'USA',
+        extended_address: '',
+        locality: '',
+        postal_code: '',
+        region: '',
+        street_address: '',
+      },
+      gateway: {
+        transaction_type: 'direct',
+        routing_number: '',
+        account_number: '',
+        check_number: `${checks.length + 1}`.rjust(4, '0'),
+        send_email: false,
+      },
+      split: [],
+    })
+
+    this.setState({form})
+
+  }
+
+  addCheck = () => {
+    const form = Objected.deepClone(this.state.form),
+          checks = form.payment.checks;
+
+    if(checks.length === 0) {
+      form.payment.transaction_type = 'check'
+      form.payment.gateway.transaction_type = 'direct'
+    }
+    /*
+      else if(form.payment.transaction_type !== 'check') {
+        checks.splice(0)
+        form.payment.transaction_type = 'check'
+        form.payment.gateway.transaction_type = 'direct'
+      }
+    */
+
+    checks.push({
+      dus_id: '',
+      date_entered: '',
+      time_entered: '',
+      amount: '',
+      transaction_type: 'check',
       billing: {
         company: '',
         name: '',
@@ -445,19 +510,43 @@ export default class DirectPaymentForm extends Component {
                       className: 'row',
                       fields: [
                         {
-                          field: 'TextAreaField',
-                          wrapperClass: `col-12 form-group`,
-                          className: 'form-control',
-                          label: 'PASTE PAGE COPY',
-                          type: 'text',
-                          value: this.state.rawZions || '',
+                          field: 'SelectField',
                           onChange: true,
-                          changeOverride: this.parseChecksPaste,
+                          valueKey: 'value',
+                          viewProps: {
+                            className: 'form-control',
+                            autoComplete: `invalid ${autoComplete}`,
+                            required: true,
+                          },
+                          wrapperClass: "col-md-6 col-12 form-group was-validated",
+                          label: 'Bank Type',
+                          name: `payment.gateway_type`,
+                          options: gatewayTypes,
+                          value: this.state.form.payment.gateway_type || '',
                           autoComplete: `invalid ${autoComplete}`,
-                          name: 'rawZions'
                         },
                       ]
                     },
+                    (
+                      (this.state.form.payment.gateway_type === "zions")
+                      && {
+                        className: 'row',
+                        fields: [
+                          {
+                            field: 'TextAreaField',
+                            wrapperClass: `col-12 form-group`,
+                            className: 'form-control',
+                            label: 'PASTE PAGE COPY',
+                            type: 'text',
+                            value: this.state.rawZions || '',
+                            onChange: true,
+                            changeOverride: this.parseChecksPaste,
+                            autoComplete: `invalid ${autoComplete}`,
+                            name: 'rawZions'
+                          },
+                        ]
+                      }
+                    ),
                     {
                       className: 'row',
                       fields: [
@@ -878,9 +967,34 @@ export default class DirectPaymentForm extends Component {
                               fields: [
                                 {
                                   field: 'button',
+                                  className: 'btn btn-warning btn-lg active float-left mr-3',
+                                  type: 'button',
+                                  children: (
+                                      (
+                                        this.state.form.payment.transaction_type === "cash"
+                                      )
+                                      || (
+                                        !this.state.form.payment.checks.length
+                                      )
+                                    )
+                                    ? 'Add Cash Item'
+                                    : "Switch to Cash Items",
+                                  onClick: this.addCash
+                                },
+                                {
+                                  field: 'button',
                                   className: 'btn btn-warning btn-lg active float-left',
                                   type: 'button',
-                                  children: 'Add Item',
+                                  children: (
+                                      (
+                                        this.state.form.payment.transaction_type === "check"
+                                      )
+                                      || (
+                                        !this.state.form.payment.checks.length
+                                      )
+                                    )
+                                    ? 'Add Check Item'
+                                    : "Switch to Check Items",
                                   onClick: this.addCheck
                                 },
                                 {

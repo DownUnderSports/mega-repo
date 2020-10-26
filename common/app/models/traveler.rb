@@ -258,7 +258,14 @@ class Traveler < ApplicationRecord
   end
 
   def has_insurance?
-    user.insurance_proofs.attached? ||
+    has_own_insurance? || has_travelex_insurance?
+  end
+
+  def has_own_insurance?
+    user.insurance_proofs.attached?
+  end
+
+  def has_travelex_insurance?
     !!debits.find_by(base_debit: BaseDebit::Insurance)
   end
 

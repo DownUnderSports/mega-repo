@@ -16,6 +16,10 @@ module Admin
         bad_checks = []
         payments = []
 
+        gateway_klass = whitelist[:gateway_type].presence&.to_s&.=~(/zions/) \
+          ? Payment::Transaction::Zions
+          : Payment::Transaction::MountainAmerica
+
         whitelist[:checks].each_with_index do |check, i|
           amount = StoreAsInt.money(check[:amount])
           total -= amount
@@ -48,7 +52,7 @@ module Admin
           payments << [
             u,
             check,
-            Payment::Transaction::Zions.new(settlement: {}, processor: {message: 'submitted'}, **check).payment_attributes
+            gateway_klass.new(settlement: {}, processor: {message: 'submitted'}, **check).payment_attributes
           ]
         end
 
