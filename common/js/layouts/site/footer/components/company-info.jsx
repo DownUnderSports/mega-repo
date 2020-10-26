@@ -1,6 +1,13 @@
 import React, { PureComponent } from 'react';
 import CopyClip from 'common/js/helpers/copy-clip'
-
+/*
+<br/>
+Physical Location: <br className='d-sm-none'/><a
+  data-content='physical'
+  href="https://maps.google.com/?q=Down Under Sports, 1755 N 400 E #201, North Logan, UT 84341-6010">
+  1755 N 400 E Ste 201, North Logan, UT 84341-6010
+</a>
+*/
 export default class CompanyInfo extends PureComponent {
   copyMailingAddress(e) {
     e.preventDefault()
@@ -26,12 +33,6 @@ export default class CompanyInfo extends PureComponent {
           onClick={this.copyMailingAddress}
         >
           PO Box 6010, North Logan, UT 84341-6010
-        </a>
-        <br/>
-        Physical Location: <br className='d-sm-none'/><a
-          data-content='physical'
-          href="https://maps.google.com/?q=Down Under Sports, 1755 N 400 E #201, North Logan, UT 84341-6010">
-          1755 N 400 E Ste 201, North Logan, UT 84341-6010
         </a>
       </address>
     )

@@ -85,7 +85,7 @@ Protecting your private information is our priority. This Statement of Privacy a
   Mailing Address:
 
         International Sports Specialists, Inc.
-        1755 N 400 E Suite 201
+        PO Box 6010
         North Logan, Utah 84341
 
   Email Address:

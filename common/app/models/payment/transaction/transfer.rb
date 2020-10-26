@@ -113,8 +113,7 @@ class Payment < ApplicationRecord
       def single_item_billing
         {
           name:                "Down Under Sports",
-          street_address:      "1755 N 400 E",
-          extended_address:    "Ste 201",
+          street_address:      "PO Box 6010",
           region:              "UT",
           company:             "International Sports Specialists, Inc",
           locality:            "North Logan",

@@ -58,7 +58,7 @@ class ContactPage extends Component {
                 <dd>
                   <Link to="https://g.page/DownUnderSports?share">
                     Down Under Sports<br/>
-                    1755 N 400 E, Ste 201<br/>
+                    PO Box 6010<br/>
                     North Logan, UT 84341
                   </Link>
                 </dd>
