@@ -11,28 +11,29 @@ module API
 
     # == Actions ============================================================
     def create
-      return not_authorized("CANNOT REQUEST INFO FOR PREVIOUS YEAR(S)") unless is_active_year?
-
-      successful, errors = nil
-
-      begin
-        @params = whitelisted_tryout_params.to_h.deep_symbolize_keys
-        raise "Valid School and Sport Information is required" unless valid_school_info
-        raise "Valid Athlete Information is required" unless valid_athlete_info
-        # raise "Valid Parent/Guardian Information is required" unless valid_guardian_info
-
-        InfokitMailer.
-          with(**@params, query: params[:query].to_unsafe_h).
-          new_tryout.
-          deliver_later(queue: :staff_mailer)
-        successful = true
-      rescue
-        successful = false
-        errors = $!.message
-        puts $!.backtrace
-      end
-
-      return successful ? render_success : not_authorized(errors, 422)
+      return not_authorized("NOT CURRENTLY ACCEPTING APPLICATIONS")
+      # return not_authorized("CANNOT REQUEST INFO FOR PREVIOUS YEAR(S)") unless is_active_year?
+      #
+      # successful, errors = nil
+      #
+      # begin
+      #   @params = whitelisted_tryout_params.to_h.deep_symbolize_keys
+      #   raise "Valid School and Sport Information is required" unless valid_school_info
+      #   raise "Valid Athlete Information is required" unless valid_athlete_info
+      #   # raise "Valid Parent/Guardian Information is required" unless valid_guardian_info
+      #
+      #   InfokitMailer.
+      #     with(**@params, query: params[:query].to_unsafe_h).
+      #     new_tryout.
+      #     deliver_later(queue: :staff_mailer)
+      #   successful = true
+      # rescue
+      #   successful = false
+      #   errors = $!.message
+      #   puts $!.backtrace
+      # end
+      #
+      # return successful ? render_success : not_authorized(errors, 422)
     end
 
     # == Cleanup ============================================================
