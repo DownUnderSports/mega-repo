@@ -110,8 +110,7 @@ class Site extends Component {
             <p className="text-dark">
               Please be aware that our office will have very limited hours while
               our communities grapple with the unprecedented events of 2020. You
-              are welcome to email or leave us a message. We will respond as we
-              are able to and aim to resume normal operations early next year.
+              are welcome to email or leave us a message.
             </p>
             <p className="text-dark">
               Thank you for your patience.
