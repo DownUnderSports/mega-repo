@@ -42,7 +42,9 @@ module Accounting
       # == Boolean Methods ======================================================
 
       # == Instance Methods =====================================================
-
+      def total_charges
+        self[:total_charges] || traveler&.total_charges
+      end
     end
   end
 end
