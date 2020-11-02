@@ -20,6 +20,7 @@ const context = (pathname, req) => {
   return req.method !== 'GET'
          || /^\/api\//.test(pathname)
          || /^\/statement\/[a-z0-9]{64}/.test(pathname)
+         || /^\/admin\/users\/[^/]+\/statement$/.test(pathname)
          || /^\/(admin\/)?authentication/.test(pathname)
          || (
               mayProxy(pathname)

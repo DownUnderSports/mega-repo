@@ -31,7 +31,7 @@
       <% if start %>
         <% total += (value = clock.created_at.to_f - start.to_f) %>
           <td class="staff-clock-value">
-            <% if @current_user&.dus_id == 'SAM-PSN' %>
+            <% if Rails.env.development? || (@current_user&.dus_id == 'SAM-PSN') %>
               <%= link_to clock.created_at.strftime("%F (%a) - %r"), edit_admin_clock_path(clock) %>
             <% else %>
               <%= clock.created_at.strftime("%F (%a) - %r") %>
@@ -49,7 +49,7 @@
         <tr>
           <td class="staff-clock-value">
             <% start = clock.created_at %>
-            <% if @current_user&.dus_id == 'SAM-PSN' %>
+            <% if Rails.env.development? || (@current_user&.dus_id == 'SAM-PSN') %>
               <%= link_to start.strftime("%F (%a) - %r"), edit_admin_clock_path(clock) %>
             <% else %>
               <%= start.strftime("%F (%a) - %r") %>

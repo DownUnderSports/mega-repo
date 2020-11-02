@@ -13,6 +13,8 @@ const OffersPage = lazy(() => import(/* webpackChunkName: "user-offers-page" */ 
 const CreditsPage = lazy(() => import(/* webpackChunkName: "user-credits-page" */ 'pages/users/show/credits'))
 const DebitsPage = lazy(() => import(/* webpackChunkName: "user-debits-page" */ 'pages/users/show/debits'))
 
+const statementUrl = '/admin/users/:id/statement'
+
 export default class UsersShowPage extends Component {
   constructor(props) {
     super(props)
@@ -79,7 +81,7 @@ export default class UsersShowPage extends Component {
   }
 
   viewStatement = () =>
-    this.openLink(this.state.user.statement_link, '_view_statement')
+    this.writeLink(statementUrl.replace(':id', this.getIdProp()))
 
   viewChecklist = () => {
     console.log(this.state.user)
@@ -95,6 +97,22 @@ export default class UsersShowPage extends Component {
     w.opener = null
     w.referrer = null
     w.location = link
+  }
+
+  writeLink = async (link, method = 'GET') => {
+    const result = await fetch(link, {
+      method,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+    });
+
+    const text = await result.text()
+    document.open()
+    document.write(text)
+    document.close()
+    window.history.pushState({}, 'Statement', link)
+    window.addEventListener('popstate', () => window.location.reload())
   }
 
   viewAuthPage = (page) => {

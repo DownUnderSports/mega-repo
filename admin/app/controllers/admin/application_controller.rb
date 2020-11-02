@@ -78,7 +78,7 @@ module Admin
 
       def get_dev_user
         BetterRecord::Current.user ||= \
-          User.joins(:staff).where(first: 'Sampson', staffs: { admin: true }).limit(1).take \
+          User.joins(:staff).where(first: 'Sara', staffs: { admin: true }).limit(1).take \
           || User.joins(:staff).limit(1).take \
           || User.new(category: Staff.new(admin: true))
       end
