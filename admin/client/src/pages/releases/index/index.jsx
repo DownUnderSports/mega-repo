@@ -1,6 +1,7 @@
 import React from 'react';
 import Component from 'common/js/components/component'
 import { CardSection, DisplayOrLoading, Link } from 'react-component-templates/components'
+import { TextField } from 'react-component-templates/form-components';
 import FileDownload from 'common/js/components/file-download'
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import { Objected } from 'react-component-templates/helpers';
@@ -16,7 +17,7 @@ const listGroupClass = { className: 'list-group' }
 const emptyObject = {}
 
 export default class ReleasesIndexPage extends Component {
-  state = { releases: [], loading: true, editing: null, errors: [] }
+  state = { releases: [], allReleases: [], loading: true, editing: null, errors: [] }
 
   componentDidMount() {
     super.componentDidMount()
@@ -36,13 +37,15 @@ export default class ReleasesIndexPage extends Component {
     if(result.releases) {
       await this.setStateAsync(state => {
         const { releases } = result,
-              oldReleases = state.releases || []
+              oldReleases = state.allReleases || []
 
         for(const release of oldReleases) {
           if(releases.findIndex((rel) => rel.id === release.id) === -1) releases.push(release)
         }
 
-        return { releases: quickSort(releases, quickCompare), loading: false }
+        const allReleases = quickSort(releases, quickCompare)
+
+        return { allReleases, releases: [ ...allReleases ], loading: false }
       })
     }
   }
@@ -175,6 +178,23 @@ export default class ReleasesIndexPage extends Component {
         this.setState({errors: [ err.message ], loading: false})
       }
     }
+  }
+
+  filter = (val) => {
+    this.setState(state => {
+      if(!val) return { releases: [ ...state.allReleases ] }
+
+      const { allReleases } = state
+
+      return {
+        releases: allReleases.filter((r) => {
+          const { dus_id, print_names } = r.additional_data || {}
+          if(dus_id && dus_id.toLowerCase().replace(/[^a-z]/g, "").includes(val.toLowerCase().replace(/[^a-z]/g, ""))) return true
+          if(print_names && print_names.toLowerCase().includes(val.toLowerCase())) return true
+          return false
+        })
+      }
+    })
   }
 
   renderEditing = () => {
@@ -398,7 +418,6 @@ export default class ReleasesIndexPage extends Component {
         }
       >
         <div className="row">
-
           <div className="col">
             <button className="btn btn-block btn-warning mb-3" onClick={this.forceReleases}>
               Refresh List
@@ -418,9 +437,22 @@ export default class ReleasesIndexPage extends Component {
             <p className="text-center text-danger">
               *The buttons above will also reset any open form*
             </p>
+            <hr/>
+            {
+              !editing
+              && (
+                <TextField
+                  name={`search[mailings]`}
+                  onChange={(e) => this.filter(e.target.value)}
+                  className='form-control mb-3'
+                  autoComplete='off'
+                  placeholder="filter results by name or DUS ID (not case sensitive)"
+                  skipExtras
+                />
+              )
+            }
           </div>
         </div>
-        <hr/>
         {
           editing
             ? this.renderEditing()
