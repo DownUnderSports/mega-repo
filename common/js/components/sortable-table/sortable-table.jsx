@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'react-component-templates/helpers'
-import quickSort from 'common/js/helpers/quick-sort'
+import quickSort from 'common/js/helpers/quick-sort-object'
 
 export default class SortableTable extends Component {
   static propTypes = {

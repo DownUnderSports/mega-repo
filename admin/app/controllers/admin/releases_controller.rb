@@ -16,30 +16,32 @@ module Admin
         format.json do
           releases = authorize User::GeneralRelease.joins(:user).includes(:user).merge(User.order(dus_id: :asc))
 
-          if Boolean.parse(params[:force]) || stale?(releases)
-            headers["X-Accel-Buffering"] = 'no'
+          if !Boolean.parse(params[:force]) && params[:from_time].present?
+            releases = releases.where(User::GeneralRelease.arel_table[:updated_at].gteq(Time.at(params[:from_time].to_f)))
+          end
 
-            expires_now
-            headers["Content-Type"] = "application/json; charset=utf-8"
-            headers["Content-Disposition"] = 'inline'
-            headers["Content-Encoding"] = 'deflate'
-            headers["Last-Modified"] = Time.zone.now.ctime.to_s
+          headers["X-Accel-Buffering"] = 'no'
 
-            self.response_body = Enumerator.new do |y|
-              deflator = StreamJSONDeflator.new(y)
+          expires_now
+          headers["Content-Type"] = "application/json; charset=utf-8"
+          headers["Content-Disposition"] = 'inline'
+          headers["Content-Encoding"] = 'deflate'
+          headers["Last-Modified"] = Time.zone.now.ctime.to_s
 
-              deflator.stream false, :version, last_update
-              deflator.stream true, :releases, '['
+          self.response_body = Enumerator.new do |y|
+            deflator = StreamJSONDeflator.new(y)
 
-              i = 0
-              releases.map do |release|
-                deflator.stream (i += 1) > 1, nil, release.as_json
-              end
+            deflator.stream false, :epoch, Time.now.to_f * 1000.0
+            deflator.stream true, :releases, '['
 
-              deflator.stream false, nil, ']'
-
-              deflator.close
+            i = 0
+            releases.map do |release|
+              deflator.stream (i += 1) > 1, nil, release.as_json
             end
+
+            deflator.stream false, nil, ']'
+
+            deflator.close
           end
         end
       end
@@ -49,11 +51,20 @@ module Admin
       successful, errors, rel = nil
 
       begin
-        user = User[params[:id]]
-        raise "User not found" unless user
+        if Boolean.parse(params[:recalculate_all])
+          ActiveRecord::Base.transaction do
+            User::GeneralRelease.split_batches_values do |g|
+              g.update_or_create_cache!
+            end
+          end
+          successful = true
+        else
+          user = User[params[:id]]
+          raise "User not found" unless user
 
-        user.create_general_release! whitelisted_release_params
-        successful = true
+          user.create_general_release! whitelisted_release_params
+          successful = true
+        end
       rescue
         successful = false
         puts errors = $!.message
@@ -104,7 +115,7 @@ module Admin
       end
 
       def whitelisted_release_params
-        params.require(:release).permit(:release_form, :signed, :allow_contact, :net_refundable, :notes)
+        params.require(:release).permit(:release_form, :is_signed, :allow_contact, :net_refundable, :notes)
       end
   end
 end

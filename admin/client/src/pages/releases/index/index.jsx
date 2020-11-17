@@ -4,8 +4,16 @@ import { CardSection, DisplayOrLoading, Link } from 'react-component-templates/c
 import FileDownload from 'common/js/components/file-download'
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import { Objected } from 'react-component-templates/helpers';
+import { quickSort, defaultComparator } from 'common/js/helpers/quick-sort'
+
+function quickCompare(a, b) {
+  let ad = (a.additional_data || {}).dus_id || "",
+      bd = (b.additional_data || {}).dus_id || ""
+  return defaultComparator(ad, bd)
+}
 
 const listGroupClass = { className: 'list-group' }
+const emptyObject = {}
 
 export default class ReleasesIndexPage extends Component {
   state = { releases: [], loading: true, editing: null, errors: [] }
@@ -15,18 +23,35 @@ export default class ReleasesIndexPage extends Component {
     this.getReleases()
   }
 
+  get lastFetch() {
+    return this._lastFetch && (this._lastFetch.getTime() / 1000.0)
+  }
+
   forceReleases = () => this.getReleases(true)
 
   getReleases = async (force) => {
     await this.setStateAsync({ loading: true, editing: null, editRelease: null, errors: [] })
-    await this.setStateAsync({ releases: await this.fetchReleases(force), loading: false })
+    const result = await this.fetchReleases(force)
+    if(result.epoch) this._lastFetch = new Date(result.epoch)
+    if(result.releases) {
+      await this.setStateAsync(state => {
+        const { releases } = result,
+              oldReleases = state.releases || []
+
+        for(const release of oldReleases) {
+          if(releases.findIndex((rel) => rel.id === release.id) === -1) releases.push(release)
+        }
+
+        return { releases: quickSort(releases, quickCompare), loading: false }
+      })
+    }
   }
 
-  fetchReleases = (force) => this.fetchResource(`/admin/releases.json?force=${!!force ? 1 : 0}`, { timeout: 5000 }, 'releases', [])
+  fetchReleases = (force) => this.fetchResource(`/admin/releases.json?force=${!!force ? 1 : 0}&from_time=${this.lastFetch || 0}`, { timeout: 5000 })
 
   setEditing = (ev) => {
     const id = ev.currentTarget.getAttribute("data-id")
-    if(id === "new") this.setState({ editing: "new", editRelease: { payment_data: {} }})
+    if(id === "new") this.setState({ editing: "new", editRelease: { additional_data: {} }})
     else {
       for(const release of this.state.releases) {
         if(release.id === +id) {
@@ -127,6 +152,31 @@ export default class ReleasesIndexPage extends Component {
     }
   }
 
+  forceRecalculate = async () => {
+    await this.setStateAsync({ loading: true, errors: [] })
+
+    try{
+      const result = await fetch("/admin/releases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recalculate_all: 1 })
+      });
+
+      await result.json()
+
+      this._lastFetch = null
+
+      await this.getReleases()
+
+    } catch(err) {
+      try {
+        this.setState({errors: (await err.response.json()).errors, loading: false})
+      } catch(e) {
+        this.setState({errors: [ err.message ], loading: false})
+      }
+    }
+  }
+
   renderEditing = () => {
     const { loading, editing, editRelease, selectedFile, errors } = this.state
 
@@ -138,11 +188,11 @@ export default class ReleasesIndexPage extends Component {
           editRelease.id
           ? (
               <span className="text-center">
-                <Link to={`/admin/users/${editRelease.payment_data.dus_id}`} target="dus_user">
-                  { editRelease.payment_data.print_names } ({ editRelease.payment_data.dus_id })
+                <Link to={`/admin/users/${editRelease.additional_data.dus_id}`} target="dus_user">
+                  { editRelease.additional_data.print_names } ({ editRelease.additional_data.dus_id })
                 </Link>
                 &nbsp;-&nbsp;
-                <Link className="btn btn-info" to={`/admin/users/${editRelease.payment_data.dus_id}/statement`} target="dus_statements">
+                <Link className="btn btn-info" to={`/admin/users/${editRelease.additional_data.dus_id}/statement`} target="dus_statements">
                   Statement <i className="material-icons">outbound</i>
                 </Link>
                 &nbsp;-&nbsp;
@@ -182,7 +232,7 @@ export default class ReleasesIndexPage extends Component {
                               Age
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.age }
+                              { editRelease.additional_data.age }
                             </td>
                           </tr>
                           <tr>
@@ -190,7 +240,7 @@ export default class ReleasesIndexPage extends Component {
                               Birth Date
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.birth_date }
+                              { editRelease.additional_data.birth_date }
                             </td>
                           </tr>
                           <tr>
@@ -198,7 +248,7 @@ export default class ReleasesIndexPage extends Component {
                               Total Paid In
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.total_payments.str_pretty }
+                              { (editRelease.additional_data.total_payments || emptyObject).str_pretty }
                             </td>
                           </tr>
                           <tr>
@@ -206,7 +256,7 @@ export default class ReleasesIndexPage extends Component {
                               Deposit Amount
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.deposit_amount.str_pretty }
+                              { (editRelease.additional_data.deposit_amount || emptyObject).str_pretty }
                             </td>
                           </tr>
                           <tr>
@@ -214,7 +264,7 @@ export default class ReleasesIndexPage extends Component {
                               Insurance Paid
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.insurance_paid.str_pretty }
+                              { (editRelease.additional_data.insurance_paid || emptyObject).str_pretty }
                             </td>
                           </tr>
                           <tr>
@@ -222,7 +272,7 @@ export default class ReleasesIndexPage extends Component {
                               Dreamtime Paid
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.dreamtime_paid.str_pretty }
+                              { (editRelease.additional_data.dreamtime_paid || emptyObject).str_pretty }
                             </td>
                           </tr>
                           <tr>
@@ -230,7 +280,7 @@ export default class ReleasesIndexPage extends Component {
                               Net Refundable (System Generated)
                             </th>
                             <td colSpan="2">
-                              { editRelease.payment_data.refundable_amount.str_pretty }
+                              { (editRelease.additional_data.refundable_amount || emptyObject).str_pretty }
                             </td>
                           </tr>
                         </tbody>
@@ -348,9 +398,15 @@ export default class ReleasesIndexPage extends Component {
         }
       >
         <div className="row">
+
           <div className="col">
             <button className="btn btn-block btn-warning mb-3" onClick={this.forceReleases}>
-              Refresh List (will also reset forms)
+              Refresh List
+            </button>
+          </div>
+          <div className="col">
+            <button className="btn btn-block btn-danger mb-3" onClick={this.forceRecalculate}>
+              Recalculate All Payment Data
             </button>
           </div>
           <div className="col">
@@ -358,7 +414,13 @@ export default class ReleasesIndexPage extends Component {
               Add New Release
             </button>
           </div>
+          <div className="col-12">
+            <p className="text-center text-danger">
+              *The buttons above will also reset any open form*
+            </p>
+          </div>
         </div>
+        <hr/>
         {
           editing
             ? this.renderEditing()
@@ -367,11 +429,11 @@ export default class ReleasesIndexPage extends Component {
                   key={release.id}
                   className='mb-3'
                   label={<span className="text-center">
-                    <Link to={`/admin/users/${release.payment_data.dus_id}`} target="dus_user">
-                      { release.payment_data.print_names } ({ release.payment_data.dus_id })
+                    <Link to={`/admin/users/${release.additional_data.dus_id}`} target="dus_user">
+                      { release.additional_data.print_names } ({ release.additional_data.dus_id })
                     </Link>
                     &nbsp;-&nbsp;
-                    <Link className="btn btn-info" to={`/admin/users/${release.payment_data.dus_id}/statement`} target="dus_statements">
+                    <Link className="btn btn-info" to={`/admin/users/${release.additional_data.dus_id}/statement`} target="dus_statements">
                       Statement <i className="material-icons">outbound</i>
                     </Link>
                     &nbsp;-&nbsp;
@@ -391,7 +453,7 @@ export default class ReleasesIndexPage extends Component {
                                 Age
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.age }
+                                { release.additional_data.age }
                               </td>
                             </tr>
                             <tr>
@@ -399,7 +461,7 @@ export default class ReleasesIndexPage extends Component {
                                 Birth Date
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.birth_date }
+                                { release.additional_data.birth_date }
                               </td>
                             </tr>
                             <tr>
@@ -407,7 +469,7 @@ export default class ReleasesIndexPage extends Component {
                                 Total Paid In
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.total_payments.str_pretty }
+                                { (release.additional_data.total_payments || emptyObject).str_pretty }
                               </td>
                             </tr>
                             <tr>
@@ -415,7 +477,7 @@ export default class ReleasesIndexPage extends Component {
                                 Deposit Amount
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.deposit_amount.str_pretty }
+                                { (release.additional_data.deposit_amount || emptyObject).str_pretty }
                               </td>
                             </tr>
                             <tr>
@@ -423,7 +485,7 @@ export default class ReleasesIndexPage extends Component {
                                 Insurance Paid
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.insurance_paid.str_pretty }
+                                { (release.additional_data.insurance_paid || emptyObject).str_pretty }
                               </td>
                             </tr>
                             <tr>
@@ -431,7 +493,7 @@ export default class ReleasesIndexPage extends Component {
                                 Dreamtime Paid
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.dreamtime_paid.str_pretty }
+                                { (release.additional_data.dreamtime_paid || emptyObject).str_pretty }
                               </td>
                             </tr>
                             <tr>
@@ -439,7 +501,7 @@ export default class ReleasesIndexPage extends Component {
                                 Net Refundable (System Generated)
                               </th>
                               <td colSpan="2">
-                                { release.payment_data.refundable_amount.str_pretty }
+                                { (release.additional_data.refundable_amount || emptyObject).str_pretty }
                               </td>
                             </tr>
                           </tbody>
@@ -453,7 +515,7 @@ export default class ReleasesIndexPage extends Component {
                                 Signed?
                               </th>
                               <td colSpan="2">
-                                { release.is_is_signed ? "Y" : "N" }
+                                { release.is_signed ? "Y" : "N" }
                               </td>
                             </tr>
                             <tr>
@@ -469,7 +531,7 @@ export default class ReleasesIndexPage extends Component {
                                 Refundable Amount:
                               </th>
                               <td colSpan="2">
-                                { release.net_refundable ? release.net_refundable.str_pretty : `SYSTEM (${release.payment_data.refundable_amount.str_pretty})` }
+                                { release.net_refundable ? release.net_refundable.str_pretty : `SYSTEM (${(release.additional_data.refundable_amount || emptyObject).str_pretty})` }
                               </td>
                             </tr>
                             <tr>

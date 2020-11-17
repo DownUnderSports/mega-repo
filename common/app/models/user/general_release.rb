@@ -21,30 +21,22 @@ class User < ApplicationRecord
     # == Callbacks ============================================================
     before_validation :set_percentage
     before_save :set_percentage
+    after_commit :set_cache
 
     # == Boolean Class Methods ================================================
 
     # == Class Methods ========================================================
 
     # == Boolean Methods ======================================================
+    def cache_needs_update?
+      t = user&.traveler
+      last_update = [ t&.updated_at, user&.updated_at, t&.items&.try(:maximum, :updated_at) ].select(&:present?).max
+      !!last_update && (updated_at <= last_update)
+    end
 
     # == Instance Methods =====================================================
     def serializable_hash(*)
       super.tap do |h|
-        t = user&.traveler
-        h["payment_data"] = {
-                     "dus_id" => user&.dus_id,
-                        "age" => user&.age || "Unknown",
-                 "birth_date" => user&.birth_date&.inspect,
-                "print_names" => user&.print_names,
-             "deposit_amount" => t&.deposit_amount,
-             "insurance_paid" => t&.insurance_paid_amount,
-              "total_charges" => t&.total_charges,
-             "total_payments" => t&.total_payments,
-          "refundable_amount" => t&.refundable_amount,
-             "dreamtime_paid" => t&.dreamtime_paid_amount,
-        }.as_json
-
         h["release_form"] = release_form.attached? ? Rails.application.routes.url_helpers.rails_blob_path(release_form, disposition: "inline") : ""
 
         h
@@ -66,6 +58,40 @@ class User < ApplicationRecord
       else
         super(StoreAsInt.money(value).to_i)
       end
+    end
+
+    def set_cache
+      update_or_create_cache if cache_needs_update?
+      true
+    end
+
+    def generate_additional_data
+      t = user&.traveler
+
+      self.additional_data = {
+                   "dus_id" => user&.dus_id,
+                      "age" => user&.age || "Unknown",
+               "birth_date" => user&.birth_date&.inspect,
+              "print_names" => user&.print_names,
+           "deposit_amount" => t&.deposit_amount.as_json,
+           "insurance_paid" => t&.insurance_paid_amount.as_json,
+            "total_charges" => t&.total_charges.as_json,
+           "total_payments" => t&.total_payments.as_json,
+        "refundable_amount" => t&.refundable_amount.as_json,
+           "dreamtime_paid" => t&.dreamtime_paid_amount.as_json,
+      }
+
+      self
+    end
+
+    def update_or_create_cache
+      generate_additional_data
+      save
+    end
+
+    def update_or_create_cache!
+      generate_additional_data
+      save!
     end
   end
 end

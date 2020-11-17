@@ -5,7 +5,7 @@ import { Objected } from 'react-component-templates/helpers';
 import JellyBox from 'load-awesome-react-components/dist/square/jelly-box'
 import CheckboxGroup from 'common/js/forms/components/checkbox-group'
 
-import quickSort from 'common/js/helpers/quick-sort'
+import quickSort from 'common/js/helpers/quick-sort-object'
 
 import availableEvents from 'common/assets/json/events'
 import availableRelays from 'common/assets/json/relays'

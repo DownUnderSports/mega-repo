@@ -14152,7 +14152,8 @@ CREATE TABLE public.user_general_releases (
     net_refundable integer,
     notes text,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
+    updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    additional_data jsonb DEFAULT '"{}"'::jsonb NOT NULL
 );
 
 
@@ -15010,7 +15011,7 @@ WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
              LEFT JOIN public.user_relations related_user_join ON ((related_user_join.id = ( SELECT user_relations.id
                    FROM (public.user_relations
                      JOIN public.users single_users ON ((single_users.id = user_relations.related_user_id)))
-                  WHERE ((user_relations.user_id = sub_users.id) AND ((single_users.category_type)::text = ANY ((ARRAY['athletes'::character varying, 'coaches'::character varying])::text[])))
+                  WHERE ((user_relations.user_id = sub_users.id) AND ((single_users.category_type)::text = ANY (ARRAY[('athletes'::character varying)::text, ('coaches'::character varying)::text])))
                  LIMIT 1))))) related_user_row ON (((users.category_type IS NULL) AND (related_user_row.user_id = users.id))))
      LEFT JOIN public.users main_user ON ((main_user.id = related_user_row.related_user_id)))
      LEFT JOIN public.athletes ON (((athletes.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'athletes'::text))))
@@ -16057,7 +16058,7 @@ WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
              LEFT JOIN public.user_relations related_user_join ON ((related_user_join.id = ( SELECT user_relations.id
                    FROM (public.user_relations
                      JOIN public.users single_users ON ((single_users.id = user_relations.related_user_id)))
-                  WHERE ((user_relations.user_id = sub_users.id) AND ((single_users.category_type)::text = ANY ((ARRAY['athletes'::character varying, 'coaches'::character varying])::text[])))
+                  WHERE ((user_relations.user_id = sub_users.id) AND ((single_users.category_type)::text = ANY (ARRAY[('athletes'::character varying)::text, ('coaches'::character varying)::text])))
                  LIMIT 1))))) related_user_row ON (((users.category_type IS NULL) AND (related_user_row.user_id = users.id))))
      LEFT JOIN public.users main_user ON ((main_user.id = related_user_row.related_user_id)))
      LEFT JOIN public.athletes ON (((athletes.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'athletes'::text))))
@@ -16811,42 +16812,6 @@ CREATE TABLE year_2020.user_event_registrations (
     CONSTRAINT user_event_registrations_operating_year_check CHECK ((operating_year = 2020))
 )
 INHERITS (public.user_event_registrations);
-
-
---
--- Name: user_general_releases; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.user_general_releases (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    is_signed boolean DEFAULT false NOT NULL,
-    allow_contact boolean DEFAULT false NOT NULL,
-    percentage_paid public.exchange_rate_integer NOT NULL,
-    net_refundable integer,
-    notes text,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: user_general_releases_id_seq; Type: SEQUENCE; Schema: year_2020; Owner: -
---
-
-CREATE SEQUENCE year_2020.user_general_releases_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_general_releases_id_seq; Type: SEQUENCE OWNED BY; Schema: year_2020; Owner: -
---
-
-ALTER SEQUENCE year_2020.user_general_releases_id_seq OWNED BY year_2020.user_general_releases.id;
 
 
 --
@@ -20079,13 +20044,6 @@ ALTER TABLE ONLY year_2020.user_event_registrations ALTER COLUMN updated_at SET 
 
 
 --
--- Name: user_general_releases id; Type: DEFAULT; Schema: year_2020; Owner: -
---
-
-ALTER TABLE ONLY year_2020.user_general_releases ALTER COLUMN id SET DEFAULT nextval('year_2020.user_general_releases_id_seq'::regclass);
-
-
---
 -- Name: user_marathon_registrations id; Type: DEFAULT; Schema: year_2020; Owner: -
 --
 
@@ -21793,14 +21751,6 @@ ALTER TABLE ONLY year_2019.user_travel_preparations
 
 ALTER TABLE ONLY year_2019.user_uniform_orders
     ADD CONSTRAINT year_2019_user_uniform_orders_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_general_releases user_general_releases_pkey; Type: CONSTRAINT; Schema: year_2020; Owner: -
---
-
-ALTER TABLE ONLY year_2020.user_general_releases
-    ADD CONSTRAINT user_general_releases_pkey PRIMARY KEY (id);
 
 
 --
@@ -25629,6 +25579,13 @@ CREATE UNIQUE INDEX index_user_forwarded_ids_on_original_id ON public.user_forwa
 
 
 --
+-- Name: index_user_general_releases_on_additional_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_general_releases_on_additional_data ON public.user_general_releases USING gin (additional_data);
+
+
+--
 -- Name: index_user_general_releases_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -27817,13 +27774,6 @@ CREATE INDEX index_user_event_registrations_on_submitter_id ON year_2020.user_ev
 --
 
 CREATE INDEX index_user_event_registrations_on_user_id ON year_2020.user_event_registrations USING btree (user_id);
-
-
---
--- Name: index_user_general_releases_on_user_id; Type: INDEX; Schema: year_2020; Owner: -
---
-
-CREATE INDEX index_user_general_releases_on_user_id ON year_2020.user_general_releases USING btree (user_id);
 
 
 --
@@ -30917,14 +30867,6 @@ ALTER TABLE ONLY year_2020.payments
 
 
 --
--- Name: user_general_releases fk_rails_4bd1989db0; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
---
-
-ALTER TABLE ONLY year_2020.user_general_releases
-    ADD CONSTRAINT fk_rails_4bd1989db0 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
 -- Name: competing_teams fk_rails_4cd6d4a588; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
 --
 
@@ -31374,6 +31316,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200624195350'),
 ('20200728181612'),
 ('20200728181613'),
-('20201116165109');
+('20201116165109'),
+('20201117153751');
 
 

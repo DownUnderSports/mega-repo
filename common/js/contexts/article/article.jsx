@@ -1,7 +1,7 @@
 import React, {createContext, Component} from 'react'
 import { object, shape, func } from 'prop-types'
 //import authFetch from 'common/js/helpers/auth-fetch'
-import quickSort from 'common/js/helpers/quick-sort'
+import quickSort from 'common/js/helpers/quick-sort-object'
 
 const articleUrl = '/api/articles'
 
