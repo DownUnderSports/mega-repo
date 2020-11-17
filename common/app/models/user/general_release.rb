@@ -29,6 +29,7 @@ class User < ApplicationRecord
 
     # == Boolean Methods ======================================================
     def cache_needs_update?
+      return true if self.additional_data.blank?
       t = user&.traveler
       last_update = [ t&.updated_at, user&.updated_at, t&.items&.try(:maximum, :updated_at) ].select(&:present?).max
       !!last_update && (updated_at <= last_update)

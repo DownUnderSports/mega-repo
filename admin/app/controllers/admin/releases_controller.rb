@@ -61,6 +61,7 @@ module Admin
         else
           user = User[params[:id]]
           raise "User not found" unless user
+          raise "Release already exists" if user.general_release
 
           user.create_general_release! whitelisted_release_params
           successful = true
