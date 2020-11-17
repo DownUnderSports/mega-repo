@@ -33,23 +33,6 @@ module Kernel
       end
     end
 
-    def get_releases_dir
-      dir_path = Rails.root.join('releases')
-      if !File.directory?(dir_path)
-        AESEncryptDir.decrypt(
-          input_path: Rails.root.join('staff-cert.pem.tar.b64.aes.gz.b64'),
-          output_path: dir_path,
-          **Rails.application.credentials.dig(:staff_cert)
-        )
-      end
-
-      if File.exist? dir_path
-        File.read(dir_path)
-      else
-        ''
-      end
-    end
-
     def fetch_from_legacy_data(path)
       result = {}
 
