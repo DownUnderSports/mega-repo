@@ -313,6 +313,14 @@ export default class ReleasesIndexPage extends Component {
                               { (editRelease.additional_data.refundable_amount || emptyObject).str_pretty }
                             </td>
                           </tr>
+                          <tr>
+                            <th>
+                              Net Refundable + Insurance Paid
+                            </th>
+                            <td colSpan="2">
+                              { this.calcNetPlusIns(editRelease) }
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -427,6 +435,17 @@ export default class ReleasesIndexPage extends Component {
         </div>
       </CardSection>
     )
+  }
+
+  calcNetPlusIns(release) {
+    try {
+      const refAmount = +(release.additional_data.refundable_amount.decimal),
+            insAmount = +(release.additional_data.insurance_paid.decimal)
+
+      return `$${(refAmount + insAmount).toFixed(2)}`
+    } catch(e) {
+      return "N/A"
+    }
   }
 
 
@@ -557,6 +576,14 @@ export default class ReleasesIndexPage extends Component {
                               </th>
                               <td colSpan="2">
                                 { (release.additional_data.refundable_amount || emptyObject).str_pretty }
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>
+                                Net Refundable + Insurance Paid
+                              </th>
+                              <td colSpan="2">
+                                { this.calcNetPlusIns(release) }
                               </td>
                             </tr>
                           </tbody>
