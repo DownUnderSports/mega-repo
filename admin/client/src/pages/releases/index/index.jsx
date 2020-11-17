@@ -31,13 +31,14 @@ export default class ReleasesIndexPage extends Component {
   forceReleases = () => this.getReleases(true)
 
   getReleases = async (force) => {
-    await this.setStateAsync({ loading: true, editing: null, editRelease: null, errors: [] })
+    await this.setStateAsync({ loading: true, editing: null, editRelease: null, filterBy: null, errors: [] })
     const result = await this.fetchReleases(force)
     if(result.epoch) this._lastFetch = new Date(result.epoch)
     if(result.releases) {
       await this.setStateAsync(state => {
         const { releases } = result,
-              oldReleases = state.allReleases || []
+              oldReleases = state.allReleases || [],
+              onlyUnmarked = state.onlyUnmarked
 
         for(const release of oldReleases) {
           if(releases.findIndex((rel) => rel.id === release.id) === -1) releases.push(release)
@@ -45,7 +46,7 @@ export default class ReleasesIndexPage extends Component {
 
         const allReleases = quickSort(releases, quickCompare)
 
-        return { allReleases, releases: [ ...allReleases ], loading: false }
+        return { allReleases, releases: [ ...(onlyUnmarked ? allReleases.filter(r => !r.net_refundable) : allReleases) ], loading: false }
       })
     }
   }
@@ -194,17 +195,33 @@ export default class ReleasesIndexPage extends Component {
     this.setState(state => {
       if(!val) return { releases: [ ...state.allReleases ] }
 
-      const { allReleases } = state
+      const { allReleases, onlyUnmarked } = state,
+            filtered = allReleases.filter((r) => {
+              const { dus_id, print_names } = r.additional_data || {}
+              if(dus_id && dus_id.toLowerCase().replace(/[^a-z]/g, "").includes(val.toLowerCase().replace(/[^a-z]/g, ""))) return true
+              if(print_names && print_names.toLowerCase().includes(val.toLowerCase())) return true
+              return false
+            })
 
       return {
-        releases: allReleases.filter((r) => {
-          const { dus_id, print_names } = r.additional_data || {}
-          if(dus_id && dus_id.toLowerCase().replace(/[^a-z]/g, "").includes(val.toLowerCase().replace(/[^a-z]/g, ""))) return true
-          if(print_names && print_names.toLowerCase().includes(val.toLowerCase())) return true
-          return false
-        })
+        releases: onlyUnmarked ? filtered.filter(r => !r.net_refundable) : filtered,
+        filterBy: val
       }
     })
+  }
+
+  toggleOnlyUnmarked = () => {
+    this.state.onlyUnmarked ? this.unsetOnlyUnmarked() : this.setOnlyUnmarked()
+  }
+
+  setOnlyUnmarked = () => {
+    this.setState(state => {
+      return { onlyUnmarked: true, releases: [ ...state.releases.filter(r => !r.net_refundable) ] }
+    })
+  }
+
+  unsetOnlyUnmarked = () => {
+    this.setState({ onlyUnmarked: false }, () => { this.filter(this.state.filterBy) })
   }
 
   renderEditing = () => {
@@ -450,7 +467,7 @@ export default class ReleasesIndexPage extends Component {
 
 
   render() {
-    const { releases, loading, editing } = this.state
+    const { releases, loading, editing, onlyUnmarked } = this.state
     return (
       <DisplayOrLoading
         display={!loading}
@@ -480,6 +497,10 @@ export default class ReleasesIndexPage extends Component {
               *The buttons above will also reset any open form*
             </p>
             <hr/>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
             {
               !editing
               && (
@@ -493,6 +514,23 @@ export default class ReleasesIndexPage extends Component {
                 />
               )
             }
+          </div>
+          <div className="col-auto">
+
+            <div className="form-group form-check">
+              <input
+                type="checkbox"
+                id="toggle_only_unmarked"
+                className="form-check-input"
+                value="1"
+                name="toggle_only_unmarked"
+                onChange={this.toggleOnlyUnmarked}
+                checked={!!onlyUnmarked}
+              />
+              <label htmlFor="toggle_only_unmarked">
+                Only Show Unset Refundable Amount?
+              </label>
+            </div>
           </div>
         </div>
         {
