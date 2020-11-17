@@ -125,7 +125,43 @@ export default class ReleasesIndexPage extends Component {
     })
   }
 
-  cancelEditing = () => this.setState({ editing: false, editRelease: null })
+  scrollToNearestMatch = (relId) => {
+    if(relId !== "new") {
+      const el = document.getElementById(`release-${relId}`)
+
+      if(el) el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" })
+      else {
+        const index = this.state.allReleases.findIndex((rel) => +(rel.id) === +relId)
+        if(index !== -1) {
+          let idx = index
+          while(++idx < this.state.allReleases.length) {
+            const { id } = this.state.allReleases[idx]
+            const el = document.getElementById(`release-${id}`)
+
+            if(el) {
+              el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" })
+              return;
+            }
+          }
+          idx = index
+          while(--idx > -1) {
+            const { id } = this.state.allReleases[idx]
+            const el = document.getElementById(`release-${id}`)
+
+            if(el) {
+              el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" })
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  cancelEditing = () => {
+    const { editing } = this.state
+    this.setState({ editing: false, editRelease: null }, () => editing && this.scrollToNearestMatch(editing))
+  }
 
   submitEditing = async () => {
     await this.setStateAsync({ loading: true, errors: [] })
@@ -156,6 +192,8 @@ export default class ReleasesIndexPage extends Component {
       await result.json()
 
       await this.getReleases()
+
+      this.scrollToNearestMatch(editing)
 
     } catch(err) {
       try {
@@ -539,6 +577,7 @@ export default class ReleasesIndexPage extends Component {
             : releases.map(release => (
                 <CardSection
                   key={release.id}
+                  id={`release-${release.id}`}
                   className='mb-3'
                   label={<span className="text-center">
                     <Link to={`/admin/users/${release.additional_data.dus_id}`} target="dus_user">
