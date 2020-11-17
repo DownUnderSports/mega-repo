@@ -152,6 +152,14 @@
       "image": "dus-logo.png",
       "index": true
     },
+    "releases": {
+      "title": "Releases",
+      "path": "admin/releases",
+      "canonical": "/admin/releases",
+      "description": "Down Under Sports: General Releases",
+      "image": "dus-logo.png",
+      "index": true
+    },
     "travel-giveaways": {
       "title": "Travel Giveaway Rules",
       "path": "admin/travel-giveaways",

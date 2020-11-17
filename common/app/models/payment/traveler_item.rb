@@ -20,6 +20,10 @@ class Payment < ApplicationRecord
     # == Scopes ===============================================================
     default_scope { where.not(traveler_id: nil) }
 
+    scope :dreamtime, -> do
+      joins(:payment).where("#{Payment.arel_table.name}.#{Payment.arel_table["billing"].name}->>'name' ILIKE ?", "Dreamtime%")
+    end
+
     # == Callbacks ============================================================
 
     # == Boolean Class Methods ================================================

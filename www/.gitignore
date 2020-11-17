@@ -47,6 +47,12 @@
 .gnupg*/
 !.gnupg.tar.b64.aes*
 
+/releases
+/releases*
+/releases/
+/releases*/
+!/releases.tar.b64.aes*
+
 staff-cert*.pem
 staff-cert*.pem*
 !staff-cert.pem.tar.b64.aes*

@@ -8,6 +8,7 @@ import { MailingsIndexPage, MailingsShowPage } from 'pages/mailings'
 import { FundraisingIdeasIndexPage, FundraisingIdeasShowPage } from 'pages/fundraising-ideas'
 import { SchoolsIndexPage, SchoolsShowPage } from 'pages/schools'
 import { UsersIndexPage, UsersShowPage } from 'pages/users'
+import { ReleasesIndexPage } from 'pages/releases'
 
 import { lazy } from 'react'
 
@@ -34,6 +35,10 @@ const routes = [
   {
     path: '/admin/chat/:uuid?',
     component: ChatPage,
+  },
+  {
+    path: '/admin/releases',
+    component: ReleasesIndexPage,
   },
   {
     path: '/admin/traveling',
@@ -167,6 +172,10 @@ const routes = [
   {
     path: '/fundraising_ideas',
     component: FundraisingIdeasIndexPage
+  },
+  {
+    path: '/releases',
+    component: ReleasesIndexPage
   },
   {
     path: '/:id([A-Za-z-]+)',

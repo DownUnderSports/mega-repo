@@ -67,6 +67,7 @@ class User < ApplicationRecord
   has_many_attached_by_year :insurance_proofs
   has_many_attached_by_year :flight_proofs
 
+  has_one :general_release, inverse_of: :user
   has_one :traveler, inverse_of: :user
   has_one :passport, inverse_of: :user
   has_one :travel_preparation, inverse_of: :user
@@ -781,6 +782,9 @@ class User < ApplicationRecord
   end
 
   # == Instance Methods =====================================================
+  def age
+    birth_date.present? ? (Time.now.to_s(:number).to_i - birth_date.to_time.to_s(:number).to_i)/10e9.to_i : "Unknown"
+  end
   # def user_signed_terms
   #   __send__ :"user_signed_terms_#{current_year}"
   # end

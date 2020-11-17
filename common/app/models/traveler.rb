@@ -412,13 +412,17 @@ class Traveler < ApplicationRecord
     deposit_amount.dollar_str.sub(/\.00/, '')
   end
 
-  def deposit
+  def find_deposit
     sum = 0.cents
     min = deposit_amount
     items.successful.order(:created_at).each do |i|
-      return i if (sum += i.amount) >= min
+      return [ i, sum - min ] if (sum += i.amount) >= min
     end
     nil
+  end
+
+  def deposit
+    find_deposit&.first
   end
 
   def deposit_date
@@ -446,6 +450,25 @@ class Traveler < ApplicationRecord
 
   def insurance_debit
     debits.find_by(base_debit: BaseDebit::Insurance)
+  end
+
+  def find_insurance_payment
+    return nil unless has_travelex_insurance?
+
+    sum = 0.cents
+    min = deposit_amount + insurance_charge
+    items.successful.order(:created_at).each do |i|
+      return [ i, sum - min ] if (sum += i.amount) >= min
+    end
+    nil
+  end
+
+  def insurance_payment
+    find_insurance_payment&.first
+  end
+
+  def insurance_date
+    @insurance_date ||= insurance_payment&.created_at&.to_date
   end
 
   def insurance_price
@@ -483,7 +506,25 @@ class Traveler < ApplicationRecord
 
   def refundable_amount
     [
-      total_payments - (deposit_amount + insurance_charge),
+      (total_payments - (deposit_amount + insurance_charge)) - dreamtime_paid_amount,
+      0.cents
+    ].max
+  end
+
+  def insurance_paid_amount
+    i = insurance_charge
+    return 0.cents unless i > 0
+    pmt = [ total_payments - deposit_amount, 0.cents ].max
+    pmt > i ? pmt : i
+  end
+
+  def dreamtime_paid_amount
+    return 0.cents unless pmt = (has_travelex_insurance? ? find_insurance_payment : find_deposit)
+
+    item, overpaid = pmt
+
+    [
+      StoreAsInt.money(items.successful.dreamtime.where(items.klass.arel_table[:created_at].gteq(item.created_at)).sum(:amount) - overpaid.to_i),
       0.cents
     ].max
   end
@@ -562,7 +603,7 @@ class Traveler < ApplicationRecord
   end
 
   def total_payments
-    StoreAsInt.money items.sum(:amount)
+    StoreAsInt.money items.successful.sum(:amount)
   end
 
   alias :cancelled? :canceled?

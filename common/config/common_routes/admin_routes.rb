@@ -350,6 +350,7 @@ module AdminRoutes
         resources :interests, only: [ :index ]
 
         resources :attributes, only: [ :show ], defaults: { format: :json }
+        resources :releases, only: [ :index, :create, :update ]
 
         get 'version', to: 'application#version'
 

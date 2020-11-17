@@ -911,53 +911,6 @@ CREATE FUNCTION public.validate_email(email text) RETURNS text
       $$;
 
 
---
--- Name: uuid_generate_v6(); Type: FUNCTION; Schema: year_2020; Owner: -
---
-
-CREATE FUNCTION year_2020.uuid_generate_v6() RETURNS uuid
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    RETURN uuid_v1_to_v6(uuid_generate_v1());
-END; $$;
-
-
---
--- Name: uuid_generate_v6mc(); Type: FUNCTION; Schema: year_2020; Owner: -
---
-
-CREATE FUNCTION year_2020.uuid_generate_v6mc() RETURNS uuid
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    RETURN uuid_v1_to_v6(uuid_generate_v1mc());
-END; $$;
-
-
---
--- Name: uuid_v1_to_v6(uuid); Type: FUNCTION; Schema: year_2020; Owner: -
---
-
-CREATE FUNCTION year_2020.uuid_v1_to_v6(v1 uuid) RETURNS uuid
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    v6 text;
-BEGIN
-    SELECT substring(v1::text from 16 for 3) ||
-            substring(v1::text from 10 for 4) ||
-            substring(v1::text from 1 for 5)  ||
-            '6' || substring(v1::text from 6 for 3) ||
-            substring(v1::text from 20)
-
-            INTO v6;
-
-    RETURN v6::uuid;
-
-END; $$;
-
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -13624,6 +13577,42 @@ ALTER SEQUENCE public.thank_you_ticket_terms_id_seq OWNED BY public.thank_you_ti
 
 
 --
+-- Name: thank_you_tickets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.thank_you_tickets (
+    id bigint NOT NULL,
+    user_id bigint,
+    uuid uuid DEFAULT public.uuid_generate_v6() NOT NULL,
+    name text,
+    email text,
+    phone text,
+    mailing_address text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: thank_you_tickets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.thank_you_tickets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: thank_you_tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.thank_you_tickets_id_seq OWNED BY public.thank_you_tickets.id;
+
+
+--
 -- Name: traveler_base_debits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14148,6 +14137,42 @@ CREATE TABLE public.user_forwarded_ids (
     dus_id text
 )
 WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2');
+
+
+--
+-- Name: user_general_releases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_general_releases (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    is_signed boolean DEFAULT false NOT NULL,
+    allow_contact boolean DEFAULT false NOT NULL,
+    percentage_paid public.exchange_rate_integer NOT NULL,
+    net_refundable integer,
+    notes text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: user_general_releases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_general_releases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_general_releases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_general_releases_id_seq OWNED BY public.user_general_releases.id;
 
 
 --
@@ -14739,6 +14764,816 @@ ALTER SEQUENCE public.view_trackers_id_seq OWNED BY public.view_trackers.id;
 
 
 --
+-- Name: payment_items; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.payment_items (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT payment_items_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.payment_items);
+
+
+--
+-- Name: payment_remittances; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.payment_remittances (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT payment_remittances_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.payment_remittances);
+
+
+--
+-- Name: payments; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.payments (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT payments_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.payments);
+
+
+--
+-- Name: accounting_remit_forms_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.accounting_remit_forms_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT payment_groups.remit_number,
+    payment_groups.positive_amount,
+    payment_groups.negative_amount,
+    payment_groups.net_amount,
+    payment_results.successful_amount,
+    payment_results.failed_amount,
+    COALESCE(payment_remittances.recorded, false) AS recorded,
+    COALESCE(payment_remittances.reconciled, false) AS reconciled
+   FROM ((( SELECT payments.remit_number,
+            (COALESCE(sum(positive_items.total), (0)::numeric))::integer AS positive_amount,
+            (COALESCE(sum(negative_items.total), (0)::numeric))::integer AS negative_amount,
+            ((sum(COALESCE(positive_items.total, (0)::bigint)))::integer + (sum(COALESCE(negative_items.total, (0)::bigint)))::integer) AS net_amount
+           FROM ((year_2019.payments
+             LEFT JOIN ( SELECT payment_items.payment_id,
+                    sum((payment_items.amount)::integer) AS total
+                   FROM year_2019.payment_items
+                  WHERE ((payment_items.amount)::integer > 0)
+                  GROUP BY payment_items.payment_id) positive_items ON ((positive_items.payment_id = payments.id)))
+             LEFT JOIN ( SELECT payment_items.payment_id,
+                    sum((payment_items.amount)::integer) AS total
+                   FROM year_2019.payment_items
+                  WHERE ((payment_items.amount)::integer < 0)
+                  GROUP BY payment_items.payment_id) negative_items ON ((negative_items.payment_id = payments.id)))
+          WHERE (payments.successful = true)
+          GROUP BY payments.remit_number) payment_groups
+     LEFT JOIN ( SELECT payments.remit_number,
+            sum(
+                CASE
+                    WHEN payments.successful THEN COALESCE((payments.amount)::integer, 0)
+                    ELSE 0
+                END) AS successful_amount,
+            sum(
+                CASE
+                    WHEN payments.successful THEN 0
+                    ELSE COALESCE((payments.amount)::integer, 0)
+                END) AS failed_amount
+           FROM year_2019.payments
+          GROUP BY payments.remit_number) payment_results ON ((payment_results.remit_number = payment_groups.remit_number)))
+     LEFT JOIN year_2019.payment_remittances ON ((payment_remittances.remit_number = payment_groups.remit_number)))
+  WITH NO DATA;
+
+
+--
+-- Name: teams; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.teams (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT teams_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.teams);
+
+
+--
+-- Name: traveler_credits; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.traveler_credits (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT traveler_credits_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.traveler_credits);
+
+
+--
+-- Name: traveler_debits; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.traveler_debits (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT traveler_debits_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.traveler_debits);
+
+
+--
+-- Name: travelers; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.travelers (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT travelers_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.travelers);
+
+
+--
+-- Name: user_messages; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.user_messages (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT user_messages_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.user_messages);
+
+
+--
+-- Name: user_transfer_expectations; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.user_transfer_expectations (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT user_transfer_expectations_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.user_transfer_expectations);
+
+
+--
+-- Name: users_index_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.users_index_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT users.id,
+    users.dus_id,
+    users.category_type,
+    users.category_id,
+    users.email,
+    users.password,
+    users.register_secret,
+    users.certificate,
+    users.title,
+    users.first,
+    users.middle,
+    users.last,
+    users.suffix,
+    users.print_first_names,
+    users.print_other_names,
+    users.nick_name,
+    users.keep_name,
+    users.address_id,
+    users.interest_id,
+    users.extension,
+    users.phone,
+    users.can_text,
+    users.gender,
+    users.shirt_size,
+    users.birth_date,
+    users.transfer_id,
+    users.responded_at,
+    users.is_verified,
+    users.visible_until_year,
+    users.created_at,
+    users.updated_at,
+    user_transfer_expectations.difficulty,
+    user_transfer_expectations.status,
+    user_transfer_expectations.can_transfer,
+    user_transfer_expectations.can_compete,
+    travelers.id AS traveler_id,
+    travelers.joined_at,
+    travelers.cancel_date,
+    coaches.id AS coach_id,
+    athletes.id AS athlete_id,
+    athletes.grad,
+    states.id AS state_id,
+    states.abbr AS state_abbr,
+    sports.id AS sport_id,
+    sports.abbr_gender AS sport_abbr,
+    COALESCE(travelers.departing_date, calculated_team.departing_date) AS departing_date,
+    schools.id AS school_id,
+    deferrals.deferral,
+    invite_rules.grad_year AS max_grad_year,
+    invite_rules.invitable,
+    invite_rules.certifiable
+   FROM (((((((((((((((public.users
+     LEFT JOIN ( SELECT deferral_check.id,
+            (EXISTS ( SELECT 1
+                   FROM year_2019.user_messages
+                  WHERE ((user_messages.type = 'User::Note'::text) AND (user_messages.user_id = deferral_check.id) AND (user_messages.message ~~ 'Deferral to 20__'::text)))) AS deferral
+           FROM public.users deferral_check) deferrals ON ((deferrals.id = users.id)))
+     LEFT JOIN ( SELECT travelers_1.id,
+            travelers_1.user_id,
+            travelers_1.team_id,
+            travelers_1.balance,
+            travelers_1.shirt_size,
+            travelers_1.departing_date,
+            travelers_1.departing_from,
+            travelers_1.returning_date,
+            travelers_1.returning_to,
+            travelers_1.bus,
+            travelers_1.wristband,
+            travelers_1.hotel,
+            travelers_1.has_ground_transportation,
+            travelers_1.has_lodging,
+            travelers_1.has_gbr,
+            travelers_1.own_flights,
+            travelers_1.cancel_date,
+            travelers_1.cancel_reason,
+            travelers_1.created_at,
+            travelers_1.updated_at,
+            travelers_1.operating_year,
+            COALESCE(traveler_payments.created_at, travelers_1.created_at) AS joined_at
+           FROM (year_2019.travelers travelers_1
+             LEFT JOIN year_2019.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                   FROM (year_2019.payment_items
+                     JOIN year_2019.payments ON ((payments.id = payment_items.payment_id)))
+                  WHERE ((payment_items.traveler_id = travelers_1.id) AND (payments.successful = true))
+                  ORDER BY payment_items.created_at
+                 LIMIT 1))))) travelers ON ((travelers.user_id = users.id)))
+     LEFT JOIN year_2019.user_transfer_expectations ON ((user_transfer_expectations.user_id = users.id)))
+     LEFT JOIN year_2019.teams ON ((teams.id = travelers.team_id)))
+     LEFT JOIN ( SELECT sub_users.id AS user_id,
+            related_user_join.related_user_id
+           FROM (public.users sub_users
+             LEFT JOIN public.user_relations related_user_join ON ((related_user_join.id = ( SELECT user_relations.id
+                   FROM (public.user_relations
+                     JOIN public.users single_users ON ((single_users.id = user_relations.related_user_id)))
+                  WHERE ((user_relations.user_id = sub_users.id) AND ((single_users.category_type)::text = ANY ((ARRAY['athletes'::character varying, 'coaches'::character varying])::text[])))
+                 LIMIT 1))))) related_user_row ON (((users.category_type IS NULL) AND (related_user_row.user_id = users.id))))
+     LEFT JOIN public.users main_user ON ((main_user.id = related_user_row.related_user_id)))
+     LEFT JOIN public.athletes ON (((athletes.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'athletes'::text))))
+     LEFT JOIN public.coaches ON (((coaches.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'coaches'::text))))
+     LEFT JOIN public.officials ON (((officials.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'officials'::text))))
+     LEFT JOIN public.schools ON ((schools.id = COALESCE(athletes.school_id, coaches.school_id))))
+     LEFT JOIN public.addresses ON ((addresses.id = COALESCE(schools.address_id, users.address_id))))
+     LEFT JOIN public.states ON ((states.id = COALESCE(teams.state_id, officials.state_id, addresses.state_id))))
+     LEFT JOIN public.sports ON ((sports.id = COALESCE(teams.sport_id, officials.sport_id, athletes.sport_id, coaches.sport_id))))
+     LEFT JOIN year_2019.teams calculated_team ON (((calculated_team.sport_id = sports.id) AND (calculated_team.state_id = states.id))))
+     LEFT JOIN public.invite_rules ON (((invite_rules.sport_id = sports.id) AND (invite_rules.state_id = states.id))))
+  WHERE (users.visible_until_year > 2019)
+  ORDER BY users.id
+  WITH NO DATA;
+
+
+--
+-- Name: accounting_users_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.accounting_users_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT users_index_view.id,
+    users_index_view.dus_id,
+    users_index_view.category_type,
+    users_index_view.category_id,
+    users_index_view.email,
+    users_index_view.password,
+    users_index_view.register_secret,
+    users_index_view.certificate,
+    users_index_view.title,
+    users_index_view.first,
+    users_index_view.middle,
+    users_index_view.last,
+    users_index_view.suffix,
+    users_index_view.print_first_names,
+    users_index_view.print_other_names,
+    users_index_view.nick_name,
+    users_index_view.keep_name,
+    users_index_view.address_id,
+    users_index_view.interest_id,
+    users_index_view.extension,
+    users_index_view.phone,
+    users_index_view.can_text,
+    users_index_view.gender,
+    users_index_view.shirt_size,
+    users_index_view.birth_date,
+    users_index_view.transfer_id,
+    users_index_view.responded_at,
+    users_index_view.is_verified,
+    users_index_view.visible_until_year,
+    users_index_view.created_at,
+    users_index_view.updated_at,
+    users_index_view.difficulty,
+    users_index_view.status,
+    users_index_view.can_transfer,
+    users_index_view.can_compete,
+    users_index_view.traveler_id,
+    users_index_view.joined_at,
+    users_index_view.cancel_date,
+    users_index_view.coach_id,
+    users_index_view.athlete_id,
+    users_index_view.grad,
+    users_index_view.state_id,
+    users_index_view.state_abbr,
+    users_index_view.sport_id,
+    users_index_view.sport_abbr,
+    users_index_view.departing_date,
+    users_index_view.school_id,
+    users_index_view.deferral,
+    users_index_view.max_grad_year,
+    users_index_view.invitable,
+    users_index_view.certifiable,
+    (COALESCE(payment_summaries.amount, (0)::bigint))::public.money_integer AS total_paid,
+    (COALESCE(debit_summaries.amount, (0)::bigint))::public.money_integer AS total_debited,
+    (COALESCE(credit_summaries.amount, (0)::bigint))::public.money_integer AS total_credited,
+    ((COALESCE(debit_summaries.amount, (0)::bigint) - COALESCE(credit_summaries.amount, (0)::bigint)))::public.money_integer AS total_charges,
+    ((COALESCE(debit_summaries.amount, (0)::bigint) - (COALESCE(payment_summaries.amount, (0)::bigint) + COALESCE(credit_summaries.amount, (0)::bigint))))::public.money_integer AS current_balance
+   FROM (((year_2019.users_index_view
+     LEFT JOIN ( SELECT payment_items.traveler_id,
+            sum((payment_items.amount)::integer) AS amount
+           FROM year_2019.payment_items
+          WHERE (payment_items.traveler_id IS NOT NULL)
+          GROUP BY payment_items.traveler_id) payment_summaries ON ((payment_summaries.traveler_id = users_index_view.traveler_id)))
+     LEFT JOIN ( SELECT traveler_debits.traveler_id,
+            sum((traveler_debits.amount)::integer) AS amount
+           FROM year_2019.traveler_debits
+          WHERE (traveler_debits.traveler_id IS NOT NULL)
+          GROUP BY traveler_debits.traveler_id) debit_summaries ON ((debit_summaries.traveler_id = users_index_view.traveler_id)))
+     LEFT JOIN ( SELECT traveler_credits.traveler_id,
+            sum((traveler_credits.amount)::integer) AS amount
+           FROM year_2019.traveler_credits
+          WHERE (traveler_credits.traveler_id IS NOT NULL)
+          GROUP BY traveler_credits.traveler_id) credit_summaries ON ((credit_summaries.traveler_id = users_index_view.traveler_id)))
+  ORDER BY users_index_view.id
+  WITH NO DATA;
+
+
+--
+-- Name: meeting_video_views; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.meeting_video_views (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT meeting_video_views_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.meeting_video_views);
+
+
+--
+-- Name: staff_assignment_visits; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.staff_assignment_visits (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT staff_assignment_visits_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.staff_assignment_visits);
+
+
+--
+-- Name: staff_assignments; Type: TABLE; Schema: year_2019; Owner: -
+--
+
+CREATE TABLE year_2019.staff_assignments (
+    operating_year integer DEFAULT 2019,
+    CONSTRAINT staff_assignments_operating_year_check CHECK ((operating_year = 2019))
+)
+INHERITS (public.staff_assignments);
+
+
+--
+-- Name: assignments_responds_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.assignments_responds_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT staff_assignments.id,
+    staff_assignments.user_id,
+    staff_assignments.assigned_to_id,
+    staff_assignments.assigned_by_id,
+    staff_assignments.reason,
+    staff_assignments.completed,
+    staff_assignments.unneeded,
+    staff_assignments.reviewed,
+    staff_assignments.locked,
+    staff_assignments.completed_at,
+    staff_assignments.unneeded_at,
+    staff_assignments.reviewed_at,
+    staff_assignments.follow_up_date,
+    staff_assignments.created_at,
+    staff_assignments.updated_at,
+    staff_assignments.operating_year,
+    staff_assignments_were_visited.visited,
+    ((assigned_to_users.first || ' '::text) || assigned_to_users.last) AS assigned_to_full_name,
+    ((assigned_by_users.first || ' '::text) || assigned_by_users.last) AS assigned_by_full_name,
+    COALESCE(message_history.message_count, (0)::bigint) AS message_count,
+    COALESCE(pre_meeting_message_history.message_count, (0)::bigint) AS pre_meeting_message_count,
+    COALESCE(post_meeting_message_history.message_count, (0)::bigint) AS post_meeting_message_count,
+    COALESCE(other_message_history.message_count, (0)::bigint) AS other_message_count,
+    message_history.last_messaged_at,
+    COALESCE(video_views.duration, '00:00:00'::text) AS duration,
+    video_views.first_watched_at AS watched_at,
+    video_views.first_viewed_at AS viewed_at,
+        CASE
+            WHEN (video_views.first_viewed_at IS NOT NULL) THEN true
+            ELSE false
+        END AS viewed,
+        CASE
+            WHEN (video_views.first_watched_at IS NOT NULL) THEN true
+            ELSE false
+        END AS watched,
+    video_views.last_viewed_at,
+    video_views.created_at AS registered_at,
+    users.dus_id,
+    users.responded_at,
+    ((COALESCE(users.first, ''::text) || ' '::text) || COALESCE(users.last, ''::text)) AS name,
+    states.id AS state_id,
+    sports.id AS sport_id,
+    athletes.grad,
+    ((COALESCE(states.abbr, ''::text) || ' '::text) || COALESCE(sports.abbr_gender, ''::text)) AS team_name,
+    COALESCE(addresses.tz_offset, school_addresses.tz_offset, states.tz_offset) AS tz_offset,
+    COALESCE(interests.level, 'Unknown'::text) AS interest_level,
+    COALESCE(interests.id, (0)::bigint) AS interest_id
+   FROM (((((((((((((((((year_2019.staff_assignments
+     JOIN public.users ON (((users.id = staff_assignments.user_id) AND (users.category_type IS NOT NULL))))
+     JOIN public.users assigned_to_users ON ((assigned_to_users.id = staff_assignments.assigned_to_id)))
+     JOIN public.users assigned_by_users ON ((assigned_by_users.id = staff_assignments.assigned_by_id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)))
+          GROUP BY user_messages.user_id) message_history ON ((message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.reason = 'pre-meeting'::text))
+          GROUP BY user_messages.user_id) pre_meeting_message_history ON ((pre_meeting_message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.reason = 'post-meeting'::text))
+          GROUP BY user_messages.user_id) post_meeting_message_history ON ((post_meeting_message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.reason !~~ '%meeting'::text))
+          GROUP BY user_messages.user_id) other_message_history ON ((other_message_history.user_id = users.id)))
+     LEFT JOIN public.athletes ON (((athletes.id = users.category_id) AND ((users.category_type)::text = 'athletes'::text))))
+     LEFT JOIN public.coaches ON (((coaches.id = users.category_id) AND ((users.category_type)::text = 'coaches'::text))))
+     LEFT JOIN public.schools ON ((schools.id = COALESCE(athletes.school_id, coaches.school_id))))
+     LEFT JOIN public.addresses ON ((addresses.id = users.address_id)))
+     LEFT JOIN public.addresses school_addresses ON ((school_addresses.id = schools.address_id)))
+     LEFT JOIN public.states ON ((states.id = COALESCE(school_addresses.state_id, addresses.state_id))))
+     LEFT JOIN public.sports ON ((sports.id = COALESCE(athletes.sport_id, coaches.sport_id))))
+     LEFT JOIN ( SELECT meeting_video_views.user_id,
+            (max(meeting_video_views.duration))::text AS duration,
+            min(meeting_video_views.first_watched_at) AS first_watched_at,
+            min(meeting_video_views.first_viewed_at) AS first_viewed_at,
+            max(meeting_video_views.last_viewed_at) AS last_viewed_at,
+            min(meeting_video_views.created_at) AS created_at
+           FROM (year_2019.meeting_video_views
+             JOIN public.meeting_videos ON (((meeting_videos.id = meeting_video_views.video_id) AND (meeting_videos.category = 'I'::public.meeting_category))))
+          GROUP BY meeting_video_views.user_id) video_views ON ((video_views.user_id = users.id)))
+     JOIN ( SELECT staff_assignments_1.id,
+                CASE
+                    WHEN (EXISTS ( SELECT 1
+                       FROM year_2019.staff_assignment_visits
+                      WHERE (staff_assignment_visits.assignment_id = staff_assignments_1.id))) THEN true
+                    ELSE false
+                END AS visited
+           FROM year_2019.staff_assignments staff_assignments_1) staff_assignments_were_visited ON ((staff_assignments_were_visited.id = staff_assignments.id)))
+     LEFT JOIN public.interests ON ((interests.id = users.interest_id)))
+  WHERE ((staff_assignments.unneeded <> true) AND (staff_assignments.completed <> true) AND (staff_assignments.reason = 'Respond'::text))
+  WITH NO DATA;
+
+
+--
+-- Name: assignments_travelers_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.assignments_travelers_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT staff_assignments.id,
+    staff_assignments.user_id,
+    staff_assignments.assigned_to_id,
+    staff_assignments.assigned_by_id,
+    staff_assignments.reason,
+    staff_assignments.completed,
+    staff_assignments.unneeded,
+    staff_assignments.reviewed,
+    staff_assignments.locked,
+    staff_assignments.completed_at,
+    staff_assignments.unneeded_at,
+    staff_assignments.reviewed_at,
+    staff_assignments.follow_up_date,
+    staff_assignments.created_at,
+    staff_assignments.updated_at,
+    staff_assignments.operating_year,
+    staff_assignments_were_visited.visited,
+    ((assigned_to_users.first || ' '::text) || assigned_to_users.last) AS assigned_to_full_name,
+    ((assigned_by_users.first || ' '::text) || assigned_by_users.last) AS assigned_by_full_name,
+    COALESCE(message_history.message_count, (0)::bigint) AS message_count,
+    COALESCE(pre_signup_message_history.message_count, (0)::bigint) AS pre_signup_message_count,
+    COALESCE(post_signup_message_history.message_count, (0)::bigint) AS post_signup_message_count,
+    message_history.last_messaged_at,
+    users.dus_id,
+    ((COALESCE(users.first, ''::text) || ' '::text) || COALESCE(users.last, ''::text)) AS name,
+    states.id AS state_id,
+    sports.id AS sport_id,
+    teams.name AS team_name,
+    COALESCE(addresses.tz_offset, states.tz_offset) AS tz_offset,
+    COALESCE(interests.level, 'Unknown'::text) AS interest_level,
+    COALESCE(interests.id, (0)::bigint) AS interest_id,
+    travelers.joined_at,
+    travelers.cancel_date
+   FROM (((((((((((((year_2019.staff_assignments
+     JOIN public.users ON ((users.id = staff_assignments.user_id)))
+     JOIN public.users assigned_to_users ON ((assigned_to_users.id = staff_assignments.assigned_to_id)))
+     JOIN public.users assigned_by_users ON ((assigned_by_users.id = staff_assignments.assigned_by_id)))
+     JOIN ( SELECT travelers_1.id,
+            travelers_1.user_id,
+            travelers_1.team_id,
+            travelers_1.balance,
+            travelers_1.shirt_size,
+            travelers_1.departing_date,
+            travelers_1.departing_from,
+            travelers_1.returning_date,
+            travelers_1.returning_to,
+            travelers_1.bus,
+            travelers_1.wristband,
+            travelers_1.hotel,
+            travelers_1.has_ground_transportation,
+            travelers_1.has_lodging,
+            travelers_1.has_gbr,
+            travelers_1.own_flights,
+            travelers_1.cancel_date,
+            travelers_1.cancel_reason,
+            travelers_1.created_at,
+            travelers_1.updated_at,
+            travelers_1.operating_year,
+            COALESCE(traveler_payments.created_at, travelers_1.created_at) AS joined_at
+           FROM (year_2019.travelers travelers_1
+             LEFT JOIN year_2019.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                   FROM (year_2019.payment_items
+                     JOIN year_2019.payments ON ((payments.id = payment_items.payment_id)))
+                  WHERE ((payment_items.traveler_id = travelers_1.id) AND (payments.successful = true))
+                  ORDER BY payment_items.created_at
+                 LIMIT 1))))) travelers ON ((travelers.user_id = users.id)))
+     JOIN year_2019.teams ON ((teams.id = travelers.team_id)))
+     JOIN public.states ON ((states.id = teams.state_id)))
+     JOIN public.sports ON ((sports.id = teams.sport_id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM ((((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN ( SELECT travelers_2.user_id,
+                    COALESCE(traveler_payments.created_at, travelers_2.created_at) AS joined_at
+                   FROM (year_2019.travelers travelers_2
+                     LEFT JOIN year_2019.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                           FROM (year_2019.payment_items
+                             JOIN year_2019.payments ON ((payments.id = payment_items.payment_id)))
+                          WHERE ((payment_items.traveler_id = travelers_2.id) AND (payments.successful = true))
+                          ORDER BY payment_items.created_at
+                         LIMIT 1))))) travelers_1 ON ((travelers_1.user_id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)))
+          GROUP BY user_messages.user_id) message_history ON ((message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM ((((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN ( SELECT travelers_2.user_id,
+                    COALESCE(traveler_payments.created_at, travelers_2.created_at) AS joined_at
+                   FROM (year_2019.travelers travelers_2
+                     LEFT JOIN year_2019.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                           FROM (year_2019.payment_items
+                             JOIN year_2019.payments ON ((payments.id = payment_items.payment_id)))
+                          WHERE ((payment_items.traveler_id = travelers_2.id) AND (payments.successful = true))
+                          ORDER BY payment_items.created_at
+                         LIMIT 1))))) travelers_1 ON ((travelers_1.user_id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.created_at < travelers_1.joined_at))
+          GROUP BY user_messages.user_id) pre_signup_message_history ON ((pre_signup_message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM ((((year_2019.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN ( SELECT travelers_2.user_id,
+                    COALESCE(traveler_payments.created_at, travelers_2.created_at) AS joined_at
+                   FROM (year_2019.travelers travelers_2
+                     LEFT JOIN year_2019.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                           FROM (year_2019.payment_items
+                             JOIN year_2019.payments ON ((payments.id = payment_items.payment_id)))
+                          WHERE ((payment_items.traveler_id = travelers_2.id) AND (payments.successful = true))
+                          ORDER BY payment_items.created_at
+                         LIMIT 1))))) travelers_1 ON ((travelers_1.user_id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.created_at >= travelers_1.joined_at))
+          GROUP BY user_messages.user_id) post_signup_message_history ON ((post_signup_message_history.user_id = users.id)))
+     LEFT JOIN public.addresses ON ((addresses.id = users.address_id)))
+     JOIN ( SELECT staff_assignments_1.id,
+                CASE
+                    WHEN (EXISTS ( SELECT 1
+                       FROM year_2019.staff_assignment_visits
+                      WHERE (staff_assignment_visits.assignment_id = staff_assignments_1.id))) THEN true
+                    ELSE false
+                END AS visited
+           FROM year_2019.staff_assignments staff_assignments_1) staff_assignments_were_visited ON ((staff_assignments_were_visited.id = staff_assignments.id)))
+     LEFT JOIN public.interests ON ((interests.id = users.interest_id)))
+  WHERE ((staff_assignments.unneeded <> true) AND (staff_assignments.completed <> true) AND (staff_assignments.reason = 'Traveler'::text))
+  WITH NO DATA;
+
+
+--
+-- Name: assignments_unassigned_responds_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.assignments_unassigned_responds_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT users.id,
+    users.dus_id,
+    users.category_type,
+    users.category_id,
+    users.email,
+    users.password,
+    users.register_secret,
+    users.certificate,
+    users.title,
+    users.first,
+    users.middle,
+    users.last,
+    users.suffix,
+    users.print_first_names,
+    users.print_other_names,
+    users.nick_name,
+    users.keep_name,
+    users.address_id,
+    users.interest_id,
+    users.extension,
+    users.phone,
+    users.can_text,
+    users.gender,
+    users.shirt_size,
+    users.birth_date,
+    users.transfer_id,
+    users.responded_at,
+    users.is_verified,
+    users.visible_until_year,
+    users.created_at,
+    users.updated_at,
+    athletes.grad,
+    COALESCE(video_views.duration, '00:00:00'::text) AS duration,
+    video_views.first_watched_at AS watched_at,
+    video_views.first_viewed_at AS viewed_at,
+    video_views.last_viewed_at,
+    video_views.created_at AS registered_at,
+        CASE
+            WHEN (video_views.first_viewed_at IS NOT NULL) THEN true
+            ELSE false
+        END AS viewed,
+        CASE
+            WHEN (video_views.first_watched_at IS NOT NULL) THEN true
+            ELSE false
+        END AS watched,
+    states.abbr AS state_abbr,
+    sports.abbr AS sport_abbr,
+    COALESCE(addresses.tz_offset, school_addresses.tz_offset, states.tz_offset) AS tz_offset
+   FROM ((((((((public.users
+     JOIN public.interests ON (((interests.id = users.interest_id) AND (interests.contactable = true))))
+     JOIN public.athletes ON (((athletes.id = users.category_id) AND ((users.category_type)::text = 'athletes'::text))))
+     LEFT JOIN public.schools ON ((schools.id = athletes.school_id)))
+     LEFT JOIN public.addresses ON ((addresses.id = users.address_id)))
+     LEFT JOIN public.addresses school_addresses ON ((school_addresses.id = schools.address_id)))
+     LEFT JOIN public.states ON ((states.id = COALESCE(school_addresses.state_id, addresses.state_id))))
+     LEFT JOIN public.sports ON ((sports.id = athletes.sport_id)))
+     LEFT JOIN ( SELECT meeting_video_views.user_id,
+            (max(meeting_video_views.duration))::text AS duration,
+            min(meeting_video_views.first_watched_at) AS first_watched_at,
+            min(meeting_video_views.first_viewed_at) AS first_viewed_at,
+            max(meeting_video_views.last_viewed_at) AS last_viewed_at,
+            min(meeting_video_views.created_at) AS created_at
+           FROM (year_2019.meeting_video_views
+             JOIN public.meeting_videos ON (((meeting_videos.id = meeting_video_views.video_id) AND (meeting_videos.category = 'I'::public.meeting_category))))
+          GROUP BY meeting_video_views.user_id) video_views ON ((video_views.user_id = users.id)))
+  WHERE (((users.responded_at IS NOT NULL) OR (users.interest_id IN ( SELECT sub_interests.id
+           FROM public.interests sub_interests
+          WHERE ((sub_interests.contactable = true) AND (NOT (sub_interests.level = 'Unknown'::text))))) OR (EXISTS ( SELECT 1
+           FROM year_2019.user_messages
+          WHERE ((user_messages.user_id = users.id) AND (user_messages.message = 'Marked for infokit pre-mail'::text))))) AND ((users.category_type)::text = 'athletes'::text) AND (NOT (EXISTS ( SELECT 1
+           FROM year_2019.staff_assignments
+          WHERE ((staff_assignments.user_id = users.id) AND (staff_assignments.reason = 'Respond'::text))))) AND (NOT (EXISTS ( SELECT 1
+           FROM year_2019.travelers
+          WHERE (travelers.user_id = users.id)))))
+  ORDER BY users.id
+  WITH NO DATA;
+
+
+--
+-- Name: assignments_unassigned_travelers_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2019.assignments_unassigned_travelers_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT users.id,
+    users.dus_id,
+    users.category_type,
+    users.category_id,
+    users.email,
+    users.password,
+    users.register_secret,
+    users.certificate,
+    users.title,
+    users.first,
+    users.middle,
+    users.last,
+    users.suffix,
+    users.print_first_names,
+    users.print_other_names,
+    users.nick_name,
+    users.keep_name,
+    users.address_id,
+    users.interest_id,
+    users.extension,
+    users.phone,
+    users.can_text,
+    users.gender,
+    users.shirt_size,
+    users.birth_date,
+    users.transfer_id,
+    users.responded_at,
+    users.is_verified,
+    users.visible_until_year,
+    users.created_at,
+    users.updated_at,
+    travelers.joined_at,
+    travelers.cancel_date,
+    states.abbr AS state_abbr,
+    sports.abbr AS sport_abbr
+   FROM (((((public.users
+     JOIN public.interests ON (((interests.id = users.interest_id) AND (interests.contactable = true))))
+     JOIN ( SELECT travelers_1.id,
+            travelers_1.user_id,
+            travelers_1.team_id,
+            travelers_1.balance,
+            travelers_1.shirt_size,
+            travelers_1.departing_date,
+            travelers_1.departing_from,
+            travelers_1.returning_date,
+            travelers_1.returning_to,
+            travelers_1.bus,
+            travelers_1.wristband,
+            travelers_1.hotel,
+            travelers_1.has_ground_transportation,
+            travelers_1.has_lodging,
+            travelers_1.has_gbr,
+            travelers_1.own_flights,
+            travelers_1.cancel_date,
+            travelers_1.cancel_reason,
+            travelers_1.created_at,
+            travelers_1.updated_at,
+            travelers_1.operating_year,
+            COALESCE(traveler_payments.created_at, travelers_1.created_at) AS joined_at
+           FROM (year_2019.travelers travelers_1
+             LEFT JOIN year_2019.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                   FROM (year_2019.payment_items
+                     JOIN year_2019.payments ON ((payments.id = payment_items.payment_id)))
+                  WHERE ((payment_items.traveler_id = travelers_1.id) AND (payments.successful = true))
+                  ORDER BY payment_items.created_at
+                 LIMIT 1))))) travelers ON ((travelers.user_id = users.id)))
+     JOIN year_2019.teams ON ((teams.id = travelers.team_id)))
+     JOIN public.states ON ((states.id = teams.state_id)))
+     JOIN public.sports ON ((sports.id = teams.sport_id)))
+  WHERE (NOT (EXISTS ( SELECT 1
+           FROM year_2019.staff_assignments
+          WHERE ((staff_assignments.user_id = users.id) AND (staff_assignments.reason = 'Traveler'::text)))))
+  ORDER BY users.id
+  WITH NO DATA;
+
+
+--
 -- Name: competing_teams; Type: TABLE; Schema: year_2019; Owner: -
 --
 
@@ -14816,25 +15651,20 @@ INHERITS (public.meeting_registrations);
 
 
 --
--- Name: meeting_video_views; Type: TABLE; Schema: year_2019; Owner: -
+-- Name: participants_map_view; Type: MATERIALIZED VIEW; Schema: year_2019; Owner: -
 --
 
-CREATE TABLE year_2019.meeting_video_views (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT meeting_video_views_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.meeting_video_views);
-
-
---
--- Name: payment_items; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.payment_items (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT payment_items_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.payment_items);
+CREATE MATERIALIZED VIEW year_2019.participants_map_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT participants.id,
+    participants.name,
+    participants.school,
+    states."full" AS state,
+    participants.state_id
+   FROM (public.participants
+     JOIN public.states ON ((states.id = participants.state_id)))
+  WHERE (participants.category = 'athlete'::text)
+  WITH NO DATA;
 
 
 --
@@ -14849,28 +15679,6 @@ INHERITS (public.payment_join_terms);
 
 
 --
--- Name: payment_remittances; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.payment_remittances (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT payment_remittances_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.payment_remittances);
-
-
---
--- Name: payments; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.payments (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT payments_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.payments);
-
-
---
 -- Name: sent_mails; Type: TABLE; Schema: year_2019; Owner: -
 --
 
@@ -14882,28 +15690,6 @@ INHERITS (public.sent_mails);
 
 
 --
--- Name: staff_assignment_visits; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.staff_assignment_visits (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT staff_assignment_visits_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.staff_assignment_visits);
-
-
---
--- Name: staff_assignments; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.staff_assignments (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT staff_assignments_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.staff_assignments);
-
-
---
 -- Name: student_lists; Type: TABLE; Schema: year_2019; Owner: -
 --
 
@@ -14912,17 +15698,6 @@ CREATE TABLE year_2019.student_lists (
     CONSTRAINT student_lists_operating_year_check CHECK ((operating_year = 2019))
 )
 INHERITS (public.student_lists);
-
-
---
--- Name: teams; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.teams (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT teams_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.teams);
 
 
 --
@@ -14945,28 +15720,6 @@ CREATE TABLE year_2019.traveler_buses_travelers (
     CONSTRAINT traveler_buses_travelers_operating_year_check CHECK ((operating_year = 2019))
 )
 INHERITS (public.traveler_buses_travelers);
-
-
---
--- Name: traveler_credits; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.traveler_credits (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT traveler_credits_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.traveler_credits);
-
-
---
--- Name: traveler_debits; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.traveler_debits (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT traveler_debits_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.traveler_debits);
 
 
 --
@@ -15003,17 +15756,6 @@ INHERITS (public.traveler_rooms);
 
 
 --
--- Name: travelers; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.travelers (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT travelers_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.travelers);
-
-
---
 -- Name: user_event_registrations; Type: TABLE; Schema: year_2019; Owner: -
 --
 
@@ -15036,17 +15778,6 @@ INHERITS (public.user_marathon_registrations);
 
 
 --
--- Name: user_messages; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.user_messages (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT user_messages_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.user_messages);
-
-
---
 -- Name: user_overrides; Type: TABLE; Schema: year_2019; Owner: -
 --
 
@@ -15055,17 +15786,6 @@ CREATE TABLE year_2019.user_overrides (
     CONSTRAINT user_overrides_operating_year_check CHECK ((operating_year = 2019))
 )
 INHERITS (public.user_overrides);
-
-
---
--- Name: user_transfer_expectations; Type: TABLE; Schema: year_2019; Owner: -
---
-
-CREATE TABLE year_2019.user_transfer_expectations (
-    operating_year integer DEFAULT 2019,
-    CONSTRAINT user_transfer_expectations_operating_year_check CHECK ((operating_year = 2019))
-)
-INHERITS (public.user_transfer_expectations);
 
 
 --
@@ -15088,6 +15808,816 @@ CREATE TABLE year_2019.user_uniform_orders (
     CONSTRAINT user_uniform_orders_operating_year_check CHECK ((operating_year = 2019))
 )
 INHERITS (public.user_uniform_orders);
+
+
+--
+-- Name: payment_items; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.payment_items (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT payment_items_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.payment_items);
+
+
+--
+-- Name: payment_remittances; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.payment_remittances (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT payment_remittances_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.payment_remittances);
+
+
+--
+-- Name: payments; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.payments (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT payments_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.payments);
+
+
+--
+-- Name: accounting_remit_forms_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.accounting_remit_forms_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT payment_groups.remit_number,
+    payment_groups.positive_amount,
+    payment_groups.negative_amount,
+    payment_groups.net_amount,
+    payment_results.successful_amount,
+    payment_results.failed_amount,
+    COALESCE(payment_remittances.recorded, false) AS recorded,
+    COALESCE(payment_remittances.reconciled, false) AS reconciled
+   FROM ((( SELECT payments.remit_number,
+            (COALESCE(sum(positive_items.total), (0)::numeric))::integer AS positive_amount,
+            (COALESCE(sum(negative_items.total), (0)::numeric))::integer AS negative_amount,
+            ((sum(COALESCE(positive_items.total, (0)::bigint)))::integer + (sum(COALESCE(negative_items.total, (0)::bigint)))::integer) AS net_amount
+           FROM ((year_2020.payments
+             LEFT JOIN ( SELECT payment_items.payment_id,
+                    sum((payment_items.amount)::integer) AS total
+                   FROM year_2020.payment_items
+                  WHERE ((payment_items.amount)::integer > 0)
+                  GROUP BY payment_items.payment_id) positive_items ON ((positive_items.payment_id = payments.id)))
+             LEFT JOIN ( SELECT payment_items.payment_id,
+                    sum((payment_items.amount)::integer) AS total
+                   FROM year_2020.payment_items
+                  WHERE ((payment_items.amount)::integer < 0)
+                  GROUP BY payment_items.payment_id) negative_items ON ((negative_items.payment_id = payments.id)))
+          WHERE (payments.successful = true)
+          GROUP BY payments.remit_number) payment_groups
+     LEFT JOIN ( SELECT payments.remit_number,
+            sum(
+                CASE
+                    WHEN payments.successful THEN COALESCE((payments.amount)::integer, 0)
+                    ELSE 0
+                END) AS successful_amount,
+            sum(
+                CASE
+                    WHEN payments.successful THEN 0
+                    ELSE COALESCE((payments.amount)::integer, 0)
+                END) AS failed_amount
+           FROM year_2020.payments
+          GROUP BY payments.remit_number) payment_results ON ((payment_results.remit_number = payment_groups.remit_number)))
+     LEFT JOIN year_2020.payment_remittances ON ((payment_remittances.remit_number = payment_groups.remit_number)))
+  WITH NO DATA;
+
+
+--
+-- Name: teams; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.teams (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT teams_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.teams);
+
+
+--
+-- Name: traveler_credits; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.traveler_credits (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT traveler_credits_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.traveler_credits);
+
+
+--
+-- Name: traveler_debits; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.traveler_debits (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT traveler_debits_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.traveler_debits);
+
+
+--
+-- Name: travelers; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.travelers (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT travelers_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.travelers);
+
+
+--
+-- Name: user_messages; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.user_messages (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT user_messages_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.user_messages);
+
+
+--
+-- Name: user_transfer_expectations; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.user_transfer_expectations (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT user_transfer_expectations_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.user_transfer_expectations);
+
+
+--
+-- Name: users_index_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.users_index_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT users.id,
+    users.dus_id,
+    users.category_type,
+    users.category_id,
+    users.email,
+    users.password,
+    users.register_secret,
+    users.certificate,
+    users.title,
+    users.first,
+    users.middle,
+    users.last,
+    users.suffix,
+    users.print_first_names,
+    users.print_other_names,
+    users.nick_name,
+    users.keep_name,
+    users.address_id,
+    users.interest_id,
+    users.extension,
+    users.phone,
+    users.can_text,
+    users.gender,
+    users.shirt_size,
+    users.birth_date,
+    users.transfer_id,
+    users.responded_at,
+    users.is_verified,
+    users.visible_until_year,
+    users.created_at,
+    users.updated_at,
+    user_transfer_expectations.difficulty,
+    user_transfer_expectations.status,
+    user_transfer_expectations.can_transfer,
+    user_transfer_expectations.can_compete,
+    travelers.id AS traveler_id,
+    travelers.joined_at,
+    travelers.cancel_date,
+    coaches.id AS coach_id,
+    athletes.id AS athlete_id,
+    athletes.grad,
+    states.id AS state_id,
+    states.abbr AS state_abbr,
+    sports.id AS sport_id,
+    sports.abbr_gender AS sport_abbr,
+    COALESCE(travelers.departing_date, calculated_team.departing_date) AS departing_date,
+    schools.id AS school_id,
+    deferrals.deferral,
+    invite_rules.grad_year AS max_grad_year,
+    invite_rules.invitable,
+    invite_rules.certifiable
+   FROM (((((((((((((((public.users
+     LEFT JOIN ( SELECT deferral_check.id,
+            (EXISTS ( SELECT 1
+                   FROM year_2020.user_messages
+                  WHERE ((user_messages.type = 'User::Note'::text) AND (user_messages.user_id = deferral_check.id) AND (user_messages.message ~~ 'Deferral to 20__'::text)))) AS deferral
+           FROM public.users deferral_check) deferrals ON ((deferrals.id = users.id)))
+     LEFT JOIN ( SELECT travelers_1.id,
+            travelers_1.user_id,
+            travelers_1.team_id,
+            travelers_1.balance,
+            travelers_1.shirt_size,
+            travelers_1.departing_date,
+            travelers_1.departing_from,
+            travelers_1.returning_date,
+            travelers_1.returning_to,
+            travelers_1.bus,
+            travelers_1.wristband,
+            travelers_1.hotel,
+            travelers_1.has_ground_transportation,
+            travelers_1.has_lodging,
+            travelers_1.has_gbr,
+            travelers_1.own_flights,
+            travelers_1.cancel_date,
+            travelers_1.cancel_reason,
+            travelers_1.created_at,
+            travelers_1.updated_at,
+            travelers_1.operating_year,
+            COALESCE(traveler_payments.created_at, travelers_1.created_at) AS joined_at
+           FROM (year_2020.travelers travelers_1
+             LEFT JOIN year_2020.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                   FROM (year_2020.payment_items
+                     JOIN year_2020.payments ON ((payments.id = payment_items.payment_id)))
+                  WHERE ((payment_items.traveler_id = travelers_1.id) AND (payments.successful = true))
+                  ORDER BY payment_items.created_at
+                 LIMIT 1))))) travelers ON ((travelers.user_id = users.id)))
+     LEFT JOIN year_2020.user_transfer_expectations ON ((user_transfer_expectations.user_id = users.id)))
+     LEFT JOIN year_2020.teams ON ((teams.id = travelers.team_id)))
+     LEFT JOIN ( SELECT sub_users.id AS user_id,
+            related_user_join.related_user_id
+           FROM (public.users sub_users
+             LEFT JOIN public.user_relations related_user_join ON ((related_user_join.id = ( SELECT user_relations.id
+                   FROM (public.user_relations
+                     JOIN public.users single_users ON ((single_users.id = user_relations.related_user_id)))
+                  WHERE ((user_relations.user_id = sub_users.id) AND ((single_users.category_type)::text = ANY ((ARRAY['athletes'::character varying, 'coaches'::character varying])::text[])))
+                 LIMIT 1))))) related_user_row ON (((users.category_type IS NULL) AND (related_user_row.user_id = users.id))))
+     LEFT JOIN public.users main_user ON ((main_user.id = related_user_row.related_user_id)))
+     LEFT JOIN public.athletes ON (((athletes.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'athletes'::text))))
+     LEFT JOIN public.coaches ON (((coaches.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'coaches'::text))))
+     LEFT JOIN public.officials ON (((officials.id = COALESCE(users.category_id, main_user.category_id)) AND ((COALESCE(users.category_type, main_user.category_type))::text = 'officials'::text))))
+     LEFT JOIN public.schools ON ((schools.id = COALESCE(athletes.school_id, coaches.school_id))))
+     LEFT JOIN public.addresses ON ((addresses.id = COALESCE(schools.address_id, users.address_id))))
+     LEFT JOIN public.states ON ((states.id = COALESCE(teams.state_id, officials.state_id, addresses.state_id))))
+     LEFT JOIN public.sports ON ((sports.id = COALESCE(teams.sport_id, officials.sport_id, athletes.sport_id, coaches.sport_id))))
+     LEFT JOIN year_2020.teams calculated_team ON (((calculated_team.sport_id = sports.id) AND (calculated_team.state_id = states.id))))
+     LEFT JOIN public.invite_rules ON (((invite_rules.sport_id = sports.id) AND (invite_rules.state_id = states.id))))
+  WHERE (users.visible_until_year > 2020)
+  ORDER BY users.id
+  WITH NO DATA;
+
+
+--
+-- Name: accounting_users_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.accounting_users_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT users_index_view.id,
+    users_index_view.dus_id,
+    users_index_view.category_type,
+    users_index_view.category_id,
+    users_index_view.email,
+    users_index_view.password,
+    users_index_view.register_secret,
+    users_index_view.certificate,
+    users_index_view.title,
+    users_index_view.first,
+    users_index_view.middle,
+    users_index_view.last,
+    users_index_view.suffix,
+    users_index_view.print_first_names,
+    users_index_view.print_other_names,
+    users_index_view.nick_name,
+    users_index_view.keep_name,
+    users_index_view.address_id,
+    users_index_view.interest_id,
+    users_index_view.extension,
+    users_index_view.phone,
+    users_index_view.can_text,
+    users_index_view.gender,
+    users_index_view.shirt_size,
+    users_index_view.birth_date,
+    users_index_view.transfer_id,
+    users_index_view.responded_at,
+    users_index_view.is_verified,
+    users_index_view.visible_until_year,
+    users_index_view.created_at,
+    users_index_view.updated_at,
+    users_index_view.difficulty,
+    users_index_view.status,
+    users_index_view.can_transfer,
+    users_index_view.can_compete,
+    users_index_view.traveler_id,
+    users_index_view.joined_at,
+    users_index_view.cancel_date,
+    users_index_view.coach_id,
+    users_index_view.athlete_id,
+    users_index_view.grad,
+    users_index_view.state_id,
+    users_index_view.state_abbr,
+    users_index_view.sport_id,
+    users_index_view.sport_abbr,
+    users_index_view.departing_date,
+    users_index_view.school_id,
+    users_index_view.deferral,
+    users_index_view.max_grad_year,
+    users_index_view.invitable,
+    users_index_view.certifiable,
+    (COALESCE(payment_summaries.amount, (0)::bigint))::public.money_integer AS total_paid,
+    (COALESCE(debit_summaries.amount, (0)::bigint))::public.money_integer AS total_debited,
+    (COALESCE(credit_summaries.amount, (0)::bigint))::public.money_integer AS total_credited,
+    ((COALESCE(debit_summaries.amount, (0)::bigint) - COALESCE(credit_summaries.amount, (0)::bigint)))::public.money_integer AS total_charges,
+    ((COALESCE(debit_summaries.amount, (0)::bigint) - (COALESCE(payment_summaries.amount, (0)::bigint) + COALESCE(credit_summaries.amount, (0)::bigint))))::public.money_integer AS current_balance
+   FROM (((year_2020.users_index_view
+     LEFT JOIN ( SELECT payment_items.traveler_id,
+            sum((payment_items.amount)::integer) AS amount
+           FROM year_2020.payment_items
+          WHERE (payment_items.traveler_id IS NOT NULL)
+          GROUP BY payment_items.traveler_id) payment_summaries ON ((payment_summaries.traveler_id = users_index_view.traveler_id)))
+     LEFT JOIN ( SELECT traveler_debits.traveler_id,
+            sum((traveler_debits.amount)::integer) AS amount
+           FROM year_2020.traveler_debits
+          WHERE (traveler_debits.traveler_id IS NOT NULL)
+          GROUP BY traveler_debits.traveler_id) debit_summaries ON ((debit_summaries.traveler_id = users_index_view.traveler_id)))
+     LEFT JOIN ( SELECT traveler_credits.traveler_id,
+            sum((traveler_credits.amount)::integer) AS amount
+           FROM year_2020.traveler_credits
+          WHERE (traveler_credits.traveler_id IS NOT NULL)
+          GROUP BY traveler_credits.traveler_id) credit_summaries ON ((credit_summaries.traveler_id = users_index_view.traveler_id)))
+  ORDER BY users_index_view.id
+  WITH NO DATA;
+
+
+--
+-- Name: meeting_video_views; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.meeting_video_views (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT meeting_video_views_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.meeting_video_views);
+
+
+--
+-- Name: staff_assignment_visits; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.staff_assignment_visits (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT staff_assignment_visits_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.staff_assignment_visits);
+
+
+--
+-- Name: staff_assignments; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.staff_assignments (
+    operating_year integer DEFAULT 2020,
+    CONSTRAINT staff_assignments_operating_year_check CHECK ((operating_year = 2020))
+)
+INHERITS (public.staff_assignments);
+
+
+--
+-- Name: assignments_responds_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.assignments_responds_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT staff_assignments.id,
+    staff_assignments.user_id,
+    staff_assignments.assigned_to_id,
+    staff_assignments.assigned_by_id,
+    staff_assignments.reason,
+    staff_assignments.completed,
+    staff_assignments.unneeded,
+    staff_assignments.reviewed,
+    staff_assignments.locked,
+    staff_assignments.completed_at,
+    staff_assignments.unneeded_at,
+    staff_assignments.reviewed_at,
+    staff_assignments.follow_up_date,
+    staff_assignments.created_at,
+    staff_assignments.updated_at,
+    staff_assignments.operating_year,
+    staff_assignments_were_visited.visited,
+    ((assigned_to_users.first || ' '::text) || assigned_to_users.last) AS assigned_to_full_name,
+    ((assigned_by_users.first || ' '::text) || assigned_by_users.last) AS assigned_by_full_name,
+    COALESCE(message_history.message_count, (0)::bigint) AS message_count,
+    COALESCE(pre_meeting_message_history.message_count, (0)::bigint) AS pre_meeting_message_count,
+    COALESCE(post_meeting_message_history.message_count, (0)::bigint) AS post_meeting_message_count,
+    COALESCE(other_message_history.message_count, (0)::bigint) AS other_message_count,
+    message_history.last_messaged_at,
+    COALESCE(video_views.duration, '00:00:00'::text) AS duration,
+    video_views.first_watched_at AS watched_at,
+    video_views.first_viewed_at AS viewed_at,
+        CASE
+            WHEN (video_views.first_viewed_at IS NOT NULL) THEN true
+            ELSE false
+        END AS viewed,
+        CASE
+            WHEN (video_views.first_watched_at IS NOT NULL) THEN true
+            ELSE false
+        END AS watched,
+    video_views.last_viewed_at,
+    video_views.created_at AS registered_at,
+    users.dus_id,
+    users.responded_at,
+    ((COALESCE(users.first, ''::text) || ' '::text) || COALESCE(users.last, ''::text)) AS name,
+    states.id AS state_id,
+    sports.id AS sport_id,
+    athletes.grad,
+    ((COALESCE(states.abbr, ''::text) || ' '::text) || COALESCE(sports.abbr_gender, ''::text)) AS team_name,
+    COALESCE(addresses.tz_offset, school_addresses.tz_offset, states.tz_offset) AS tz_offset,
+    COALESCE(interests.level, 'Unknown'::text) AS interest_level,
+    COALESCE(interests.id, (0)::bigint) AS interest_id
+   FROM (((((((((((((((((year_2020.staff_assignments
+     JOIN public.users ON (((users.id = staff_assignments.user_id) AND (users.category_type IS NOT NULL))))
+     JOIN public.users assigned_to_users ON ((assigned_to_users.id = staff_assignments.assigned_to_id)))
+     JOIN public.users assigned_by_users ON ((assigned_by_users.id = staff_assignments.assigned_by_id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)))
+          GROUP BY user_messages.user_id) message_history ON ((message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.reason = 'pre-meeting'::text))
+          GROUP BY user_messages.user_id) pre_meeting_message_history ON ((pre_meeting_message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.reason = 'post-meeting'::text))
+          GROUP BY user_messages.user_id) post_meeting_message_history ON ((post_meeting_message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM (((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.reason !~~ '%meeting'::text))
+          GROUP BY user_messages.user_id) other_message_history ON ((other_message_history.user_id = users.id)))
+     LEFT JOIN public.athletes ON (((athletes.id = users.category_id) AND ((users.category_type)::text = 'athletes'::text))))
+     LEFT JOIN public.coaches ON (((coaches.id = users.category_id) AND ((users.category_type)::text = 'coaches'::text))))
+     LEFT JOIN public.schools ON ((schools.id = COALESCE(athletes.school_id, coaches.school_id))))
+     LEFT JOIN public.addresses ON ((addresses.id = users.address_id)))
+     LEFT JOIN public.addresses school_addresses ON ((school_addresses.id = schools.address_id)))
+     LEFT JOIN public.states ON ((states.id = COALESCE(school_addresses.state_id, addresses.state_id))))
+     LEFT JOIN public.sports ON ((sports.id = COALESCE(athletes.sport_id, coaches.sport_id))))
+     LEFT JOIN ( SELECT meeting_video_views.user_id,
+            (max(meeting_video_views.duration))::text AS duration,
+            min(meeting_video_views.first_watched_at) AS first_watched_at,
+            min(meeting_video_views.first_viewed_at) AS first_viewed_at,
+            max(meeting_video_views.last_viewed_at) AS last_viewed_at,
+            min(meeting_video_views.created_at) AS created_at
+           FROM (year_2020.meeting_video_views
+             JOIN public.meeting_videos ON (((meeting_videos.id = meeting_video_views.video_id) AND (meeting_videos.category = 'I'::public.meeting_category))))
+          GROUP BY meeting_video_views.user_id) video_views ON ((video_views.user_id = users.id)))
+     JOIN ( SELECT staff_assignments_1.id,
+                CASE
+                    WHEN (EXISTS ( SELECT 1
+                       FROM year_2020.staff_assignment_visits
+                      WHERE (staff_assignment_visits.assignment_id = staff_assignments_1.id))) THEN true
+                    ELSE false
+                END AS visited
+           FROM year_2020.staff_assignments staff_assignments_1) staff_assignments_were_visited ON ((staff_assignments_were_visited.id = staff_assignments.id)))
+     LEFT JOIN public.interests ON ((interests.id = users.interest_id)))
+  WHERE ((staff_assignments.unneeded <> true) AND (staff_assignments.completed <> true) AND (staff_assignments.reason = 'Respond'::text))
+  WITH NO DATA;
+
+
+--
+-- Name: assignments_travelers_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.assignments_travelers_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT staff_assignments.id,
+    staff_assignments.user_id,
+    staff_assignments.assigned_to_id,
+    staff_assignments.assigned_by_id,
+    staff_assignments.reason,
+    staff_assignments.completed,
+    staff_assignments.unneeded,
+    staff_assignments.reviewed,
+    staff_assignments.locked,
+    staff_assignments.completed_at,
+    staff_assignments.unneeded_at,
+    staff_assignments.reviewed_at,
+    staff_assignments.follow_up_date,
+    staff_assignments.created_at,
+    staff_assignments.updated_at,
+    staff_assignments.operating_year,
+    staff_assignments_were_visited.visited,
+    ((assigned_to_users.first || ' '::text) || assigned_to_users.last) AS assigned_to_full_name,
+    ((assigned_by_users.first || ' '::text) || assigned_by_users.last) AS assigned_by_full_name,
+    COALESCE(message_history.message_count, (0)::bigint) AS message_count,
+    COALESCE(pre_signup_message_history.message_count, (0)::bigint) AS pre_signup_message_count,
+    COALESCE(post_signup_message_history.message_count, (0)::bigint) AS post_signup_message_count,
+    message_history.last_messaged_at,
+    users.dus_id,
+    ((COALESCE(users.first, ''::text) || ' '::text) || COALESCE(users.last, ''::text)) AS name,
+    states.id AS state_id,
+    sports.id AS sport_id,
+    teams.name AS team_name,
+    COALESCE(addresses.tz_offset, states.tz_offset) AS tz_offset,
+    COALESCE(interests.level, 'Unknown'::text) AS interest_level,
+    COALESCE(interests.id, (0)::bigint) AS interest_id,
+    travelers.joined_at,
+    travelers.cancel_date
+   FROM (((((((((((((year_2020.staff_assignments
+     JOIN public.users ON ((users.id = staff_assignments.user_id)))
+     JOIN public.users assigned_to_users ON ((assigned_to_users.id = staff_assignments.assigned_to_id)))
+     JOIN public.users assigned_by_users ON ((assigned_by_users.id = staff_assignments.assigned_by_id)))
+     JOIN ( SELECT travelers_1.id,
+            travelers_1.user_id,
+            travelers_1.team_id,
+            travelers_1.balance,
+            travelers_1.shirt_size,
+            travelers_1.departing_date,
+            travelers_1.departing_from,
+            travelers_1.returning_date,
+            travelers_1.returning_to,
+            travelers_1.bus,
+            travelers_1.wristband,
+            travelers_1.hotel,
+            travelers_1.has_ground_transportation,
+            travelers_1.has_lodging,
+            travelers_1.has_gbr,
+            travelers_1.own_flights,
+            travelers_1.cancel_date,
+            travelers_1.cancel_reason,
+            travelers_1.created_at,
+            travelers_1.updated_at,
+            travelers_1.operating_year,
+            COALESCE(traveler_payments.created_at, travelers_1.created_at) AS joined_at
+           FROM (year_2020.travelers travelers_1
+             LEFT JOIN year_2020.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                   FROM (year_2020.payment_items
+                     JOIN year_2020.payments ON ((payments.id = payment_items.payment_id)))
+                  WHERE ((payment_items.traveler_id = travelers_1.id) AND (payments.successful = true))
+                  ORDER BY payment_items.created_at
+                 LIMIT 1))))) travelers ON ((travelers.user_id = users.id)))
+     JOIN year_2020.teams ON ((teams.id = travelers.team_id)))
+     JOIN public.states ON ((states.id = teams.state_id)))
+     JOIN public.sports ON ((sports.id = teams.sport_id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM ((((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN ( SELECT travelers_2.user_id,
+                    COALESCE(traveler_payments.created_at, travelers_2.created_at) AS joined_at
+                   FROM (year_2020.travelers travelers_2
+                     LEFT JOIN year_2020.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                           FROM (year_2020.payment_items
+                             JOIN year_2020.payments ON ((payments.id = payment_items.payment_id)))
+                          WHERE ((payment_items.traveler_id = travelers_2.id) AND (payments.successful = true))
+                          ORDER BY payment_items.created_at
+                         LIMIT 1))))) travelers_1 ON ((travelers_1.user_id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)))
+          GROUP BY user_messages.user_id) message_history ON ((message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM ((((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN ( SELECT travelers_2.user_id,
+                    COALESCE(traveler_payments.created_at, travelers_2.created_at) AS joined_at
+                   FROM (year_2020.travelers travelers_2
+                     LEFT JOIN year_2020.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                           FROM (year_2020.payment_items
+                             JOIN year_2020.payments ON ((payments.id = payment_items.payment_id)))
+                          WHERE ((payment_items.traveler_id = travelers_2.id) AND (payments.successful = true))
+                          ORDER BY payment_items.created_at
+                         LIMIT 1))))) travelers_1 ON ((travelers_1.user_id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.created_at < travelers_1.joined_at))
+          GROUP BY user_messages.user_id) pre_signup_message_history ON ((pre_signup_message_history.user_id = users.id)))
+     LEFT JOIN ( SELECT user_messages.user_id,
+            count(user_messages.id) AS message_count,
+            max(user_messages.created_at) AS last_messaged_at
+           FROM ((((year_2020.user_messages
+             JOIN public.users message_users ON ((message_users.id = user_messages.user_id)))
+             JOIN ( SELECT travelers_2.user_id,
+                    COALESCE(traveler_payments.created_at, travelers_2.created_at) AS joined_at
+                   FROM (year_2020.travelers travelers_2
+                     LEFT JOIN year_2020.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                           FROM (year_2020.payment_items
+                             JOIN year_2020.payments ON ((payments.id = payment_items.payment_id)))
+                          WHERE ((payment_items.traveler_id = travelers_2.id) AND (payments.successful = true))
+                          ORDER BY payment_items.created_at
+                         LIMIT 1))))) travelers_1 ON ((travelers_1.user_id = user_messages.user_id)))
+             JOIN public.staffs ON ((staffs.id = user_messages.staff_id)))
+             JOIN public.users message_staff_user ON (((message_staff_user.category_id = staffs.id) AND ((message_staff_user.category_type)::text = 'staffs'::text))))
+          WHERE ((NOT (user_messages.type = 'User::Alert'::text)) AND (NOT (message_staff_user.dus_id = 'AUTOWK'::text)) AND (user_messages.created_at >= travelers_1.joined_at))
+          GROUP BY user_messages.user_id) post_signup_message_history ON ((post_signup_message_history.user_id = users.id)))
+     LEFT JOIN public.addresses ON ((addresses.id = users.address_id)))
+     JOIN ( SELECT staff_assignments_1.id,
+                CASE
+                    WHEN (EXISTS ( SELECT 1
+                       FROM year_2020.staff_assignment_visits
+                      WHERE (staff_assignment_visits.assignment_id = staff_assignments_1.id))) THEN true
+                    ELSE false
+                END AS visited
+           FROM year_2020.staff_assignments staff_assignments_1) staff_assignments_were_visited ON ((staff_assignments_were_visited.id = staff_assignments.id)))
+     LEFT JOIN public.interests ON ((interests.id = users.interest_id)))
+  WHERE ((staff_assignments.unneeded <> true) AND (staff_assignments.completed <> true) AND (staff_assignments.reason = 'Traveler'::text))
+  WITH NO DATA;
+
+
+--
+-- Name: assignments_unassigned_responds_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.assignments_unassigned_responds_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT users.id,
+    users.dus_id,
+    users.category_type,
+    users.category_id,
+    users.email,
+    users.password,
+    users.register_secret,
+    users.certificate,
+    users.title,
+    users.first,
+    users.middle,
+    users.last,
+    users.suffix,
+    users.print_first_names,
+    users.print_other_names,
+    users.nick_name,
+    users.keep_name,
+    users.address_id,
+    users.interest_id,
+    users.extension,
+    users.phone,
+    users.can_text,
+    users.gender,
+    users.shirt_size,
+    users.birth_date,
+    users.transfer_id,
+    users.responded_at,
+    users.is_verified,
+    users.visible_until_year,
+    users.created_at,
+    users.updated_at,
+    athletes.grad,
+    COALESCE(video_views.duration, '00:00:00'::text) AS duration,
+    video_views.first_watched_at AS watched_at,
+    video_views.first_viewed_at AS viewed_at,
+    video_views.last_viewed_at,
+    video_views.created_at AS registered_at,
+        CASE
+            WHEN (video_views.first_viewed_at IS NOT NULL) THEN true
+            ELSE false
+        END AS viewed,
+        CASE
+            WHEN (video_views.first_watched_at IS NOT NULL) THEN true
+            ELSE false
+        END AS watched,
+    states.abbr AS state_abbr,
+    sports.abbr AS sport_abbr,
+    COALESCE(addresses.tz_offset, school_addresses.tz_offset, states.tz_offset) AS tz_offset
+   FROM ((((((((public.users
+     JOIN public.interests ON (((interests.id = users.interest_id) AND (interests.contactable = true))))
+     JOIN public.athletes ON (((athletes.id = users.category_id) AND ((users.category_type)::text = 'athletes'::text))))
+     LEFT JOIN public.schools ON ((schools.id = athletes.school_id)))
+     LEFT JOIN public.addresses ON ((addresses.id = users.address_id)))
+     LEFT JOIN public.addresses school_addresses ON ((school_addresses.id = schools.address_id)))
+     LEFT JOIN public.states ON ((states.id = COALESCE(school_addresses.state_id, addresses.state_id))))
+     LEFT JOIN public.sports ON ((sports.id = athletes.sport_id)))
+     LEFT JOIN ( SELECT meeting_video_views.user_id,
+            (max(meeting_video_views.duration))::text AS duration,
+            min(meeting_video_views.first_watched_at) AS first_watched_at,
+            min(meeting_video_views.first_viewed_at) AS first_viewed_at,
+            max(meeting_video_views.last_viewed_at) AS last_viewed_at,
+            min(meeting_video_views.created_at) AS created_at
+           FROM (year_2020.meeting_video_views
+             JOIN public.meeting_videos ON (((meeting_videos.id = meeting_video_views.video_id) AND (meeting_videos.category = 'I'::public.meeting_category))))
+          GROUP BY meeting_video_views.user_id) video_views ON ((video_views.user_id = users.id)))
+  WHERE (((users.responded_at IS NOT NULL) OR (users.interest_id IN ( SELECT sub_interests.id
+           FROM public.interests sub_interests
+          WHERE ((sub_interests.contactable = true) AND (NOT (sub_interests.level = 'Unknown'::text))))) OR (EXISTS ( SELECT 1
+           FROM year_2020.user_messages
+          WHERE ((user_messages.user_id = users.id) AND (user_messages.message = 'Marked for infokit pre-mail'::text))))) AND ((users.category_type)::text = 'athletes'::text) AND (NOT (EXISTS ( SELECT 1
+           FROM year_2020.staff_assignments
+          WHERE ((staff_assignments.user_id = users.id) AND (staff_assignments.reason = 'Respond'::text))))) AND (NOT (EXISTS ( SELECT 1
+           FROM year_2020.travelers
+          WHERE (travelers.user_id = users.id)))))
+  ORDER BY users.id
+  WITH NO DATA;
+
+
+--
+-- Name: assignments_unassigned_travelers_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
+--
+
+CREATE MATERIALIZED VIEW year_2020.assignments_unassigned_travelers_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT DISTINCT users.id,
+    users.dus_id,
+    users.category_type,
+    users.category_id,
+    users.email,
+    users.password,
+    users.register_secret,
+    users.certificate,
+    users.title,
+    users.first,
+    users.middle,
+    users.last,
+    users.suffix,
+    users.print_first_names,
+    users.print_other_names,
+    users.nick_name,
+    users.keep_name,
+    users.address_id,
+    users.interest_id,
+    users.extension,
+    users.phone,
+    users.can_text,
+    users.gender,
+    users.shirt_size,
+    users.birth_date,
+    users.transfer_id,
+    users.responded_at,
+    users.is_verified,
+    users.visible_until_year,
+    users.created_at,
+    users.updated_at,
+    travelers.joined_at,
+    travelers.cancel_date,
+    states.abbr AS state_abbr,
+    sports.abbr AS sport_abbr
+   FROM (((((public.users
+     JOIN public.interests ON (((interests.id = users.interest_id) AND (interests.contactable = true))))
+     JOIN ( SELECT travelers_1.id,
+            travelers_1.user_id,
+            travelers_1.team_id,
+            travelers_1.balance,
+            travelers_1.shirt_size,
+            travelers_1.departing_date,
+            travelers_1.departing_from,
+            travelers_1.returning_date,
+            travelers_1.returning_to,
+            travelers_1.bus,
+            travelers_1.wristband,
+            travelers_1.hotel,
+            travelers_1.has_ground_transportation,
+            travelers_1.has_lodging,
+            travelers_1.has_gbr,
+            travelers_1.own_flights,
+            travelers_1.cancel_date,
+            travelers_1.cancel_reason,
+            travelers_1.created_at,
+            travelers_1.updated_at,
+            travelers_1.operating_year,
+            COALESCE(traveler_payments.created_at, travelers_1.created_at) AS joined_at
+           FROM (year_2020.travelers travelers_1
+             LEFT JOIN year_2020.payment_items traveler_payments ON ((traveler_payments.id = ( SELECT payment_items.id
+                   FROM (year_2020.payment_items
+                     JOIN year_2020.payments ON ((payments.id = payment_items.payment_id)))
+                  WHERE ((payment_items.traveler_id = travelers_1.id) AND (payments.successful = true))
+                  ORDER BY payment_items.created_at
+                 LIMIT 1))))) travelers ON ((travelers.user_id = users.id)))
+     JOIN year_2020.teams ON ((teams.id = travelers.team_id)))
+     JOIN public.states ON ((states.id = teams.state_id)))
+     JOIN public.sports ON ((sports.id = teams.sport_id)))
+  WHERE (NOT (EXISTS ( SELECT 1
+           FROM year_2020.staff_assignments
+          WHERE ((staff_assignments.user_id = users.id) AND (staff_assignments.reason = 'Traveler'::text)))))
+  ORDER BY users.id
+  WITH NO DATA;
 
 
 --
@@ -15168,25 +16698,20 @@ INHERITS (public.meeting_registrations);
 
 
 --
--- Name: meeting_video_views; Type: TABLE; Schema: year_2020; Owner: -
+-- Name: participants_map_view; Type: MATERIALIZED VIEW; Schema: year_2020; Owner: -
 --
 
-CREATE TABLE year_2020.meeting_video_views (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT meeting_video_views_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.meeting_video_views);
-
-
---
--- Name: payment_items; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.payment_items (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT payment_items_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.payment_items);
+CREATE MATERIALIZED VIEW year_2020.participants_map_view
+WITH (autovacuum_vacuum_threshold='50', autovacuum_vacuum_scale_factor='0.2') AS
+ SELECT participants.id,
+    participants.name,
+    participants.school,
+    states."full" AS state,
+    participants.state_id
+   FROM (public.participants
+     JOIN public.states ON ((states.id = participants.state_id)))
+  WHERE (participants.category = 'athlete'::text)
+  WITH NO DATA;
 
 
 --
@@ -15201,28 +16726,6 @@ INHERITS (public.payment_join_terms);
 
 
 --
--- Name: payment_remittances; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.payment_remittances (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT payment_remittances_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.payment_remittances);
-
-
---
--- Name: payments; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.payments (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT payments_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.payments);
-
-
---
 -- Name: sent_mails; Type: TABLE; Schema: year_2020; Owner: -
 --
 
@@ -15234,28 +16737,6 @@ INHERITS (public.sent_mails);
 
 
 --
--- Name: staff_assignment_visits; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.staff_assignment_visits (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT staff_assignment_visits_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.staff_assignment_visits);
-
-
---
--- Name: staff_assignments; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.staff_assignments (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT staff_assignments_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.staff_assignments);
-
-
---
 -- Name: student_lists; Type: TABLE; Schema: year_2020; Owner: -
 --
 
@@ -15264,53 +16745,6 @@ CREATE TABLE year_2020.student_lists (
     CONSTRAINT student_lists_operating_year_check CHECK ((operating_year = 2020))
 )
 INHERITS (public.student_lists);
-
-
---
--- Name: teams; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.teams (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT teams_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.teams);
-
-
---
--- Name: thank_you_tickets; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.thank_you_tickets (
-    id bigint NOT NULL,
-    user_id bigint,
-    uuid uuid DEFAULT year_2020.uuid_generate_v6() NOT NULL,
-    name text,
-    email text,
-    phone text,
-    mailing_address text,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: thank_you_tickets_id_seq; Type: SEQUENCE; Schema: year_2020; Owner: -
---
-
-CREATE SEQUENCE year_2020.thank_you_tickets_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: thank_you_tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: year_2020; Owner: -
---
-
-ALTER SEQUENCE year_2020.thank_you_tickets_id_seq OWNED BY year_2020.thank_you_tickets.id;
 
 
 --
@@ -15333,28 +16767,6 @@ CREATE TABLE year_2020.traveler_buses_travelers (
     CONSTRAINT traveler_buses_travelers_operating_year_check CHECK ((operating_year = 2020))
 )
 INHERITS (public.traveler_buses_travelers);
-
-
---
--- Name: traveler_credits; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.traveler_credits (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT traveler_credits_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.traveler_credits);
-
-
---
--- Name: traveler_debits; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.traveler_debits (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT traveler_debits_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.traveler_debits);
 
 
 --
@@ -15391,17 +16803,6 @@ INHERITS (public.traveler_rooms);
 
 
 --
--- Name: travelers; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.travelers (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT travelers_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.travelers);
-
-
---
 -- Name: user_event_registrations; Type: TABLE; Schema: year_2020; Owner: -
 --
 
@@ -15410,6 +16811,42 @@ CREATE TABLE year_2020.user_event_registrations (
     CONSTRAINT user_event_registrations_operating_year_check CHECK ((operating_year = 2020))
 )
 INHERITS (public.user_event_registrations);
+
+
+--
+-- Name: user_general_releases; Type: TABLE; Schema: year_2020; Owner: -
+--
+
+CREATE TABLE year_2020.user_general_releases (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    is_signed boolean DEFAULT false NOT NULL,
+    allow_contact boolean DEFAULT false NOT NULL,
+    percentage_paid public.exchange_rate_integer NOT NULL,
+    net_refundable integer,
+    notes text,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: user_general_releases_id_seq; Type: SEQUENCE; Schema: year_2020; Owner: -
+--
+
+CREATE SEQUENCE year_2020.user_general_releases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_general_releases_id_seq; Type: SEQUENCE OWNED BY; Schema: year_2020; Owner: -
+--
+
+ALTER SEQUENCE year_2020.user_general_releases_id_seq OWNED BY year_2020.user_general_releases.id;
 
 
 --
@@ -15424,17 +16861,6 @@ INHERITS (public.user_marathon_registrations);
 
 
 --
--- Name: user_messages; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.user_messages (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT user_messages_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.user_messages);
-
-
---
 -- Name: user_overrides; Type: TABLE; Schema: year_2020; Owner: -
 --
 
@@ -15443,17 +16869,6 @@ CREATE TABLE year_2020.user_overrides (
     CONSTRAINT user_overrides_operating_year_check CHECK ((operating_year = 2020))
 )
 INHERITS (public.user_overrides);
-
-
---
--- Name: user_transfer_expectations; Type: TABLE; Schema: year_2020; Owner: -
---
-
-CREATE TABLE year_2020.user_transfer_expectations (
-    operating_year integer DEFAULT 2020,
-    CONSTRAINT user_transfer_expectations_operating_year_check CHECK ((operating_year = 2020))
-)
-INHERITS (public.user_transfer_expectations);
 
 
 --
@@ -15885,6 +17300,13 @@ ALTER TABLE ONLY public.thank_you_ticket_terms ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: thank_you_tickets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.thank_you_tickets ALTER COLUMN id SET DEFAULT nextval('public.thank_you_tickets_id_seq'::regclass);
+
+
+--
 -- Name: traveler_base_debits id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15966,6 +17388,13 @@ ALTER TABLE ONLY public.user_ambassadors ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.user_event_registrations ALTER COLUMN id SET DEFAULT nextval('public.user_event_registrations_id_seq'::regclass);
+
+
+--
+-- Name: user_general_releases id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_general_releases ALTER COLUMN id SET DEFAULT nextval('public.user_general_releases_id_seq'::regclass);
 
 
 --
@@ -18118,13 +19547,6 @@ ALTER TABLE ONLY year_2020.teams ALTER COLUMN updated_at SET DEFAULT now();
 
 
 --
--- Name: thank_you_tickets id; Type: DEFAULT; Schema: year_2020; Owner: -
---
-
-ALTER TABLE ONLY year_2020.thank_you_tickets ALTER COLUMN id SET DEFAULT nextval('year_2020.thank_you_tickets_id_seq'::regclass);
-
-
---
 -- Name: traveler_buses id; Type: DEFAULT; Schema: year_2020; Owner: -
 --
 
@@ -18654,6 +20076,13 @@ ALTER TABLE ONLY year_2020.user_event_registrations ALTER COLUMN created_at SET 
 --
 
 ALTER TABLE ONLY year_2020.user_event_registrations ALTER COLUMN updated_at SET DEFAULT now();
+
+
+--
+-- Name: user_general_releases id; Type: DEFAULT; Schema: year_2020; Owner: -
+--
+
+ALTER TABLE ONLY year_2020.user_general_releases ALTER COLUMN id SET DEFAULT nextval('year_2020.user_general_releases_id_seq'::regclass);
 
 
 --
@@ -19871,6 +21300,14 @@ ALTER TABLE ONLY public.thank_you_ticket_terms
 
 
 --
+-- Name: thank_you_tickets thank_you_tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.thank_you_tickets
+    ADD CONSTRAINT thank_you_tickets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: traveler_base_debits traveler_base_debits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19964,6 +21401,14 @@ ALTER TABLE ONLY public.user_ambassadors
 
 ALTER TABLE ONLY public.user_event_registrations
     ADD CONSTRAINT user_event_registrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_general_releases user_general_releases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_general_releases
+    ADD CONSTRAINT user_general_releases_pkey PRIMARY KEY (id);
 
 
 --
@@ -20351,11 +21796,11 @@ ALTER TABLE ONLY year_2019.user_uniform_orders
 
 
 --
--- Name: thank_you_tickets thank_you_tickets_pkey; Type: CONSTRAINT; Schema: year_2020; Owner: -
+-- Name: user_general_releases user_general_releases_pkey; Type: CONSTRAINT; Schema: year_2020; Owner: -
 --
 
-ALTER TABLE ONLY year_2020.thank_you_tickets
-    ADD CONSTRAINT thank_you_tickets_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY year_2020.user_general_releases
+    ADD CONSTRAINT user_general_releases_pkey PRIMARY KEY (id);
 
 
 --
@@ -23841,6 +25286,20 @@ CREATE INDEX index_thank_you_ticket_terms_on_edited_by_id ON public.thank_you_ti
 
 
 --
+-- Name: index_thank_you_tickets_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_thank_you_tickets_on_user_id ON public.thank_you_tickets USING btree (user_id);
+
+
+--
+-- Name: index_thank_you_tickets_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_thank_you_tickets_on_uuid ON public.thank_you_tickets USING btree (uuid);
+
+
+--
 -- Name: index_traveler_base_debits_on_is_default; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24170,6 +25629,13 @@ CREATE UNIQUE INDEX index_user_forwarded_ids_on_original_id ON public.user_forwa
 
 
 --
+-- Name: index_user_general_releases_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_general_releases_on_user_id ON public.user_general_releases USING btree (user_id);
+
+
+--
 -- Name: index_user_interest_histories_on_changed_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24429,6 +25895,13 @@ CREATE INDEX schools_name_search_idx ON public.schools USING gin (name public.gi
 
 
 --
+-- Name: thank_you_ticket_name_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX thank_you_ticket_name_index ON public.thank_you_tickets USING btree (name) WHERE (name IS NOT NULL);
+
+
+--
 -- Name: users_dus_id_hash_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24461,6 +25934,69 @@ CREATE INDEX users_print_first_names_search_idx ON public.users USING gin (print
 --
 
 CREATE INDEX users_print_other_names_search_idx ON public.users USING gin (print_other_names public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_assigned_by_full_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_assigned_by_full_name_idx ON year_2019.assignments_responds_view USING gin (assigned_by_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_assigned_to_full_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_assigned_to_full_name_idx ON year_2019.assignments_responds_view USING gin (assigned_to_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_duration_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_duration_idx ON year_2019.assignments_responds_view USING gin (duration public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_name_idx ON year_2019.assignments_responds_view USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_team_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_team_name_idx ON year_2019.assignments_responds_view USING gin (team_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_assigned_by_full_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_assigned_by_full_name_idx ON year_2019.assignments_travelers_view USING gin (assigned_by_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_assigned_to_full_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_assigned_to_full_name_idx ON year_2019.assignments_travelers_view USING gin (assigned_to_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_name_idx ON year_2019.assignments_travelers_view USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_team_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_team_name_idx ON year_2019.assignments_travelers_view USING gin (team_name public.gin_trgm_ops);
 
 
 --
@@ -25150,6 +26686,545 @@ CREATE INDEX index_user_uniform_orders_on_user_id ON year_2019.user_uniform_orde
 
 
 --
+-- Name: index_year_2019.accounting_users_view_on_dus_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.accounting_users_view_on_dus_id" ON year_2019.accounting_users_view USING btree (dus_id);
+
+
+--
+-- Name: index_year_2019.accounting_users_view_on_first; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.accounting_users_view_on_first" ON year_2019.accounting_users_view USING btree (first);
+
+
+--
+-- Name: index_year_2019.accounting_users_view_on_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.accounting_users_view_on_id" ON year_2019.accounting_users_view USING btree (id);
+
+
+--
+-- Name: index_year_2019.accounting_users_view_on_last; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.accounting_users_view_on_last" ON year_2019.accounting_users_view USING btree (last);
+
+
+--
+-- Name: index_year_2019.accounting_users_view_on_sport_abbr; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.accounting_users_view_on_sport_abbr" ON year_2019.accounting_users_view USING btree (sport_abbr);
+
+
+--
+-- Name: index_year_2019.accounting_users_view_on_state_abbr; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.accounting_users_view_on_state_abbr" ON year_2019.accounting_users_view USING btree (state_abbr);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_assigned_by_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_assigned_by_id" ON year_2019.assignments_responds_view USING btree (assigned_by_id);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_assigned_to_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_assigned_to_id" ON year_2019.assignments_responds_view USING btree (assigned_to_id);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_completed; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_completed" ON year_2019.assignments_responds_view USING btree (completed);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_created_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_created_at" ON year_2019.assignments_responds_view USING btree (created_at);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_dus_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_dus_id" ON year_2019.assignments_responds_view USING btree (dus_id);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_grad; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_grad" ON year_2019.assignments_responds_view USING btree (grad);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.assignments_responds_view_on_id" ON year_2019.assignments_responds_view USING btree (id);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_last_viewed_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_last_viewed_at" ON year_2019.assignments_responds_view USING btree (last_viewed_at);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_registered_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_registered_at" ON year_2019.assignments_responds_view USING btree (registered_at);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_reviewed; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_reviewed" ON year_2019.assignments_responds_view USING btree (reviewed);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_sport_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_sport_id" ON year_2019.assignments_responds_view USING btree (sport_id);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_state_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_state_id" ON year_2019.assignments_responds_view USING btree (state_id);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_team_name; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_team_name" ON year_2019.assignments_responds_view USING btree (team_name);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_tz_offset; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_tz_offset" ON year_2019.assignments_responds_view USING btree (tz_offset);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_unneeded; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_unneeded" ON year_2019.assignments_responds_view USING btree (unneeded);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_viewed_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_viewed_at" ON year_2019.assignments_responds_view USING btree (viewed_at);
+
+
+--
+-- Name: index_year_2019.assignments_responds_view_on_watched_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.assignments_responds_view_on_watched_at" ON year_2019.assignments_responds_view USING btree (watched_at);
+
+
+--
+-- Name: index_year_2019.assignments_unassigned_responds_view_on_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.assignments_unassigned_responds_view_on_id" ON year_2019.assignments_unassigned_responds_view USING btree (id);
+
+
+--
+-- Name: index_year_2019.participants_map_view_on_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.participants_map_view_on_id" ON year_2019.participants_map_view USING btree (id);
+
+
+--
+-- Name: index_year_2019.participants_map_view_on_state_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.participants_map_view_on_state_id" ON year_2019.participants_map_view USING btree (state_id);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_can_compete; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_can_compete" ON year_2019.users_index_view USING btree (can_compete);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_can_transfer; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_can_transfer" ON year_2019.users_index_view USING btree (can_transfer);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_cancel_date; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_cancel_date" ON year_2019.users_index_view USING btree (cancel_date);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_difficulty; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_difficulty" ON year_2019.users_index_view USING btree (difficulty);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_dus_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.users_index_view_on_dus_id" ON year_2019.users_index_view USING btree (dus_id);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_grad; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_grad" ON year_2019.users_index_view USING btree (grad);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2019.users_index_view_on_id" ON year_2019.users_index_view USING btree (id);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_joined_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_joined_at" ON year_2019.users_index_view USING btree (joined_at);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_responded_at; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_responded_at" ON year_2019.users_index_view USING btree (responded_at);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_sport_abbr; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_sport_abbr" ON year_2019.users_index_view USING btree (sport_abbr);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_sport_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_sport_id" ON year_2019.users_index_view USING btree (sport_id);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_state_abbr; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_state_abbr" ON year_2019.users_index_view USING btree (state_abbr);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_state_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_state_id" ON year_2019.users_index_view USING btree (state_id);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_status; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_status" ON year_2019.users_index_view USING btree (status);
+
+
+--
+-- Name: index_year_2019.users_index_view_on_traveler_id; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX "index_year_2019.users_index_view_on_traveler_id" ON year_2019.users_index_view USING btree (traveler_id);
+
+
+--
+-- Name: traveler_assignment_views_assigned_by_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_assigned_by_id_idx ON year_2019.assignments_travelers_view USING btree (assigned_by_id);
+
+
+--
+-- Name: traveler_assignment_views_assigned_to_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_assigned_to_id_idx ON year_2019.assignments_travelers_view USING btree (assigned_to_id);
+
+
+--
+-- Name: traveler_assignment_views_cancel_date_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_cancel_date_idx ON year_2019.assignments_travelers_view USING btree (cancel_date);
+
+
+--
+-- Name: traveler_assignment_views_completed_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_completed_idx ON year_2019.assignments_travelers_view USING btree (completed);
+
+
+--
+-- Name: traveler_assignment_views_created_at_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_created_at_idx ON year_2019.assignments_travelers_view USING btree (created_at);
+
+
+--
+-- Name: traveler_assignment_views_dus_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_dus_id_idx ON year_2019.assignments_travelers_view USING btree (dus_id);
+
+
+--
+-- Name: traveler_assignment_views_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX traveler_assignment_views_id_idx ON year_2019.assignments_travelers_view USING btree (id);
+
+
+--
+-- Name: traveler_assignment_views_joined_at_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_joined_at_idx ON year_2019.assignments_travelers_view USING btree (joined_at);
+
+
+--
+-- Name: traveler_assignment_views_reviewed_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_reviewed_idx ON year_2019.assignments_travelers_view USING btree (reviewed);
+
+
+--
+-- Name: traveler_assignment_views_sport_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_sport_id_idx ON year_2019.assignments_travelers_view USING btree (sport_id);
+
+
+--
+-- Name: traveler_assignment_views_state_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_state_id_idx ON year_2019.assignments_travelers_view USING btree (state_id);
+
+
+--
+-- Name: traveler_assignment_views_team_name_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_team_name_idx ON year_2019.assignments_travelers_view USING btree (team_name);
+
+
+--
+-- Name: traveler_assignment_views_tz_offset_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_tz_offset_idx ON year_2019.assignments_travelers_view USING btree (tz_offset);
+
+
+--
+-- Name: traveler_assignment_views_unneeded_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_unneeded_idx ON year_2019.assignments_travelers_view USING btree (unneeded);
+
+
+--
+-- Name: unassigned_travelers_view_cancel_date_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_cancel_date_idx ON year_2019.assignments_unassigned_travelers_view USING btree (cancel_date);
+
+
+--
+-- Name: unassigned_travelers_view_id_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX unassigned_travelers_view_id_idx ON year_2019.assignments_unassigned_travelers_view USING btree (id);
+
+
+--
+-- Name: unassigned_travelers_view_joined_at_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_joined_at_idx ON year_2019.assignments_unassigned_travelers_view USING btree (joined_at);
+
+
+--
+-- Name: unassigned_travelers_view_sport_and_state_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_sport_and_state_idx ON year_2019.assignments_unassigned_travelers_view USING btree (sport_abbr, state_abbr);
+
+
+--
+-- Name: unassigned_travelers_view_state_and_sport_idx; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_state_and_sport_idx ON year_2019.assignments_unassigned_travelers_view USING btree (state_abbr, sport_abbr);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_failed_amount; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_failed_amount ON year_2019.accounting_remit_forms_view USING btree (failed_amount);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_negative_amount; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_negative_amount ON year_2019.accounting_remit_forms_view USING btree (negative_amount);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_net_amount; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_net_amount ON year_2019.accounting_remit_forms_view USING btree (net_amount);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_positive_amount; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_positive_amount ON year_2019.accounting_remit_forms_view USING btree (positive_amount);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_reconciled; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_reconciled ON year_2019.accounting_remit_forms_view USING btree (reconciled);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_recorded; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_recorded ON year_2019.accounting_remit_forms_view USING btree (recorded);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_remit_number; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE UNIQUE INDEX year_2019_remit_forms_view_on_remit_number ON year_2019.accounting_remit_forms_view USING btree (remit_number);
+
+
+--
+-- Name: year_2019_remit_forms_view_on_successful_amount; Type: INDEX; Schema: year_2019; Owner: -
+--
+
+CREATE INDEX year_2019_remit_forms_view_on_successful_amount ON year_2019.accounting_remit_forms_view USING btree (successful_amount);
+
+
+--
+-- Name: assignments_responds_view_assigned_by_full_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_assigned_by_full_name_idx ON year_2020.assignments_responds_view USING gin (assigned_by_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_assigned_to_full_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_assigned_to_full_name_idx ON year_2020.assignments_responds_view USING gin (assigned_to_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_duration_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_duration_idx ON year_2020.assignments_responds_view USING gin (duration public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_name_idx ON year_2020.assignments_responds_view USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_responds_view_team_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_responds_view_team_name_idx ON year_2020.assignments_responds_view USING gin (team_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_assigned_by_full_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_assigned_by_full_name_idx ON year_2020.assignments_travelers_view USING gin (assigned_by_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_assigned_to_full_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_assigned_to_full_name_idx ON year_2020.assignments_travelers_view USING gin (assigned_to_full_name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_name_idx ON year_2020.assignments_travelers_view USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: assignments_travelers_view_team_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX assignments_travelers_view_team_name_idx ON year_2020.assignments_travelers_view USING gin (team_name public.gin_trgm_ops);
+
+
+--
 -- Name: expected_difficulty_and_status_index; Type: INDEX; Schema: year_2020; Owner: -
 --
 
@@ -25479,20 +27554,6 @@ CREATE INDEX index_teams_on_state_id ON year_2020.teams USING btree (state_id);
 
 
 --
--- Name: index_thank_you_tickets_on_user_id; Type: INDEX; Schema: year_2020; Owner: -
---
-
-CREATE INDEX index_thank_you_tickets_on_user_id ON year_2020.thank_you_tickets USING btree (user_id);
-
-
---
--- Name: index_thank_you_tickets_on_uuid; Type: INDEX; Schema: year_2020; Owner: -
---
-
-CREATE UNIQUE INDEX index_thank_you_tickets_on_uuid ON year_2020.thank_you_tickets USING btree (uuid);
-
-
---
 -- Name: index_traveler_buses_on_color; Type: INDEX; Schema: year_2020; Owner: -
 --
 
@@ -25759,6 +27820,13 @@ CREATE INDEX index_user_event_registrations_on_user_id ON year_2020.user_event_r
 
 
 --
+-- Name: index_user_general_releases_on_user_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX index_user_general_releases_on_user_id ON year_2020.user_general_releases USING btree (user_id);
+
+
+--
 -- Name: index_user_marathon_registrations_on_user_id; Type: INDEX; Schema: year_2020; Owner: -
 --
 
@@ -25847,6 +27915,482 @@ CREATE INDEX index_user_uniform_orders_on_submitter_id ON year_2020.user_uniform
 --
 
 CREATE INDEX index_user_uniform_orders_on_user_id ON year_2020.user_uniform_orders USING btree (user_id);
+
+
+--
+-- Name: index_year_2020.accounting_users_view_on_dus_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.accounting_users_view_on_dus_id" ON year_2020.accounting_users_view USING btree (dus_id);
+
+
+--
+-- Name: index_year_2020.accounting_users_view_on_first; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.accounting_users_view_on_first" ON year_2020.accounting_users_view USING btree (first);
+
+
+--
+-- Name: index_year_2020.accounting_users_view_on_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.accounting_users_view_on_id" ON year_2020.accounting_users_view USING btree (id);
+
+
+--
+-- Name: index_year_2020.accounting_users_view_on_last; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.accounting_users_view_on_last" ON year_2020.accounting_users_view USING btree (last);
+
+
+--
+-- Name: index_year_2020.accounting_users_view_on_sport_abbr; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.accounting_users_view_on_sport_abbr" ON year_2020.accounting_users_view USING btree (sport_abbr);
+
+
+--
+-- Name: index_year_2020.accounting_users_view_on_state_abbr; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.accounting_users_view_on_state_abbr" ON year_2020.accounting_users_view USING btree (state_abbr);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_assigned_by_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_assigned_by_id" ON year_2020.assignments_responds_view USING btree (assigned_by_id);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_assigned_to_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_assigned_to_id" ON year_2020.assignments_responds_view USING btree (assigned_to_id);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_completed; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_completed" ON year_2020.assignments_responds_view USING btree (completed);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_created_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_created_at" ON year_2020.assignments_responds_view USING btree (created_at);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_dus_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_dus_id" ON year_2020.assignments_responds_view USING btree (dus_id);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_grad; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_grad" ON year_2020.assignments_responds_view USING btree (grad);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.assignments_responds_view_on_id" ON year_2020.assignments_responds_view USING btree (id);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_last_viewed_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_last_viewed_at" ON year_2020.assignments_responds_view USING btree (last_viewed_at);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_registered_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_registered_at" ON year_2020.assignments_responds_view USING btree (registered_at);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_reviewed; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_reviewed" ON year_2020.assignments_responds_view USING btree (reviewed);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_sport_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_sport_id" ON year_2020.assignments_responds_view USING btree (sport_id);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_state_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_state_id" ON year_2020.assignments_responds_view USING btree (state_id);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_team_name; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_team_name" ON year_2020.assignments_responds_view USING btree (team_name);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_tz_offset; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_tz_offset" ON year_2020.assignments_responds_view USING btree (tz_offset);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_unneeded; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_unneeded" ON year_2020.assignments_responds_view USING btree (unneeded);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_viewed_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_viewed_at" ON year_2020.assignments_responds_view USING btree (viewed_at);
+
+
+--
+-- Name: index_year_2020.assignments_responds_view_on_watched_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.assignments_responds_view_on_watched_at" ON year_2020.assignments_responds_view USING btree (watched_at);
+
+
+--
+-- Name: index_year_2020.assignments_unassigned_responds_view_on_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.assignments_unassigned_responds_view_on_id" ON year_2020.assignments_unassigned_responds_view USING btree (id);
+
+
+--
+-- Name: index_year_2020.participants_map_view_on_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.participants_map_view_on_id" ON year_2020.participants_map_view USING btree (id);
+
+
+--
+-- Name: index_year_2020.participants_map_view_on_state_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.participants_map_view_on_state_id" ON year_2020.participants_map_view USING btree (state_id);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_can_compete; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_can_compete" ON year_2020.users_index_view USING btree (can_compete);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_can_transfer; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_can_transfer" ON year_2020.users_index_view USING btree (can_transfer);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_cancel_date; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_cancel_date" ON year_2020.users_index_view USING btree (cancel_date);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_difficulty; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_difficulty" ON year_2020.users_index_view USING btree (difficulty);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_dus_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.users_index_view_on_dus_id" ON year_2020.users_index_view USING btree (dus_id);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_grad; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_grad" ON year_2020.users_index_view USING btree (grad);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX "index_year_2020.users_index_view_on_id" ON year_2020.users_index_view USING btree (id);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_joined_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_joined_at" ON year_2020.users_index_view USING btree (joined_at);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_responded_at; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_responded_at" ON year_2020.users_index_view USING btree (responded_at);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_sport_abbr; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_sport_abbr" ON year_2020.users_index_view USING btree (sport_abbr);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_sport_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_sport_id" ON year_2020.users_index_view USING btree (sport_id);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_state_abbr; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_state_abbr" ON year_2020.users_index_view USING btree (state_abbr);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_state_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_state_id" ON year_2020.users_index_view USING btree (state_id);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_status; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_status" ON year_2020.users_index_view USING btree (status);
+
+
+--
+-- Name: index_year_2020.users_index_view_on_traveler_id; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX "index_year_2020.users_index_view_on_traveler_id" ON year_2020.users_index_view USING btree (traveler_id);
+
+
+--
+-- Name: traveler_assignment_views_assigned_by_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_assigned_by_id_idx ON year_2020.assignments_travelers_view USING btree (assigned_by_id);
+
+
+--
+-- Name: traveler_assignment_views_assigned_to_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_assigned_to_id_idx ON year_2020.assignments_travelers_view USING btree (assigned_to_id);
+
+
+--
+-- Name: traveler_assignment_views_cancel_date_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_cancel_date_idx ON year_2020.assignments_travelers_view USING btree (cancel_date);
+
+
+--
+-- Name: traveler_assignment_views_completed_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_completed_idx ON year_2020.assignments_travelers_view USING btree (completed);
+
+
+--
+-- Name: traveler_assignment_views_created_at_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_created_at_idx ON year_2020.assignments_travelers_view USING btree (created_at);
+
+
+--
+-- Name: traveler_assignment_views_dus_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_dus_id_idx ON year_2020.assignments_travelers_view USING btree (dus_id);
+
+
+--
+-- Name: traveler_assignment_views_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX traveler_assignment_views_id_idx ON year_2020.assignments_travelers_view USING btree (id);
+
+
+--
+-- Name: traveler_assignment_views_joined_at_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_joined_at_idx ON year_2020.assignments_travelers_view USING btree (joined_at);
+
+
+--
+-- Name: traveler_assignment_views_reviewed_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_reviewed_idx ON year_2020.assignments_travelers_view USING btree (reviewed);
+
+
+--
+-- Name: traveler_assignment_views_sport_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_sport_id_idx ON year_2020.assignments_travelers_view USING btree (sport_id);
+
+
+--
+-- Name: traveler_assignment_views_state_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_state_id_idx ON year_2020.assignments_travelers_view USING btree (state_id);
+
+
+--
+-- Name: traveler_assignment_views_team_name_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_team_name_idx ON year_2020.assignments_travelers_view USING btree (team_name);
+
+
+--
+-- Name: traveler_assignment_views_tz_offset_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_tz_offset_idx ON year_2020.assignments_travelers_view USING btree (tz_offset);
+
+
+--
+-- Name: traveler_assignment_views_unneeded_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX traveler_assignment_views_unneeded_idx ON year_2020.assignments_travelers_view USING btree (unneeded);
+
+
+--
+-- Name: unassigned_travelers_view_cancel_date_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_cancel_date_idx ON year_2020.assignments_unassigned_travelers_view USING btree (cancel_date);
+
+
+--
+-- Name: unassigned_travelers_view_id_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX unassigned_travelers_view_id_idx ON year_2020.assignments_unassigned_travelers_view USING btree (id);
+
+
+--
+-- Name: unassigned_travelers_view_joined_at_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_joined_at_idx ON year_2020.assignments_unassigned_travelers_view USING btree (joined_at);
+
+
+--
+-- Name: unassigned_travelers_view_sport_and_state_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_sport_and_state_idx ON year_2020.assignments_unassigned_travelers_view USING btree (sport_abbr, state_abbr);
+
+
+--
+-- Name: unassigned_travelers_view_state_and_sport_idx; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX unassigned_travelers_view_state_and_sport_idx ON year_2020.assignments_unassigned_travelers_view USING btree (state_abbr, sport_abbr);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_failed_amount; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_failed_amount ON year_2020.accounting_remit_forms_view USING btree (failed_amount);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_negative_amount; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_negative_amount ON year_2020.accounting_remit_forms_view USING btree (negative_amount);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_net_amount; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_net_amount ON year_2020.accounting_remit_forms_view USING btree (net_amount);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_positive_amount; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_positive_amount ON year_2020.accounting_remit_forms_view USING btree (positive_amount);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_reconciled; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_reconciled ON year_2020.accounting_remit_forms_view USING btree (reconciled);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_recorded; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_recorded ON year_2020.accounting_remit_forms_view USING btree (recorded);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_remit_number; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE UNIQUE INDEX year_2020_remit_forms_view_on_remit_number ON year_2020.accounting_remit_forms_view USING btree (remit_number);
+
+
+--
+-- Name: year_2020_remit_forms_view_on_successful_amount; Type: INDEX; Schema: year_2020; Owner: -
+--
+
+CREATE INDEX year_2020_remit_forms_view_on_successful_amount ON year_2020.accounting_remit_forms_view USING btree (successful_amount);
 
 
 --
@@ -27469,6 +30013,14 @@ ALTER TABLE ONLY public.meetings
 
 
 --
+-- Name: user_general_releases fk_rails_4bd1989db0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_general_releases
+    ADD CONSTRAINT fk_rails_4bd1989db0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: flight_airports fk_rails_4c4c8ae552; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -27650,6 +30202,14 @@ ALTER TABLE ONLY public.coaches
 
 ALTER TABLE ONLY public.athletes
     ADD CONSTRAINT fk_rails_b6b4420e7e FOREIGN KEY (competing_team_id) REFERENCES public.competing_teams(id) DEFERRABLE;
+
+
+--
+-- Name: thank_you_tickets fk_rails_c283235798; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.thank_you_tickets
+    ADD CONSTRAINT fk_rails_c283235798 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -28357,6 +30917,14 @@ ALTER TABLE ONLY year_2020.payments
 
 
 --
+-- Name: user_general_releases fk_rails_4bd1989db0; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
+--
+
+ALTER TABLE ONLY year_2020.user_general_releases
+    ADD CONSTRAINT fk_rails_4bd1989db0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: competing_teams fk_rails_4cd6d4a588; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
 --
 
@@ -28525,14 +31093,6 @@ ALTER TABLE ONLY year_2020.meeting_video_views
 
 
 --
--- Name: thank_you_tickets fk_rails_c283235798; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
---
-
-ALTER TABLE ONLY year_2020.thank_you_tickets
-    ADD CONSTRAINT fk_rails_c283235798 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
 -- Name: staff_assignments fk_rails_c51868b6cc; Type: FK CONSTRAINT; Schema: year_2020; Owner: -
 --
 
@@ -28680,7 +31240,7 @@ ALTER TABLE ONLY year_2020.user_messages
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO year_2020,public;
+SET search_path TO public,public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20180518042050'),
@@ -28813,6 +31373,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200531122420'),
 ('20200624195350'),
 ('20200728181612'),
-('20200728181613');
+('20200728181613'),
+('20201116165109');
 
 

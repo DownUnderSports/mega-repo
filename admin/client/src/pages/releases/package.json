@@ -1,0 +1,5 @@
+{
+  "name": "ReleasePages",
+  "private": true,
+  "main": "./releases.jsx"
+}

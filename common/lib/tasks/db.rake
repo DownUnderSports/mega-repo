@@ -78,12 +78,20 @@ namespace :db do
   end
 end
 
-Rake::Task['db:migrate'].enhance(['db:views:up:before', 'db:set_to_public']) do
+# Rake::Task['db:migrate'].enhance(['db:views:up:before', 'db:set_to_public']) do
+#   Rake::Task['db:set_to_default'].invoke
+#   Rake::Task['db:views:up:after'].invoke
+# end
+#
+# Rake::Task['db:rollback'].enhance(['db:views:down:before', 'db:set_to_public']) do
+#   Rake::Task['db:set_to_default'].invoke
+#   Rake::Task['db:views:down:after'].invoke
+# end
+
+Rake::Task['db:migrate'].enhance([ 'db:set_to_public' ]) do
   Rake::Task['db:set_to_default'].invoke
-  Rake::Task['db:views:up:after'].invoke
 end
 
-Rake::Task['db:rollback'].enhance(['db:views:down:before', 'db:set_to_public']) do
+Rake::Task['db:rollback'].enhance([ 'db:set_to_public' ]) do
   Rake::Task['db:set_to_default'].invoke
-  Rake::Task['db:views:down:after'].invoke
 end

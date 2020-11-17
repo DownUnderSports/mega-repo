@@ -1,0 +1,5 @@
+{
+  "name": "ReleasesShowPage",
+  "private": true,
+  "main": "./show.jsx"
+}

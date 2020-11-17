@@ -1302,6 +1302,15 @@ body .form-group.d-flex.flex-wrap .input-group-append .input-group-text {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+body .labeler {
+  width: 100%;
+}
+body .labeler th {
+  text-align: right;
+}
+body .labeler td {
+  text-align: left;
+}
 body .table-striped tbody tr.bg-danger {
   background-color: rgba(200,0,0,0.3) !important;
 }
