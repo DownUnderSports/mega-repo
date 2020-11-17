@@ -597,7 +597,7 @@ export default class ReleasesIndexPage extends Component {
                                 { release.net_refundable ? release.net_refundable.str_pretty : `SYSTEM (${(release.additional_data.refundable_amount || emptyObject).str_pretty})` }
                               </td>
                             </tr>
-                            <tr>
+                            <tr className="d-none">
                               <th>
                                 Refund Percentage:
                               </th>

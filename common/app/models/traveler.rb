@@ -515,7 +515,7 @@ class Traveler < ApplicationRecord
     i = insurance_charge
     return 0.cents unless i > 0
     pmt = [ total_payments - deposit_amount, 0.cents ].max
-    pmt > i ? pmt : i
+    pmt > i ? i : pmt
   end
 
   def dreamtime_paid_amount
