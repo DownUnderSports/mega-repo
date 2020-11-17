@@ -19,9 +19,8 @@ class User < ApplicationRecord
     # == Scopes ===============================================================
 
     # == Callbacks ============================================================
-    before_validation :set_percentage
     before_save :set_percentage
-    after_commit :set_cache
+    before_save :generate_data_if_needed
 
     # == Boolean Class Methods ================================================
 
@@ -29,7 +28,7 @@ class User < ApplicationRecord
 
     # == Boolean Methods ======================================================
     def cache_needs_update?
-      return true if self.additional_data.blank?
+      return true if self.additional_data.blank? || !self.persisted?
       t = user&.traveler
       last_update = [ t&.updated_at, user&.updated_at, t&.items&.try(:maximum, :updated_at) ].select(&:present?).max
       !!last_update && (updated_at <= last_update)
@@ -61,8 +60,8 @@ class User < ApplicationRecord
       end
     end
 
-    def set_cache
-      update_or_create_cache if cache_needs_update?
+    def generate_data_if_needed
+      generate_additional_data if cache_needs_update?
       true
     end
 

@@ -14153,7 +14153,8 @@ CREATE TABLE public.user_general_releases (
     notes text,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    additional_data jsonb DEFAULT '"{}"'::jsonb NOT NULL
+    additional_data jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    agreed_to_terms boolean DEFAULT false NOT NULL
 );
 
 
@@ -31317,6 +31318,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200728181612'),
 ('20200728181613'),
 ('20201116165109'),
-('20201117153751');
+('20201117153751'),
+('20201117195049');
 
 

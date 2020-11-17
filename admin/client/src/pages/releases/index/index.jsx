@@ -83,6 +83,15 @@ export default class ReleasesIndexPage extends Component {
     })
   }
 
+  toggleReleaseAgreed = ev => {
+    const value = !this.state.editRelease.agreed_to_terms
+    this.setState(state => {
+      const editRelease = Objected.deepClone(state.editRelease || {})
+      editRelease.agreed_to_terms = value
+      return { editRelease }
+    })
+  }
+
   setRefundable = ev => {
     const target = ev.currentTarget
     this.setState(state => {
@@ -121,7 +130,7 @@ export default class ReleasesIndexPage extends Component {
     await this.setStateAsync({ loading: true, errors: [] })
 
     try{
-      const { editing, editRelease: { dus_id, is_signed, allow_contact, notes, net_refundable }, selectedFile } = this.state,
+      const { editing, editRelease: { dus_id, is_signed, allow_contact, agreed_to_terms, notes, net_refundable }, selectedFile } = this.state,
             isCreate = (editing === "new"),
             body = new FormData()
 
@@ -129,6 +138,7 @@ export default class ReleasesIndexPage extends Component {
 
       body.append("release[is_signed]", is_signed ? 1 : 0)
       body.append("release[allow_contact]", allow_contact ? 1 : 0)
+      body.append("release[agreed_to_terms]", agreed_to_terms ? 1 : 0)
       body.append("release[notes]", notes || "")
       body.append("release[net_refundable]", (net_refundable && net_refundable.decimal) || "")
 
@@ -344,6 +354,20 @@ export default class ReleasesIndexPage extends Component {
               <div className="form-group form-check">
                 <input
                   type="checkbox"
+                  id={`${editing}_agreed`}
+                  className="form-check-input"
+                  value="1"
+                  name={`release[agreed_to_terms]`}
+                  onChange={this.toggleReleaseAgreed}
+                  checked={!!editRelease.agreed_to_terms}
+                />
+                <label htmlFor={`${editing}_agreed`}>
+                  Agreed to Terms?
+                </label>
+              </div>
+              <div className="form-group form-check">
+                <input
+                  type="checkbox"
                   id={`${editing}_future`}
                   className="form-check-input"
                   value="1"
@@ -355,7 +379,6 @@ export default class ReleasesIndexPage extends Component {
                   Future Contact?
                 </label>
               </div>
-
               <div className="form-group">
                 <label htmlFor={`${editing}_refundable`}>
                   Refundable Amount Override:
@@ -548,6 +571,14 @@ export default class ReleasesIndexPage extends Component {
                               </th>
                               <td colSpan="2">
                                 { release.is_signed ? "Y" : "N" }
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>
+                                Agreed to Terms?
+                              </th>
+                              <td colSpan="2">
+                                { release.agreed_to_terms ? "Y" : "N" }
                               </td>
                             </tr>
                             <tr>

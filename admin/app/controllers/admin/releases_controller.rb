@@ -116,7 +116,7 @@ module Admin
       end
 
       def whitelisted_release_params
-        params.require(:release).permit(:release_form, :is_signed, :allow_contact, :net_refundable, :notes)
+        params.require(:release).permit(:release_form, :is_signed, :allow_contact, :agreed_to_terms, :net_refundable, :notes)
       end
   end
 end
