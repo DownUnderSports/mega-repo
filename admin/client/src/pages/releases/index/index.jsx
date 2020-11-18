@@ -31,7 +31,7 @@ export default class ReleasesIndexPage extends Component {
   forceReleases = () => this.getReleases(true)
 
   getReleases = async (force) => {
-    await this.setStateAsync({ loading: true, editing: null, editRelease: null, filterBy: null, errors: [] })
+    await this.setStateAsync({ loading: true, editing: null, editRelease: null, filterBy: null, errors: [], selectedFile: null })
     const result = await this.fetchReleases(force)
     if(result.epoch) this._lastFetch = new Date(result.epoch)
     if(result.releases) {
@@ -281,6 +281,10 @@ export default class ReleasesIndexPage extends Component {
                   Statement <i className="material-icons">outbound</i>
                 </Link>
                 &nbsp;-&nbsp;
+                <Link to={editRelease.release_form || "#"} className="btn btn-info" target="dus_releases" disabled={!editRelease.release_form}>
+                  {editRelease.release_form ? "Release Form" : ""} <i className="material-icons">{editRelease.release_form ? "outbound" : "error"}</i>
+                </Link>
+                &nbsp;-&nbsp;
                 <button className="btn btn-danger" onClick={this.cancelEditing}>
                   Cancel
                 </button>
@@ -456,8 +460,8 @@ export default class ReleasesIndexPage extends Component {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor={`${editing}_form`}>
-                  Release Form:
+                <label htmlFor={`${editing}_form ${editRelease.release_form ? "text-danger" : ""}`}>
+                  {editRelease.release_form ? "Replace Release" : "Release"} Form:
                 </label>
                 <input
                   type="file"
