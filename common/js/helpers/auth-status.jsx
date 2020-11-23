@@ -139,13 +139,17 @@ class AuthStatusWrapper {
     if(!this.token) {
       console.log(process.env.REACT_APP_AUTH_URL, pxyPort, String(process.env.REACT_APP_AUTH_URL || '').replace('%LOCAL_PORT%', String(pxyPort || 443)))
 
-      const url = String(process.env.REACT_APP_AUTH_URL || '').replace('%LOCAL_PORT%', String(pxyPort || 443)),
+      // const url = String(process.env.REACT_APP_AUTH_URL || '').replace('%LOCAL_PORT%', String(pxyPort || 443)),
+      const url = "/admin/sessions",
             deviceId = url && document.getElementById('device-id'),
             value = url && `${url}?${deviceId ? `device_id=${deviceId.value}` : ''}`
 
       if(value) {
         // window.addEventListener('message', this.receiveFromServer, false)
         try {
+          const email = window.prompt("Please enter your email", "mail@downundersports.com");
+          const password = window.prompt("Please enter your password", "");
+
           const result = await fetch(value, {
                   skipQueue: true,
                   mode: 'cors',

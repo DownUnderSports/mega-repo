@@ -22,6 +22,7 @@ const context = (pathname, req) => {
          || /^\/statement\/[a-z0-9]{64}/.test(pathname)
          || /^\/admin\/users\/[^/]+\/statement$/.test(pathname)
          || /^\/(admin\/)?authentication/.test(pathname)
+         || /^\/(admin\/)?sessions/.test(pathname)
          || (
               mayProxy(pathname)
               && req.headers.accept

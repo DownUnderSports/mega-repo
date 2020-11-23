@@ -4,6 +4,9 @@
 module Admin
   class SessionsController < ::Admin::ApplicationController
     # == Modules ============================================================
+    include BetterRecord::Sessionable
+
+    layout 'internal'
 
     # == Class Methods ======================================================
 

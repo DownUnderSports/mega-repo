@@ -235,6 +235,7 @@ module AdminRoutes
 
         resources :schools
         resources :sessions, only: :index, defaults: { format: :json }
+        resources :sessions, only: [ :new, :create ], defaults: { format: :html }
 
         resource  :privacy_policy, only: %i[ show create ]
         resources :terms, only: %i[ index create ]

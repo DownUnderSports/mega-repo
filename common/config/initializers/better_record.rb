@@ -75,7 +75,7 @@ module BetterRecord
 
     self.use_bearer_token = true
 
-    # self.after_login_path = Rails.application.routes.url_helpers.root_path
+    self.after_login_path = :root_path
 
     # self.session_column = :uuid
 

@@ -1,0 +1,39 @@
+<% provide :title, "Log In" %>
+<%= form_with url: admin_sessions_path, id: "new_session_form" do |form| %>
+  <div class="mdc-layout-grid__inner">
+    <% if defined?(@errors) && @errors.present? %>
+      <%= content_tag :div, class: "col-12 mb-4" do %>
+        <%= render partial: "shared/errors" %>
+      <% end %>
+    <% end %>
+    <%= hidden_field_tag :after_login, @redirect_value if defined? @redirect_value %>
+    <%= content_tag :div, class: "col-12" do %>
+      <!-- Render textfield component -->
+      <div class="mdc-text-field mdc-text-field--filled mdc-text-field--with-trailing-icon">
+        <%= form.text_field :email, type: "email", class: "mdc-text-field__input", data: { target: "text-field.input" } %>
+        <i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing clickable" data-target="text-field.icon">
+          email
+        </i>
+        <%= form.label :email, class: "mdc-floating-label mdc-floating-label--float-above", required: true, data: { target: "text-field.label" } %>
+        <div class="mdc-line-ripple"></div>
+      </div>
+    <% end %>
+    <%= content_tag :div, class: "col-12" do %>
+      <!-- Render textfield component -->
+      <div class="mdc-text-field mdc-text-field--filled mdc-text-field--with-trailing-icon">
+        <%= form.text_field :password, type: "password", class: "mdc-text-field__input", data: { target: "text-field.input" } %>
+        <i class="material-icons material-icons-outlined mdc-text-field__icon mdc-text-field__icon--trailing clickable" data-target="text-field.icon">
+          visibility
+        </i>
+        <%= form.label :password, class: "mdc-floating-label mdc-floating-label--float-above", required: true, data: { target: "text-field.label" } %>
+        <div class="mdc-line-ripple"></div>
+      </div>
+    <% end %>
+    <%= content_tag :div, class: "col-12" do %>
+      <button class="mdc-button mdc-button--unelevated" type="submit">
+        <div class="mdc-button__ripple"></div>
+        <span class="mdc-button__label">Submit</span>
+      </button>
+    <% end %>
+  </div>
+<% end %>
