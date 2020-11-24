@@ -17,7 +17,7 @@ const listGroupClass = { className: 'list-group' }
 const emptyObject = {}
 
 export default class ReleasesIndexPage extends Component {
-  state = { releases: [], allReleases: [], loading: true, editing: null, errors: [] }
+  state = { releases: [], allReleases: [], count: 0, loading: true, editing: null, errors: [] }
 
   componentDidMount() {
     super.componentDidMount()
@@ -46,7 +46,7 @@ export default class ReleasesIndexPage extends Component {
 
         const allReleases = quickSort(releases, quickCompare)
 
-        return { allReleases, releases: [ ...(onlyUnmarked ? allReleases.filter(r => !r.net_refundable) : allReleases) ], loading: false }
+        return { allReleases, count: allReleases.length, releases: [ ...(onlyUnmarked ? allReleases.filter(r => !r.net_refundable) : allReleases) ], loading: false }
       })
     }
   }
@@ -509,7 +509,7 @@ export default class ReleasesIndexPage extends Component {
 
 
   render() {
-    const { releases, loading, editing, onlyUnmarked } = this.state
+    const { releases, count, loading, editing, onlyUnmarked } = this.state
     return (
       <DisplayOrLoading
         display={!loading}
@@ -573,6 +573,11 @@ export default class ReleasesIndexPage extends Component {
                 Only Show Unset Refundable Amount?
               </label>
             </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 text-right">
+            Showing { releases.length } of { count } Total
           </div>
         </div>
         {
