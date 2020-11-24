@@ -1,0 +1,4 @@
+var form = document.getElementById("new_session_form");
+if(form) {
+  form.innerHTML = "<%= escape_javascript render partial: 'admin/sessions/new' %>"
+}

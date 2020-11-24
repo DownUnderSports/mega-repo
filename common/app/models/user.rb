@@ -681,6 +681,13 @@ class User < ApplicationRecord
     set_db_default_year
   end
 
+  def self.authenticate(params)
+    where(email: params[:email]).
+    find_by("password = crypt(?, password)", params[:password])
+  rescue
+    nil
+  end
+
   # == Boolean Methods ======================================================
   def can_send_cancellation?
     self.traveler && !self.is_deferral? && !self.histories.find_by(message: 'Sent Cancellation Confirmation')

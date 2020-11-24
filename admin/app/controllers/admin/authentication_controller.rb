@@ -59,7 +59,7 @@ module Admin
 
       def is_proxy?
         !!(
-          (header_hash[:HTTP_HOST] =~ /(\.|^)downundersports\.com$/i) &&
+          (header_hash[:HTTP_HOST] =~ /(\.|^)downundersports(-[a-zA-Z]+\.herokuapp)?\.com$/i) &&
           # (header_hash[:HTTP_X_FORWARDED_BY] == '10.0.0.10:443') &&
           (header_hash[:HTTP_X_FORWARDED_FOR] =~ /(204\.132\.140\.19[2-7]|74\.92\.245\.6[5-8]|66.206.9.1[0-4])$/)
         )
@@ -75,7 +75,7 @@ module Admin
         end
       else
         def allow_origin_value
-          request_origin =~ /^([^.]+\.)*downundersports.com$/ ?
+          request_origin =~ /^([^.]+\.)*downundersports(-[a-zA-Z]+\.herokuapp)?\.com$/ ?
             request_origin :
             'https://admin.downundersports.com'
         end
