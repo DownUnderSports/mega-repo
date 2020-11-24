@@ -3,6 +3,8 @@ import { pxyPort } from 'common/js/helpers/proxy-port'
 
 const callbacks = []
 
+let email, password
+
 class AuthStatusWrapper {
   // static authTokenName = 'DusAuthToken'
 
@@ -147,8 +149,8 @@ class AuthStatusWrapper {
       if(value) {
         // window.addEventListener('message', this.receiveFromServer, false)
         try {
-          const email = window.prompt("Please enter your email", "mail@downundersports.com");
-          const password = window.prompt("Please enter your password", "");
+          email = email || window.prompt("Please enter your email", "mail@downundersports.com");
+          password = password || window.prompt("Please enter your password", "");
 
           const result = await fetch(value, {
                   method: "POST",
@@ -165,6 +167,8 @@ class AuthStatusWrapper {
           this.token = json.token
           await this._getCookies()
         } catch(e) {
+          email = null
+          password = null
           this.token = null
         }
       }
