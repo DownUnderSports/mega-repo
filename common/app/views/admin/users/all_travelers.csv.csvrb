@@ -7,6 +7,118 @@ airfare_debits =
 
 gbr_debit = Traveler::BaseDebit.find_by(name: 'Great Barrier Reef Escape').id
 
+#  %w[
+#  url
+#  base_qr_code
+#  payment_qr_code
+#  dus_id
+#  athlete_dus_ids
+#  coach_dus_ids
+#  main_dus_ids
+#  category
+#  interest
+#  grad
+#  team
+#  team_sport
+#  team_state
+#  2021_status
+#  2021_can_transfer
+#  2021_can_compete
+#  2021_special_notes
+#  first
+#  middle
+#  last
+#  suffix
+#  print_name
+#  print_first_names
+#  print_other_names
+#  print_first_only
+#  print_last_only
+#  gender
+#  shirt_size
+#  birth_date
+#  meeting_date
+#  video_first_sent_date
+#  video_first_watched_date
+#  join_date
+#  deposit_date
+#  cancel_date
+#  total_paid
+#  total_credits
+#  total_debits
+#  total_charges
+#  current_balance
+#  is_deferral
+#  transfer_credits
+#  offers_count
+#  total_offers_amount
+#  offer_names
+#  has_insurance
+#  has_gbr
+#  has_domestic
+#  has_single
+#  departing_date
+#  returning_date
+#  departing_from
+#  returning_to
+#  address
+#  address_foreign
+#  address_street
+#  address_street_2
+#  address_street_3
+#  address_city
+#  address_state
+#  address_zip
+#  address_country
+#  phone
+#  email
+#  parent_1_relationship
+#  parent_1_name
+#  parent_1_phone
+#  parent_1_email
+#  parent_2_relationship
+#  parent_2_name
+#  parent_2_phone
+#  parent_2_email
+#  parent_3_relationship
+#  parent_3_name
+#  parent_3_phone
+#  parent_3_email
+#  handicap
+#  positions
+#  height
+#  weight
+#  competing_teams
+#  assigned_buses
+#  arriving_airport
+#  arriving_from
+#  arriving_carrier
+#  arriving_flight
+#  arriving_at
+#  arriving_epoch
+#  departing_airport
+#  departing_to
+#  departing_carrier
+#  departing_flight
+#  departing_at
+#  departing_epoch
+#  release_agreed_to_terms
+#  release_allow_future_contact
+#  release_is_signed
+#  release_assigned_refundable
+#  release_form
+#  release_age
+#  release_birth_date
+#  release_total_payments
+#  release_deposit_amount
+#  release_insurance_paid
+#  release_dreamtime_paid
+#  release_calculated_refundable_amount
+#  release_assigned_refundable_amount
+#  release_percentage_paid
+#  release_notes
+#  ]
+
 csv << %w[
   url
   base_qr_code
@@ -84,24 +196,21 @@ csv << %w[
   parent_3_name
   parent_3_phone
   parent_3_email
-  handicap
-  positions
-  height
-  weight
   competing_teams
-  assigned_buses
-  arriving_airport
-  arriving_from
-  arriving_carrier
-  arriving_flight
-  arriving_at
-  arriving_epoch
-  departing_airport
-  departing_to
-  departing_carrier
-  departing_flight
-  departing_at
-  departing_epoch
+  release_agreed_to_terms
+  release_allow_future_contact
+  release_is_signed
+  release_form
+  release_age
+  release_birth_date
+  release_total_payments
+  release_deposit_amount
+  release_insurance_paid
+  release_dreamtime_paid
+  release_calculated_refundable_amount
+  release_assigned_refundable_amount
+  release_percentage_paid
+  release_notes
 ]
 
 User.where_exists(:traveler).split_batches_values(preserve_order: true) do |u|
@@ -109,6 +218,8 @@ User.where_exists(:traveler).split_batches_values(preserve_order: true) do |u|
 
   arriving_flight, departing_flight = u.traveler.international_flights
   addr = u.main_address.presence
+  release = u.general_release
+  release_data = release&.additional_data || {}
 
   csv << [
     u.url(true),
@@ -176,23 +287,37 @@ User.where_exists(:traveler).split_batches_values(preserve_order: true) do |u|
     u.ambassador_phone.presence,
     u.all_ambassador_emails,
     *u.guardian_contact_info(3).flatten,
-    a_sport&.handicap,
-    (a_sport&.positions_array || []).join(', '),
-    a_sport&.height,
-    a_sport&.weight,
+    # a_sport&.handicap,
+    # (a_sport&.positions_array || []).join(', '),
+    # a_sport&.height,
+    # a_sport&.weight,
     u.traveler.competing_teams_string,
-    u.traveler.buses_string,
-    arriving_flight&.arriving_airport_code,
-    arriving_flight&.departing_airport_code,
-    arriving_flight&.schedule&.operator,
-    arriving_flight&.flight_number,
-    arriving_flight&.local_arriving_at&.strftime("%F %R"),
-    arriving_flight&.arriving_at&.to_i,
-    departing_flight&.departing_airport_code,
-    departing_flight&.arriving_airport_code,
-    departing_flight&.schedule&.operator,
-    departing_flight&.flight_number,
-    departing_flight&.local_departing_at&.strftime("%F %R"),
-    departing_flight&.departing_at&.to_i,
+    # u.traveler.buses_string,
+    # arriving_flight&.arriving_airport_code,
+    # arriving_flight&.departing_airport_code,
+    # arriving_flight&.schedule&.operator,
+    # arriving_flight&.flight_number,
+    # arriving_flight&.local_arriving_at&.strftime("%F %R"),
+    # arriving_flight&.arriving_at&.to_i,
+    # departing_flight&.departing_airport_code,
+    # departing_flight&.arriving_airport_code,
+    # departing_flight&.schedule&.operator,
+    # departing_flight&.flight_number,
+    # departing_flight&.local_departing_at&.strftime("%F %R"),
+    # departing_flight&.departing_at&.to_i,
+    release&.agreed_to_terms ? "yes" : "no",
+    release&.allow_contact ? "yes" : "no",
+    release&.is_signed ? "yes" : "no",
+    release&.release_form&.attached? ? Rails.application.routes.url_helpers.rails_blob_url(release.release_form, disposition: "inline") : nil,
+    release_data["age"],
+    release_data["birth_date"],
+    release_data["total_payments"] && release_data["total_payments"]["str_pretty"],
+    release_data["deposit_amount"] && release_data["deposit_amount"]["str_pretty"],
+    release_data["insurance_paid"] && release_data["insurance_paid"]["str_pretty"],
+    release_data["dreamtime_paid"] && release_data["dreamtime_paid"]["str_pretty"],
+    release_data["refundable_amount"] && release_data["refundable_amount"]["str_pretty"],
+    release&.net_refundable&.presence&.to_s(true),
+    release&.percentage_paid&.presence&.to_s(true),
+    release&.notes
   ]
 end
