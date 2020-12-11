@@ -149,8 +149,10 @@ class AuthStatusWrapper {
       if(value) {
         // window.addEventListener('message', this.receiveFromServer, false)
         try {
-          email = email || window.prompt("Please enter your email", "mail@downundersports.com");
-          password = password || window.prompt("Please enter your password", "");
+          email = email || window.prompt("Please enter your email", localStorage.getItem('window-auth-email') || "mail@downundersports.com");
+          localStorage.setItem('window-auth-email', email)
+          password = password || window.prompt("Please enter your password", sessionStorage.getItem('window-auth-password') || "");
+          sessionStorage.setItem('window-auth-password', password)
 
           const result = await fetch(value, {
                   method: "POST",
