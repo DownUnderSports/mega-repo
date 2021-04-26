@@ -62,7 +62,7 @@ class ThankYouTicket < ApplicationRecord
 
   private
     def domain
-      Rails.env.development? ? "http://lvh.me:#{port}" : "https://www.downundersports.com"
+      local_host
     end
 
     def port

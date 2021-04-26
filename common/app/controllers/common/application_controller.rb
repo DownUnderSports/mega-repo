@@ -118,7 +118,7 @@ module Common
     end
 
     def cookie_domain
-      Rails.env.production? ? '.downundersports.com' : :all
+      :all
     end
 
     def set_current_user_cookies(user_to_set = nil)
@@ -127,25 +127,25 @@ module Common
           cookies.encrypted[:current_user_id] = {
             value: user_to_set.id,
             expires: Time.now + 24.hours,
-            secure: Rails.env.production?,
+            secure: false,
             domain: cookie_domain,
             tld_length: 2
-          }.merge!(Rails.env.production? ? { same_site: :lax } : {})
+          }
         )
 
         cookies[:plain_id] = {
           value: user_to_set.id,
           expires: Time.now + 24.hours,
-          secure: Rails.env.production?,
+          secure: false,
           domain: cookie_domain,
           tld_length: 2
-        }.merge!(Rails.env.production? ? { same_site: :none } : {})
+        }
 
         if Rails.env.production?
           cookies.encrypted[:current_user_id_legacy] = {
             value: user_to_set.id,
             expires: Time.now + 24.hours,
-            secure: Rails.env.production?,
+            secure: false,
             domain: cookie_domain,
             tld_length: 2
           }
@@ -153,7 +153,7 @@ module Common
           cookies[:plain_id_legacy] = {
             value: user_to_set.id,
             expires: Time.now + 24.hours,
-            secure: Rails.env.production?,
+            secure: false,
             domain: cookie_domain,
             tld_length: 2
           }
@@ -536,10 +536,8 @@ module Common
         end
       end
 
-      if Rails.env.development?
-        def requesting_device_id
-          @requesting_device_id ||= "development"
-        end
+      def requesting_device_id
+        @requesting_device_id ||= "development"
       end
 
       def set_language
@@ -551,7 +549,7 @@ module Common
       end
 
       def local_domain
-        Rails.env.development? ? "lvh.me:#{local_port}" : "downundersports.com"
+        "lvh.me:#{local_port}"
       end
 
       def match_javascript_file(file)

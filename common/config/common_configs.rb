@@ -72,8 +72,7 @@ module CommonConfigs
     set_routing_seo_info(config)
     set_action_mailer_defaults(config)
 
-    Rails.application.routes.default_url_options[:host] =
-      Rails.env.development? ? 'lvh.me:3000' : config.route_info[:domain]
+    Rails.application.routes.default_url_options[:host] = "lvh.me"
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
@@ -129,13 +128,13 @@ module CommonConfigs
   def self.session_store_options
     sesh_key = (ENV["SESSION_KEY"] || ENV["CURRENT_APP_NAME"] || "_down_under_sports").underscore
     sesh_key = "_#{sesh_key}" unless sesh_key[0] == "_"
-    cookie_domain = Rails.env.production? ? '.downundersports.com' : '.lvh.me'
+    cookie_domain = ".lvh.me"
     {
       key: sesh_key,
       domain: cookie_domain,
       tld_length: 2,
-      expire_after: Rails.env.production? ? 24.hours : nil,
-      secure: Rails.env.production?
+      expire_after: nil,
+      secure: false
     }
   end
 

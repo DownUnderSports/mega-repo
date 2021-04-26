@@ -30,7 +30,7 @@ class User < ApplicationRecord
 
     # == Instance Methods =====================================================
     def url
-      "#{Rails.env.development? ? "http://lvh.me:3000" : "https://admin.downundersports.com"}/admin/accounting/refund_requests/#{self.id}"
+      "#{local_host}/admin/accounting/refund_requests/#{self.id}"
     end
 
     def send_notification

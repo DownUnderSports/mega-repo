@@ -11,9 +11,7 @@ wicked_cfg = {
   }
 }
 
-if !Rails.env.production?
-  WickedPdf.config[:exe_path] = '/usr/bin/wkhtmltopdf'
-end
+WickedPdf.config[:exe_path] = '/usr/bin/wkhtmltopdf'
 
 WickedPdf.config ||= {}
 WickedPdf.config.merge!(wicked_cfg)

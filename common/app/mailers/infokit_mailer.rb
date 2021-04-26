@@ -104,7 +104,7 @@ class InfokitMailer < ApplicationMailer
       params[:user] || {},
       params[:guardian] || {},
       params[:options] || {},
-      Rails.env.development? ? 'http://lvh.me:3000' : 'https://admin.downundersports.com'
+      Rails.env.development? ? 'http://lvh.me:3000' : "http://lvh.me"
     ]
 
     mail to: 'it@downundersports.com', subject: 'Bad Information Request' do |format|

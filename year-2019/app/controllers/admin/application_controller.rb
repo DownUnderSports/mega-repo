@@ -59,23 +59,18 @@ module Admin
 
     # == Cleanup ============================================================
     rescue_from not_authorized_error, with: :not_authorized
-    if (ENV['CURRENT_APP_NAME'].to_s == 'downundersports-admin') || Rails.env.development?
-      layout 'admin'
-    else
-      before_action :unauthorized_access
+
+    layout 'admin'
+
+    def requesting_device_id
+      "development"
     end
 
-    if Rails.env.development?
-      def requesting_device_id
-        "development"
-      end
-
-      def current_user(*args)
-        BetterRecord::Current.user ||= \
-          User.joins(:staff).where(first: 'Sampson', staffs: { admin: true }).limit(1).take \
-          || User.joins(:staff).limit(1).take \
-          || User.new(category: Staff.new(admin: true))
-      end
+    def current_user(*args)
+      BetterRecord::Current.user ||= \
+        User.joins(:staff).where(first: 'Sampson', staffs: { admin: true }).limit(1).take \
+        || User.joins(:staff).limit(1).take \
+        || User.new(category: Staff.new(admin: true))
     end
 
     def fallback_index_html
@@ -130,9 +125,7 @@ module Admin
       end
 
       def user_has_valid_access?
-        Rails.env.development? ||
-          safe_formats.any? {|f| request.format.__send__(f) } ||
-          check_user
+        true
       end
 
       def safe_formats
@@ -153,9 +146,7 @@ module Admin
       end
 
       def url_with_auth(path)
-        "http#{
-          Rails.env.development? ? '' : "s"
-        }://authorize.#{
+        "http://authorize.#{
           local_domain
         }#{
           path

@@ -13,10 +13,6 @@ module Aus
     # == Actions ============================================================
 
     # == Cleanup ============================================================
-    if !(ENV['CURRENT_APP_NAME'].to_s == 'downundersports-admin') && !Rails.env.development?
-      before_action :unauthorized_access
-    end
-
     def app_base
       'aus'
     end

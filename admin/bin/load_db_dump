@@ -25,7 +25,7 @@ chdir APP_ROOT do
   system! 'bin/rails db:environment:set RAILS_ENV=development'
 
   puts "\n== Dropping Attachments =="
-  system! 'bin/rails db:drop_attachments'
+  # system! 'bin/rails db:drop_attachments'
 
   # puts "\n== Migrating Test Database"
   # system! 'bin/rails db:migrate RAILS_ENV=test'

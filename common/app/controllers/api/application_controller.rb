@@ -16,9 +16,6 @@ module API
     end
 
     # == Pre/Post Flight Checks =============================================
-    unless (ENV['CURRENT_APP_NAME'].to_s == 'downundersports-admin') || Rails.env.development?
-      after_action :set_auth_header
-    end
 
     # == Actions ============================================================
     def version
@@ -30,7 +27,7 @@ module API
 
     private
       def cookie_domain
-        Rails.env.production? ? '.downundersports.com' : :all
+        :all
       end
 
       def set_current_user_cookies(user_to_set = nil)
@@ -39,25 +36,25 @@ module API
             cookies.encrypted[:current_user_id] = {
               value: user_to_set.id,
               expires: Time.now + 24.hours,
-              secure: Rails.env.production?,
+              secure: false,
               domain: cookie_domain,
               tld_length: 2
-            }.merge!(Rails.env.production? ? { same_site: :lax } : {})
+            }
           )
 
           cookies[:plain_id] = {
             value: user_to_set.id,
             expires: Time.now + 24.hours,
-            secure: Rails.env.production?,
+            secure: false,
             domain: cookie_domain,
             tld_length: 2
-          }.merge!(Rails.env.production? ? { same_site: :none } : {})
+          }
 
           if Rails.env.production?
             cookies.encrypted[:current_user_id_legacy] = {
               value: user_to_set.id,
               expires: Time.now + 24.hours,
-              secure: Rails.env.production?,
+              secure: false,
               domain: cookie_domain,
               tld_length: 2
             }
@@ -65,7 +62,7 @@ module API
             cookies[:plain_id_legacy] = {
               value: user_to_set.id,
               expires: Time.now + 24.hours,
-              secure: Rails.env.production?,
+              secure: false,
               domain: cookie_domain,
               tld_length: 2
             }
@@ -81,30 +78,28 @@ module API
         end
       end
 
-      if Rails.env.development?
-        def requesting_device_id
-          "development"
+      def requesting_device_id
+        "development"
+      end
+
+      def get_dev_user
+        BetterRecord::Current.user ||= \
+          User.joins(:staff).where(first: 'Sampson', staffs: { admin: true }).limit(1).take \
+          || User.joins(:staff).limit(1).take \
+          || User.new(category: Staff.new(admin: true))
+      end
+
+      def current_user(*args)
+        unless BetterRecord::Current.user
+          self.current_token = create_jwt(get_dev_user)
+          set_user get_dev_user
         end
 
-        def get_dev_user
-          BetterRecord::Current.user ||= \
-            User.joins(:staff).where(first: 'Sampson', staffs: { admin: true }).limit(1).take \
-            || User.joins(:staff).limit(1).take \
-            || User.new(category: Staff.new(admin: true))
-        end
+        BetterRecord::Current.user = User[BetterRecord::Current.user.id]
 
-        def current_user(*args)
-          unless BetterRecord::Current.user
-            self.current_token = create_jwt(get_dev_user)
-            set_user get_dev_user
-          end
+        set_current_user_cookies
 
-          BetterRecord::Current.user = User[BetterRecord::Current.user.id]
-
-          set_current_user_cookies
-
-          BetterRecord::Current.user
-        end
+        BetterRecord::Current.user
       end
 
       def current_user_hash(minimal = false)
@@ -183,16 +178,8 @@ module API
         nil
       end
 
-      if Rails.env.development?
-        def requesting_device_id
-          @requesting_device_id ||= "development"
-        end
-      else
-        def requesting_device_id
-          @requesting_device_id = (session[:requesting_device_id] ||= current_user_session_data[:token_device_id] || SecureRandom.uuid)
-        rescue
-          @requesting_device_id = SecureRandom.uuid
-        end
+      def requesting_device_id
+        @requesting_device_id ||= "development"
       end
   end
 end

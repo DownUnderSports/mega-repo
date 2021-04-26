@@ -46,8 +46,7 @@ module Admin
       end
 
       def user_has_valid_access?
-        Rails.env.development? ||
-          verify_user_access
+        true
       end
 
       def verify_user_access
@@ -65,31 +64,13 @@ module Admin
         )
       end
 
-      if Rails.env.development?
-        def allow_origin_value
-          '*'
-        end
-
-        def current_token
-          @current_token ||= create_jwt(current_user || auto_worker, { has_certificate: true })
-        end
-      else
-        def allow_origin_value
-          request_origin =~ /^([^.]+\.)*downundersports(-[a-zA-Z]+\.herokuapp)?\.com$/ ?
-            request_origin :
-            'https://admin.downundersports.com'
-        end
-
-        def current_token
-          @current_token
-        end
-
-        def requesting_device_id
-          params[:device_id] || SecureRandom.uuid
-        end
+      def allow_origin_value
+        '*'
       end
 
-
+      def current_token
+        @current_token ||= create_jwt(current_user || auto_worker, { has_certificate: true })
+      end
 
       # def decrypt_certificate(cert, options = nil)
       #   value, gpg_res = decrypt_gpg_base64(cert)

@@ -5,11 +5,11 @@ module Kernel
     end
 
     def local_domain
-      Rails.env.development? ? "lvh.me:#{local_port}" : "downundersports.com"
+      "lvh.me:#{local_port}"
     end
 
     def local_protocol
-      Rails.env.development? ? "http" : "https"
+      "http"
     end
 
     def local_host
@@ -177,14 +177,7 @@ module Kernel
     end
 
     def debugging_trace
-      if Rails.env.development?
-        trace = TracePoint.new(:call) { |tp| p [tp.path, tp.lineno, tp.event, tp.method_id] }
-        trace.enable
-        yield
-        trace.disable
-      else
-        yield
-      end
+      yield
     end
 
     def encrypt_and_encode_str(str)
@@ -336,12 +329,7 @@ module Kernel
     end
 
     def visual_trace
-      if Rails.env.development?
-        require 'visual_call_graph'
-        VisualCallGraph.trace { yield }
-      else
-        yield
-      end
+      yield
     end
 
     def wrong_school

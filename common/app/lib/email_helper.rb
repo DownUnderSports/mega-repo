@@ -7,15 +7,13 @@ module EmailHelper
       Rails.application.assets&.[](filename)&.filename
     end
   end
-  
+
   def email_image_tag(image, **options)
-    if Rails.env.development?
-      attachments[image] = {
-        mime_type: "image/#{image.split(".")[-1]}",
-        content: File.read(get_full_path_to_asset(image))
-      }
-      image = attachments[image].url
-    end
+    attachments[image] = {
+      mime_type: "image/#{image.split(".")[-1]}",
+      content: File.read(get_full_path_to_asset(image))
+    }
+    image = attachments[image].url
     image_tag image, **options
   end
 end

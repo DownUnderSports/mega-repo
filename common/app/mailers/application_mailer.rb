@@ -87,16 +87,7 @@ class ApplicationMailer < ActionMailer::Base
   end
 
   def production_email(email = nil)
-    if Rails.env.development?
-      result = %w[ sampson@downundersports.com ]
-      result << "gayle@downundersports.com" if @include_gayle && email_has_gayle(email)
-    elsif block_given?
-      result = yield
-    else
-      result = email
-    end
-
-    result
+    [ "it.downundersports@gmail.com" ]
   end
 
   def filter_emails(emails, all: false)

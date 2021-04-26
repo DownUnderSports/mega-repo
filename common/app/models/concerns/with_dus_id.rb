@@ -29,10 +29,7 @@ module WithDusId
   end
 
   def url(fetching_admin_url = false, category = nil, amount = nil)
-    domain =
-      Rails.env.development? ?
-        local_host :
-        "https://#{fetching_admin_url ? 'admin.' : 'www.'}downundersports.com"
+    domain = "#{local_protocol}://#{fetching_admin_url ? 'admin.' : 'www.'}#{local_domain}"
 
     base = fetching_admin_url ? '/admin/users' : ''
     category = category.presence && "/#{category}"

@@ -65,36 +65,30 @@ module Admin
     rescue_from not_authorized_error, with: :not_authorized
     rescue_from not_defined_error, with: :record_not_found
 
-    if (ENV['CURRENT_APP_NAME'].to_s == 'downundersports-admin') || Rails.env.development?
-      layout 'admin'
-    else
-      before_action :unauthorized_access
+    layout 'admin'
+
+    def requesting_device_id
+      "development"
     end
 
-    if Rails.env.development?
-      def requesting_device_id
-        "development"
+    def get_dev_user
+      BetterRecord::Current.user ||= \
+        User.joins(:staff).where(first: 'Sara', staffs: { admin: true }).limit(1).take \
+        || User.joins(:staff).limit(1).take \
+        || User.new(category: Staff.new(admin: true))
+    end
+
+    def current_user(*args)
+      unless BetterRecord::Current.user
+        self.current_token = create_jwt(get_dev_user)
+        set_user get_dev_user
       end
 
-      def get_dev_user
-        BetterRecord::Current.user ||= \
-          User.joins(:staff).where(first: 'Sara', staffs: { admin: true }).limit(1).take \
-          || User.joins(:staff).limit(1).take \
-          || User.new(category: Staff.new(admin: true))
-      end
+      BetterRecord::Current.user = User[BetterRecord::Current.user.id]
 
-      def current_user(*args)
-        unless BetterRecord::Current.user
-          self.current_token = create_jwt(get_dev_user)
-          set_user get_dev_user
-        end
+      set_current_user_cookies
 
-        BetterRecord::Current.user = User[BetterRecord::Current.user.id]
-
-        set_current_user_cookies
-
-        BetterRecord::Current.user
-      end
+      BetterRecord::Current.user
     end
 
     def fallback_index_html
@@ -140,9 +134,7 @@ module Admin
       end
 
       def user_has_valid_access?
-        check_user ||
-          Rails.env.development? ||
-          safe_formats.any? {|f| request.format.__send__(f) }
+        true
       end
 
       def safe_formats
@@ -163,9 +155,7 @@ module Admin
       end
 
       def url_with_auth(path)
-        "http#{
-          Rails.env.development? ? '' : "s"
-        }://authorize.#{
+        "http://authorize.#{
           local_domain
         }#{
           path
@@ -177,7 +167,7 @@ module Admin
       end
 
       def local_domain
-        Rails.env.development? ? "lvh.me:#{local_port}" : "downundersports.com"
+        "lvh.me:#{local_port}"
       end
 
       def lookup_user
