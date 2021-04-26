@@ -14,7 +14,7 @@ chdir APP_ROOT do
   system! 'bin/rails db:drop'
 
   puts "\n== Pulling Heroku Data =="
-  system! 'heroku pg:pull HEROKU_POSTGRESQL_AMBER_URL down_under_sports_development --exclude-table-data "auditing.logged_actions_active_storage_blobs; active_storage_blobs; auditing.logged_actions_active_storage_attachments; active_storage_attachments"'
+  system! 'heroku pg:pull HEROKU_POSTGRESQL_ONYX_URL down_under_sports_mega_development --exclude-table-data "auditing.logged_actions_active_storage_blobs; active_storage_blobs; auditing.logged_actions_active_storage_attachments; active_storage_attachments"'
 
   puts "\n== Setting DB environment =="
   system! 'bin/rails db:environment:set RAILS_ENV=development'

@@ -1,0 +1,215 @@
+#!/usr/bin/env bash
+
+set -e
+
+# set -x # -> for debug
+
+#rm -rf /tmp/heroku
+
+parse_git_branch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1) /'
+}
+
+parse_commit_hash() {
+  git log -1 | head -1
+}
+
+sync_folders() {
+  echo "  -- SYNC $1/ => $2/"
+  echo
+  rsync -rP --delete --exclude=.git "$1/" "$2/" >/dev/null
+}
+
+function pull_git_repo() {
+  set +e
+  git fetch
+  git reset --hard origin/master
+  set -e
+}
+
+function pull_heroku_repo() {
+  set +e
+  git fetch
+  git reset --hard heroku/master
+  set -e
+}
+
+# config
+PROJECT="mega-repo"
+NAMESPACE="down-under-sports"
+REPO="git@github.com:DownUnderSports/$PROJECT.git"
+SRVDIR="/home/$NAMESPACE"
+COMMIT_LOG="`parse_git_branch`: `parse_commit_hash`"
+
+# globals
+CODE_SOURCE_DIR="$(pwd)"
+
+prepare() {
+  echo
+  echo "=============== Fetch latest version of code from GH ==============="
+  echo
+
+  # make sure our changes are there, but no need on jenkins
+  echo "Pushing local changes...."
+  git push
+  echo
+
+  # make sure SRVDIR is in place and go there
+  pushd "$SRVDIR"
+    # make sure REPO is in place and go there
+    if [ ! -d $PROJECT ]; then git clone $REPO;  fi
+    pushd "$PROJECT"
+      # checkout last version of whatever needs checkouting
+      if [ "$#" -gt "0" ];  then git checkout $@;  fi
+      echo "Pulling from GitHub..."
+      pull_git_repo
+      echo
+    popd
+  popd
+}
+
+function deploy() {
+
+  TMPVENDOR="$SRVDIR/admin/vendor"
+  TMPCOMMON="$TMPVENDOR/common"
+
+  function sync_common() {
+    # replace vendor/common symlink with the actual folder
+    echo "Syncing vendor/common..."
+    echo
+
+    if [ -f $TMPCOMMON ]; then
+      echo " -- remove symlink: $TMPCOMMON"
+
+      rm $TMPCOMMON
+    fi
+
+    if [ ! -d $TMPVENDOR ]; then
+      echo " -- create vendor dir: $TMPVENDOR"
+
+      mkdir $TMPVENDOR
+    fi
+
+    sync_folders "$CODE_SOURCE_DIR/common" $TMPCOMMON
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/lib/assets" ]]; then
+      for d in $SRVDIR/admin/lib/assets; do
+        echo "Syncing assets"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/assets" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/lib/active_storage" ]]; then
+      for d in $SRVDIR/admin/lib/active_storage; do
+        echo "Syncing active_storage"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/lib/active_storage" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/db" ]]; then
+      for d in $SRVDIR/admin/db; do
+        echo "Syncing db"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/db" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/lib/db" ]]; then
+      for d in $SRVDIR/admin/lib/db; do
+        echo "Syncing db"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/lib/db" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/lib/tasks" ]]; then
+      for d in $SRVDIR/admin/lib/tasks; do
+        echo "Syncing tasks"
+        echo
+
+        rm -rf $d
+
+        sync_folders "$CODE_SOURCE_DIR/common/lib/tasks" "$d"
+        echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/config/sidekiq.yml" ]]; then
+      for d in $SRVDIR/admin/config/sidekiq.yml; do
+          echo "Syncing sidekiq.yml"
+          echo
+
+          rm -rf $d
+
+          cp -a "$CODE_SOURCE_DIR/common/config/sidekiq.yml" "$d"
+          echo
+      done
+    fi
+
+    if [[ -L "$CODE_SOURCE_DIR/admin/config/storage.yml" ]]; then
+      for d in $SRVDIR/admin/config/storage.yml; do
+          echo "Syncing storage.yml"
+          echo
+
+          rm -rf $d
+
+          cp -a "$CODE_SOURCE_DIR/common/config/storage.yml" "$d"
+          echo
+      done
+    fi
+
+    echo
+    echo "OK"
+    echo
+  }
+
+  echo
+  echo "=================== assemble the deployment code ==================="
+  echo
+
+  pushd "$SRVDIR"
+    echo "Assembling project-specific code..."
+    REPO_NAME="$PROJECT-admin"
+    # sync the main part of the project
+
+    sync_folders "$CODE_SOURCE_DIR/admin" "$SRVDIR/admin"
+    sync_common
+    echo
+
+    echo "OK"
+    echo
+
+    echo "=================== compile the deployment code ==================="
+
+    pushd admin
+      yarn heroku-postbuild
+    popd
+
+  popd
+}
+
+echo
+echo "==================== Deploying Code =================="
+echo
+
+deploy
+
+echo

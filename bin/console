@@ -7,6 +7,6 @@ then
   source /usr/share/chruby/chruby.sh && chruby ruby-2.6.6
 fi
 
-pushd www
-bin/rails c
+pushd admin
+  bin/rails c
 popd

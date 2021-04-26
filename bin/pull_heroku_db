@@ -6,6 +6,6 @@ then
   source /usr/share/chruby/chruby.sh && chruby ruby-2.6.6
 fi
 
-pushd www
-bin/pull_heroku_db
+pushd admin
+  bin/pull_heroku_db
 popd

@@ -6,7 +6,7 @@ then
   source /usr/share/chruby/chruby.sh && chruby ruby-2.6.6
 fi
 
-echo "proxying to www/bin/$1 ${@:2}"
-pushd www
-bin/$1 "${@:2}"
+echo "proxying to admin/bin/$1 ${@:2}"
+pushd admin
+  bin/$1 "${@:2}"
 popd
