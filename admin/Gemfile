@@ -29,7 +29,7 @@ gem 'pg', '~> 1.1', '>= 1.1.2'
 # Stylesheet inlining for email **
 gem 'premailer-rails', '~> 1.9.7'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 4.3'
 gem 'pundit', '~> 2.0'
 # gem 'mustache', '~> 1.0'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
