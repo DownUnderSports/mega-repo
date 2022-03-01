@@ -18,7 +18,7 @@ gem 'braintree', '~> 2.90', '>= 2.90.0'
 gem 'browser', '~> 2.5', '>= 2.5.3'
 gem 'dkim', '~> 1.0', '>= 1.0.1'
 gem 'icalendar', '~> 2.4', '>= 2.4.1'
-gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.12'
 gem 'inky-rb', require: 'inky', github: 'SampsonCrowley/inky-rb', ref: '30e006c95d47ca6ca6d73fb48f6377b0d71f673d'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
