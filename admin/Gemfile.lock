@@ -226,7 +226,7 @@ GEM
       pry (~> 0.10)
       pry-byebug (~> 3.4)
       pry-coolline (~> 0.2)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     jwe (0.4.0)
     jwt (2.2.2)
     listen (3.1.5)
