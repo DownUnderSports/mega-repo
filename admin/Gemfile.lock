@@ -418,7 +418,7 @@ GEM
     tilt (2.0.10)
     tiny_fake_redis (0.1.0)
       zeitwerk (~> 2, >= 2.2.2)
-    tzinfo (1.2.7)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uber (0.1.0)
     uglifier (4.2.0)
